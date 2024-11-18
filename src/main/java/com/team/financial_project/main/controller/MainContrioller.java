@@ -1,4 +1,4 @@
-package com.team.financial_project.controller;
+package com.team.financial_project.main.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
