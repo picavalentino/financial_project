@@ -1,0 +1,159 @@
+/* 폰트 설정 (한글_Pre) */
+@font-face {
+    font-family: "Pretendard";
+    src: url("../fonts/Pretendard-Medium.otf");
+}
+
+body, input::placeholder {
+    font-family: "Pretendard";
+}
+
+/* 공통(전체) 영역 */
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+/* header 영역 */
+.navbar {
+    background-color: #010535;
+    height: 87px;
+}
+
+#logo img {
+    width: 138px;
+    height: 41px;
+}
+
+.btn {
+    color: #ffffff;
+}
+
+/* sidebar 영역 */
+.sidebar {
+    height: 100vh;
+    width: 250px;
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: #EFEFF1;
+    padding-top: 30px;
+    transition: all 0.3s ease;
+    overflow-y: auto; /* 스크롤을 추가하여 내용이 넘치면 스크롤이 생기도록 */
+    border-right: 1px solid #7D7F84;
+    box-sizing: border-box;
+}
+
+/* 사용자 프로필 */
+.sidebar .profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar .profile img {
+    width: 96px;
+    height: 128px;
+    border-radius: 5%;
+}
+
+.sidebar .profile h4 {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+/* 사이드바 메뉴 버튼 */
+.sidebar .btn {
+    font-size: 15px;
+    color: #303249;
+    background-color: #d9d9d9;
+    border: none;
+    padding: 10px 15px;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s;
+    text-decoration: none;
+}
+
+.sidebar .btn .img-menuicon{
+    width: 20px;
+    height: 20px;
+}
+
+.sidebar .btn:hover {
+    background-color: #e9ecef;
+    color: #303249;
+}
+
+/* 드롭다운 메뉴 */
+.sidebar .nav-item {
+    margin: 5px 0;
+}
+
+.sidebar .collapse {
+    margin-left: 20px;
+}
+
+.sidebar .list-unstyled a {
+    font-size: 14px;
+    color: #303249;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    text-decoration: none;
+}
+
+.sidebar .list-unstyled a:hover {
+    color: #696B7A;
+}
+
+/* 드롭다운 메뉴가 열렸을 때 다른 메뉴가 겹치지 않도록 position 설정 */
+.sidebar .collapse {
+    position: relative;
+}
+
+/* 아이템 내에서 오른쪽으로 아이콘을 밀기 위한 스타일 */
+.ml-auto {
+    margin-left: auto;
+}
+
+.img-pin {
+    margin-right: 10px;
+}
+
+/* 반응형 사이드바 */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 150px;
+    }
+
+    .sidebar .profile img {
+        width: 72px;
+        height: 96px;
+    }
+
+    .sidebar .profile h4 {
+        font-size: 14px;
+    }
+}
+
+/* 모바일 화면에서 사이드바 숨기기 */
+@media (max-width: 576px) {
+    .sidebar {
+        display: none;
+    }
+
+    .sidebar.show {
+        display: block;
+    }
+}
+
+/* content 영역 */
+.content {
+    width: 100%; /* 남은 공간을 차지 */
+    background-color: #EFEFF1;
+}
