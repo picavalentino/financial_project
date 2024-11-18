@@ -1,4 +1,4 @@
-package com.team.financial_project.dto;
+package com.team.financial_project.login.dto;
 
 import lombok.Data;
 
