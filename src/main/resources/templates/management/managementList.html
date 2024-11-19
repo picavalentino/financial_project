@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
   <meta charset="UTF-8">
   <title>GS Bank</title>
@@ -17,10 +17,9 @@
   <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>
 
   <!-- content 영역 -->
-  <div layout:fragment="content" class="content">
+  <div class="content">
     <!-- 실제 콘텐츠가 이 부분에 들어갑니다 -->
     <div class="container mt-5">
-      <link rel="stylesheet" th:href="@{/css/managementList.css}">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -42,7 +41,7 @@
             <option value="5">영업3부</option>
           </select>
           <select class="form-select me-2" style="width: 150px;">
-            <option selected>직무</option>
+            <option selected>직위</option>
             <option value="1">회장</option>
             <option value="2">사장</option>
             <option value="3">부사장</option>
@@ -72,22 +71,23 @@
         <thead>
         <tr>
           <th scope="col">부서</th>
-          <th scope="col">직무</th>
+          <th scope="col">직위</th>
           <th scope="col">이름</th>
           <th scope="col">이메일</th>
           <th scope="col">전화번호</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>Bold text column</td>
-          <td>Regular text column</td>
-          <td>Regular text column</td>
-          <td>Regular text column</td>
-          <td>Regular text column</td>
+        <tr th:each="management : ${managementList}">
+          <td th:text="${management.dept_name}">부서</td>
+          <td th:text="${management.position_name}">직위</td>
+          <td th:text="${management.user_name}">이름</td>
+          <td th:text="${management.user_email}">이메일</td>
+          <td th:text="${management.user_telno}">전화번호</td>
         </tr>
-
-        <!-- 반복적인 직원 정보 행들 추가 -->
+        <tr th:if="${managementList == null or #lists.isEmpty(managementList)}">
+          <td colspan="5">데이터가 없습니다.</td>
+        </tr>
         </tbody>
       </table>
 
@@ -101,7 +101,7 @@
           <li th:each="pageNumber : ${paginationBarNumbers}" th:classappend="${pageNumber == currentPageNumber} ? 'active' : ''" class="page-item">
             <a class="page-link" th:href="@{/management/list(page=${pageNumber})}" th:text="${pageNumber}">1</a>
           </li>
-          <li th:classappend="${currentPageNumber == paginationBarNumbers.size()} ? 'disabled' : ''" class="page-item">
+          <li th:classappend="${currentPageNumber == totalPageNumber} ? 'disabled' : ''" class="page-item">
             <a class="page-link" th:href="@{/management/list(page=${currentPageNumber + 1})}" aria-label="Next">
               &gt;
             </a>
@@ -109,20 +109,13 @@
         </ul>
       </nav>
 
-
       <div class="mt-2 text-end">
-        1-05 of 18 items
+        <span th:text="'1-' + pageSize + ' of ' + totalDataCount + ' items'"></span>
       </div>
     </div>
 
   </div>
 </div>
-
-<!--    &lt;!&ndash; 사이드바 넣기 &ndash;&gt;-->
-<!--    <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>-->
-
-<!--    &lt;!&ndash; content 영역 &ndash;&gt;-->
-<!--    <th:block layout:fragment="content"></th:block>-->
 
 </body>
 </html>

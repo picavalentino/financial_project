@@ -11,7 +11,7 @@ spring:
     username: codechef
     password: codechef1234
 
-  mybatis:
+mybatis:
     mapper-locations: classpath:mapper/*.xml
     type-aliases-package: classpath:/mybatis-config.xml
     configuration:
