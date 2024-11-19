@@ -1,0 +1,33 @@
+.sub_content {
+    margin: 20px;
+}
+.title{
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+.box_wrap{
+    display: flex;
+    flex-direction: row;
+    width: 100%
+}
+.produce{
+    margin-bottom: 20px;
+}
+.product-info{
+    position: left;
+    background-color: white;
+    border-radius: 15px;
+    margin-right: 20px;
+    padding: 10px;
+    width: 800px;
+}
+.air-info{
+    position: right;
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    width: 500px;
+}
+.inp_wrap{
+
+}
