@@ -1,21 +1,3 @@
-#MySql ?? ??
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/financial
-    username: root
-    password: 1111
-  sql:
-    init:
-      mode: always
-      # mode: never
-      # always: ??, embedded: ?? DB?, never: ?? ?? ??
-  jpa:
-    defer-datasource-initialization: true
-    hibernate:
-      ddl-auto: create
-      # ddl-auto: validate
-    properties:
-      hibrenate:
-        show_sql: true
-        format_sql: true
+  profiles:
+    active: dev
