@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>GS Bank</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <script th:src="@{/js/jQuery.js}"></script>
+</head>
+<body>
+<!-- header 넣기 -->
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+
+<div class="d-flex" style="height: 100vh;">
+  <!-- 사이드바 넣기 -->
+  <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>
+
+  <!-- content 영역 -->
+  <div layout:fragment="content" class="content">
+    <!-- 실제 콘텐츠가 이 부분에 들어갑니다 -->
+    <div class="container mt-5">
+      <link rel="stylesheet" th:href="@{/css/employees.css}">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item">직원관리</li>
+          <li class="breadcrumb-item active" aria-current="page">직원정보관리</li>
+        </ol>
+      </nav>
+
+      <h2 class="mb-4">직원정보관리</h2>
+
+      <div class="mb-3 d-flex justify-content-between">
+        <div class="d-flex">
+          <select class="form-select me-2" style="width: 150px;">
+            <option selected>부서</option>
+            <option value="1">임원실</option>
+            <option value="2">인사팀</option>
+            <option value="3">영업1부</option>
+            <option value="4">영업2부</option>
+            <option value="5">영업3부</option>
+          </select>
+          <select class="form-select me-2" style="width: 150px;">
+            <option selected>직무</option>
+            <option value="1">회장</option>
+            <option value="2">사장</option>
+            <option value="3">부사장</option>
+            <option value="4">전무이사</option>
+            <option value="5">상무이사</option>
+            <option value="6">이사</option>
+            <option value="7">부장</option>
+            <option value="8">차장</option>
+            <option value="9">과장</option>
+            <option value="10">대리</option>
+            <option value="11">주임</option>
+            <option value="12">계장</option>
+            <option value="13">사원</option>
+          </select>
+          <select class="form-select me-2" style="width: 150px;">
+            <option selected>상태</option>
+            <option value="1">Active</option>
+            <option value="2">Inactive</option>
+          </select>
+          <select class="form-select me-2" style="width: 150px;">
+            <option selected>검색</option>
+            <option value="user_name">이름</option>
+            <option value="user_auth_cd">권한</option>
+          </select>
+          <input type="text" class="form-control me-2" style="width: 200px;" placeholder="검색어 입력">
+          <button class="btn btn-primary">검색</button>
+        </div>
+      </div>
+
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">사업번호</th>
+          <th scope="col">부서</th>
+          <th scope="col">직무</th>
+          <th scope="col">이름</th>
+          <th scope="col">권한</th>
+          <th scope="col">활동 상태</th>
+          <th scope="col">수정</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><strong>Bold text column</strong></td>
+          <td>Bold text column</td>
+          <td>Regular text column</td>
+          <td>Regular text column</td>
+          <td>Regular text column</td>
+          <td><span class="status-active">● Active</span></td>
+          <td><button class="btn-update">수정</button></td>
+        </tr>
+        <!-- 반복적인 직원 정보 행들 추가 -->
+        </tbody>
+      </table>
+
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">&lt;</a>
+          </li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">4</a></li>
+          <li class="page-item"><a class="page-link" href="#">5</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">&gt;</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="mt-2 text-end">
+        1-05 of 18 items
+      </div>
+    </div>
+  </div>
+
+<!--    &lt;!&ndash; 사이드바 넣기 &ndash;&gt;-->
+<!--    <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>-->
+
+<!--    &lt;!&ndash; content 영역 &ndash;&gt;-->
+<!--    <th:block layout:fragment="content"></th:block>-->
+
+</body>
+</html>
