@@ -17,13 +17,153 @@
     <!-- 버튼 -->
     <button id="openModalBtn">상담 일지</button>
 
-    <!-- 모달 창 -->
+    <!-- 상담 목록 모달 창 -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeModalBtn">&times;</span>
-            <h2>고객님 상담 목록</h2>
-            <ul id="userList"></ul>  <!-- 사용자 목록 -->
-            <div id="pagination"></div> <!-- 페이지네이션 -->
+            <div class="d-flex justify-content-between">
+                <h2>### 고객님 상담 목록</h2>
+                <div>
+                    <button id="counselWriteBtn" class="btn btn-dark">상담작성</button>
+                    <span class="close" id="closeModalBtn" style="font-size: 40px; padding-right: 20px; padding-left: 70px;">&times;</span>
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">작성부서</th>
+                    <th scope="col">상담유형</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">수정일</th>
+                </tr>
+                </thead>
+                <tbody id="counselList">
+
+                <!-- 반복적인 직원 정보 행들 추가 -->
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">&lt;</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">&gt;</a>
+                    </li>
+                </ul>
+            </nav>
+<!--            <div id="pagination"></div> &lt;!&ndash; 페이지네이션 &ndash;&gt;-->
+        </div>
+    </div>
+
+    <!-- 상담 상세 모달 창 -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <form>
+                <div class="d-flex justify-content-between">
+                    <h2>### 고객님 상담상세</h2>
+                    <div>
+                        <span class="close" id="closeDetailModalBtn" style="font-size: 40px; padding-right: 20px; padding-left: 70px;">&times;</span>
+                    </div>
+                </div>
+
+                <div class="form-group row" style="margin: 10px;">
+                    <label class="col-sm-1 col-form-label">작성자</label>
+                    <div class="col-sm-3">
+                        <input type="text" readonly class="form-control-plaintext" value="김사람">
+                    </div>
+
+                    <label class="col-sm-1 col-form-label text-right">작성부서</label>
+                    <div class="col-sm-3">
+                        <input type="text" readonly class="form-control-plaintext" value="영업부">
+                    </div>
+
+                    <label class="col-sm-1 col-form-label text-right">작성일</label>
+                    <div class="col-sm-3">
+                        <input type="text" readonly class="form-control-plaintext" value="2024-04-02">
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group row" style="margin: 10px;">
+                    <label class="col-sm-1 col-form-label text-right">상담유형</label>
+                    <div class="col-sm-3">
+                        <input type="text" readonly class="form-control-plaintext" value="기타">
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group row" style="margin: 10px;">
+                    <label class="col-sm-1 col-form-label text-right">상담내용</label>
+                    <div class="col-sm-10">
+                        <textarea readonly class="form-control-plaintext" rows="10">안녕하세요 고객님, 사랑과 정성을 다하는 GS은행입니다. 무엇을 도와드릴까요? 네네 대출 상품을 문의하신다고요? 어떤 대출 상품을 문의하시는 걸까요? 담보대출인지요? 신용대출인지요? 주택담보대출은 LTV와 DSR 규제에 따라서 금액이 달라집니다.  LTV는 70%가 적용되고 DSR은 40% 가 적용됩니다. 이율은 코픽스가 신규취급액 기준 전달보다 소폭 하향되어서 변동금리에 반영 될 예정이라 실제 부담하실 이율은 변동금리 기준 4%내외가 되실 것 같습니다만 정확한 금리는 대출이 실행될때 안내 드릴 수 있습니다.</textarea>
+                    </div>
+                </div>
+            </form>
+            <button id="backBtn" class="btn btn-dark" style="width: 126px; margin-bottom: 20px; margin-left: 20px;">뒤로가기</button>
+        </div>
+    </div>
+
+    <!-- 상담 작성 모달 창 -->
+    <div id="writeModal" class="modal">
+        <div class="modal-content">
+            <form>
+                <div class="d-flex justify-content-between">
+                    <h2>### 고객님 상담작성</h2>
+                    <div>
+                        <span class="close" id="closeWriteModalBtn" style="font-size: 40px; padding-right: 20px; padding-left: 70px;">&times;</span>
+                    </div>
+                </div>
+
+                <div class="form-group row" style="margin: 10px;">
+                    <label class="col-sm-1 col-form-label">작성자</label>
+                    <div class="col-sm-5">
+                        <input type="text" readonly class="form-control-plaintext" value="김사람">
+                    </div>
+
+                    <label class="col-sm-1 col-form-label text-right">작성부서</label>
+                    <div class="col-sm-3">
+                        <input type="text" readonly class="form-control-plaintext" value="영업부">
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group row" style="margin: 10px;">
+                    <label class="col-sm-1 col-form-label text-right">상담유형</label>
+                    <div class="col-sm-3">
+                        <select class="form-select me-2" style="width: 150px;">
+                            <option selected>선택</option>
+                            <option value="savings">적금</option>
+                            <option value="credit">예금</option>
+                            <option value="lump_sum_savings">목돈적금</option>
+                            <option value="loan">대출</option>
+                            <option value="etc">기타</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group row" style="margin: 10px;">
+                    <label class="col-sm-1 col-form-label text-right">상담내용</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control-plaintext" rows="10" style="border: 1px solid lightgray;border-radius: 10px;resize: none;"></textarea>
+                    </div>
+                </div>
+
+                <div id="writeBtn" style="text-align: end;margin-right: 20px;">
+                    <button class="btn btn-dark" style="width: 126px; margin-bottom: 20px;">작성</button>
+                </div>
+            </form>
         </div>
     </div>
 
