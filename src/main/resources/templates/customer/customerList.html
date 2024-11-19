@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+<head>
+    <meta charset="UTF-8">
+    <title>GS Bank</title>
+    <!-- 전체 적용될 CSS -->
+    <th:block layout:fragment="css"></th:block>
+    <!-- 전체 적용될 스크립트 -->
+    <th:block layout:fragment="script"></th:block>
+    <!-- 페이지별 고객 조회 CSS -->
+    <link rel="stylesheet" th:href="@{/css/customerList.css}">
+</head>
+<body>
+<div layout:fragment="content" class="content">
+    <div class="main-content">
+        <section class="location">
+        <div class="breadcrumb">
+            <span class="icon">🏠</span>
+            <a href="/main">Home</a> &gt;
+            <a href="/customer/list">고객관리</a> &gt;
+            <span>고객조회</span>
+        </div>
+        <h2>고객조회</h2>
+        </section>
+        <!--       ======================================================================================================         -->
+        <section class="customer-query">
+               <div class="actions">
+                <!-- 왼쪽 버튼 그룹 -->
+                <div class="left-actions">
+                    <button class="print-button">
+                        <span class="icon">🖨️</span> 인쇄
+                    </button>
+                    <button class="message-button">
+                        <span class="icon">✉️</span> 메시지 발송
+                    </button>
+                </div>
+                <!-- 오른쪽 버튼 그룹 -->
+                <div class="right-actions">
+                    <div class="search">
+                        <select>
+                            <option>검색</option>
+                            <option>고객명</option>
+                            <option>이메일</option>
+                            <option>담당자</option>
+                            <option>활동 상태</option>
+                        </select>
+                        <input type="text" placeholder="검색어를 입력하세요">
+                        <button class="search-button">
+                            <span class="icon">🔍</span> 검색
+                        </button>
+                    </div>
+                    <button class="register-button">
+                        <span class="icon">➕</span> 등록
+                    </button>
+                </div>
+            </div>
+            <!--       ======================================================================================================         -->
+            <table>
+                <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox">
+                    </th>
+                    <th>번호</th>
+                    <th>고객명</th>
+                    <th>생년월일</th>
+                    <th>전화번호</th>
+                    <th>Email</th>
+                    <th>담당자</th>
+                    <th>활동 상태</th>
+                    <th>등록일</th>
+                </tr>
+                </thead>
+                <!--       ======================================================================================================         -->
+                <tbody>
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>001</td>
+                    <td>
+                        <a href="#">김하은</a>
+                    </td>
+                    <td>19940926</td>
+                    <td>010-1111-1111</td>
+                    <td>aaa@naver.com</td>
+                    <td>김사원</td>
+                    <td><span class="status active">Active</span></td>
+                    <td>2024-11-18</td>
+                </tr>
+                </tbody>
+            </table>
+            <!--       ======================================================================================================         -->
+            <div class="pagination-container">
+                <div class="pagination">
+                    <button class="prev">&lt;</button>
+                    <a href="#">1</a>
+                    <a href="#" class="active">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <button class="next">&gt;</button>
+                </div>
+                <span class="pagination-info">1-05 of 18 items</span>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>
