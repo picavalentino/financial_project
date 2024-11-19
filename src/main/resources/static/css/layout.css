@@ -22,10 +22,92 @@ body, input::placeholder {
     align-items: stretch; /* 자식 요소를 동일 높이로 맞춤 */
 }
 
+.side-content{
+    height: auto;
+}
+
+/*토글 테스트*/
+/* 토글 버튼 스타일 */
+.navbar-toggler {
+    position: absolute;
+    top: 25px;
+    right: 10px;
+    background-color: transparent; /* 배경색 제거 */
+    border: 1px solid #ddd;
+    z-index: 1060; /* 다른 요소 위에 표시 */
+    border-radius: 3px;
+}
+
+.navbar-toggler-icon {
+    width: 24px; /* 아이콘 크기 */
+    height: 24px; /* 아이콘 크기 */
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; /* 반복 제거 */
+    background-size: contain; /* 아이콘 크기 조정 */
+}
+
+/* 위에서 내려오는 애니메이션 */
+.collapse-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    z-index: 1050;
+    transition: height 0.3s ease-out;
+    background-color: #010535;
+}
+
+.collapse-top.show {
+    height: auto;
+    background-color: #010535;
+}
+
+/* 토글 드랍 스타일 */
+.sidebar-toggle {
+    background-color: #010535;
+    padding: 1rem;
+    border: none;
+}
+
+.sidebar-toggle .btn {
+    font-size: 14px;
+    color: #E5E7FF;
+    border: none;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+.sidebar-toggle .btn:hover {
+    background-color: #E5E7FF;
+    color: #212529;
+}
+
+.sidebar-toggle .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 11px;
+    border-radius: 5px;
+}
+
+.sidebar-toggle .nav-link:hover {
+    background-color: #e9ecef;
+    color: #212529;
+}
+
+.sidebar-toggle .collapse {
+    margin-left: 25px;
+}
+
+
 /* header 영역 */
 .navbar {
     background-color: #010535;
-    height: 87px;
+    height: 80px;
 }
 
 #logo img {
@@ -35,6 +117,10 @@ body, input::placeholder {
 
 .btn {
     color: #ffffff;
+}
+
+.bookmark{
+    background-color: #ffffff;
 }
 
 /* sidebar 영역 */
@@ -131,31 +217,21 @@ body, input::placeholder {
 }
 
 /* 반응형 사이드바 */
+/* 작은 화면에서는 사이드바 숨기기 */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 150px;
-    }
-
-    .sidebar .profile img {
-        width: 72px;
-        height: 96px;
-    }
-
-    .sidebar .profile h4 {
-        font-size: 14px;
-    }
-}
-
-/* 모바일 화면에서 사이드바 숨기기 */
-@media (max-width: 576px) {
     .sidebar {
         display: none;
     }
 
-    .sidebar.show {
+    .collapse #sidebarMenu {
         display: block;
     }
+
+    .log{
+        margin-right: 50px;
+    }
 }
+
 
 /* content 영역 */
 .content {

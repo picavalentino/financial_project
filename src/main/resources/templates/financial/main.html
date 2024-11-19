@@ -89,8 +89,10 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="news-item">
-                                            <img src="/images/main/news1.webp" alt="News 1" class="news-img">
-                                            <p class="news-title">뉴스제목입니다! 이 상황을 어떻게 생각하십니까?</p>
+                                            <a href="#">
+                                                <img src="/images/main/news1.webp" alt="News 1" class="news-img">
+                                                <p class="news-title">뉴스제목입니다! 이 상황을 어떻게 생각하십니까?</p>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -110,7 +112,6 @@
                         </div>
                     </div>
 
-
                     <!-- 주요 지수 -->
                     <div class="col-lg-12">
                         <div class="card">
@@ -118,26 +119,39 @@
                             <div class="card-body text-center">
                                 <div class="row">
                                     <div class="col-md-4 excharge-rate">
-                                        <div class="america">
+                                        <div class="america rate-box">
                                             <img src="/images/main/미국국기.png" class="img-flag">
+                                            <div class="rate-info">
+                                                <span class="excharge-num">1,407.30</span>
+                                                <span class="excharge-success">▲0.30</span>
+                                                <span class="excharge-success">+0.02%</span>
+                                            </div>
                                         </div>
-                                        <div class="japan">
+                                        <div class="japan rate-box">
                                             <img src="/images/main/일본국기.png" class="img-flag">
+                                            <div class="rate-info">
+                                                <span class="excharge-num">901.57</span>
+                                                <span class="excharge-danger">▼3.57</span>
+                                                <span class="excharge-danger">-0.39%</span>
+                                            </div>
                                         </div>
-                                        <div class="euro">
+                                        <div class="euro rate-box">
                                             <img src="/images/main/유럽연합국기.png" class="img-flag">
+                                            <div class="rate-info">
+                                                <span class="excharge-num">1,483.79</span>
+                                                <span class="excharge-danger">▼2.42</span>
+                                                <span class="excharge-danger">-0.16%</span>
+                                            </div>
                                         </div>
-                                        <div class="ex-text">환율</div>
+                                        <div class="score-text">환율</div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <h5 class="card-title">2,422.56</h5>
-                                        <p class="card-text text-success">+0.31%</p>
-                                        <p>코스피</p>
+                                    <div class="col-md-4 kospi">
+                                        <div class="stock-box"></div>
+                                        <div class="score-text">코스피</div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <h5 class="card-title">1,483.79</h5>
-                                        <p class="card-text text-danger">-0.16%</p>
-                                        <p>코스닥</p>
+                                    <div class="col-md-4 kosdaq">
+                                        <div class="stock-box"></div>
+                                        <div class="score-text">코스닥</div>
                                     </div>
                                 </div>
                             </div>
@@ -150,18 +164,18 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header text-primary">분석</div>
-                    <div class="card-body text-center">
+                    <div class="card-body text-center analyze-card">
                         <div>
-                            <div class="circle mb-4"></div>
-                            고객 성별 분포
+                            <canvas id="salesChart" class="sales-chart"></canvas>
+                            <div class="score-text">매출 분석</div>
                         </div>
                         <div>
-                            <div class="circle"></div>
-                            고객 연령 분포
+                            <canvas id="genderChart" class="gender-chart"></canvas>
+                            <div class="score-text">고객 성별 분포</div>
                         </div>
                         <div>
-                            <div class="circle"></div>
-                            매출 분석
+                            <canvas id="ageChart" class="age-chart"></canvas>
+                            <div class="score-text">고객 연령 분포</div>
                         </div>
                     </div>
                 </div>
@@ -169,7 +183,79 @@
         </div>
     </section>
 
+    <!-- Chart.js를 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 사용자 정의 스크립트 -->
+    <script>
+        // 성별 분포 차트
+        const genderCtx = document.getElementById('genderChart').getContext('2d');
+        new Chart(genderCtx, {
+            type: 'pie',
+            data: {
+                labels: ['남성', '여성'],
+                datasets: [{
+                    label: '성별 분포',
+                    data: [60, 40],
+                    backgroundColor: ['#007bff', '#ff6384'],
+                    hoverOffset: 4
+                }]
+            }
+        });
+
+        // 연령 분포 차트
+        const ageCtx = document.getElementById('ageChart').getContext('2d');
+        new Chart(ageCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['10대', '20대', '30대', '40대', '50대 이상'],
+                datasets: [{
+                    label: '연령 분포',
+                    data: [10, 30, 25, 20, 15],
+                    backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top', // 범례를 차트 상단에 표시
+                        align: 'center', // 범례를 가운데 정렬 (좌우로 일렬 정렬)
+                        labels: {
+                            padding: 15,    // 범례 항목 간 간격
+                            boxWidth: 20,   // 색상 박스 너비
+                            boxHeight: 10   // 색상 박스 높이
+                        }
+                    }
+                }
+            }
+        });
+
+        // 매출 분석 차트
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        new Chart(salesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1월', '2월', '3월', '4월', '5월'],
+                datasets: [{
+                    label: '매출 (단위: 만원)',
+                    data: [120, 150, 180, 200, 250],
+                    backgroundColor: '#4bc0c0'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+
 
 </div>
+
 </body>
 </html>

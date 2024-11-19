@@ -1,3 +1,21 @@
+/* 공통 카드 스타일 */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* 카드 헤더 스타일 */
+.card-header {
+    font-weight: bold;
+    font-size: 16px;
+    border-bottom: none;
+    background-color: #ffffff;
+    color: #232755 !important;
+    padding: 10px 15px;
+}
+
 /* 공지사항 카드 스타일 */
 .notice-card {
     border-radius: 10px;
@@ -114,32 +132,14 @@
     color: #232755 !important;
 }
 
-
-/* 공통 카드 스타일 */
-.card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-/* 카드 헤더 스타일 */
-.card-header {
-    font-weight: bold;
-    font-size: 16px;
-    border-bottom: none;
-    background-color: #ffffff;
-    color: #232755 !important;
-    padding: 10px 15px;
-}
-
 /* 뉴스 이미지 스타일 */
 .news-img {
-    height: 150px;
-    object-fit: cover;
     width: 100%;
+    aspect-ratio: 10 / 7;
+    object-fit: cover;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
 }
 
 /* 뉴스 항목 컨테이너 */
@@ -153,44 +153,106 @@
     font-size: 14px;
     margin-top: 10px;
     color: #232755;
-    font-weight: bold;
     text-align: center;
     line-height: 1.5;
 }
 
 /*주요 지수*/
+/*환율 코스피 코스닥 하단 공통 텍스트*/
+.score-text{
+    font-size: 14px;
+    margin-top: 10px;
+    color: #005382;
+    font-weight: bold;
+    text-align: center;
+}
+
+/*환율*/
+.rate-box {
+    display: flex;
+    align-items: center;
+    background-color: #010535; /* 어두운 배경색 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    padding: 10px 15px; /* 내부 여백 */
+    margin-bottom: 10px; /* 각 박스 사이 간격 */
+    color: #ffffff; /* 기본 글자 색상 */
+    flex-wrap: nowrap;
+}
+
+/*국기 이미지*/
 .img-flag{
     width: 30px;
     height: 30px;
+    margin-right: 15px;
 }
 
-.card-title {
-  font-size: 1.5rem;
-  font-weight: bold;
+/* 텍스트 컨테이너 */
+.rate-info {
+    display: flex; /* 플렉스 컨테이너 설정 */
+    flex-grow: 1; /* 남은 공간을 모두 차지 */
+    flex-wrap: wrap; /* 넘칠 때만 줄바꿈 */
+    align-items: center;
+    justify-content: space-evenly;
 }
 
-.card-text {
-  font-size: 1.2rem;
+/*환율 숫자*/
+.excharge-num {
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
 }
 
-.text-danger {
-  color: #dc3545;
+/*환율 상승*/
+.excharge-success {
+    color: #FF0000;
+    font-size: 0.75rem;
+    text-align: center;
 }
 
-.text-success {
-  color: #28a745;
+/*환율 하락*/
+.excharge-danger{
+    color: #B0DBF3;
+    font-size: 0.75rem;
+    text-align: center;
 }
 
+/*코스피 코스닥*/
+.stock-box{
+    border-radius: 8px; /* 모서리 둥글게 */
+    padding: 10px 15px; /* 내부 여백 */
+    width: 100%;
+    aspect-ratio: 10 / 7;
+    border: 2px solid #010535;
+}
 
-.circle {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 2px solid #007bff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
+/*분석 카드*/
+/* 분석 카드의 차트 간 간격 설정 */
+.analyze-card > div {
+  margin-bottom: 40px; /* 각 차트 섹션 간 간격 */
+}
+
+/* 마지막 차트 아래쪽 여백 제거 */
+.analyze-card > div:last-child {
+  margin-bottom: 0;
+}
+
+/*매출 그래프*/
+.sales-chart{
+    width: 100%; /* 100% 너비 */
+    height: 300px; /* 높이 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+/*성별 그래프*/
+.gender-chart {
+    width: 60%; /* 100% 너비 */
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+/*연령 그래프*/
+.age-chart {
+    width: 70%; /* 100% 너비 */
+    margin: 0 auto; /* 중앙 정렬 */
 }
 
 
