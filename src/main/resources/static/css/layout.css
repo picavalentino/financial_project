@@ -17,6 +17,11 @@ body, input::placeholder {
     user-select: none;
 }
 
+.d-flex {
+    display: flex;
+    align-items: stretch; /* 자식 요소를 동일 높이로 맞춤 */
+}
+
 /* header 영역 */
 .navbar {
     background-color: #010535;
@@ -34,7 +39,7 @@ body, input::placeholder {
 
 /* sidebar 영역 */
 .sidebar {
-    height: 100vh;
+    height: auto; /* 높이를 콘텐츠 크기에 따라 자동 조절 */
     width: 250px;
     position: relative;
     top: 0;
@@ -155,5 +160,10 @@ body, input::placeholder {
 /* content 영역 */
 .content {
     width: 100%; /* 남은 공간을 차지 */
+    min-height: 100vh; /* 콘텐츠 높이가 화면 높이보다 작으면 화면을 채움 */
+    height: auto;
+    padding: 20px; /* 기본 여백 */
     background-color: #EFEFF1;
+    overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 허용 */
+    box-sizing: border-box;
 }

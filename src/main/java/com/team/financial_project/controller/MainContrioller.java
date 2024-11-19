@@ -10,4 +10,10 @@ public class MainContrioller {
     public String test() {
         return "/financial/test";
     }
+
+    // test용
+    @GetMapping("/main")
+    public String main() {
+        return "/financial/main";
+    }
 }
