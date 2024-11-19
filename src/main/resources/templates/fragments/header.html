@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:sec="www.thymeleaf.org/extras/spring-security">
+
+<!-- header라는 이름으로 선언-->
+<div th:fragment="header">
+    <div class="navbar shadow-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-4" id="logo">
+                    <a th:href="@{/main}" class="navbar-brand d-flex align-items-center">
+                        <img src="/images/common/logo.png" alt="GS Bank Logo">
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">Login</a>
+                <span>
+                    <a th:href="@{/mypage}" class="btn">MyPage</a>
+                    <a th:href="@{/logout}" class="btn" sec:authorize="isAuthenticated()">Logout</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
