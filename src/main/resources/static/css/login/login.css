@@ -1,0 +1,145 @@
+@font-face {
+    font-family: "Pretendard";
+    src: url("../fonts/Pretendard-Medium.otf");
+}
+html{
+    height: 100%;
+}
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #ececec;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.left-logo {
+    width: 70%;
+    background-color: #010535;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px;
+    border-radius: 10px;
+}
+
+.left-logo img {
+    max-width: 100%;
+    height: auto;
+}
+
+.right{
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ecececa3;
+}
+
+.login{
+    width: 70%;
+    height: auto;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.input-container{
+    display: flex;
+    border-bottom: 2px solid #929292;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.employee-number-id, .password{
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 75%;
+}
+
+.input-icon{
+    width: 20px;
+    height: 20px;
+}
+
+.id-input,
+.password-input{
+    border: none;
+    width: 100%;
+}
+
+.id-input:focus,
+.password-input:focus{
+    outline: none;
+}
+
+.remember_id{
+    font-size: small;
+    color: #929292;
+    display: flex;
+    align-items: center;
+}
+
+.btn-login{
+    font-size: large;
+    padding: 10px 0px;
+    background-color: #71A4AD;
+    border-radius: 25px;
+    border: none;
+    width: 100%;
+    color: #ffffff;
+}
+
+.btns{
+    display: flex;
+    justify-content: space-between;
+}
+.btn-register,
+.btn-retrieve-id,
+.btn-retrieve-pw{
+    border: none;
+    background: none;
+    padding: 0;
+    color: #717171;
+    font-size: small;
+    padding: 0 10px;
+}
+.btn-register{
+    font-size: medium;
+}
+.btn-retrieve-id,
+.btn-retrieve-pw{
+    font-size: small;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+        width: 90%;
+    }
+
+    .left-logo {
+        padding: 20px;
+    }
+
+    .right-login {
+        padding: 20px;
+    }
+}
