@@ -18,7 +18,6 @@
 
   <!-- content 영역 -->
   <div layout:fragment="content" class="content">
-    <!-- 실제 콘텐츠가 이 부분에 들어갑니다 -->
     <div class="container mt-5">
       <link rel="stylesheet" th:href="@{/css/employees.css}">
       <nav aria-label="breadcrumb">
@@ -45,17 +44,7 @@
             <option selected>직무</option>
             <option value="1">회장</option>
             <option value="2">사장</option>
-            <option value="3">부사장</option>
-            <option value="4">전무이사</option>
-            <option value="5">상무이사</option>
-            <option value="6">이사</option>
-            <option value="7">부장</option>
-            <option value="8">차장</option>
-            <option value="9">과장</option>
-            <option value="10">대리</option>
-            <option value="11">주임</option>
-            <option value="12">계장</option>
-            <option value="13">사원</option>
+            <!-- 추가 직무 옵션들 -->
           </select>
           <select class="form-select me-2" style="width: 150px;">
             <option selected>상태</option>
@@ -92,7 +81,7 @@
           <td>Regular text column</td>
           <td>Regular text column</td>
           <td><span class="status-active">● Active</span></td>
-          <td><button class="btn-update">수정</button></td>
+          <td><button class="btn btn-warning" onclick="openEditModal()">수정</button></td>
         </tr>
         <!-- 반복적인 직원 정보 행들 추가 -->
         </tbody>
@@ -100,31 +89,113 @@
 
       <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-          <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1">&lt;</a>
+          <li th:classappend="${currentPageNumber == 1} ? 'disabled' : ''" class="page-item">
+            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber - 1})}" aria-label="Previous">
+              &lt;
+            </a>
           </li>
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">4</a></li>
-          <li class="page-item"><a class="page-link" href="#">5</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#">&gt;</a>
+          <li th:each="pageNumber : ${paginationBarNumbers}" th:classappend="${pageNumber == currentPageNumber} ? 'active' : ''" class="page-item">
+            <a class="page-link" th:href="@{/management/list(page=${pageNumber})}" th:text="${pageNumber}">1</a>
+          </li>
+          <li th:classappend="${currentPageNumber == paginationBarNumbers.size()} ? 'disabled' : ''" class="page-item">
+            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber + 1})}" aria-label="Next">
+              &gt;
+            </a>
           </li>
         </ul>
       </nav>
+
+      <!-- 직원 수정 모달 -->
+      <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editModalLabel">직원 수정</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- 직원 수정 폼 -->
+              <form th:action="@{/management/employees/edit}" method="post">
+                <!-- 수정 모달 폼 내용 (등록 폼과 동일하게 복사) -->
+                <div class="mb-3">
+                  <label for="employeeId" class="form-label">사원번호</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="employeeId" name="employeeId" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="employeeName" class="form-label">직원 이름</label>
+                  <input type="text" class="form-control" id="employeeName" name="employeeName" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="employeeName" class="form-label">생년 월일</label>
+                  <input type="text" class="form-control" id="user_birthday" name="user_birthday" readonly>
+                </div>
+                <div class="mb-3 d-flex justify-content-between">
+                  <div class="me-2">
+                    <label class="form-label">부서</label>
+                    <select class="form-select" style="width: 220px;">
+                      <option selected>부서</option>
+                      <option value="1">임원실</option>
+                      <option value="2">인사팀</option>
+                      <option value="3">영업1부</option>
+                      <option value="4">영업2부</option>
+                      <option value="5">영업3부</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label">직무</label>
+                    <select class="form-select" style="width: 220px;">
+                      <option selected>직무</option>
+                      <option value="1">회장</option>
+                      <option value="2">사장</option>
+                      <option value="3">부사장</option>
+                      <option value="4">전무이사</option>
+                      <option value="5">상무이사</option>
+                      <option value="6">이사</option>
+                      <option value="7">부장</option>
+                      <option value="8">차장</option>
+                      <option value="9">과장</option>
+                      <option value="10">대리</option>
+                      <option value="11">주임</option>
+                      <option value="12">계장</option>
+                      <option value="13">사원</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">권한</label>
+                  <select class="form-select me-2" style="width: 100%;">
+                    <option selected>권한</option>
+                    <option value="1">총관리자</option>
+                    <option value="2">중간관리자</option>
+                    <option value="3">인사팀</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="activityStatus" class="form-label">활동 상태</label>
+                  <select class="form-select" id="activityStatus" name="activityStatus" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                  <button type="submit" class="btn btn-primary">등록</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="mt-2 text-end">
         1-05 of 18 items
       </div>
     </div>
   </div>
+</div>
 
-<!--    &lt;!&ndash; 사이드바 넣기 &ndash;&gt;-->
-<!--    <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>-->
-
-<!--    &lt;!&ndash; content 영역 &ndash;&gt;-->
-<!--    <th:block layout:fragment="content"></th:block>-->
-
+<script th:src="@{/js/management/employeeInsertModal.js}"></script>
 </body>
 </html>

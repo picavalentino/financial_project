@@ -29,7 +29,22 @@ public class managementController {
     }
 
     @GetMapping("/employees")
-    public String managementEmployees() {
+    public String managementEmployees(Model model, @RequestParam(name = "page", defaultValue = "1") int page) {
+        int totalPageNumber = 10; // 실제 데이터에 맞춰 계산된 총 페이지 수
+        List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumber(page, totalPageNumber);
+
+        model.addAttribute("paginationBarNumbers", paginationBarNumbers);
+        model.addAttribute("currentPageNumber", page);
         return "/management/managementEmployees";
+    }
+
+    @GetMapping("/insert")
+    public String managementInsert(Model model, @RequestParam(name = "page", defaultValue = "1") int page) {
+        int totalPageNumber = 10; // 실제 데이터에 맞춰 계산된 총 페이지 수
+        List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumber(page, totalPageNumber);
+
+        model.addAttribute("paginationBarNumbers", paginationBarNumbers);
+        model.addAttribute("currentPageNumber", page);
+        return "/management/managementInsert";
     }
 }
