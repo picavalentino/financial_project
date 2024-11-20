@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>고객 이벤트 관리</title>
+  <link rel="stylesheet" th:href="@{/css/schedule/customer.css}">
+</head>
+<!-- 전체 적용될 CSS -->
+<th:block layout:fragment="css"></th:block>
+<!-- 전체 적용될 스크립트 -->
+<th:block layout:fragment="script"></th:block>
+
+<body>
+
+<div layout:fragment="content" class="content">
+  <div class="container1">
+    <div class="content1">
+    <h1>고객 이벤트 관리</h1>
+    <div class="calendar-container">
+
+      <div class="calendar-header">
+
+        <h2><a><button id="btn_left">&lt;</button></a>2024년 11월<a><button id="btn_right">&gt;</button></a>
+        </h2>
+
+      </div>
+
+
+      <table class="calendar-table">
+        <thead>
+        <tr>
+          <th id="sun">일</th>
+          <th>월</th>
+          <th>화</th>
+          <th>수</th>
+          <th>목</th>
+          <th>금</th>
+          <th id="sat">토</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>1<div class="event-bar">이고객님 생일</div>
+          </td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>4
+            <div class="event-bar">김고객님 생일</div>
+            <div class="event-bar">전고객님 생일</div>
+            <div class="event-bar">장고객님 생일</div>
+          </td>
+          <td>5</td>
+          <td>6</td>
+          <td>7 </td>
+          <td>8</td>
+          <td>9</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>11</td>
+          <td>12</td>
+          <td>13</td>
+          <td>14</td>
+          <td>15</td>
+          <td>16</td>
+        </tr>
+        <tr>
+          <td>17</td>
+          <td>18</td>
+          <td>19</td>
+          <td>20
+            <div class="event-bar multi-day">박고객 만기일</div>
+            <div class="event-bar multi-day">이고객 만기일</div>
+            <div class="event-bar multi-day">차고객 만기일</div>
+          </td>
+          <td>21</td>
+          <td>22</td>
+          <td>23</td>
+        </tr>
+        <tr>
+          <td>24</td>
+          <td>25</td>
+          <td>26</td>
+          <td>27</td>
+          <td>28</td>
+          <td>29</td>
+          <td>30</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="today_task">
+
+    <h3> <img th:src="@{/css/schedule/img/task_img.png}">
+      오늘의 할 일</h3>
+    <div class="today-tasks">
+      <label for="task1"><strong> &middot; 11:30</strong></label>
+      <div id="task_text">
+        <p> 나부자 고객님 예금 상담 </p><input type="checkbox" id="task1" checked>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+</div>
+</body>
+
+</html>

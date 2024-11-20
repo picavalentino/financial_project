@@ -10,4 +10,5 @@ public class MainContrioller {
     public String test() {
         return "/financial/test";
     }
+
 }

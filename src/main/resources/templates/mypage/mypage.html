@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지</title>
+  <link rel="stylesheet" th:href="@{/css/mypage/mypage.css}">
+</head>
+
+<body>
+<div layout:fragment="content" class="content">
+
+
+  <h1> 나의 정보</h1>
+  <div class="content1">
+
+    <div class="mypage_right">
+      <div id="myprofile_mid">
+        <img th:src="@{/css/mypage/img/mypage_default_profile.jpg}">
+        <label for="file" class="custom-file-upload">파일 선택</label>
+        <input type="file" id="file">
+        <button id="pw_edit"> 비밀번호 변경하기</button>
+      </div>
+      <div class="input_box">
+        <div id="myprofile_left">
+          <p>사원번호 <br> <input type="text" value="20020411002"></p>
+          <p>입사일 <br> <input type="text" value="2022.04.11"></p>
+          <p>부서 <br> <input type="text" value="개발"></p>
+          <p>직무 <br> <input type="text" value="대리"></p>
+        </div>
+        <div id="myprofile_right">
+          <p>이름 <br> <input type="text" value="홍길동"></p>
+          <div class="phone">
+            <p>휴대전화 <br> <input type="text" value="010" id="phone_input1"> - <input type="text"
+                                                                                    value="1234" id="phone_input2"> - <input type="text" value="1234" id="phone_input3">
+              <button>인증</button>
+            </p>
+            <h5 id="msg">인증이 완료 되었습니다</h5>
+          </div>
+
+          <p>E-Mail <br> <input type="text" value="gildong82@gsitm.co.kr"></p>
+
+          <div class="buttons">
+            <button>수정하기</button>
+            <button>등록하기</button>
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+    <div class="mypage_left">
+      <div class="mycustomer">
+        <div id="mycustomer_title">
+          <p> 나의 고객 정보 : </p>
+          <button type="text"> 더보기 </button>
+        </div>
+
+        <table id="mycustomer_table">
+          <thead>
+          <th>고객 이름</th>
+          <th>가입 상품</th>
+          <th>이메일</th>
+          </thead>
+          <tbody>
+          <td><a href="#">김고객</a></td>
+          <td>예금</td>
+          <td>gildong82@gsitm.co.kr</td>
+          </tbody>
+          <tbody>
+          <td><a href="#">김고객</a></td>
+          <td>예금</td>
+          <td>gildong82@gsitm.co.kr</td>
+          </tbody>
+          <tbody>
+          <td><a href="#">김고객</a></td>
+          <td>예금</td>
+          <td>gildong82@gsitm.co.kr</td>
+          </tbody>
+          <tbody>
+          <td><a href="#">김고객</a></td>
+          <td>예금</td>
+          <td>gildong82@gsitm.co.kr</td>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="myboard">
+        <div id="myboard_title">
+          <p> 내 작성글 : </p>
+          <button type="text"> 더보기 </button>
+        </div>
+
+        <table id="myboard_table">
+          <thead>
+          <th>제목</th>
+          <th>사원번호</th>
+          <th>작성일</th>
+          </thead>
+          <tbody>
+          <td><a href="#">예금 금리 변경사항</a></td>
+          <td>20220411002</td>
+          <td>2024.11.18</td>
+          </tbody>
+          <tbody>
+          <td><a href="#">예금 금리 변경사항</a></td>
+          <td>20220411002</td>
+          <td>2024.11.18</td>
+          </tbody>
+          <tbody>
+          <td><a href="#">예금 금리 변경사항</a></td>
+          <td>20220411002</td>
+          <td>2024.11.18</td>
+          </tbody>
+          <tbody>
+          <td><a href="#">예금 금리 변경사항</a></td>
+          <td>20220411002</td>
+          <td>2024.11.18</td>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모달 창-->
+  <div id="pwModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>비밀번호 변경하기</h2>
+      <form>
+        <label for="newPassword">변경 비밀번호</label>
+        <div style="position: relative;">
+          <input type="password" id="newPassword" placeholder="비밀번호를 입력해주세요.">
+          <button type="button" id="togglePassword"
+                  style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+            <img th:src="@{/images/common/icon-eye.png}" id="eyeIcon" alt="눈 아이콘" >
+          </button>
+        </div>
+
+        <label for="confirmPassword">비밀번호 확인</label>
+        <input type="password" id="confirmPassword" placeholder="비밀번호를 입력해주세요.">
+        <button type="submit" class="modal-button">변경</button>
+      </form>
+    </div>
+  </div>
+  <script th:inline="javascript">
+    $(document).ready(function () {
+        console.log("jQuery가 준비되었습니다.");
+
+        // 모달 관련 요소 가져오기
+        const $modal = $('#pwModal');
+        const $btn = $('#pw_edit');
+        const $closeBtn = $('.close');
+
+        // 버튼 클릭 시 모달 열기
+        $btn.on("click", function () {
+               $modal.fadeIn();
+        });
+
+        // 닫기 버튼 클릭 시 모달 닫기
+        $closeBtn.on("click", function () {
+              $modal.fadeOut();
+        });
+
+        // 모달 외부 클릭 시 닫기
+        $(window).on("click", function (event) {
+            if ($(event.target).is($modal)) {
+                 $modal.fadeOut();
+
+            }
+
+        });
+        // 비밀번호 표시/숨기기 버튼 관련
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("newPassword");
+        const eyeIcon = document.getElementById("eyeIcon");
+
+        togglePassword.addEventListener("click", () => {
+            const isPasswordVisible = passwordInput.type === "text";
+            passwordInput.type = isPasswordVisible ? "password" : "text";
+            eyeIcon.src = isPasswordVisible ? "/images/common/icon-eye.png" : "/images/common/icon-hide.png";
+        });
+    });
+  </script>
+
+</div>
+
+
+
+
+</body>
+
+
+
+</html>
