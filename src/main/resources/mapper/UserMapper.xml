@@ -2,6 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.financial_project.mapper.UserMapper">
+<!--셀렉트 박스에서 쓸 부서이름 가져오는 구문-->
+    <select id="selectDepartmentList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        code_no AS user_dept_cd,  -- 부서 코드 (코드 번호)
+        code_nm AS dept_name       -- 부서명
+        FROM
+        tb_code
+        WHERE
+        code_cl LIKE '200'  -- 200번대의 코드 클러스터 필터링 (200번대가 부서 코드임)
+        ORDER BY
+        code_no ASC  -- 코드 번호 순으로 정렬
+    </select>
+
+
+    <select id="selectJopPositionList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        code_no AS user_jbps_ty_cd, -- 직위 코드 (코드 번호)
+        code_nm AS position_name    -- 직위명
+        FROM
+        tb_code
+        WHERE
+        code_cl LIKE '201'    -- 201번대가 직위 코드임
+        ORDER BY
+        code_no ASC  -- 코드 번호 순으로 정렬
+    </select>
+
+    <!-- 전체 직원 수 가져오기 (검색 조건 포함) -->
+    <select id="getTotalDataCount" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_user
+        WHERE 1=1
+        <if test="dept != null and dept != ''">
+            AND user_dept_cd = #{dept}
+        </if>
+        <if test="position != null and position != ''">
+            AND user_jbps_ty_cd = #{position}
+        </if>
+        <if test="searchField != null and searchField != '' and searchValue != null and searchValue != ''">
+            AND ${searchField} LIKE CONCAT('%', #{searchValue}, '%')
+        </if>
+    </select>
 
     <select id="selectManagementList" resultType="com.team.financial_project.dto.UserDTO">
         SELECT
@@ -14,16 +55,32 @@
         tb_user tu
         LEFT JOIN
         tb_code dept_cd
-        ON
-        tu.user_dept_cd_code_cl = dept_cd.code_cl
-        AND
-        tu.user_dept_cd = dept_cd.code_no
+        ON tu.user_dept_cd_code_cl = dept_cd.code_cl
+        AND tu.user_dept_cd = dept_cd.code_no
         LEFT JOIN
         tb_code jbps_cd
-        ON
-        tu.user_jbps_ty_cd_code_cl = jbps_cd.code_cl
-        AND
-        tu.user_jbps_ty_cd = jbps_cd.code_no
+        ON tu.user_jbps_ty_cd_code_cl = jbps_cd.code_cl
+        AND tu.user_jbps_ty_cd = jbps_cd.code_no
+        WHERE 1=1
+        <if test="dept != null and dept != ''">
+            AND tu.user_dept_cd = #{dept}
+        </if>
+        <if test="position != null and position != ''">
+            AND tu.user_jbps_ty_cd = #{position}
+        </if>
+        <if test="searchField != null and searchValue != null and searchValue != ''">
+            <choose>
+                <when test="searchField == 'user_name'">
+                    AND tu.user_name LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchField == 'user_email'">
+                    AND tu.user_email LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchField == 'user_telno'">
+                    AND tu.user_telno LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+            </choose>
+        </if>
         ORDER BY
         tu.user_dept_cd,  -- 1차 정렬: 부서 코드
         jbps_cd.code_no   -- 2차 정렬: 코드 번호 순으로 정렬
@@ -32,7 +89,38 @@
     </select>
 
 
-    <select id="getTotalDataCount" resultType="int">
-        SELECT COUNT(*) FROM tb_user
-    </select>
+
+
+    <!--    <select id="selectManagementList" resultType="com.team.financial_project.dto.UserDTO">-->
+<!--        SELECT-->
+<!--        dept_cd.code_nm AS dept_name,  &#45;&#45; 부서명-->
+<!--        jbps_cd.code_nm AS position_name,  &#45;&#45; 직위명-->
+<!--        tu.user_name,-->
+<!--        tu.user_email,-->
+<!--        tu.user_telno-->
+<!--        FROM-->
+<!--        tb_user tu-->
+<!--        LEFT JOIN-->
+<!--        tb_code dept_cd-->
+<!--        ON-->
+<!--        tu.user_dept_cd_code_cl = dept_cd.code_cl-->
+<!--        AND-->
+<!--        tu.user_dept_cd = dept_cd.code_no-->
+<!--        LEFT JOIN-->
+<!--        tb_code jbps_cd-->
+<!--        ON-->
+<!--        tu.user_jbps_ty_cd_code_cl = jbps_cd.code_cl-->
+<!--        AND-->
+<!--        tu.user_jbps_ty_cd = jbps_cd.code_no-->
+<!--        ORDER BY-->
+<!--        tu.user_dept_cd,  &#45;&#45; 1차 정렬: 부서 코드-->
+<!--        jbps_cd.code_no   &#45;&#45; 2차 정렬: 코드 번호 순으로 정렬-->
+<!--        LIMIT-->
+<!--        #{pageSize} OFFSET #{offset}-->
+<!--    </select>-->
+
+<!--    <select id="getTotalDataCount" resultType="int">-->
+<!--        SELECT COUNT(*) FROM tb_user-->
+<!--    </select>-->
+
 </mapper>

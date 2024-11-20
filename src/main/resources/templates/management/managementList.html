@@ -30,42 +30,33 @@
 
       <h2 class="mb-4">직원목록조회</h2>
 
-      <div class="mb-3 d-flex justify-content-between">
-        <div class="d-flex">
-          <select class="form-select me-2" style="width: 150px;">
-            <option selected>부서</option>
-            <option value="1">임원실</option>
-            <option value="2">인사팀</option>
-            <option value="3">영업1부</option>
-            <option value="4">영업2부</option>
-            <option value="5">영업3부</option>
-          </select>
-          <select class="form-select me-2" style="width: 150px;">
-            <option selected>직위</option>
-            <option value="1">회장</option>
-            <option value="2">사장</option>
-            <option value="3">부사장</option>
-            <option value="4">전무이사</option>
-            <option value="5">상무이사</option>
-            <option value="6">이사</option>
-            <option value="7">부장</option>
-            <option value="8">차장</option>
-            <option value="9">과장</option>
-            <option value="10">대리</option>
-            <option value="11">주임</option>
-            <option value="12">계장</option>
-            <option value="13">사원</option>
-          </select>
-          <select class="form-select me-2" style="width: 150px;">
-            <option selected>검색</option>
-            <option value="user_name">이름</option>
-            <option value="user_email">이메일</option>
-            <option value="user_telno">전화번호</option>
-          </select>
-          <input type="text" class="form-control me-2" style="width: 200px;" placeholder="검색어 입력">
-          <button class="btn btn-primary">검색</button>
-        </div>
-      </div>
+      <form th:action="@{/management/list}" method="get" id="searchForm" class="d-flex">
+        <select name="dept" class="form-select me-2" style="width: 150px;">
+          <option value="" selected>부서</option>
+          <th:block th:each="department : ${DepartmentList}">
+            <option th:value="${department.user_dept_cd}" th:text="${department.dept_name}" th:selected="${dept == department.user_dept_cd}"></option>
+          </th:block>
+        </select>
+
+        <select name="position" class="form-select me-2" style="width: 150px;">
+          <option value="" selected>직위</option>
+          <th:block th:each="JopPosition : ${JopPositionList}">
+            <option th:value="${JopPosition.user_jbps_ty_cd}" th:text="${JopPosition.position_name}" th:selected="${position == JopPosition.user_jbps_ty_cd}"></option>
+          </th:block>
+        </select>
+
+        <select name="searchField" class="form-select me-2" style="width: 150px;">
+          <option value="" selected>검색</option>
+          <option value="user_name" th:selected="${searchField == 'user_name'}">이름</option>
+          <option value="user_email" th:selected="${searchField == 'user_email'}">이메일</option>
+          <option value="user_telno" th:selected="${searchField == 'user_telno'}">전화번호</option>
+        </select>
+
+        <input type="text" name="searchValue" class="form-control me-2" style="width: 200px;" placeholder="검색어 입력" th:value="${searchValue}">
+        <button type="submit" class="btn btn-primary">검색</button>
+      </form>
+
+
 
       <table class="table table-hover">
         <thead>

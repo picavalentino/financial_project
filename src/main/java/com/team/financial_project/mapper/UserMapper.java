@@ -8,9 +8,18 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    List<UserDTO> selectManagementList(@Param("pageSize") int pageSize, @Param("offset") int offset);
+    // 부서 정보 가져오기
+    List<UserDTO> selectDepartmentList();
 
-    int getTotalDataCount();
+    // 직위 정보 가져오기
+    List<UserDTO> selectJopPositionList();
 
-//    List<UserDTO> selectAllManagementList();
+    // 전체 직원 수 가져오기 (검색 조건 포함)
+    int getTotalDataCount(@Param("dept") String dept, @Param("position") String position,
+                          @Param("searchField") String searchField, @Param("searchValue") String searchValue);
+
+    // 현재 페이지에 맞는 직원 목록 가져오기 (검색 조건 포함)
+    List<UserDTO> selectManagementList(@Param("offset") int offset, @Param("pageSize") int pageSize,
+                                    @Param("dept") String dept, @Param("position") String position,
+                                    @Param("searchField") String searchField, @Param("searchValue") String searchValue);
 }

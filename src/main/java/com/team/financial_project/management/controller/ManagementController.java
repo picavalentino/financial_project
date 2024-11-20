@@ -3,6 +3,7 @@ package com.team.financial_project.management.controller;
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.main.service.PaginationService;
 import com.team.financial_project.management.service.ManagementService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,9 +28,24 @@ public class ManagementController {
     }
 
     @GetMapping("/list")
-    public String managementList(Model model, @RequestParam(name = "page", defaultValue = "1") int page) {
-        // 총 페이지 수 계산 (예를 들어, 데이터베이스에 있는 전체 직원 수와 한 페이지당 보여줄 직원 수를 통해 계산)
-        int totalDataCount = managementService.getTotalDataCount();
+    public String managementList(
+            Model model,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "dept", required = false) String dept,
+            @RequestParam(name = "position", required = false) String position,
+            @RequestParam(name = "searchField", required = false) String searchField,
+            @RequestParam(name = "searchValue", required = false) String searchValue) {
+
+        // 셀렉트 박스에 쓸 부서 정보 가져오기
+        List<UserDTO> departmentList = managementService.getDepartmentList();
+        model.addAttribute("DepartmentList", departmentList);
+
+        // 셀렉트 박스에 쓸 직위 정보 가져오기
+        List<UserDTO> jobPositionList = managementService.getJopPositionList();
+        model.addAttribute("JopPositionList", jobPositionList);
+
+        // 총 데이터 수 계산 (검색 조건 포함)
+        int totalDataCount = managementService.getTotalDataCount(dept, position, searchField, searchValue);
         int pageSize = 10; // 한 페이지에 보여줄 데이터 수
         int totalPageNumber = (int) Math.ceil((double) totalDataCount / pageSize);
 
@@ -38,18 +54,23 @@ public class ManagementController {
         model.addAttribute("paginationBarNumbers", paginationBarNumbers);
         model.addAttribute("currentPageNumber", page);
 
-        // 현재 페이지에 맞는 직원 목록 가져오기
-        List<UserDTO> managementList = managementService.getManagementList(page, pageSize);
-        if (managementList == null || managementList.isEmpty()) {
-            model.addAttribute("managementList", Collections.emptyList());
-        } else {
-            model.addAttribute("managementList", managementList);
-        }
+        // 현재 페이지에 맞는 직원 목록 가져오기 (검색 조건 포함)
+        List<UserDTO> managementList = managementService.getManagementList(page, pageSize, dept, position, searchField, searchValue);
+        model.addAttribute("managementList", managementList.isEmpty() ? Collections.emptyList() : managementList);
+
+        // 페이지 정보 추가
+        model.addAttribute("totalPageNumber", totalPageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalDataCount", totalDataCount);
+
+        // 검색 조건 모델에 추가
+        model.addAttribute("dept", dept);
+        model.addAttribute("position", position);
+        model.addAttribute("searchField", searchField);
+        model.addAttribute("searchValue", searchValue);
 
         return "management/managementList";
     }
-
-
 
 
     @GetMapping("/employees")

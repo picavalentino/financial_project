@@ -16,22 +16,28 @@ public class ManagementService {
         this.userMapper = userMapper;
     }
 
-    public List<UserDTO> getManagementList(int page, int pageSize) {
+    // 전체 직원 수 가져오기 (검색 조건 포함)
+    public int getTotalDataCount(String dept, String position, String searchField, String searchValue) {
+        return userMapper.getTotalDataCount(dept, position, searchField, searchValue);
+    }
+
+    // 현재 페이지에 맞는 직원 목록 가져오기 (검색 조건 포함)
+    public List<UserDTO> getManagementList(int page, int pageSize, String dept, String position, String searchField, String searchValue) {
         int offset = (page - 1) * pageSize;
-        List<UserDTO> managementList = userMapper.selectManagementList(pageSize, offset);
-        System.out.println("Management List: " + managementList);
-        return managementList;
+        String validatedSearchField = null;
+        if ("user_name".equals(searchField) || "user_email".equals(searchField) || "user_telno".equals(searchField)) {
+            validatedSearchField = searchField;
+        }
+        System.out.println("검색 조건: dept=" + dept + ", position=" + position + ", searchField=" + searchField + ", searchValue=" + searchValue);
+        return userMapper.selectManagementList(offset, pageSize, dept, position, validatedSearchField, searchValue);
     }
 
 
-    public int getTotalDataCount() {
-        return userMapper.getTotalDataCount();
+    public List<UserDTO> getDepartmentList() {
+        return userMapper.selectDepartmentList();
     }
 
-//    public List<UserDTO> getManagementList() {
-//
-//        System.out.println("getManagementList >>");
-//
-//        return userMapper.selectAllManagementList();
-//    }
+    public List<UserDTO> getJopPositionList() {
+        return userMapper.selectJopPositionList();
+    }
 }
