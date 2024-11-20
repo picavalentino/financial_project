@@ -1,10 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>GS Bank</title>
+    <!-- 전체 적용될 CSS -->
+    <th:block layout:fragment="css"></th:block>
+    <!-- 전체 적용될 스크립트 -->
+    <th:block layout:fragment="script"></th:block>
+    <!-- 페이지별 상품 설계 조회 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/promotion/button.css}">
+    <link rel="stylesheet" th:href="@{/css/promotion/common.css}">
+    <link rel="stylesheet" th:href="@{/css/promotion/promotionCal.css}">
 </head>
 <body>
+<div layout:fragment="content" class="content">
+    <div class="main-content">
+        <!-- 페이지 위치 & 제목 -->
+        <section class="page-location">
+            <div class="page-breadcrumb">
+                <span class="home-icon"><i class="bi bi-house-door-fill"></i></span>
+                <a href="/main">Home</a> &gt;
+                <a href="/promotion/list">프로모션관리</a> &gt;
+                <span>금융계산기</span>
+            </div>
+            <h1 class="page-title">금융계산기</h1>
+        </section>
 
+        <!-- 설계 탭 -->
+        <div class="tabs">
+            <button class="tab active">적금 설계</button>
+            <button class="tab inactive">목돈마련적금 설계</button>
+            <button class="tab inactive">예금 설계</button>
+            <button class="tab inactive">대출 설계</button>
+        </div>
+
+        <!-- 입력 폼 -->
+        <div class="form-container">
+            <div class="label-group">
+                <label for="designNo">설계번호</label>
+                <label for="productSelect">상품선택</label>
+                <label for="paymentCycle">납입주기</label>
+                <label for="startDate">시작일자</label>
+                <label for="depositAmount">불입금액 (원)</label>
+                <label for="targetPeriod">목표기간 (개월)</label>
+                <label for="interestRate">적용금리 (%)</label>
+                <label for="taxType">이자과세</label>
+                <label for="designDate">설계일자</label>
+                <label for="writeDate">작성일자</label>
+            </div>
+            <div class="input-group">
+                <div class="input-group-left">
+                    <input type="text" id="designNo" name="designNo">
+                    <div class="input-with-button">
+                        <input type="text" id="productCode" name="productCode">
+                        <input type="text" id="productName" name="productName">
+                        <button><i class="bi bi-search"></i></button>
+                    </div>
+                    <select id="paymentCycle" name="paymentCycle">
+                        <option>월납</option>
+                        <option>연납</option>
+                    </select>
+                    <input type="date" id="startDate" name="startDate">
+                    <div class="button-row">
+                        <input type="text" id="depositAmount" name="depositAmount">
+                        <div class="button-group">
+                            <button class="button-plus">+ 10만원</button>
+                            <button class="button-plus">+ 50만원</button>
+                            <button class="button-plus">+ 100만원</button>
+                            <button class="button-reset">정정</button>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <input type="text" id="targetPeriod" name="targetPeriod">
+                        <div class="button-group">
+                            <button class="button-plus">+ 3개월</button>
+                            <button class="button-plus">+ 6개월</button>
+                            <button class="button-plus">+ 12개월</button>
+                            <button class="button-reset">정정</button>
+                        </div>
+                    </div>
+                    <input type="text" id="interestRate" name="interestRate">
+                    <select id="taxType" name="taxType">
+                        <option>일반과세 (15.4%)</option>
+                        <option>비과세</option>
+                    </select>
+                    <input type="date" id="designDate" name="designDate">
+                    <input type="date" id="writeDate" name="writeDate">
+                </div>
+            </div>
+        </div>
+
+        <!-- 컨트롤 컨테이너-->
+        <div class="control-container">
+            <!-- 설계 유형 선택 -->
+            <div class="radio-group">
+                <label><input type="radio" name="calculationType" value="detailed"> 정상설계</label>
+                <label><input type="radio" name="calculationType" value="simple"> 간편설계</label>
+            </div>
+
+            <!-- 우측 버튼 -->
+            <div class="button-wrap">
+                <button class="btn btn-calculate">이자계산</button>
+                <button class="btn btn-status">진행상태</button>
+                <button class="btn btn-save">저장</button>
+                <button class="btn btn-send">발송</button>
+                <button class="btn btn-print">인쇄</button>
+                <button class="btn btn-list">목록</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 자바스크립트 -->
+    <script th:inline="javascript">
+    </script>
+</div>
 </body>
 </html>

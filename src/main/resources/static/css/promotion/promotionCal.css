@@ -1,0 +1,155 @@
+/* 탭 전체 스타일 */
+.tabs {
+    display: flex;
+    height: 52px;
+    gap: 0px; /* 탭 간격 */
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+/* 탭 버튼 스타일 */
+.tab {
+    flex: 1; /* 4등분 */
+    height: 52px;
+    border-radius: 10px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
+
+/* 활성화된 탭 */
+.active {
+    background-color: #303249;
+    color: #FFFFFF;
+}
+
+/* 비활성화된 탭 */
+.inactive {
+    background-color: #D9D9D9;
+    color: #303249;
+}
+
+/* ======================================================================================================= */
+/* 입력 폼 컨테이너 */
+.form-container {
+    display: flex;
+    gap: 20px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    margin-bottom: 32px;
+    padding: 30px;
+}
+
+/* label 그룹 */
+.label-group {
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+/* label */
+.label-group label {
+    height: 32px;
+    color: #303249;
+    font-size: 17px;
+    line-height: 32px;
+}
+
+/* input 그룹 */
+.input-group {
+    display: flex;
+    gap: 20px;
+}
+
+/* 왼쪽 input 그룹 */
+.input-group-left {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+/* 왼쪽 input 그룹 내 input, select 공통 */
+.input-group-left input,
+.input-group-left select {
+    width: 180px;
+    height: 32px;
+    border: 1px solid #8E98A8;
+    border-radius: 8px;
+    padding: 0 8px;
+    font-size: 16px;
+    color: #8E98A8;
+}
+
+/* input 및 select 안의 텍스트 스타일 */
+.input-group-left input::placeholder,
+.input-group-left select {
+    color: #8E98A8; /* 텍스트 색상 */
+    font-size: 16px;
+}
+
+.input-with-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-with-button button {
+    width: 32px;
+    height: 32px;
+    background-color: #303249;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.button-row {
+    display: flex;
+    gap: 16px;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+}
+
+.button-group button {
+    width: 150px;
+    height: 32px;
+    border: 1px solid #303249;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.button-plus {
+    background-color: white;
+    color: #303249;
+}
+
+.button-reset {
+    background-color: #303249;
+    color: #FFFFFF;
+    border: none;
+}
+
+
+
+
+
+
+/*컨트롤 컨테이너*/
+.control-container {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}

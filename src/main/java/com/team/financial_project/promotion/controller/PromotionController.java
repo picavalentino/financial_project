@@ -93,6 +93,10 @@ public class PromotionController {
     }
 
     // 금융계산기 페이지 (등록)
+    @GetMapping("/cal")
+    public String viewCalPage() {
+        return "promotion/promotionCal";
+    }
 
 
     // 금융계산기 페이지 (상세)

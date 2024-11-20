@@ -99,7 +99,7 @@
         <table class="data-table">
             <thead>
             <tr>
-                <th><input type="checkbox"></th>
+                <th><input type="checkbox" id="selectAll"></th>
                 <th onclick="sortTable('custNm')" class="sortable">
                     고객명 <i class="bi bi-chevron-expand"></i>
                 </th>
@@ -124,9 +124,9 @@
             <tbody id="result-table-body">
             <tr th:each="productDesign : ${PromotionList}"
                 th:attr="data-dsgn-sn=${productDesign.dsgnSn}"
-                onclick="handleRowClick(this)">
+                onclick="handleRowClick(this, event)">
                 <td>
-                    <input type="checkbox">
+                    <input type="checkbox" class="row-checkbox">
                 </td>
                 <td th:text="${productDesign.custNm}"></td>
                 <td th:text="${productDesign.userNm}"></td>
@@ -251,7 +251,7 @@
                             console.log('Product Design:', productDesign); // 데이터 확인
 
                             const row = `
-                                <tr>
+                                <tr data-dsgn-sn="${productDesign.dsgnSn}" onclick="handleRowClick(this, event)">
                                     <td><input type="checkbox"></td>
                                     <td>${productDesign.custNm}</td>
                                     <td>${productDesign.userNm}</td>
@@ -266,7 +266,7 @@
                         });
                     } else {
                         console.log('No data available.'); // 데이터가 없을 때
-                        tableBody.append('<tr><td colspan="6">데이터가 없습니다.</td></tr>');
+                        tableBody.append('<tr><td colspan="8">데이터가 없습니다.</td></tr>');
                     }
 
                     // 페이지네이션 갱신
@@ -338,7 +338,13 @@
         }
 
         // 테이블 행 클릭 시 금융계산기 페이지로 이동
-        function handleRowClick(row) {
+        function handleRowClick(row, event) {
+            // 클릭된 요소가 체크박스인 경우, 이벤트 처리 중단
+            if (event.target.closest('td').querySelector('input[type="checkbox"]')) {
+                event.stopPropagation();
+                return;
+            }
+
             // 클릭한 행의 data-dsgn-sn 값 가져오기
             const dsgnSn = row.getAttribute('data-dsgn-sn');
 
@@ -349,6 +355,24 @@
                 console.error('설계번호가 없습니다.');
             }
         }
+
+        // 전체 선택 및 개별 체크박스 동기화
+        $(document).ready(() => {
+            const selectAllCheckbox = $('#selectAll');
+            const rowCheckboxes = $('#result-table-body .row-checkbox');
+
+            // 상단 체크박스 클릭 시
+            selectAllCheckbox.on('change', function () {
+                const isChecked = this.checked;
+                rowCheckboxes.prop('checked', isChecked);
+            });
+
+            // 개별 체크박스 클릭 시
+            rowCheckboxes.on('change', function () {
+                const allChecked = rowCheckboxes.length === rowCheckboxes.filter(':checked').length;
+                selectAllCheckbox.prop('checked', allChecked);
+            });
+        });
     </script>
 </div>
 </body>
