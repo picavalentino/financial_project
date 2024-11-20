@@ -80,6 +80,7 @@ public class ManagementController {
             @RequestParam(name = "dept", required = false) String dept,
             @RequestParam(name = "position", required = false) String position,
             @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "auth", required = false) String auth,
             @RequestParam(name = "searchField", required = false) String searchField,
             @RequestParam(name = "searchValue", required = false) String searchValue) {
 
@@ -95,6 +96,10 @@ public class ManagementController {
         List<UserDTO> statusList = managementService.getStatusList();
         model.addAttribute("statusList", statusList);
 
+        // 셀렉트 박스에 쓸 권한 정보 가져오기
+        List<UserDTO> authList = managementService.getauthList();
+        model.addAttribute("authList", authList);
+
         // 총 데이터 수 계산 (검색 조건 포함)
         int totalEmployeeCount = managementService.getTotalEmployeeCount(dept, position, status, searchField, searchValue);
         int pageSize = 10; // 한 페이지에 보여줄 데이터 수
@@ -107,7 +112,7 @@ public class ManagementController {
         model.addAttribute("currentPageNumber", page);
 
         // 현재 페이지에 맞는 직원 목록 가져오기 (검색 조건 포함)
-        List<UserDTO> employeeList = managementService.getEmployeeList(page, pageSize, dept, position, status, searchField, searchValue);
+        List<UserDTO> employeeList = managementService.getEmployeeList(page, pageSize, dept, position, status, auth, searchField, searchValue);
         model.addAttribute("employeeList", employeeList.isEmpty() ? Collections.emptyList() : employeeList);
 
         // 페이지 정보 추가
@@ -119,6 +124,7 @@ public class ManagementController {
         model.addAttribute("dept", dept);
         model.addAttribute("position", position);
         model.addAttribute("status", status);
+        model.addAttribute("auth", auth);
         model.addAttribute("searchField", searchField);
         model.addAttribute("searchValue", searchValue);
 

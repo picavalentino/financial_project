@@ -28,7 +28,7 @@
         code_no ASC  -- 코드 번호 순으로 정렬
     </select>
 
-    <!--셀렉트 박스에서 쓸 권한이름 가져오는 구문-->
+    <!--셀렉트 박스에서 쓸 상태이름 가져오는 구문-->
     <select id="selectStatusList" resultType="com.team.financial_project.dto.UserDTO">
         SELECT
         code_no AS user_status, -- 현재 상태 코드 (코드 번호)
@@ -37,6 +37,19 @@
         tb_code
         WHERE
         code_cl LIKE '100'    -- 100번 현재 상태 코드임
+        ORDER BY
+        code_no ASC  -- 코드 번호 순으로 정렬
+    </select>
+
+<!--    셀렉트 박스에서 쓸 권한 이름 가져오기-->
+    <select id="selectAuthList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        code_no AS user_auth_cd, -- 현재 권한 코드 (코드 번호)
+        code_nm AS auth_name    -- 권한명
+        FROM
+        tb_code
+        WHERE
+        code_cl LIKE '101'    -- 101번 권한 코드임
         ORDER BY
         code_no ASC  -- 코드 번호 순으로 정렬
     </select>
@@ -104,7 +117,7 @@
     <!-- 직원 총 수 가져오기 (검색 조건 포함) / employees -->
     <select id="getTotalEmployeeCount" resultType="int">
         SELECT COUNT(*)
-        FROM tb_user
+        FROM tb_user tu
         WHERE 1=1
         <if test="dept != null and dept != ''">
             AND tu.user_dept_cd = #{dept}
@@ -127,13 +140,12 @@
         </if>
     </select>
 
-    <!-- 직원 목록 가져오기 (페이지 및 검색 조건 포함) -->
     <select id="selectEmployeeList" resultType="com.team.financial_project.dto.UserDTO">
         SELECT
         dept_cd.code_nm AS dept_name,  -- 부서명
         jbps_cd.code_nm AS position_name,  -- 직위명
         status_cd.code_nm AS status_name,  -- 활동상태
-        auth_cd.code_nm AS auth_name,    -- 권한
+        auth_cd.code_nm AS auth_name,    -- 권한 이름
         tu.user_id,
         tu.user_name
         FROM
@@ -164,18 +176,22 @@
         <if test="status != null and status != ''">
             AND tu.user_status = #{status}
         </if>
+        <if test="auth != null and auth != ''">
+            AND tu.user_auth_cd = #{auth}
+        </if>
         <if test="searchField != null and searchValue != null and searchValue != ''">
             <choose>
                 <when test="searchField == 'user_name'">
                     AND tu.user_name LIKE CONCAT('%', #{searchValue}, '%')
                 </when>
-                <when test="searchField == 'user_auth'">
-                    AND tu.user_auth_cd LIKE CONCAT('%', #{searchValue}, '%')
+                <when test="searchField == 'user_id'">
+                    AND tu.user_id LIKE CONCAT('%', #{searchValue}, '%')
                 </when>
             </choose>
         </if>
         ORDER BY tu.user_dept_cd, jbps_cd.code_no
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
+
 
 </mapper>

@@ -29,6 +29,9 @@ public class ManagementService {
     public List<UserDTO> getStatusList() { return userMapper.selectStatusList();
     }
 
+    public List<UserDTO> getauthList() { return userMapper.selectAuthList();
+    }
+
     // 전체 직원 수 가져오기 (검색 조건 포함)
     public int getTotalDataCount(String dept, String position, String searchField, String searchValue) {
         return userMapper.getTotalDataCount(dept, position, searchField, searchValue);
@@ -52,16 +55,16 @@ public class ManagementService {
     }
 
     // /employees 요청에서 현재 페이지에 맞는 직원 목록 가져오기 (검색 조건 포함)
-    public List<UserDTO> getEmployeeList(int page, int pageSize, String dept, String position, String status, String searchField, String searchValue) {
+    public List<UserDTO> getEmployeeList(int page, int pageSize, String dept, String position, String status, String auth, String searchField, String searchValue) {
         int offset = (page - 1) * pageSize;
 
         String validatedSearchField = null;
-        if ("user_name".equals(searchField) || "user_auth".equals(searchField)) {
+        if ("user_name".equals(searchField) || "user_id".equals(searchField)) {
             validatedSearchField = searchField;
         }
 
-        System.out.println("검색 조건: dept=" + dept + ", position=" + position + ", status=" + status + ", searchField=" + validatedSearchField + ", searchValue=" + searchValue);
-        return userMapper.selectEmployeeList(offset, pageSize, dept, position, status, validatedSearchField, searchValue);
+        System.out.println("검색 조건: dept=" + dept + ", position=" + position + ", status=" + status + ", auth=" + auth + ", searchField=" + validatedSearchField + ", searchValue=" + searchValue);
+        return userMapper.selectEmployeeList(offset, pageSize, dept, position, status, auth, validatedSearchField, searchValue);
     }
 
 }

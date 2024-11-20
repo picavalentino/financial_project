@@ -54,10 +54,17 @@
             </th:block>
           </select>
 
+          <select name="auth" class="form-select me-2" style="width: 150px;">
+            <option value="" selected>권한</option>
+            <th:block th:each="auth : ${authList}">
+              <option th:value="${auth.user_auth_cd}" th:text="${auth.auth_name}" th:selected="${auth == auth.user_auth_cd}"></option>
+            </th:block>
+          </select>
+
           <select name="searchField" class="form-select me-2" style="width: 150px;">
             <option value="" selected>검색</option>
             <option value="user_name" th:selected="${searchField == 'user_name'}">이름</option>
-            <option value="user_auth_cd" th:selected="${searchField == 'user_auth_cd'}">권한</option>
+            <option value="user_id" th:selected="${searchField == 'user_id'}">사원번호</option>
           </select>
 
           <input type="text" name="searchValue" class="form-control me-2" style="width: 200px;" th:value="${searchValue}" placeholder="검색어 입력">
