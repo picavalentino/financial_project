@@ -21,5 +21,7 @@ public class UserDTO {
     private String user_dept_cd_code_cl;   // 직원 부서 분류코드
     private String user_jbps_ty_cd_code_cl;  // 직위 분류코드
     private String dept_name; // 부서 이름
-    private String position_name; // 직위 이름
+    private String position_name;// 직위 이름
+    private String status_name; // 상태 이름
+    private String auth_name; // 권한 이름
 }

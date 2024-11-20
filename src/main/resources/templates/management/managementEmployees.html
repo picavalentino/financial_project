@@ -30,52 +30,46 @@
 
       <h2 class="mb-4">직원정보관리</h2>
 
-      <div class="mb-3 d-flex justify-content-between">
+      <!-- 검색 및 필터 폼 시작 -->
+      <form th:action="@{/management/employees}" method="get" id="searchForm" class="d-flex justify-content-between mb-3">
         <div class="d-flex">
-          <select class="form-select me-2" style="width: 150px;">
-            <option selected>부서</option>
-            <option value="1">임원실</option>
-            <option value="2">인사팀</option>
-            <option value="3">영업1부</option>
-            <option value="4">영업2부</option>
-            <option value="5">영업3부</option>
+          <select name="dept" class="form-select me-2" style="width: 150px;">
+            <option value="" selected>부서</option>
+            <th:block th:each="department : ${DepartmentList}">
+              <option th:value="${department.user_dept_cd}" th:text="${department.dept_name}" th:selected="${dept == department.user_dept_cd}"></option>
+            </th:block>
           </select>
-          <select class="form-select me-2" style="width: 150px;">
-            <option selected>직위</option>
-            <option value="1">회장</option>
-            <option value="2">사장</option>
-            <option value="3">부사장</option>
-            <option value="4">전무이사</option>
-            <option value="5">상무이사</option>
-            <option value="6">이사</option>
-            <option value="7">부장</option>
-            <option value="8">차장</option>
-            <option value="9">과장</option>
-            <option value="10">대리</option>
-            <option value="11">주임</option>
-            <option value="12">계장</option>
-            <option value="13">사원</option>
-            <!-- 추가 직무 옵션들 -->
+
+          <select name="position" class="form-select me-2" style="width: 150px;">
+            <option value="" selected>직위</option>
+            <th:block th:each="JopPosition : ${JopPositionList}">
+              <option th:value="${JopPosition.user_jbps_ty_cd}" th:text="${JopPosition.position_name}" th:selected="${position == JopPosition.user_jbps_ty_cd}"></option>
+            </th:block>
           </select>
-          <select class="form-select me-2" style="width: 150px;">
-            <option selected>상태</option>
-            <option value="1">Active</option>
-            <option value="2">Inactive</option>
+
+          <select name="status" class="form-select me-2" style="width: 150px;">
+            <option value="" selected>상태</option>
+            <th:block th:each="statusItem : ${statusList}">
+              <option th:value="${statusItem.user_status}" th:text="${statusItem.status_name}" th:selected="${status == statusItem.user_status}"></option>
+            </th:block>
           </select>
-          <select class="form-select me-2" style="width: 150px;">
-            <option selected>검색</option>
-            <option value="user_name">이름</option>
-            <option value="user_auth_cd">권한</option>
+
+          <select name="searchField" class="form-select me-2" style="width: 150px;">
+            <option value="" selected>검색</option>
+            <option value="user_name" th:selected="${searchField == 'user_name'}">이름</option>
+            <option value="user_auth_cd" th:selected="${searchField == 'user_auth_cd'}">권한</option>
           </select>
-          <input type="text" class="form-control me-2" style="width: 200px;" placeholder="검색어 입력">
-          <button class="btn btn-primary">검색</button>
+
+          <input type="text" name="searchValue" class="form-control me-2" style="width: 200px;" th:value="${searchValue}" placeholder="검색어 입력">
+          <button type="submit" class="btn btn-primary">검색</button>
         </div>
-      </div>
+      </form>
+      <!-- 검색 및 필터 폼 끝 -->
 
       <table class="table table-hover">
         <thead>
         <tr>
-          <th scope="col">사업번호</th>
+          <th scope="col">사원번호</th>
           <th scope="col">부서</th>
           <th scope="col">직위</th>
           <th scope="col">이름</th>
@@ -85,36 +79,42 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td><strong>Bold text column</strong></td>
-          <td>Bold text column</td>
-          <td>Regular text column</td>
-          <td>Regular text column</td>
-          <td>Regular text column</td>
-          <td><span class="status-active">● Active</span></td>
+        <tr th:each="employee : ${employeeList}">
+          <td th:text="${employee.user_id}">사원번호</td>
+          <td th:text="${employee.dept_name}">부서</td>
+          <td th:text="${employee.position_name}">직위</td>
+          <td th:text="${employee.user_name}">이름</td>
+          <td th:text="${employee.auth_name}">권한</td>
+          <td th:text="${employee.status_name}">활동상태</td>
           <td><button class="btn btn-warning" onclick="openEditModal()">수정</button></td>
         </tr>
-        <!-- 반복적인 직원 정보 행들 추가 -->
+        <tr th:if="${employeeList == null or #lists.isEmpty(employeeList)}">
+          <td colspan="7">데이터가 없습니다.</td>
+        </tr>
         </tbody>
       </table>
 
       <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
+          <!-- 이전 페이지 -->
           <li th:classappend="${currentPageNumber == 1} ? 'disabled' : ''" class="page-item">
-            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber - 1})}" aria-label="Previous">
+            <a class="page-link" th:href="@{/management/employees(page=${currentPageNumber - 1}, dept=${dept}, position=${position}, status=${status}, searchField=${searchField}, searchValue=${searchValue})}" aria-label="Previous">
               &lt;
             </a>
           </li>
+          <!-- 페이지 번호 -->
           <li th:each="pageNumber : ${paginationBarNumbers}" th:classappend="${pageNumber == currentPageNumber} ? 'active' : ''" class="page-item">
-            <a class="page-link" th:href="@{/management/list(page=${pageNumber})}" th:text="${pageNumber}">1</a>
+            <a class="page-link" th:href="@{/management/employees(page=${pageNumber}, dept=${dept}, position=${position}, status=${status}, searchField=${searchField}, searchValue=${searchValue})}" th:text="${pageNumber}">1</a>
           </li>
-          <li th:classappend="${currentPageNumber == paginationBarNumbers.size()} ? 'disabled' : ''" class="page-item">
-            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber + 1})}" aria-label="Next">
+          <!-- 다음 페이지 -->
+          <li th:classappend="${currentPageNumber == totalPageNumber} ? 'disabled' : ''" class="page-item">
+            <a class="page-link" th:href="@{/management/employees(page=${currentPageNumber + 1}, dept=${dept}, position=${position}, status=${status}, searchField=${searchField}, searchValue=${searchValue})}" aria-label="Next">
               &gt;
             </a>
           </li>
         </ul>
       </nav>
+
 
       <!-- 직원 수정 모달 -->
       <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
