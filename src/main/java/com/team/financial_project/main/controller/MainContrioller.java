@@ -8,6 +8,6 @@ public class MainContrioller {
     // test용
     @GetMapping("/test")
     public String test() {
-        return "/financial/test";
+        return "financial/test";
     }
 }
