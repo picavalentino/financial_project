@@ -3,13 +3,10 @@ package com.team.financial_project.counsel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
 public class TbCounsel {
     @Id
@@ -22,9 +19,9 @@ public class TbCounsel {
     @Column(length = 10, nullable = false)
     private String counselCategory;
     @Column
-    private Timestamp counselCreateAt;
+    private LocalDateTime counselCreateAt;
     @Column
-    private Timestamp counselUpdateAt;
+    private LocalDateTime counselUpdateAt;
     @Column(length = 10000)
     private String counselContent;
 }

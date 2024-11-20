@@ -7,27 +7,29 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: 1111
-    hikari:
-      maximum-pool-size: 10
+    url: jdbc:postgresql://codechefdb.czywaum4cloy.ap-northeast-2.rds.amazonaws.com:5432/financialprojectDB
+    username: codechef
+    password: codechef1234
 
-  jpa:
-    hibernate:
-      ddl-auto: validate   # 테이블 생성 및 자동 업데이트
-    show-sql: true  # 실행된 SQL 쿼리를 콘솔에 출력
-    properties:
-      hibernate:
-        format_sql: true  # SQL을 보기 좋게 포맷팅
-        dialect: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL Dialect
-    packages-to-scan: com.team.financial_project.counsel.entity  # 엔티티 패키지 위치 지정
-#    url: jdbc:postgresql://codechefdb.czywaum4cloy.ap-northeast-2.rds.amazonaws.com:5432/financialprojectDB
-#    username: codechef
-#    password: codechef1234
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: classpath:/mybatis-config.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-  mybatis:
-    mapper-locations: classpath:mapper/*.xml
-    type-aliases-package: classpath:/mybatis-config.xml
-    configuration:
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: postgres
+#    password: 1111
+#    hikari:
+#      maximum-pool-size: 10
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate   # 테이블 생성 및 자동 업데이트
+#    show-sql: true  # 실행된 SQL 쿼리를 콘솔에 출력
+#    properties:
+#      hibernate:
+#        format_sql: true  # SQL을 보기 좋게 포맷팅
+#        dialect: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL Dialect
+#    packages-to-scan: com.team.financial_project.counsel.entity  # 엔티티 패키지 위치 지정
+

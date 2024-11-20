@@ -5,4 +5,12 @@
     <typeAliases>
         <typeAlias type="com.team.financial_project.login.dto.UserDTO" alias="userDTO"></typeAlias>
     </typeAliases>
+
+    <typeHandlers>
+        <typeHandler handler="com.team.financial_project.counsel.handler.LocalDateTimeTypeHandler"/>
+    </typeHandlers>
+
+    <mappers>
+        <mapper resource="mapper/CounselMapper.xml"/>
+    </mappers>
 </configuration>
