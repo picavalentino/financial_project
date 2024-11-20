@@ -17,33 +17,34 @@
 
     <div class="mypage_right">
       <div id="myprofile_mid">
-        <img th:src="@{/css/mypage/img/mypage_default_profile.jpg}">
-        <label for="file" class="custom-file-upload">파일 선택</label>
+        <img id="profile_img" th:src="@{/css/mypage/img/mypage_default_profile.jpg}">
+        <label for="file" class="custom-file-upload" disabled>파일 선택</label>
         <input type="file" id="file">
         <button id="pw_edit"> 비밀번호 변경하기</button>
       </div>
       <div class="input_box">
         <div id="myprofile_left">
-          <p>사원번호 <br> <input type="text" value="20020411002"></p>
-          <p>입사일 <br> <input type="text" value="2022.04.11"></p>
-          <p>부서 <br> <input type="text" value="개발"></p>
-          <p>직무 <br> <input type="text" value="대리"></p>
+          <p>사원번호 <br> <input type="text" value="20020411002" disabled></p>
+          <p>입사일 <br> <input type="text" value="2022.04.11" disabled></p>
+          <p>부서 <br> <input type="text" value="개발" disabled></p>
+          <p>직무 <br> <input type="text" value="대리" disabled></p>
         </div>
         <div id="myprofile_right">
-          <p>이름 <br> <input type="text" value="홍길동"></p>
+          <p>이름 <br> <input type="text" value="홍길동" disabled></p>
           <div class="phone">
-            <p>휴대전화 <br> <input type="text" value="010" id="phone_input1"> - <input type="text"
-                                                                                    value="1234" id="phone_input2"> - <input type="text" value="1234" id="phone_input3">
+            <p>휴대전화 <br> <input type="text" value="010" id="phone_input1" disabled> - <input type="text"
+                                                                                             value="1234" id="phone_input2" disabled> - <input type="text" value="1234"
+                                                                                                                                               id="phone_input3" disabled>
               <button>인증</button>
             </p>
             <h5 id="msg">인증이 완료 되었습니다</h5>
           </div>
 
-          <p>E-Mail <br> <input type="text" value="gildong82@gsitm.co.kr"></p>
+          <p>E-Mail <br> <input type="text" value="gildong82@gsitm.co.kr" disabled></p>
 
           <div class="buttons">
-            <button>수정하기</button>
-            <button>등록하기</button>
+            <button id="editButton">수정하기</button>
+            <button id="adminButton">등록하기</button>
           </div>
 
 
@@ -135,7 +136,7 @@
           <input type="password" id="newPassword" placeholder="비밀번호를 입력해주세요.">
           <button type="button" id="togglePassword"
                   style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
-            <img th:src="@{/images/common/icon-eye.png}" id="eyeIcon" alt="눈 아이콘" >
+            <img th:src="@{/images/common/icon-eye.png}" id="eyeIcon" alt="눈 아이콘">
           </button>
         </div>
 
@@ -149,6 +150,22 @@
     $(document).ready(function () {
         console.log("jQuery가 준비되었습니다.");
 
+
+        // "수정하기" 버튼 클릭 이벤트
+        $('#editButton').on("click", function () {
+            // 모든 input 요소의 disabled 속성 제거
+            $('input').each(function () {
+                $(this).prop("disabled", false);
+            });
+        });
+
+       $('#adminButton').on("click", function () {
+            // 모든 input 요소의 disabled 속성 제거
+            $('input').each(function () {
+                $(this).prop("disabled", true);
+            });
+        });
+
         // 모달 관련 요소 가져오기
         const $modal = $('#pwModal');
         const $btn = $('#pw_edit');
@@ -156,18 +173,18 @@
 
         // 버튼 클릭 시 모달 열기
         $btn.on("click", function () {
-               $modal.fadeIn();
+            $modal.fadeIn();
         });
 
         // 닫기 버튼 클릭 시 모달 닫기
         $closeBtn.on("click", function () {
-              $modal.fadeOut();
+            $modal.fadeOut();
         });
 
         // 모달 외부 클릭 시 닫기
         $(window).on("click", function (event) {
             if ($(event.target).is($modal)) {
-                 $modal.fadeOut();
+                $modal.fadeOut();
 
             }
 

@@ -73,7 +73,7 @@ h1 {
     align-items: center;
 }
 
-img {
+#profile_img {
     border-radius: 20px;
     width: 180px;
     height: 202px;

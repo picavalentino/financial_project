@@ -47,7 +47,7 @@
             <td class="calendar-cell"></td>
             <td class="calendar-cell"></td>
             <td class="calendar-cell">1
-              <div class="event-bar">금융프로젝트</div>
+              <div class="event-bar" data-title="금융프로젝트" data-date="11월 1일 (금요일)" data-time="오전 9:00~11:00" data-location="강남역" data-person="김철수">금융프로젝트</div>
             </td>
             <td class="calendar-cell">2</td>
           </tr>
@@ -63,8 +63,6 @@
                   <span class="event-dot-team"></span>
                   <p class="event-title">프로젝트 발표</p>
                 </div>
-                <p class="event-time">4:00 - 5:30</p>
-                <p class="event-detail">프로젝트 발표 자료 인쇄</p>
               </div>
             </td>
             <td class="calendar-cell">7</td>
@@ -94,8 +92,7 @@
                   <span class="event-dot-personal"></span>
                   <p class="event-title">제주도</p>
                 </div>
-                <p class="event-time">4:00 - 5:30</p>
-                <p class="event-detail">프로젝트 발표 자료 인쇄</p>
+
               </div>
             </td>
             <td class="calendar-cell">22
@@ -105,8 +102,6 @@
                   <span class="event-dot-personal"></span>
                   <p class="event-title">제주도</p>
                 </div>
-                <p class="event-time">4:00 - 5:30</p>
-                <p class="event-detail">프로젝트 발표 자료 인쇄</p>
               </div>
             </td>
             <td class="calendar-cell">23</td>
@@ -210,8 +205,8 @@
         <input type="text" class="task-title" placeholder="Enter title...">
         <input type="text" class="location-input" placeholder="Enter location...">
         <div class="checkboxes">
-          <label><input type="checkbox" class="team-checkbox"> 팀  </label>
-          <label><input type="checkbox" class="personal-checkbox"> 개인</label>
+          <label><input type="checkbox" class="select-checkbox" id="team-checkbox"> 팀  </label>
+          <label><input type="checkbox" class="select-checkbox" id="personal-checkbox"> 개인</label>
         </div>
       </div>
       <div class="details">
@@ -223,6 +218,39 @@
     <script th:inline="javascript">
       $(document).ready(function () {
         console.log("jQuery가 준비되었습니다.");
+      const eventModal = $('#eventModal'); // 모달 창
+      const $closeBtn = $('.close'); // 닫기 버튼
+
+      // 이벤트 바 클릭 시 모달 열기
+      $('.event-bar').on('click', function () {
+        const title = $(this).data('title');
+        const date = $(this).data('date');
+        const time = $(this).data('time');
+        const location = $(this).data('location');
+        const person = $(this).data('person');
+
+        // 모달 내용 설정
+        $('.event-title').text(title);
+        $('.event-time').text(`${date} - ${time}`);
+        $('.event-location').text(location);
+        $('.event-person').text(person);
+
+        // 모달 열기
+        $eventModal.fadeIn();
+      });
+
+      // 닫기 버튼 클릭 시 모달 닫기
+      $closeBtn.on('click', function () {
+        $eventModal.fadeOut();
+      });
+
+      // 모달 외부 클릭 시 닫기
+      $(window).on('click', function (event) {
+        if ($(event.target).is($eventModal)) {
+          $eventModal.fadeOut();
+        }
+      });
+
 
         // 모달 관련 요소 가져오기
         const $modal = $('.schedule_detail'); // 모달 창
@@ -260,6 +288,21 @@
                 $modal.fadeOut(); // 모달 숨기기
             }
         });
+
+        //체크박스 하나만 선택
+         const checkboxes = document.querySelectorAll('.select-checkbox');
+
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            checkboxes.forEach(box => {
+              if (box !== e.target) {
+                box.checked = false;
+              }
+            });
+          }
+        });
+      });
       });
     </script>
 </div>

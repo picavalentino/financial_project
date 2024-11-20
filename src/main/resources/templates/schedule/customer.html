@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>고객 이벤트 관리</title>
-  <link rel="stylesheet" th:href="@{/css/schedule/customer.css}">
+  <link rel="stylesheet"th:href="@{/css/schedule/customer.css}">
 </head>
 <!-- 전체 적용될 CSS -->
 <th:block layout:fragment="css"></th:block>
@@ -17,102 +17,232 @@
 <div layout:fragment="content" class="content">
   <div class="container1">
     <div class="content1">
-    <h1>고객 이벤트 관리</h1>
-    <div class="calendar-container">
+      <h1>고객 이벤트 관리</h1>
+      <div class="button-container">
+        <button id="brithday_btn">생일</button>
+        <button id="finish_btn">만기</button>
+      </div>
+      <div class="calendar-container">
 
-      <div class="calendar-header">
 
-        <h2><a><button id="btn_left">&lt;</button></a>2024년 11월<a><button id="btn_right">&gt;</button></a>
-        </h2>
+        <div class="calendar-header">
 
+          <h2><a><button id="btn_left">&lt;</button></a>2024년 11월<a><button id="btn_right">&gt;</button></a>
+          </h2>
+
+        </div>
+
+
+        <table class="calendar-table">
+          <thead>
+          <tr>
+            <th id="sun">일</th>
+            <th>월</th>
+            <th>화</th>
+            <th>수</th>
+            <th>목</th>
+            <th>금</th>
+            <th id="sat">토</th>
+          </tr>
+          </thead>
+          <tbody class="calendar-cell">
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>1<div class="event-bar">이고객님 생일</div>
+            </td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>4
+              <div class="event-bar">김고객님 생일</div>
+              <div class="event-bar">전고객님 생일</div>
+              <div class="event-bar">장고객님 생일</div>
+            </td>
+            <td>5</td>
+            <td>6</td>
+            <td>7 </td>
+            <td>8</td>
+            <td>9</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>11</td>
+            <td>12</td>
+            <td>13</td>
+            <td>14</td>
+            <td>15</td>
+            <td>16</td>
+          </tr>
+          <tr>
+            <td>17</td>
+            <td>18</td>
+            <td>19</td>
+            <td>20
+              <div class="event-bar multi-day">박고객 만기일</div>
+              <div class="event-bar multi-day">이고객 만기일</div>
+              <div class="event-bar multi-day">차고객 만기일</div>
+            </td>
+            <td>21</td>
+            <td>22</td>
+            <td>23</td>
+          </tr>
+          <tr>
+            <td>24</td>
+            <td>25</td>
+            <td>26</td>
+            <td>27</td>
+            <td>28</td>
+            <td>29</td>
+            <td>30</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="today_task">
+
+      <h3> <img th:src="@{/css/schedule/img/task_img.png}">
+        오늘의 할 일</h3>
+      <div class="today-tasks">
+        <label for="task1"><strong> &middot; 11:30</strong></label>
+        <div id="task_text">
+          <p> 나부자 고객님 예금 상담 </p><input type="checkbox" id="task1" checked>
+        </div>
       </div>
 
 
-      <table class="calendar-table">
-        <thead>
-        <tr>
-          <th id="sun">일</th>
-          <th>월</th>
-          <th>화</th>
-          <th>수</th>
-          <th>목</th>
-          <th>금</th>
-          <th id="sat">토</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>1<div class="event-bar">이고객님 생일</div>
-          </td>
-          <td>2</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>4
-            <div class="event-bar">김고객님 생일</div>
-            <div class="event-bar">전고객님 생일</div>
-            <div class="event-bar">장고객님 생일</div>
-          </td>
-          <td>5</td>
-          <td>6</td>
-          <td>7 </td>
-          <td>8</td>
-          <td>9</td>
-        </tr>
-        <tr>
-          <td>10</td>
-          <td>11</td>
-          <td>12</td>
-          <td>13</td>
-          <td>14</td>
-          <td>15</td>
-          <td>16</td>
-        </tr>
-        <tr>
-          <td>17</td>
-          <td>18</td>
-          <td>19</td>
-          <td>20
-            <div class="event-bar multi-day">박고객 만기일</div>
-            <div class="event-bar multi-day">이고객 만기일</div>
-            <div class="event-bar multi-day">차고객 만기일</div>
-          </td>
-          <td>21</td>
-          <td>22</td>
-          <td>23</td>
-        </tr>
-        <tr>
-          <td>24</td>
-          <td>25</td>
-          <td>26</td>
-          <td>27</td>
-          <td>28</td>
-          <td>29</td>
-          <td>30</td>
-        </tr>
-        </tbody>
-      </table>
     </div>
   </div>
-  <div class="today_task">
 
-    <h3> <img th:src="@{/css/schedule/img/task_img.png}">
-      오늘의 할 일</h3>
-    <div class="today-tasks">
-      <label for="task1"><strong> &middot; 11:30</strong></label>
-      <div id="task_text">
-        <p> 나부자 고객님 예금 상담 </p><input type="checkbox" id="task1" checked>
+
+  <div class="schedule_detail">
+    <div class="scheduler-container">
+
+      <h1>일정 등록</h1>
+
+      <div class="date-display">
+        <button id="prev-day">&lt;</button>
+        <span id="current-date">2024.11.20</span>
+        <button id="next-day">&gt;</button>
+      </div>
+
+      <div class="scheduler">
+        <span class="close">&times;</span>
+        <div class="row">
+          <select class="time-select">
+            <!-- Generate time slots dynamically -->
+            <!-- 00:00 ~ 23:30 in 30-minute intervals -->
+            <option value="00:00">00:00</option>
+            <option value="00:30">00:30</option>
+            <option value="01:00">01:00</option>
+            <option value="01:30">01:30</option>
+            <option value="02:00">02:00</option>
+            <option value="02:30">02:30</option>
+            <option value="03:00">03:00</option>
+            <option value="03:30">03:30</option>
+            <option value="04:00">04:00</option>
+            <option value="04:30">04:30</option>
+            <option value="05:00">05:00</option>
+            <option value="05:30">05:30</option>
+            <option value="06:00">06:00</option>
+            <option value="06:30">06:30</option>
+            <option value="07:00">07:00</option>
+            <option value="07:30">07:30</option>
+            <option value="08:00">08:00</option>
+            <option value="08:30">08:30</option>
+            <option value="09:00">09:00</option>
+            <option value="09:30">09:30</option>
+            <option value="10:00">10:00</option>
+            <option value="10:30">10:30</option>
+            <option value="11:00">11:00</option>
+            <option value="11:30">11:30</option>
+            <option value="12:00">12:00</option>
+            <option value="12:30">12:30</option>
+            <option value="13:00">13:00</option>
+            <option value="13:30">13:30</option>
+            <option value="14:00">14:00</option>
+            <option value="14:30">14:30</option>
+            <option value="15:00">15:00</option>
+            <option value="15:30">15:30</option>
+            <option value="16:00">16:00</option>
+            <option value="16:30">16:30</option>
+            <option value="17:00">17:00</option>
+            <option value="17:30">17:30</option>
+            <option value="18:00">18:00</option>
+            <option value="18:30">18:30</option>
+            <option value="19:00">19:00</option>
+            <option value="19:30">19:30</option>
+            <option value="20:00">20:00</option>
+            <option value="20:30">20:30</option>
+            <option value="21:00">21:00</option>
+            <option value="21:30">21:30</option>
+            <option value="22:00">22:00</option>
+            <option value="22:30">22:30</option>
+            <option value="23:00">23:00</option>
+            <option value="23:30">23:30</option>
+          </select>
+          <input type="text" class="task-title" placeholder="Enter title...">
+          <input type="text" class="location-input" placeholder="Enter location...">
+          <div class="checkboxes">
+            <label><input type="checkbox" class="select-checkbox" id="team-customer"  checked disabled > 고객 </label>
+          </div>
+        </div>
+        <div class="details">
+          <textarea class="details-input" placeholder="Enter detailed information..."></textarea>
+        </div>
+        <input type="submit" value="등록">
       </div>
     </div>
+    <script th:inline="javascript">
+      $(document).ready(function () {
+        console.log("jQuery가 준비되었습니다.");
+
+        // 모달 관련 요소 가져오기
+        const $modal = $('.schedule_detail'); // 모달 창
+        const $calendarCells = $('.calendar-cell'); // 날짜 셀
+        const $closeBtn = $('.schedule_detail .close'); // 닫기 버튼
+
+        // 날짜 클릭 시 모달 열기
+        $calendarCells.on("click", function (event) {
+            // 클릭한 위치에 모달 배치
+            $modal.fadeIn();
+            const clickX = event.pageX; // 클릭한 X 좌표
+            const clickY = event.pageY; // 클릭한 Y 좌표
+
+            // 모달 위치 설정
+            $modal.css({
+                display: "block",
+                top: clickY + "px",
+                left: clickX + "px",
+                position: "absolute",
+                transform: "translate(-50%, -50%)"
+            });
+
+            // 부드러운 나타나기 효과
+
+        });
+
+        // 닫기 버튼 클릭 시 모달 닫기
+        $closeBtn.on("click", function () {
+            $modal.fadeOut(); // 모달 숨기기
+        });
+
+        // 모달 외부 클릭 시 닫기
+        $(window).on("click", function (event) {
+            if ($(event.target).hasClass('schedule_detail')) {
+                $modal.fadeOut(); // 모달 숨기기
+            }
+        });
 
 
+      });
+    </script>
   </div>
-</div>
 </div>
 </body>
 

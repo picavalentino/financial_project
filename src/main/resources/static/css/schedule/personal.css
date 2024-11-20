@@ -450,3 +450,79 @@ label{
     margin-right: 70px;
     margin-top: 20px;
   }
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f9f9f9;
+}
+
+.event-card {
+  background: #f0f9fc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 300px;
+  margin: auto;
+  border: 1px solid #dfe6e9;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.event-color {
+  width: 10px;
+  height: 10px;
+  background-color: #3498db;
+  border-radius: 50%;
+}
+
+.event-title {
+  font-size: 18px;
+  font-weight: bold;
+  flex-grow: 1;
+  margin-left: 10px;
+  color: #2c3e50;
+}
+
+.card-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.card-actions img {
+  width: 16px;
+  height: 16px;
+}
+
+.card-details {
+  color: #2c3e50;
+}
+
+.card-details p {
+  font-size: 14px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.card-reminder, .card-participant {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.card-reminder img, .card-participant img {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+.card-reminder span, .card-participant span {
+  font-size: 14px;
+  color: #636e72;
+}

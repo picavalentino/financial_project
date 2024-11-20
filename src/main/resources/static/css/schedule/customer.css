@@ -11,7 +11,7 @@
 }
 .content1  {
     display: flex;
-     max-width: 100%;
+    max-width: 100%;
     flex-direction: column;
     margin: 20px auto;
     margin: 0px 0px 0px 0px;
@@ -152,32 +152,35 @@ h1 {
 
 .today-tasks {
     width: 400px;
-       margin-top: 20px;
-       height: auto;
-       border: 1px solid #ababab;
-       border-radius: 15px;
-       background-color: #f8f9fa;
-       padding-left: 50px;
-       padding-top: 15px;
-}
-.today_task img{
-    width: 25px;
-
-}
-.today_task{
-margin-left: 50px;
-}
-.today_task h3 {
-    margin-left: 10px;
-    margin-top: 80px;
-     font-size: 25px;
+    margin-top: 20px;
+    height: auto;
+    border: 1px solid #ababab;
+    border-radius: 15px;
+    background-color: #f8f9fa;
+    padding-left: 50px;
+    padding-top: 15px;
+ padding-bottom: 15px;
 }
 #task_text{
     display: flex;
     width: 90%;
     justify-content: space-between;
 
+
 }
+.today_task{
+margin-left: 50px;
+}
+.today_task img{
+    width: 25px;
+
+}
+.today_task h3 {
+    margin-left: 10px;
+    margin-top: 90px;
+    font-size: 25px;
+}
+
 
 /* 체크박스 크기 키우기 */
 .today-tasks input[type="checkbox"] {
@@ -194,7 +197,7 @@ margin-left: 50px;
    margin-top: 8px;
 }
 label{
-      font-size: 22px;
+    font-size: 22px;
 }
 
 #ps{
@@ -202,3 +205,284 @@ label{
     margin-left: 2px;
     font-size: 14px;
 }
+/* 이벤트 정보 컨테이너 */
+.event-info {
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 8px;
+    background-color: #f9fcff; /* 약간의 배경 강조 */
+
+}
+
+/* 이벤트 제목 컨테이너 */
+.event-title-container {
+    display: flex; /* Flexbox 사용 */
+    align-items: center; /* 수직 정렬 */
+    margin-bottom: 5px;
+}
+
+/* 일정 점 스타일 */
+.event-dot-team {
+    width: 8px;
+    height: 8px;
+    background-color: #7ac6dc; /* 색상 */
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.event-dot-personal {
+    width: 8px;
+    height: 8px;
+    background-color: #ffa366; /* 색상 */
+    border-radius: 50%;
+    margin-right: 5px;
+}
+/* 일정 제목 스타일 */
+.event-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    color: #333;
+}
+
+/* 일정 시간 스타일 */
+.event-time {
+    font-size: 12px;
+    color: #666;
+    margin: 3px 0;
+}
+
+/* 일정 세부사항 */
+.event-detail {
+    font-size: 12px;
+    color: #999;
+    margin-top: 3px;
+}
+/* Body Styling */
+.schedule_detail {
+      display: none; /* 기본적으로 숨김 */
+      z-index: 1000;
+      background-color: none;
+      border-radius: 10px;
+      width: 500px;
+      max-width: 90%;
+      padding: 20px;
+      transform: translate(-50%, -50%);
+  }
+
+  /* Scheduler Container */
+  .scheduler-container {
+    background: #f0f9fc;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 800px;
+    max-width: 90%;
+    text-align: center;
+  }
+
+  /* Header Title */
+  .scheduler-container h1 {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-right:55px;
+  }
+
+  /* Date Display */
+  .date-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 16px;
+  }
+
+  .date-display button {
+    background-color: #7AAEBC;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+
+  .date-display button:hover {
+    background-color: #7AAEBC;
+  }
+
+  #current-date {
+    font-weight: bold;
+    color: #555;
+  }
+
+  /* Scheduler Rows */
+  .scheduler .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eaeaea;
+    gap: 10px;
+  }
+
+  /* Time Select Styling */
+  .time-select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    color: #333;
+    width: 120px;
+  }
+
+  /* Title Input Styling */
+  .task-title {
+    flex: 2;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .task-title:focus {
+    border-color: #7AAEBC;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 119, 204, 0.3);
+  }
+
+  /* Location Input Styling */
+  .location-input {
+    flex: 2;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .location-input:focus {
+    border-color: #28a745;
+    outline: none;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+  }
+
+  /* Checkboxes */
+  .checkboxes {
+    display: flex;
+    gap: 10px;
+    margin-left: 15px;
+  }
+
+  .checkboxes label {
+    font-size: 12px;
+    color: #555;
+  }
+
+  .checkboxes input[type="checkbox"] {
+    margin-right: 5px;
+    cursor: pointer;
+    accent-color: #7AAEBC;
+  }
+
+  /* Details Section */
+  .details {
+    margin: 10px 0;
+  }
+
+  .details-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    resize: none;
+    height: 80px;
+  }
+
+  .details-input:focus {
+    border-color: #f0ad4e;
+    outline: none;
+    box-shadow: 0 0 5px rgba(240, 173, 78, 0.3);
+  }
+
+  /* Placeholder Styling */
+  .task-title::placeholder,
+  .location-input::placeholder,
+  .details-input::placeholder {
+    font-style: italic;
+    color: #aaa;
+  }
+.schedule_detail .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.schedule_detail .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #d9d9d9;
+  cursor: pointer;
+}
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #aaa;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 70px;
+    margin-top: 20px;
+  }
+  .button-container {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    gap: 10px; /* 버튼 간격 */
+    margin-right: auto;
+    margin-left: 900px;
+  }
+
+  #brithday_btn {
+    background-color: #7AAEBC; /* 버튼 배경색 */
+    color: white; /* 버튼 텍스트 색상 */
+    border: none; /* 테두리 제거 */
+    padding: 10px 20px; /* 여백 */
+    border-radius: 10px;
+    cursor: pointer; /* 클릭 가능한 커서 */
+    font-size: 16px; /* 텍스트 크기 */
+    font-weight: 500; /* 텍스트 굵기 */
+    transition: background 0.3s ease; /* 배경색 전환 효과 */
+  }
+  #finish_btn {
+    background-color: #FF7672; /* 버튼 배경색 */
+    color: white; /* 버튼 텍스트 색상 */
+    border: none; /* 테두리 제거 */
+    padding: 10px 20px; /* 여백 */
+    border-radius: 10px;
+    cursor: pointer; /* 클릭 가능한 커서 */
+    font-size: 14px; /* 텍스트 크기 */
+    font-weight: bold; /* 텍스트 굵기 */
+    transition: background 0.3s ease; /* 배경색 전환 효과 */
+  }
+
+
+
+  .button-container button:hover {
+    background-color: #5D9BA8; /* 호버 시 색상 변경 */
+  }
