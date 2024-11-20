@@ -15,4 +15,6 @@ public interface ProductMapper {
     void updateProduct(ProductDTO dto);
 
     void deleteProduct(BigDecimal prodSn);
+
+    void insertProduct(ProductDTO dto);
 }

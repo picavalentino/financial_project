@@ -115,8 +115,8 @@
             <td><input type="checkbox"></td>
             <td>[[${product.prodTyCd}]]</td>
             <td>[[${product.prodNm}]]</td>
-            <td th:text="${product.prodInstlAmtMin != null ? #numbers.formatDecimal(product.prodInstlAmtMin, 0, 0) : '0'}"></td>
-            <td th:text="${product.prodInstlAmtMax != null ? #numbers.formatDecimal(product.prodInstlAmtMax, 0, 0) : '0'}"></td>
+            <td th:text="|${#numbers.formatInteger(product.prodInstlAmtMin, 0, 'COMMA')}원|"></td>
+            <td th:text="|${#numbers.formatInteger(product.prodInstlAmtMax, 0, 'COMMA')}원|"></td>
             <td>[[${product.prodPayTyCd}]]</td>
             <td>[[${product.prodAirMin}]]</td>
             <td>[[${product.prodAirMax}]]</td>
@@ -137,9 +137,16 @@
     </div>
   </div>
   <script th:inline="javascript">
-    $(document).ready(function () {
-        let amountMin = [[${product.prodInstlAmtMin}]];
-        console.log('최소가입액'+amountMin);
+    $(document).ready(function(){
+          $(".btn-register").on("click", function (e) {
+                window.location.href = "/product/insert"; // 신규상품등록 페이지로 이동
+          });
+          $(".btn-search").on("click", function (e) {
+                window.location.href = "/product/search"; // 조건검색
+          });
+          $(".btn-search-all").on("click", function (e) {
+                window.location.href = "/product/list"; // 전체상품로딩
+          });
     });
   </script>
 </div>

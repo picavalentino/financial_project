@@ -35,4 +35,8 @@ public class ProductService {
     public void deleteProduct(BigDecimal prodSn) {
         productMapper.deleteProduct(prodSn);
     }
+
+    public void insertProduct(ProductDTO dto) {
+        productMapper.insertProduct(dto);
+    }
 }

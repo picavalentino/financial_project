@@ -64,7 +64,7 @@
         LEFT JOIN tb_code c2 ON c2.code_cl = p.prod_sbstg_ty_cd_code_cl AND c2.code_no = p.prod_sbstg_ty_cd
         LEFT JOIN tb_code c3 ON c3.code_cl = p.prod_pay_ty_cd_code_cl AND c3.code_no = p.prod_pay_ty_cd
         LEFT JOIN tb_code c4 ON c4.code_cl = p.prod_int_tax_ty_cd_code_cl AND c4.code_no = p.prod_int_tax_ty_cd
-        ORDER BY p.prod_ntsl_bgn_ymd DESC;
+        ORDER BY p.prod_create_at DESC;
     </select>
 
     <select id="findById" parameterType="Long" resultMap="ProductResultMap">
@@ -106,6 +106,10 @@
         LEFT JOIN tb_prod_hist h ON h.prod_sn = p.prod_sn
         WHERE p.prod_sn = #{prodSn}
     </select>
+
+    <insert id="insertProduct" parameterType="com.team.financial_project.product.dto.ProductDTO">
+
+    </insert>
 
     <update id="updateProduct" parameterType="com.team.financial_project.product.dto.ProductDTO">
         <!-- 기존 데이터를 tb_prod_hist 테이블에 추가 -->

@@ -10,9 +10,10 @@
     position: left;
     background-color: white;
     border-radius: 15px;
-    margin-right: 20px;
+    margin-right: 30px;
     padding: 10px;
     width: 800px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 .air-info{
     position: right;
@@ -21,6 +22,34 @@
     padding: 10px;
     width: 500px;
 }
-.inp_wrap{
 
+.table-product-form{
+    padding: 10px;
+}
+
+.table-product-form tr{
+    padding: 10px;
+}
+.table-product-form th{
+    width: 25%;
+    padding: 12px;
+    padding-left: 15px;
+}
+
+.table-product-form td input[type="text"]{
+    width: 40%;
+    border-radius: 5px;
+}
+
+.table-product-form td select{
+    width: 40%;
+    border-radius: 5px;
+    padding: 3px;
+    text-align: center;
+    font-weight: 400;
+}
+.inp_wrap input[type="date"]{
+    width: 40%;
+    border-radius: 5px;
+    text-align: center;
 }

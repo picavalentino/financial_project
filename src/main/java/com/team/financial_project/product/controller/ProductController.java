@@ -72,7 +72,9 @@ public class ProductController {
     }
 
     @PostMapping("/insert")
-    public String productInsertProc() {
+    public String productInsertProc(ProductDTO dto) {
+        log.info("### insert product: " + dto);
+        productService.insertProduct(dto);
         return "redirect:/product/list";
     }
 
