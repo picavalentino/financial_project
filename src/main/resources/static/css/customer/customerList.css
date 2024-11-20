@@ -85,8 +85,16 @@
     background-color: #6c757d; /* 어두운 회색 */
 }
 
+.print-button:hover {
+    background-color: #5a6268;
+}
+
 .message-button {
     background-color: #343a40; /* 더 어두운 회색 */
+}
+
+.message-button:hover {
+    background-color: #292d3e;
 }
 
 .search-button {

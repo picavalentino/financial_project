@@ -3,11 +3,10 @@
     padding: 20px;
 }
 
-.customer-query {
+.customerInfo {
     display : flex;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 80%;
 }
 
 .location h2 {
@@ -16,7 +15,16 @@
     font-weight: bold;
     color: #333;
 }
-/* 전체 틀 */
+
+.customerInfo h2{
+    color: #ffffff;
+    background-color: #343a40;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 20px;
+    width : 200px;
+    text-align:center;
+}
 /* ======================================================================================================= */
 /* 브레드크럼 스타일 */
 .breadcrumb {
@@ -45,31 +53,23 @@
 .breadcrumb span {
     color: #888888;
 }
-/* ======================================================================================================= */
-/* 컨텐츠 틀 */
-.customer-query{
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 87%;
-}
 
-.customer-query h2{
-    color: #ffffff;
-    background-color: #343a40;
-    padding: 10px;
-    border-radius: 4px;
-    font-size: 20px;
-    width : 200px;
-    text-align:center;
+/* ======================================================================================================= */
+/* 화면 분할 */
+
+.leftSide, rightSide{
+    display: flex;
+    flex-direction: column;
 }
 
 /* ======================================================================================================= */
 /* 고객 정보 / 담당자 정보 */
-.info-fields{
+.customer{
     display: flex;
-    width : 80%;
-    margin-bottom : 30px;
+    width : 100%;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    background-color: #ffffff;
 }
 
 .customerLeft , .customerRight {
@@ -78,32 +78,29 @@
     gap: 20px 20px; /* 행과 열 간격 설정 */
     flex-direction: column;
     align-items: flex-start;
+    padding: 15px;
+}
+
+.staff{
     background-color: #ffffff;
     padding: 15px;
     border-radius: 8px;
+    width : 100%;
+    margin-bottom: 30px;
+    border-radius: 8px;
 }
 
-.staff-fields {
-    margin-top: 30px;
+.staffContainer {
+   display: flex;
+}
+
+.staffLeft , .staffRight{
     display: flex;
     grid-template-columns: 1fr 1fr; /* 두 열로 나눔 */
     gap: 20px 20px; /* 행과 열 간격 설정 */
-    margin-bottom: 10px;
     flex-direction: column;
     align-items: flex-start;
-    background-color: #ffffff;
     padding: 15px;
-    border-radius: 8px;
-    width : 800px;
-}
-
-.customer-info{
-    width : 65%;
-}
-
-/* 주소 입력 필드에만 넓은 스타일 적용 */
-.wide-input {
-    grid-column: span 2; /* 그리드에서 두 칸을 차지하도록 설정 */
 }
 
 /* ======================================================================================================= */
@@ -113,11 +110,13 @@
     border-radius: 8px;
 }
 
-.consult-info {
+.rightSide {
     width : 600px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    justify-content: space-between;
+    margin-bottom:auto;
 }
 
 /* 개별 상담 영역 */
@@ -126,6 +125,7 @@
     padding: 15px;
     border-radius: 8px;
 }
+
 /* ======================================================================================================= */
 /* 버튼 */
 .buttons {
@@ -171,7 +171,7 @@ button {
 /* ======================================================================================================= */
 /* 기타 */
 
-.customer-info label{
+.leftSide label{
     width: 370px;
     display: flex;
     font-size: 14px;
@@ -206,7 +206,7 @@ select, input {
 /* 텍스트 영역 스타일 */
 textarea {
     width: 100%;
-    height: 210px;
+    height: 230px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -216,6 +216,7 @@ textarea {
     resize: none;
     overflow-y: auto; /* 스크롤바 설정 */
 }
+
 
 
 

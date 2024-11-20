@@ -2,52 +2,111 @@
 <html xmlns:th="www.thymeleaf.org">
 <meta charset="UTF-8">
 <head>
-    <link rel="stylesheet" th:href="@{/css/customerListModal.css}">
-    <script src="/js/customerListModal.js"></script>
+    <script src="/js/customer/customerListModal.js"></script>
 </head>
 <body>
-<!--       ======================================================================================================         -->
+<!--  ====================================================================================================================  -->
 <!-- 메세지 발송-->
 <div th:fragment="customerMessageModal">
     <div id="messageModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <button class="close-button" onclick="closeModal('messageModal')">X</button>
+        <div class="modal-message-content">
+
+            <!-- 상단 핸드폰 스피커 부분 -->
+            <div class="phone-speaker"></div>
+
+            <button class="close-button" onclick="closeModal('messageModal')">✖</button>
             <div class="message-box">
                 <textarea>
-                ~Web 발신~
-                안녕하십니까 GS-BANK입니다.
-                고객님 평안한 하루 보내고 계십니까
-                저는 퇴근 좀 시켜주세요
-                감사합니다
+[Web 발신]
+안녕하십니까 GS-BANK입니다.
+고객님 평안한 하루 보내고 계십니까
+저는 퇴근 좀 시켜주세요
+제발...
+감사합니다.
                 </textarea>
             </div>
-            <div class="tag-container">
-                <button class="tag-btn">전고객 X</button>
+            <div class="tag-container" id="tagContainer">
+                <button class="tag-btn">전고객 <span onclick="removeTag(event)">X</span></button>
+                <button class="tag-btn">V고객 <span onclick="removeTag(event)">X</span></button>
+                <button class="tag-btn">규고객 <span onclick="removeTag(event)">X</span></button>
+                <button class="tag-btn">일고객 <span onclick="removeTag(event)">X</span></button>
+                <button class="tag-btn">삼고객 <span onclick="removeTag(event)">X</span></button>
+                <button class="tag-btn">신고객 <span onclick="removeTag(event)">X</span></button>
+                <button class="tag-btn">일고객 <span onclick="removeTag(event)">X</span></button>
+                <button class="tag-btn">전고객 <span onclick="removeTag(event)">X</span></button>
+                <button class="tag-btn">전고객 <span onclick="removeTag(event)">X</span></button>
             </div>
-            <button class="send-button">✉ 메시지 발송</button>
+            <button class="message-button" id="send-button">✉ 메시지 발송</button>
         </div>
     </div>
 </div>
-<!--       ======================================================================================================         -->
+<!--   =================================================================================================================  -->
 <!-- 고객 등록-->
 <div th:fragment="customerInsertModal">
     <div id="insertModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <button class="close-button" onclick="closeModal('insertModal')">X</button>
-            <div class="message-box">
-                <p>등록 모달 내용이 여기에 표시됩니다.</p>
-            </div>
+        <div class="modal-insert-content">
+            <button class="close-button" onclick="closeModal('insertModal')">✖</button>
+            <h2 class="modal-title">고객 등록</h2>
+            <form class="register-form">
+                <label>고객명</label>
+                <input type="text" placeholder="이름을 입력해주세요.">
+                <label>생년월일</label>
+                <input type="text" placeholder="생년월일을 입력해주세요">
+                <label>연락처</label>
+                <input type="tel" placeholder="010-1111-1111">
+                <label>Email</label>
+                <input type="email" placeholder="example@gssitm.co.kr">
+                <label>직업</label>
+                <select>
+                    <option value="">직업코드를 선택해주세요</option>
+                    <option value="developer">개발자</option>
+                    <option value="designer">디자이너</option>
+                    <option value="manager">매니저</option>
+                </select>
+                <label>주소</label>
+                <select>
+                    <option value="">카카오 api 사용 예정</option>
+                </select>
+                <button type="submit" class="submit-button">고객 등록</button>
+            </form>
         </div>
     </div>
 </div>
-<!--       ======================================================================================================         -->
+<!--  ==================================================================================================================  -->
 <!-- 고객 목록 인쇄-->
 <div th:fragment="customerPrintModal">
     <div id="printModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <button class="close-button" onclick="closeModal('printModal')">X</button>
-            <div class="message-box">
-                <p>인쇄 모달 내용이 여기에 표시됩니다.</p>
+        <div class="modal-print-content">
+            <button class="close-button" onclick="closeModal('printModal')">✖</button>
+            <h2 class="modal-title">고객 목록 인쇄</h2>
+            <table class="print-table" id="print-table">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>고객명</th>
+                    <th>생년월일</th>
+                    <th>전화번호</th>
+                    <th>Email</th>
+                    <th>담당자</th>
+                    <th>활동 상태</th>
+                    <th>등록일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>001</td>
+                    <td>전하연</td>
+                    <td>19940926</td>
+                    <td>010-1111-1111</td>
+                    <td>aaa@naver.com</td>
+                    <td>김사람</td>
+                    <td><span class="status active">Active</span></td>
+                    <td>2024-11-18</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="print-button-container">
+            <button class="print-button" onclick="printTable()">🖨️ 인쇄</button>
             </div>
         </div>
     </div>

@@ -11,7 +11,9 @@
     <!-- 전체 적용될 스크립트 -->
     <th:block layout:fragment="script"></th:block>
     <!-- 페이지별 고객 조회 CSS -->
-    <link rel="stylesheet" th:href="@{/css/customerDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/customer/customerDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/customer/customerDetailModal.css}">
+    <script src="/js/customer/customerDetailModal.js"></script>
 </head>
 <body>
 <div layout:fragment="content" class="content">
@@ -26,10 +28,10 @@
             <h2>고객정보</h2>
         </section>
         <!-- ============================================================================================== -->
-        <section class="customer-query">
+        <section class="customerInfo">
             <!-- 고객 정보 섹션 -->
-            <section class="customer-info">
-                <div class="info-fields">
+            <section class="leftSide">
+                <div class="customer">
                     <div class="customerLeft">
                         <label>고객명 <input type="text" disabled></label>
                         <label>주민번호 <input type="text" disabled></label>
@@ -54,27 +56,26 @@
                     </div>
                 </div>
                 <!-- ===================================================================================== -->
-                <h2>담당 직원</h2>
-                <div class="staff-fields">
-                    <label>담당자
-                        <input class="searchManager" type="text" disabled>
-                        <button class="search-btn">🔍</button>
-                    </label>
-                    <label>연락처 <input type="text" disabled></label>
-                    <label>담당자 부서 / 직급 <input type="text" disabled></label>
-                    <label>담당자ID <input type="text" disabled></label>
-
-                </div>
-                <!-- ===================================================================================== -->
-                <div class="buttons">
-                    <button class="print-btn">인쇄</button>
-                    <button class="edit-btn">변경</button>
-                    <button class="list-btn">목록</button>
+                <div class="staff">
+                    <h2>담당 직원</h2>
+                    <div class="staffContainer">
+                        <div class="staffLeft">
+                            <label>담당자
+                                <input class="searchManager" type="text" disabled>
+                                <button class="search-btn" onclick="openSearchModal()">🔍</button>
+                            </label>
+                            <label>담당자ID <input type="text" disabled></label>
+                        </div>
+                        <div class="staffRight">
+                            <label>연락처 <input type="text" disabled></label>
+                            <label>담당자 부서 / 직급 <input type="text" disabled></label>
+                        </div>
+                    </div>
                 </div>
             </section>
             <!-- ===================================================================================== -->
             <!-- 상담 내역 및 수정 내역 섹션 -->
-            <section class="consult-info">
+            <section class="rightSide">
                 <div class="consultation">
                     <div class="consult-bar">
                         <h2>최근 상담 내역</h2>
@@ -97,6 +98,14 @@
             </section>
         </section>
     </div>
+    <!-- ===================================================================================== -->
+    <div class="buttons">
+        <button class="print-btn">인쇄</button>
+        <button class="edit-btn">변경</button>
+        <button class="list-btn">목록</button>
+    </div>
+
+    <div th:replace="~{customer/customerDetailModal :: managerSearchModal}"></div>
 </div>
 </body>
 </html>

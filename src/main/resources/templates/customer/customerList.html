@@ -10,32 +10,35 @@
     <!-- 전체 적용될 스크립트 -->
     <th:block layout:fragment="script"></th:block>
     <!-- 페이지별 고객 조회 CSS -->
-    <link rel="stylesheet" th:href="@{/css/customerList.css}">
+    <link rel="stylesheet" th:href="@{/css/customer/customerList.css}">
+    <link rel="stylesheet" th:href="@{/css/customer/customerListModal.css}">
+    <script src="/js/customer/customerListModal.js"></script>
 </head>
 <body>
 <div layout:fragment="content" class="content">
     <div class="main-content">
         <section class="location">
-        <div class="breadcrumb">
-            <span class="icon">🏠</span>
-            <a href="/main">Home</a> &gt;
-            <a href="/customer/list">고객관리</a> &gt;
-            <span>고객조회</span>
-        </div>
-        <h2>고객조회</h2>
+            <div class="breadcrumb">
+                <span class="icon">🏠</span>
+                <a href="/main">Home</a> &gt;
+                <a href="/customer/list">고객관리</a> &gt;
+                <span>고객목록</span>
+            </div>
+            <h2>고객목록</h2>
         </section>
         <!--       ======================================================================================================         -->
         <section class="customer-query">
-               <div class="actions">
+            <div class="actions">
                 <!-- 왼쪽 버튼 그룹 -->
                 <div class="left-actions">
-                    <button class="print-button">
+                    <button class="print-button" onclick="openPrintModal()">
                         <span class="icon">🖨️</span> 인쇄
                     </button>
-                    <button class="message-button">
+                    <button class="message-button" onclick="openMessageModal()">
                         <span class="icon">✉️</span> 메시지 발송
                     </button>
                 </div>
+                <!--       ======================================================================================================         -->
                 <!-- 오른쪽 버튼 그룹 -->
                 <div class="right-actions">
                     <div class="search">
@@ -51,7 +54,7 @@
                             <span class="icon">🔍</span> 검색
                         </button>
                     </div>
-                    <button class="register-button">
+                    <button class="register-button" onclick="openInsertModal()">
                         <span class="icon">➕</span> 등록
                     </button>
                 </div>
@@ -107,6 +110,11 @@
             </div>
         </section>
     </div>
+    <!-- ======================================================================================================================== -->
+    <!--모달 이동-->
+    <div th:replace="~{customer/customerListModal :: customerPrintModal}"></div>
+    <div th:replace="~{customer/customerListModal :: customerMessageModal}"></div>
+    <div th:replace="~{customer/customerListModal :: customerInsertModal}"></div>
 </div>
 </body>
 </html>
