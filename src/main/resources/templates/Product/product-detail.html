@@ -29,99 +29,123 @@
             <div class="product">
                 <h1 class="title">상품 상세보기</h1>
                 <div class="info-table">
-                    <form th:action="@{/product/update/}" method="post" class="product-info">
-                        <table class="table-product-form">
-                            <tbody>
-                            <tr>
-                                <th><label>상품명</label></th>
-                                <td><input th:value="${dto.prodNm}" type="text" readonly></td>
-                            </tr>
-                            <tr>
-                                <th><label>상품코드</label></th>
-                                <td><input th:value="${dto.prodCd}" type="text" readonly></td>
-                            </tr>
-                            <tr>
-                                <th><label>상품유형</label></th>
-                                <td><input th:value="${dto.prodTyCd}" type="text" readonly></td>
-                            </tr>
-                            <tr>
-                                <th><label>가입대상</label></th>
-                                <td><input th:value="${dto.prodSbstgTyCd}" type="text" readonly></td>
-                            </tr>
-                            <tr>
-                                <th><label>가입금액</label></th>
-                                <td>
-                                    <div class="inp_wrap">
-                                            <input th:value="${dto.prodInstlAmtMin} + ' (최소)'" type="text" readonly>
+                    <div class="product-info">
+                        <form th:action="@{/product/update}" method="post" class="product-form">
+                            <table class="table-product-form">
+                                <tbody>
+                                <tr>
+                                    <th><label>상품명</label></th>
+                                    <td class="readonly"><input th:value="${dto.prodNm}" name="prodNm" type="text" readonly></td>
+                                    <input type="hidden" name="prodSn" th:value="${dto.prodSn}">
+                                </tr>
+                                <tr>
+                                    <th><label>상품코드</label></th>
+                                    <td class="readonly"><input th:value="${dto.prodCd}" type="text" readonly></td>
+                                </tr>
+                                <tr>
+                                    <th><label>상품유형</label></th>
+                                    <td class="readonly"><input th:value="${dto.prodTyCd}" type="text" readonly></td>
+                                </tr>
+                                <tr>
+                                    <th><label>가입대상</label></th>
+                                    <td class="readonly"><input th:value="${dto.prodSbstgTyCd}" type="text" readonly></td>
+                                </tr>
+                                <tr>
+                                    <th><label>가입금액</label></th>
+                                    <td class="readonly">
+                                        <div class="inp_wrap">
+                                            <input th:value="|${#numbers.formatInteger(dto.prodInstlAmtMin, 0, 'COMMA')} (최소)|" type="text" readonly>
                                             <span>~</span>
-                                            <input th:value="${dto.prodInstlAmtMax} + ' (최대)'" type="text" readonly>
+                                            <input th:value="|${#numbers.formatInteger(dto.prodInstlAmtMax, 0, 'COMMA')} (최대)|" type="text" readonly>
                                             <span>원</span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label>납입주기</label></th>
-                                <td><input th:value="${dto.prodPayTyCd}" type="text" readonly></td>
-                            </tr>
-                            <tr>
-                                <th><label>적용이율</label></th>
-                                <td>
-                                    <div class="inp_wrap">
-                                        <input th:value="${dto.prodAirMin}" type="text" placeholder="최소">
-                                        <span>~</span>
-                                        <input th:value="${dto.prodAirMax}" type="text" placeholder="최대">
-                                        <span>%</span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label>적용기간</label></th>
-                                <td>
-                                    <div class="inp_wrap">
-                                        <input th:value="${dto.prodAirBgnYmd}" type="date" required>
-                                        <span>~</span>
-                                        <input th:value="${dto.prodAirEndYmd}" type="date" required>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label>이자과세구분</label></th>
-                                <td><input th:value="${dto.prodIntTaxTyCd}" type="text" readonly></td>
-                            </tr>
-                            <tr>
-                                <th><label>판매상태</label></th>
-                                <td><input th:value="${dto.prodCurrStcd}" type="text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>판매기간</label></th>
-                                <td>
-                                    <div class="inp_wrap">
-                                        <input th:value="${dto.prodNtslBgnYmd}" type="date" required>
-                                        <span>~</span>
-                                        <input th:value="${dto.prodNtslEndYmd}" type="date" required>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </form>
-                    <div class="air-info">
-                        <label>이율변동내역</label>
-                        <textarea readonly></textarea>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label>납입주기</label></th>
+                                    <td class="readonly"><input th:value="${dto.prodPayTyCd}" type="text" readonly></td>
+                                </tr>
+                                <tr>
+                                    <th><label>적용이율</label></th>
+                                    <td>
+                                        <div class="inp_wrap" th:classappend="${dto.prodCurrStcd == '판매종료'} ? 'inactive' : ''">
+                                            <input th:value="${dto.prodAirMin}" name="prodAirMin" type="text" placeholder="최소">
+                                            <span>~</span>
+                                            <input th:value="${dto.prodAirMax}" name="prodAirMax" type="text" placeholder="최대">
+                                            <span>%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label>적용기간</label></th>
+                                    <td>
+                                        <div class="inp_wrap" th:classappend="${dto.prodCurrStcd == '판매종료'} ? 'inactive' : ''">
+                                            <input  th:value="${dto.prodAirBgnYmd}" name="prodAirBgnYmd" type="date" required>
+                                            <span>~</span>
+                                            <input th:value="${dto.prodAirEndYmd}" name="prodAirEndYmd" type="date" required>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label>이자과세구분</label></th>
+                                    <td class="readonly"><input th:value="${dto.prodIntTaxTyCd}" type="text" readonly></td>
+                                </tr>
+                                <tr>
+                                    <th><label>판매상태</label></th>
+                                    <td class="readonly">
+                                        <div>
+                                            <input th:value="${dto.prodCurrStcd}" type="text">
+                                            <button th:if="${(dto.prodCurrStcd ?: '').trim() == '판매중'}" id="btn-end" type="button">판매종료</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label>판매기간</label></th>
+                                    <td>
+                                        <div class="inp_wrap" th:classappend="${dto.prodCurrStcd == '판매종료'} ? 'inactive' : ''">
+                                            <input th:value="${dto.prodNtslBgnYmd}" name="prodNtslBgnYmd" type="date" required>
+                                            <span>~</span>
+                                            <input th:value="${dto.prodNtslEndYmd}" name="prodNtslEndYmd" type="date" required>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                        <div class="air-info">
+                            <label>이율변동내역</label>
+                            <div class="air-info-box">
+                                <table class="air-table">
+                                    <thead>
+                                    <tr>
+                                        <th>작성일</th>
+                                        <th>이자율 범위</th>
+                                        <th>적용기간</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="hist : ${dto.histList}">
+                                        <td th:text="${hist.formattedHistCreateAt}"></td>
+                                        <td th:text="${hist.prodAirMin} + ' ~ ' + ${hist.prodAirMax}"></td>
+                                        <td th:text="${hist.prodAirBgnYmd} + ' ~ ' + ${hist.prodAirEndYmd}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-wrap">
+                        <button class="btn btn-register" th:if="${(dto.prodCurrStcd ?: '').trim() != '판매종료'}">
+                            <div class="icon"><i class="icon bi bi-plus-circle-fill"></i></div> 수정
+                        </button>
+                        <button class="btn btn-list">
+                            <div class="icon"><i class="icon bi bi-list"></i></div> 목록
+                        </button>
                     </div>
                 </div>
+
             </div>
-            <div class="button-wrap">
-                <button class="btn btn-register">
-                    <div class="icon"><i class="icon bi bi-plus-circle-fill"></i></div> 수정
-                </button>
-                <button class="btn btn-delete">
-                    <div class="icon"><i class="icon bi bi-trash-fill"></i></div> 삭제
-                </button>
-                <button class="btn btn-list">
-                    <div class="icon"><i class="icon bi bi-list"></i></div> 목록
-                </button>
-            </div>
+
         </div>
 
     <script th:inline="javascript">
@@ -129,8 +153,9 @@
             // 수정 버튼 클릭
             $(".btn-register").on("click", function (e) {
                 e.preventDefault(); // 기본 동작 방지
+                const productId = $("input[name='prodSn']").val(); // 상품코드 또는 ID 가져오기
                 const formData = $("form.product-info").serialize(); // 폼 데이터 직렬화
-                const updateUrl = "/product/update"; // 수정 요청 URL
+                const updateUrl = "/product/detail/" + productId + "/update"; // 수정 요청 URL
 
                 $.ajax({
                     url: updateUrl,
@@ -148,27 +173,28 @@
                 });
             });
 
-            // 삭제 버튼 클릭
-            $(".btn-delete").on("click", function (e) {
-                e.preventDefault(); // 기본 동작 방지
-                if (!confirm("정말 삭제하시겠습니까?")) {
-                    return; // 사용자가 취소하면 중단
+            // 판매종료 버튼 클릭
+            $("#btn-end").on("click", function (e) {
+                e.preventDefault();
+
+                // 확인창
+                if (!confirm("지금부터 해당 상품 판매를 중지하시겠습니까?")) {
+                    return;
                 }
 
-                const deleteUrl = "/product/delete"; // 삭제 요청 URL
-                const productId = $("input[name='prodCd']").val(); // 상품코드 또는 ID 가져오기
+                const productId = $("input[name='prodSn']").val(); // 상품 코드 가져오기
+                const deleteUrl = "/product/detail/" + productId + "/delete"; // 삭제 요청 URL
 
                 $.ajax({
-                    url: deleteUrl + "/" + productId,
-                    type: "DELETE",
+                    url: deleteUrl,
+                    type: "POST", // PATCH 대신 POST로 변경
                     success: function (response) {
-                        alert("삭제되었습니다.");
-                        // 성공 시 목록 페이지로 이동
-                        window.location.href = "/product/list";
+                        alert("판매중지되었습니다.");
+                        location.reload();
                     },
                     error: function (xhr, status, error) {
-                        console.error("삭제 실패: ", error);
-                        alert("삭제에 실패했습니다.");
+                        console.error("판매 중지 실패: ", error);
+                        alert("판매 중지에 실패했습니다.");
                     },
                 });
             });
@@ -180,7 +206,6 @@
             });
         });
     </script>
-
 
 </div>
 </body>

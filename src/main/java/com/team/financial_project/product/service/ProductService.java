@@ -5,6 +5,7 @@ import com.team.financial_project.product.dto.ProductDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -25,5 +26,13 @@ public class ProductService {
 
     public ProductDTO findById(Long prodSn) {
         return productMapper.findById(prodSn);
+    }
+
+    public void updateProduct(ProductDTO dto) {
+        productMapper.updateProduct(dto);
+    }
+
+    public void deleteProduct(BigDecimal prodSn) {
+        productMapper.deleteProduct(prodSn);
     }
 }

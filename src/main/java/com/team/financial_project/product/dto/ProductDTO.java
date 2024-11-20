@@ -5,6 +5,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -12,8 +13,8 @@ import java.time.LocalDateTime;
 public class ProductDTO {
     private Long prodSn;                 // 상품 일련번호
     private String prodNm;                 // 상품명
-    private Long prodInstlAmtMin;    // 최소 가입한도
-    private Long prodInstlAmtMax;    // 최대 가입한도
+    private Integer prodInstlAmtMin;    // 최소 가입한도
+    private Integer prodInstlAmtMax;    // 최대 가입한도
     private LocalDateTime prodCreateAt;    // 생성 일시
     private LocalDateTime prodUpdateAt;    // 수정 일시
     private String userId;                 // 담당직원 사원번호
@@ -29,4 +30,5 @@ public class ProductDTO {
     private String prodCurrStcd;           // 현재 상태 코드
     private String prodNtslBgnYmd;      // 판매 시작일
     private String prodNtslEndYmd;      // 판매 종료일
+    private List<ProdHistDTO> histList; // 히스토리 리스트
 }

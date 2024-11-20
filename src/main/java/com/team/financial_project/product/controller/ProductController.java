@@ -2,15 +2,20 @@ package com.team.financial_project.product.controller;
 
 import com.team.financial_project.product.dto.ProductDTO;
 import com.team.financial_project.product.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 //@RestController
 @Controller
 @RequestMapping("/product")
+@Slf4j
 public class ProductController {
     private final ProductService productService;
 
@@ -25,7 +30,6 @@ public class ProductController {
         List<ProductDTO> fullList = productService.findAll();
         int totalItems = fullList.size();
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-        System.out.println(fullList);
         // 페이지에 해당하는 상품 추출
         int startIndex = (page - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, totalItems);
@@ -47,6 +51,14 @@ public class ProductController {
     @GetMapping("/detail/{prodSn}")
     public String viewProductDetail(@PathVariable("prodSn") Long prodSn, Model model) {
         ProductDTO dto = productService.findById(prodSn);
+
+        // 포맷팅 처리
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        dto.getHistList().forEach(hist -> {
+            if (hist.getHistCreateAt() != null) {
+                hist.setFormattedHistCreateAt(hist.getHistCreateAt().format(formatter));
+            }
+        });
         model.addAttribute("dto", dto);
         return "/product/product-detail";
     }
@@ -65,14 +77,21 @@ public class ProductController {
     }
 
     // 상품 수정
-    @PatchMapping("/update")
-    public String productUpdate() {
-        return "redirect:/product/detail";
+    @PostMapping("/detail/{prodSn}/update")
+    public String productUpdate(ProductDTO dto, RedirectAttributes redirectAttributes) {
+        log.info("### update product: "+dto);
+        productService.updateProduct(dto);
+        String url = "redirect:/product/detail/" + dto.getProdSn();
+        redirectAttributes.addFlashAttribute("msg", "상품 정보가 변경되었습니다.");
+        return url;
     }
 
     // 상품 삭제
-    @PatchMapping("/delete")
-    public String productDelete() {
-        return "redirect:/product/list";
+    @PostMapping("/detail/{prodSn}/delete")
+    public String productDelete(@PathVariable("prodSn")BigDecimal prodSn, RedirectAttributes redirectAttributes) {
+        productService.deleteProduct(prodSn);
+        String url = "redirect:/product/detail/" + prodSn;
+        redirectAttributes.addFlashAttribute("msg", "해당 상품의 상태가 판매 중지로 변경되었습니다.");
+        return url;
     }
 }
