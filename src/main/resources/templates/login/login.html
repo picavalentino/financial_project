@@ -15,7 +15,7 @@
         <img src="/images/common/big-logo.png" alt="GS Bank Logo">
     </div>
     <div class="right">
-        <div class="login">
+        <form class="login" th:action="@{/login}" method="post">
             <div class="mb-5">
                 <label for="user_id" class="form-label">사원번호</label>
                 <div class="input-container">
@@ -41,13 +41,13 @@
             </div>
             <input type="button" value="로그인" class="btn-login">
             <div class="btns">
-                <input type="button" value="등록하기" class="btn-register">
+                <input type="button" value="등록하기" class="btn-register" onclick="location.href='/register'">
                 <div>
                     <input type="button" value="사번 찾기" class="btn-retrieve-id">
                     <input type="button" value="비밀번호 찾기" class="btn-retrieve-pw">
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 

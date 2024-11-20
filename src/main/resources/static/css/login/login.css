@@ -2,9 +2,6 @@
     font-family: "Pretendard";
     src: url("../fonts/Pretendard-Medium.otf");
 }
-html{
-    height: 100%;
-}
 body {
     margin: 0;
     padding: 0;
@@ -12,6 +9,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: #00000081;
 }
 
 .login-container {
@@ -30,12 +28,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 100px;
     border-radius: 10px;
 }
 
 .left-logo img {
-    max-width: 100%;
+    max-width: 50%;
     height: auto;
 }
 
@@ -56,6 +53,7 @@ body {
     flex-direction: column;
     background-color: #ffffff;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .input-container{
@@ -109,7 +107,9 @@ body {
 .btns{
     display: flex;
     justify-content: space-between;
+    padding: 0 10px;
 }
+
 .btn-register,
 .btn-retrieve-id,
 .btn-retrieve-pw{
@@ -118,7 +118,6 @@ body {
     padding: 0;
     color: #717171;
     font-size: small;
-    padding: 0 10px;
 }
 .btn-register{
     font-size: medium;

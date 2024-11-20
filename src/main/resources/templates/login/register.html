@@ -10,43 +10,69 @@
     <link rel="stylesheet" th:href="@{/css/login/register.css}">
 </head>
 <body>
-<div class="login-container">
+<div class="register-container">
     <div class="left-logo">
         <img src="/images/common/big-logo.png" alt="GS Bank Logo">
     </div>
     <div class="right">
-        <div class="login">
-            <div class="mb-5">
-                <label for="user_id" class="form-label">사원번호</label>
-                <div class="input-container">
-                    <div class="employee-number-id">
-                        <img src="/images/common/icon-user-id.png" alt="User Icon" class="input-icon">
-                        <input type="text" name="user_id" id="user_id" class="id-input" placeholder="사원번호를 입력해주세요.">
+        <div class="register">
+            <div class="title">
+                <div class="text">등록하기</div>
+                <img src="/images/common/cross.png" alt="cross">
+            </div>
+            <div class="mb-2 input-container">
+                <label for="user_id">사원번호</label>
+                <input type="text" name="user_id" id="user_id" class="id-input" placeholder="사원번호를 검색해주세요.">
+                <div id="userResults" class="dropdown" style="display: none;"></div>
+            </div>
+            <div class="mb-2 employee-info">
+                <div class="left-info">
+                    <div class="mt-4">
+                        <label for="user_name">이름</label>
+                        <p class="user_name" id="user_name">홍길동</p>
                     </div>
-                    <div class="remember_id">
-                        <input type="checkbox" id="remember_checkbox" class="remember_checkbox">
-                        <label for="remember_checkbox">저장하기</label>
+                    <div class="mt-5">
+                        <label for="user_birthday">생년월일</label>
+                        <p class="user_birthday" id="user_birthday">990101</p>
+                    </div>
+                </div>
+                <div class="right-img">
+                    <img src="/images/common/default-img.png" alt="img">
+                    <div class="img-btns">
+                        <input type="button" value="등록">
+                        <input type="button" value="초기화">
                     </div>
                 </div>
             </div>
-            <div class="mb-5">
-                <label for="user_pw" class="form-label">비밀번호</label>
-                <div class="input-container">
-                    <div class="password">
-                        <img src="/images/common/padlock.png" alt="Password Icon" class="input-icon">
-                        <input type="password" name="user_pw" id="user_pw" class="password-input" placeholder="비밀번호를 입력해주세요.">
-                    </div>
-                    <img src="/images/common/icon-hide.png" alt="Eye Icon">
+            <div class="mb-2 input-container">
+                <label for="user_pw">비밀번호</label>
+                <input type="password" name="user_pw" id="user_pw" class="password-input" placeholder="비밀번호를 입력해주세요.">
+            </div>
+            <div class="mb-2 input-container">
+                <label for="confirm-user_pw">비밀번호 확인</label>
+                <input type="password" name="user_pw" id="confirm-user_pw" class="confirm-user_pw" placeholder="비밀번호를 한번 더 입력해주세요.">
+            </div>
+            <div class="mb-2 input-container">
+                <label for="user_email">Email</label>
+                <input type="text" name="user_email" id="user_email" class="user_email" placeholder="example@gsitm.co.kr">
+            </div>
+            <div class="mb-2 input-container">
+                <label for="user_telno">휴대전화</label>
+                <div id="user_telno" name="user_telno" class="user_telno">
+                    <select name="phone1" id="phone1">
+                        <option value="010">010</option>
+                        <option value="011">011</option>
+                        <option value="016">016</option>
+                        <option value="017">017</option>
+                        <option value="018">018</option>
+                        <option value="019">019</option>
+                    </select><span>-</span>
+                    <input type="tel" id="phone2" class="phone2" placeholder="0000"><span>-</span>
+                    <input type="tel" id="phone3" class="phone3" placeholder="0000">
+                    <input type="button" value="인증" class="btn-phone">
                 </div>
             </div>
-            <input type="button" value="로그인" class="btn-login">
-            <div class="btns">
-                <input type="button" value="등록하기" class="btn-register">
-                <div>
-                    <input type="button" value="사번 찾기" class="btn-retrieve-id">
-                    <input type="button" value="비밀번호 찾기" class="btn-retrieve-pw">
-                </div>
-            </div>
+            <input type="button" value="회원가입" class="btn-register mt-3">
         </div>
     </div>
 </div>
