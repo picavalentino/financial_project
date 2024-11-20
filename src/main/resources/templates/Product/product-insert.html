@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+
+<meta charset="UTF-8">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/product/common.css">
+    <link rel="stylesheet" href="/css/product/product-insert.css">
+    <link rel="stylesheet" href="/css/buttons/button.css">
+</head>
+
+<title>GS Bank</title>
+<!-- 전체 적용될 CSS -->
+<th:block layout:fragment="css"></th:block>
+<!-- 전체 적용될 스크립트 -->
+<th:block layout:fragment="script"></th:block>
+
+<!-- 우리가 작업할 공간 -->
+<body>
+<div layout:fragment="content" class="content">
+        <div class="sub_content">
+            <div class="location">
+                <p><i class="bi bi-house-door-fill"></i> Home / 상품관리 / 신규상품등록 </p>
+            </div>
+            <div class="produce">
+                <h1 class="title">신규상품등록</h1>
+                <div class="box_wrap">
+                    <form th:action="@{/product/insert/}" method="post" class="product-info">
+                        <ul class="left">
+                            <li>
+                                <label>상품명</label>
+                                <input name="prodNm" type="text">
+                            </li>
+<!--                            <li>-->
+<!--                                <label>상품코드</label>-->
+<!--                                <select>-->
+<!--                                    <option value="">==선택==</option>-->
+<!--                                    <option value="1">적금</option>-->
+<!--                                    <option value="2">예금</option>-->
+<!--                                    <option value="3">대출</option>-->
+<!--                                </select>-->
+<!--                            </li>-->
+                            <li>
+                                <label>상품유형</label>
+                                <select name="prodTyCd">
+                                    <option value="">==선택==</option>
+                                    <option value="1">적금</option>
+                                    <option value="2">예금</option>
+                                    <option value="3">대출</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>가입대상</label>
+                                <select name="prodSbstgTyCd">
+                                    <option value="">==선택==</option>
+                                    <option value="1">일반개인</option>
+                                    <option value="2">청년생활지원</option>
+                                    <option value="3">장애자우선지원</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>가입금액</label>
+                                <div class="inp_wrap">
+                                    <div class="unit unit01">
+                                        <input name="prodInstlAmtMin" type="text" placeholder="최소">
+                                    </div>
+                                    <span>~</span>
+                                    <div class="unit unit01">
+                                        <input name="prodInstlAmtMax" type="text" placeholder="최대">
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <label>납입주기</label>
+                                <select name="prodPayTyCd">
+                                    <option value="">==선택==</option>
+                                    <option value="1">월납</option>
+                                    <option value="3">3개월납</option>
+                                    <option value="6">6개월납</option>
+                                    <option value="8">년납</option>
+                                    <option value="9">일시납</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>적용이율</label>
+                                <div class="inp_wrap">
+                                    <div class="unit unit02">
+                                        <input name="prodAirMin" type="text" placeholder="최소">
+                                    </div>
+                                    <span>~</span>
+                                    <div class="unit unit02">
+                                        <input name="prodAirMax" type="text" placeholder="최대">
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <label>적용기간</label>
+                                <div class="inp_wrap">
+                                    <input name="prodAirBgnYmd" type="date" placeholder="최소" required>
+                                    <span>~</span>
+                                    <input name="prodAirEndYmd" type="date" placeholder="최대" required>
+                                </div>
+                            </li>
+                            <li>
+                                <label>이자과세구분</label>
+                                <select name="prodIntTaxTyCd">
+                                    <option value="">==선택==</option>
+                                    <option value="1">일반과세</option>
+                                    <option value="2">세금우대</option>
+                                    <option value="3">비과세</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>판매상태</label>
+                                <select name="prodCurrStcd">
+                                    <option value="">==선택==</option>
+                                    <option value="0">준비</option>
+                                    <option value="1">정상</option>
+                                    <option value="9">사용불가</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>판매기간</label>
+                                <div class="inp_wrap">
+                                    <input name="prodNtslBgnYmd" type="date" placeholder="최소" required>
+                                    <span>~</span>
+                                    <input name="prodNtslEndYmd" type="date" placeholder="최대" required>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
+<!--                    <div class="air-info">-->
+<!--                        <label>이율변동내역</label>-->
+<!--                        <textarea readonly></textarea>-->
+<!--                    </div>-->
+                </div>
+            </div>
+            <div class="button-wrap">
+                <button class="btn btn-register">
+                    <i class="icon bi bi-plus-circle-fill"></i> 등록
+                </button>
+                <button class="btn btn-reset">
+                    <i class="icon bi bi-arrow-left-circle-fill"></i> 초기화
+                </button>
+                <button class="btn btn-list">
+                    <i class="icon bi bi-list"></i> 목록
+                </button>
+            </div>
+        </div>
+
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            $.ajax({
+
+            });
+        });
+    </script>
+
+</div>
+</body>
+</html>

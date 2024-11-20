@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.financial_project.mapper.ProductMapper">
+    <resultMap id="ProductResultMap" type="com.team.financial_project.product.dto.ProductDTO">
+        <id property="prodSn" column="prod_sn"/>
+        <result property="prodNm" column="prod_nm"/>
+        <result property="prodInstlAmtMin" column="prod_instl_amt_min"/>
+        <result property="prodInstlAmtMax" column="prod_instl_amt_max"/>
+        <result property="prodCreateAt" column="prod_create_at"/>
+        <result property="prodUpdateAt" column="prod_update_at"/>
+        <result property="userId" column="user_id"/>
+        <result property="prodCd" column="prod_cd"/>
+        <result property="prodTyCd" column="prod_ty_cd"/>
+        <result property="prodSbstgTyCd" column="prod_sbstg_ty_cd"/>
+        <result property="prodPayTyCd" column="prod_pay_ty_cd"/>
+        <result property="prodAirMin" column="prod_air_min"/>
+        <result property="prodAirMax" column="prod_air_max"/>
+        <result property="prodAirBgnYmd" column="prod_air_bgn_ymd"/>
+        <result property="prodAirEndYmd" column="prod_air_end_ymd"/>
+        <result property="prodCurrStcd" column="prod_curr_stcd"/>
+        <result property="prodNtslBgnYmd" column="prod_ntsl_bgn_ymd"/>
+        <result property="prodNtslEndYmd" column="prod_ntsl_end_ymd"/>
+    </resultMap>
+    <select id="findAll" resultType="com.team.financial_project.product.dto.ProductDTO">
+        SELECT
+        p.prod_sn,
+        p.prod_nm,
+        p.prod_instl_amt_min,
+        p.prod_instl_amt_max,
+        p.prod_create_at,
+        p.prod_update_at,
+        p.user_id,
+        p.prod_cd,
+        c1.code_nm AS prodTyCd,
+        c2.code_nm AS prodSbstgTyCd,
+        c3.code_nm AS prodPayTyCd,
+        c4.code_nm AS prodIntTaxTyCd,
+        p.prod_air_min,
+        p.prod_air_max,
+        p.prod_air_bgn_ymd,
+        p.prod_air_end_ymd,
+        p.prod_curr_stcd,
+        p.prod_ntsl_bgn_ymd,
+        p.prod_ntsl_end_ymd
+        FROM tb_product p
+        LEFT JOIN tb_code c1 ON c1.code_cl = p.prod_ty_cd_code_cl AND c1.code_no = p.prod_ty_cd
+        LEFT JOIN tb_code c2 ON c2.code_cl = p.prod_sbstg_ty_cd_code_cl AND c2.code_no = p.prod_sbstg_ty_cd
+        LEFT JOIN tb_code c3 ON c3.code_cl = p.prod_pay_ty_cd_code_cl AND c3.code_no = p.prod_pay_ty_cd
+        LEFT JOIN tb_code c4 ON c4.code_cl = p.prod_int_tax_ty_cd_code_cl AND c4.code_no = p.prod_int_tax_ty_cd
+        ORDER BY p.prod_ntsl_bgn_ymd DESC;
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="com.team.financial_project.product.dto.ProductDTO">
+        SELECT prod_sn, prod_nm, prod_instl_amt_min, prod_instl_amt_max, prod_create_at, prod_update_at,
+        user_id, prod_cd, prod_ty_cd, prod_sbstg_ty_cd, prod_pay_ty_cd, prod_air_min, prod_air_max,
+        prod_air_bgn_ymd, prod_air_end_ymd, prod_curr_stcd, prod_ntsl_bgn_ymd, prod_ntsl_end_ymd
+        FROM tb_product
+        WHERE prod_sn = #{prodSn}
+    </select>
+</mapper>

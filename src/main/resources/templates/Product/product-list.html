@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/css/product/common.css">
   <link rel="stylesheet" href="/css/product/product-list.css">
   <link rel="stylesheet" href="/css/buttons/button.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <title>GS Bank</title>
 <!-- 전체 적용될 CSS -->
@@ -112,10 +113,10 @@
         <tbody>
           <tr th:each="product : ${list}" th:onclick="'window.location.href=\'/product/detail/' + ${product.prodSn} + '\';'" style="cursor: pointer;">
             <td><input type="checkbox"></td>
-            <td>상품유형</td>
+            <td>[[${product.prodTyCd}]]</td>
             <td>[[${product.prodNm}]]</td>
-            <td>[[${product.prodInstlAmtMin}]]</td>
-            <td>[[${product.prodInstlAmtMax}]]</td>
+            <td th:text="${product.prodInstlAmtMin != null ? #numbers.formatDecimal(product.prodInstlAmtMin, 0, 0) : '0'}"></td>
+            <td th:text="${product.prodInstlAmtMax != null ? #numbers.formatDecimal(product.prodInstlAmtMax, 0, 0) : '0'}"></td>
             <td>[[${product.prodPayTyCd}]]</td>
             <td>[[${product.prodAirMin}]]</td>
             <td>[[${product.prodAirMax}]]</td>
@@ -135,6 +136,12 @@
       </div>
     </div>
   </div>
+  <script th:inline="javascript">
+    $(document).ready(function () {
+        let amountMin = [[${product.prodInstlAmtMin}]];
+        console.log('최소가입액'+amountMin);
+    });
+  </script>
 </div>
 </body>
 </html>
