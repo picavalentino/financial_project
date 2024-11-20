@@ -425,6 +425,5 @@ input[type="password"] {
 input[type="text"],
 input[type="password"] {
   line-height: 1.5;
-  padding: 8px 12px;
   box-sizing: border-box; /* 패딩 포함하여 크기 계산 */
 }
