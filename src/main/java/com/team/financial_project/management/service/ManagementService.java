@@ -67,4 +67,15 @@ public class ManagementService {
         return userMapper.selectEmployeeList(offset, pageSize, dept, position, status, auth, validatedSearchField, searchValue);
     }
 
+    // insert 요청에서 신입사원 직원수 가져오기
+    public int getTotalInsertCount(String searchValue) {
+        return userMapper.getTotalInsertCount(searchValue);
+    }
+
+    public List<UserDTO> getInsertList(int page, int pageSize,String searchValue) {
+        int offset = (page - 1) * pageSize;
+
+        System.out.println("검색 조건: searchValue=" + searchValue);
+        return userMapper.selectInsertList(offset, pageSize, searchValue);
+    }
 }

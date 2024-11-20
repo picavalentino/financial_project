@@ -193,5 +193,47 @@
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
+    <!-- 직원 총 수 가져오기 (검색 조건 포함) / insert -->
+    <select id="getTotalInsertCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tb_user tu
+        WHERE
+        tu.user_id LIKE '2024%'
+    </select>
+
+    <select id="selectInsertList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        dept_cd.code_nm AS dept_name,  -- 부서명
+        jbps_cd.code_nm AS position_name,  -- 직위명
+        status_cd.code_nm AS status_name,  -- 활동상태
+        auth_cd.code_nm AS auth_name,    -- 권한 이름
+        tu.user_id,
+        tu.user_name,
+        tu.user_birthday,
+        tu.user_jncmp_ymd -- 입사날짜
+        FROM
+        tb_user tu
+        LEFT JOIN
+        tb_code dept_cd
+        ON tu.user_dept_cd_code_cl = dept_cd.code_cl
+        AND tu.user_dept_cd = dept_cd.code_no
+        LEFT JOIN
+        tb_code jbps_cd
+        ON tu.user_jbps_ty_cd_code_cl = jbps_cd.code_cl
+        AND tu.user_jbps_ty_cd = jbps_cd.code_no
+        LEFT JOIN
+        tb_code status_cd
+        ON tu.user_status_code_cl = status_cd.code_cl
+        AND tu.user_status = status_cd.code_no
+        LEFT JOIN
+        tb_code auth_cd
+        ON tu.user_auth_cd_code_cl = auth_cd.code_cl
+        AND tu.user_auth_cd = auth_cd.code_no
+        WHERE
+        tu.user_id LIKE '2024%'
+        ORDER BY
+        tu.user_dept_cd, jbps_cd.code_no
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
 
 </mapper>

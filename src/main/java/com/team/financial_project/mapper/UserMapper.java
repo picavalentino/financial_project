@@ -20,7 +20,7 @@ public interface UserMapper {
     // 권한 정보 가져오기
     List<UserDTO> selectAuthList();
 
-    // 전체 직원 수 가져오기 (검색 조건 포함)
+    // 전체 직원 수 가져오기 (검색 조건 포함) - list
     int getTotalDataCount(@Param("dept") String dept, @Param("position") String position,
                           @Param("searchField") String searchField, @Param("searchValue") String searchValue);
 
@@ -29,6 +29,7 @@ public interface UserMapper {
                                     @Param("dept") String dept, @Param("position") String position,
                                     @Param("searchField") String searchField, @Param("searchValue") String searchValue);
 
+    // 전체 직원 수 가져오기 (검색 조건 포함) - employees
     int getTotalEmployeeCount(@Param("dept") String dept, @Param("position") String position,
                                  @Param("status") String status, @Param("searchField") String searchField,
                                  @Param("searchValue") String searchValue);
@@ -39,4 +40,8 @@ public interface UserMapper {
                                      @Param("searchField") String searchField,
                                      @Param("searchValue") String searchValue);
 
+    // 전체 직원 수 가져오기 (검색 조건 포함) - insert
+    int getTotalInsertCount(@Param("searchValue") String searchValue);
+
+    List<UserDTO> selectInsertList(int offset, int pageSize, String searchValue);
 }

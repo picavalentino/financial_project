@@ -133,12 +133,29 @@ public class ManagementController {
 
 
     @GetMapping("/insert")
-    public String managementInsert(Model model, @RequestParam(name = "page", defaultValue = "1") int page) {
-        int totalPageNumber = 10; // 실제 데이터에 맞춰 계산된 총 페이지 수
-        List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumber(page, totalPageNumber);
+    public String managementInsert(Model model,
+                                   @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                   @RequestParam(name = "searchValue", required = false) String searchValue) {
 
+        // 총 데이터 수 계산 (검색 조건 포함)
+        int totalInsertCount = managementService.getTotalInsertCount(searchValue);
+        int pageSize = 10; // 한 페이지에 보여줄 데이터 수
+        int totalPageNumber = (int) Math.ceil((double) totalInsertCount / pageSize);
+        System.out.println(totalPageNumber);
+
+        // 페이지네이션 바 번호 계산
+        List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumber(page, totalPageNumber);
         model.addAttribute("paginationBarNumbers", paginationBarNumbers);
         model.addAttribute("currentPageNumber", page);
+
+        // 현재 페이지에 맞는 직원 목록 가져오기 (검색 조건 포함)
+        List<UserDTO> insertList = managementService.getInsertList(page, pageSize, searchValue);
+        model.addAttribute("insertList", insertList.isEmpty() ? Collections.emptyList() : insertList);
+
+        // 페이지 정보 추가
+        model.addAttribute("totalPageNumber", totalPageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalInsertCount", totalInsertCount);
         return "/management/managementInsert";
     }
 }
