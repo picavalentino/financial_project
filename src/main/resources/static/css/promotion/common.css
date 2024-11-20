@@ -1,0 +1,44 @@
+/* 공통 : 링크 태그에 밑줄 제거 */
+a {
+    text-decoration: none;
+}
+
+/* content 사이즈와 여백 */
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* 페이지 위치 */
+.page-breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #888888;
+    gap: 5px; /* 아이콘과 텍스트 사이 간격 */
+}
+
+.home-icon {
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.page-breadcrumb a {
+    color: #888888;
+}
+
+.page-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* 페이지 제목 */
+.page-title {
+    /*font-size: 25px;*/
+    font-size: 1.75rem;
+    /*font-weight: bold;*/
+    margin-top: 20px; /* 페이지 위치와의 간격 */
+    margin-bottom: 30px; /* 아래 내용과의 간격 */
+    padding-left: 20px;
+    color: #333;
+}
+

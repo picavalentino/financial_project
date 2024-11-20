@@ -16,12 +16,12 @@ public class PromotionBatchJob {
         this.promotionService = promotionService;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정 실행
-    public void updateProgressStatuses() {
-        System.out.println("Batch job started at: " + LocalDate.now());
-        promotionService.updateAllProgressStatuses();
-        System.out.println("Batch job completed.");
-    }
+//    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정 실행
+//    public void updateProgressStatuses() {
+//        System.out.println("Batch job started at: " + LocalDate.now());
+//        promotionService.updateAllProgressStatuses();
+//        System.out.println("Batch job completed.");
+//    }
 
     // @Scheduled는 Cron 표현식을 사용해 실행 주기를 설정
     // 0 0 0 * * ?: 매일 자정 실행

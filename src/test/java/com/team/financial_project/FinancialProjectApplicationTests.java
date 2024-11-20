@@ -4,8 +4,10 @@ import com.team.financial_project.promotion.service.PromotionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class FinancialProjectApplicationTests {
 
 	@Autowired
@@ -15,6 +17,7 @@ class FinancialProjectApplicationTests {
 	void contextLoads() {
 	}
 
+	@Transactional
 	@Test
 	void testUpdateAllProgressStatuses() {
 		// updateAllProgressStatuses 메서드 호출

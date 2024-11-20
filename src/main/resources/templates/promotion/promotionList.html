@@ -2,115 +2,178 @@
 <html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
 <!--security 적용 후 아래 코드로 변경해주세요-->
 <!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
-
-<meta charset="UTF-8">
-<title>GS Bank</title>
-<!-- 전체 적용될 CSS -->
-<th:block layout:fragment="css"></th:block>
-<!-- 전체 적용될 스크립트 -->
-<th:block layout:fragment="script"></th:block>
-
-<!-- 우리가 작업할 공간 -->
+<head>
+    <meta charset="UTF-8">
+    <title>GS Bank</title>
+    <!-- 전체 적용될 CSS -->
+    <th:block layout:fragment="css"></th:block>
+    <!-- 전체 적용될 스크립트 -->
+    <th:block layout:fragment="script"></th:block>
+    <!-- 페이지별 상품 설계 조회 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/promotion/button.css}">
+    <link rel="stylesheet" th:href="@{/css/promotion/common.css}">
+    <link rel="stylesheet" th:href="@{/css/promotion/promotionList.css}">
+</head>
 <body>
 <div layout:fragment="content" class="content">
-    <h1>상품 설계 조회 페이지입니다.</h1>
-    <div>
-        <div>
-            <label>고객명</label>
-            <input type="text" name="custNm">
-        </div>
-        <div>
-            <label>담당자</label>
-            <input type="text" name="userNm">
-        </div>
-        <p></p>
-        <div>
-            <label>진행상태</label>
-            <select name="prgStcd" id="prgStcd" onchange="filterResults()">
-                <option value="">전체</option>
-                <option value="0">제안중</option>
-                <option value="1">추가상담필요</option>
-                <option value="2">가입대기</option>
-                <option value="3">가입완료</option>
-                <option value="4">만기예정</option>
-                <option value="5">취소/보류</option>
-                <option value="9">해지</option>
-            </select>
-        </div>
-        <div>
-            <label>상품유형</label>
-            <select name="dsTyCd" id="dsTyCd" onchange="filterResults()">
-                <option value="">전체</option>
-                <option value="1">적금설계</option>
-                <option value="2">목돈마련설계</option>
-                <option value="3">예금설계</option>
-                <option value="4">대출설계</option>
-            </select>
-        </div>
-        <div>
-            <label>상품명</label>
-            <input type="text" name="prodNm">
-        </div>
-        <div>
-            <button type="button" onclick="filterResults()">조건검색</button>
-            <button type="button" onclick="resetFilters()">전체검색</button>
-        </div>
-    </div>
+    <div class="main-content">
+        <!-- 페이지 위치 & 제목 -->
+        <section class="page-location">
+            <div class="page-breadcrumb">
+                <span class="home-icon"><i class="bi bi-house-door-fill"></i></span>
+                <a href="/main">Home</a> &gt;
+                <a href="/promotion/list">프로모션관리</a> &gt;
+                <span>상품설계조회</span>
+            </div>
+            <h1 class="page-title">상품설계조회</h1>
+        </section>
 
-    <table>
-        <thead>
-        <tr>
-            <th onclick="sortTable('custNm')">고객명</th>
-            <th onclick="sortTable('userNm')">담당자</th>
-            <th onclick="sortTable('dsTyCd')">상품유형</th>
-            <th onclick="sortTable('prodNm')">상품명</th>
-            <th onclick="sortTable('prgStcd')">진행상태</th>
-            <th onclick="sortTable('mtrDt')">만기일자</th>
-            <th>만기금액(잔액)</th>
-        </tr>
-        </thead>
-        <tbody id="result-table-body">
-        <tr th:each="productDesign : ${PromotionList}"
-            th:attr="data-dsgn-sn=${productDesign.dsgnSn}"
-            onclick="handleRowClick(this)">
-            <td th:text="${productDesign.custNm}"></td>
-            <td th:text="${productDesign.userNm}"></td>
-            <td>
-                <span th:if="${productDesign.dsTyCd == '1'}">적금설계</span>
-                <span th:if="${productDesign.dsTyCd == '2'}">목돈마련설계</span>
-                <span th:if="${productDesign.dsTyCd == '3'}">예금설계</span>
-                <span th:if="${productDesign.dsTyCd == '4'}">대출설계</span>
-            </td>
-            <td th:text="${productDesign.prodNm}"></td>
-            <td>
-                <span th:if="${productDesign.prgStcd == '0'}">제안중</span>
-                <span th:if="${productDesign.prgStcd == '1'}">추가상담필요</span>
-                <span th:if="${productDesign.prgStcd == '2'}">가입대기</span>
-                <span th:if="${productDesign.prgStcd == '3'}">가입완료</span>
-                <span th:if="${productDesign.prgStcd == '4'}">만기예정</span>
-                <span th:if="${productDesign.prgStcd == '5'}">취소/보류</span>
-                <span th:if="${productDesign.prgStcd == '9'}">해지</span>
-            </td>
-            <td th:text="${productDesign.mtrDate}"></td>
-            <td th:text="${productDesign.mtrAmt}"></td>
-        </tr>
-        </tbody>
-    </table>
+        <!-- 검색 영역 -->
+        <div class="search-controls-area">
+            <!-- 첫 번째 줄 -->
+            <div class="search-row">
+                <div class="search-item">
+                    <label for="custNm">고객명</label>
+                    <input type="text" id="custNm" name="custNm">
+                </div>
+                <div class="search-item">
+                    <label for="userNm">담당자</label>
+                    <input type="text" id="userNm" name="userNm">
+                </div>
+                <div class="search-item">
+                    <label></label>
+                </div>
+                <div class="search-buttons">
+                    <button class="btn btn-search" onclick="filterResults()">
+                        <i class="icon bi bi-search"></i> 검색
+                    </button>
+                    <button class="btn btn-search-all" onclick="resetFilters()">
+                        <i class="icon bi bi-search"></i> 전체
+                    </button>
+                </div>
+            </div>
 
-    <div id="paginationControls">
-        <!-- 이전 페이지 링크 -->
-        <span th:if="${currentPage == 1}">&lt;</span>
-        <a th:if="${currentPage > 1}" th:href="@{/promotion/list(page=${currentPage - 1}, size=${10})}">&lt;</a>
+            <!-- 두 번째 줄 -->
+            <div class="search-row">
+                <div class="search-item">
+                    <label for="prgStcd">진행상태</label>
+                    <select id="prgStcd" name="prgStcd" onchange="filterResults()">
+                        <option value="">전체</option>
+                        <option value="0">제안중</option>
+                        <option value="1">추가상담필요</option>
+                        <option value="2">가입대기</option>
+                        <option value="3">가입완료</option>
+                        <option value="4">만기예정</option>
+                        <option value="5">취소/보류</option>
+                        <option value="6">만기완료</option>
+                        <option value="9">해지</option>
+                    </select>
+                </div>
+                <div class="search-item">
+                    <label for="dsTyCd">상품유형</label>
+                    <select id="dsTyCd" name="dsTyCd" onchange="filterResults()">
+                        <option value="">전체</option>
+                        <option value="1">적금설계</option>
+                        <option value="2">목돈마련설계</option>
+                        <option value="3">예금설계</option>
+                        <option value="4">대출설계</option>
+                    </select>
+                </div>
+                <div class="search-item">
+                    <label for="prodNm">상품명</label>
+                    <input type="text" id="prodNm" name="prodNm">
+                </div>
+                <div class="search-buttons">
+                    <button class="btn btn-print">
+                        <i class="icon bi bi-printer"></i> 인쇄
+                    </button>
+                    <button class="btn btn-register">
+                        <i class="icon bi bi-plus-circle-fill"></i> 등록
+                    </button>
+                </div>
+            </div>
+        </div>
 
-        <!-- 페이지 번호 -->
-        <span th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
-        <a th:if="${pageNum != currentPage}" th:href="@{/promotion/list(page=${pageNum}, size=${10})}" th:text="${pageNum}"></a>
-        <span th:if="${pageNum == currentPage}" th:text="${pageNum}"></span>
-    </span>
+        <!-- 테이블 -->
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th><input type="checkbox"></th>
+                <th onclick="sortTable('custNm')" class="sortable">
+                    고객명 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('userNm')" class="sortable">
+                    담당자 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('dsTyCd')" class="sortable">
+                    상품유형 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('prodNm')" class="sortable">
+                    상품명 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('prgStcd')" class="sortable">
+                    진행상태 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('mtrDt')" class="sortable">
+                    만기일자 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th>만기금액(잔액)</th>
+            </tr>
+            </thead>
+            <tbody id="result-table-body">
+            <tr th:each="productDesign : ${PromotionList}"
+                th:attr="data-dsgn-sn=${productDesign.dsgnSn}"
+                onclick="handleRowClick(this)">
+                <td>
+                    <input type="checkbox">
+                </td>
+                <td th:text="${productDesign.custNm}"></td>
+                <td th:text="${productDesign.userNm}"></td>
+                <td>
+                    <span th:if="${productDesign.dsTyCd == '1'}">적금설계</span>
+                    <span th:if="${productDesign.dsTyCd == '2'}">목돈마련설계</span>
+                    <span th:if="${productDesign.dsTyCd == '3'}">예금설계</span>
+                    <span th:if="${productDesign.dsTyCd == '4'}">대출설계</span>
+                </td>
+                <td th:text="${productDesign.prodNm}"></td>
+                <td>
+                    <span th:if="${productDesign.prgStcd == '0'}">제안중</span>
+                    <span th:if="${productDesign.prgStcd == '1'}">추가상담필요</span>
+                    <span th:if="${productDesign.prgStcd == '2'}">가입대기</span>
+                    <span th:if="${productDesign.prgStcd == '3'}">가입완료</span>
+                    <span th:if="${productDesign.prgStcd == '4'}">만기예정</span>
+                    <span th:if="${productDesign.prgStcd == '5'}">취소/보류</span>
+                    <span th:if="${productDesign.prgStcd == '9'}">해지</span>
+                </td>
+                <td th:text="${productDesign.mtrDate}"></td>
+                <td th:text="${productDesign.mtrAmt}"></td>
+            </tr>
+            </tbody>
+        </table>
 
-        <!-- 다음 페이지 링크 -->
-        <span th:if="${currentPage == totalPages}">&gt;</span>
-        <a th:if="${currentPage < totalPages}" th:href="@{/promotion/list(page=${currentPage + 1}, size=${10})}">&gt;</a>
+        <!-- 페이지네이션 -->
+        <div id="paginationControls" class="pagination-container">
+            <div class="pagination">
+                <!-- 이전 버튼 -->
+                <button class="pagination-prev pagination-button" th:if="${currentPage > 1}"
+                        th:onclick="'location.href=\'' + @{/promotion/list(page=${currentPage - 1}, size=${10})} + '\''">&lt;</button>
+                <button class="pagination-prev pagination-button" th:if="${currentPage == 1}" disabled>&lt;</button>
+
+                <!-- 페이지 번호 -->
+                <a th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
+                   th:href="@{/promotion/list(page=${pageNum}, size=${10})}"
+                   th:classappend="${pageNum == currentPage} ? 'pagination-active' : ''"
+                   th:text="${pageNum}" class="pagination-number"></a>
+
+                <!-- 다음 버튼 -->
+                <button class="pagination-next pagination-button" th:if="${currentPage < totalPages}"
+                        th:onclick="'location.href=\'' + @{/promotion/list(page=${currentPage + 1}, size=${10})} + '\''">&gt;</button>
+                <button class="pagination-next pagination-button" th:if="${currentPage == totalPages}" disabled>&gt;</button>
+            </div>
+            <span class="pagination-info"
+                  th:text="'Page ' + ${currentPage} + ' of ' + ${totalPages}"></span>
+        </div>
     </div>
 
     <!-- 자바스크립트 -->
@@ -174,6 +237,7 @@
                     ajax: true // AJAX 요청임을 명시
                 },
                 success: function(response) {
+
                     console.log('Response:', response); // 응답 데이터 확인
 
                     // 기존 테이블 데이터를 초기화
@@ -188,6 +252,7 @@
 
                             const row = `
                                 <tr>
+                                    <td><input type="checkbox"></td>
                                     <td>${productDesign.custNm}</td>
                                     <td>${productDesign.userNm}</td>
                                     <td>${getProductType(productDesign.dsTyCd)}</td>
@@ -206,6 +271,7 @@
 
                     // 페이지네이션 갱신
                     updatePagination(response.totalPages, response.currentPage);
+
                 },
                 error: function(error) {
                     console.error('Error fetching filtered results:', error);
@@ -243,27 +309,31 @@
             const paginationControls = $('#paginationControls');
             paginationControls.empty(); // 기존 페이지네이션 요소 초기화
 
+            // 새로운 페이지네이션 요소 생성
+            const paginationDiv = $('<div class="pagination"></div>');
+            paginationControls.append(paginationDiv);
+
             // 이전 페이지 버튼
             if (currentPage > 1) {
-                paginationControls.append(`<a href="#" onclick="filterResults(${currentPage - 1})">&lt;</a>`);
+                paginationDiv.append(`<button class="pagination-prev pagination-button" onclick="filterResults(${currentPage - 1})">&lt;</button>`);
             } else {
-                paginationControls.append(`<span>&lt;</span>`);
+                paginationDiv.append(`<button class="pagination-prev pagination-button" disabled>&lt;</button>`);
             }
 
             // 페이지 번호
             for (let i = 1; i <= totalPages; i++) {
                 if (i === currentPage) {
-                    paginationControls.append(`<span>${i}</span>`);
+                    paginationDiv.append(`<a href="#" class="pagination-number pagination-active" disabled>${i}</button>`);
                 } else {
-                    paginationControls.append(`<a href="#" onclick="filterResults(${i})">${i}</a>`);
+                    paginationDiv.append(`<a href="#" class="pagination-number" onclick="filterResults(${i})">${i}</a>`);
                 }
             }
 
             // 다음 페이지 버튼
             if (currentPage < totalPages) {
-                paginationControls.append(`<a href="#" onclick="filterResults(${currentPage + 1})">&gt;</a>`);
+                paginationDiv.append(`<button class="pagination-number" onclick="filterResults(${currentPage + 1})">&gt;</a>`);
             } else {
-                paginationControls.append(`<span>&gt;</span>`);
+                paginationDiv.append(`<button class="pagination-next pagination-button">&gt;</button>`);
             }
         }
 

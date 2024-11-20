@@ -1,0 +1,187 @@
+/* ======================================================================================================= */
+/* 검색 영역 */
+.search-controls-area {
+    padding: 20px;
+    background-color: #f4f4f6;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* search-row 수직 간격 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+/* 각 줄 */
+.search-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) auto; /* 3개의 필드 + 버튼 그룹 */
+    align-items: center;
+    gap: 50px; /* 열 간격 */
+}
+
+/* 필드와 레이블 그룹 */
+.search-item {
+    display: flex;
+    flex-direction: row; /* 가로 배치 */
+    align-items: center;
+    gap: 10px; /* 라벨과 필드 간격 */
+}
+
+/* 레이블 */
+.search-item label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap; /* 라벨이 줄바꿈되지 않도록 설정 */
+    width: 80px; /* 고정 너비로 정렬 */
+}
+
+/* 입력 필드 및 셀렉트 박스 */
+.search-item input,
+.search-item select {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 100%;
+}
+
+/* 버튼 그룹 */
+.search-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-left: 100px; /* 필드 그룹과의 간격 추가 */
+}
+
+/* ======================================================================================================= */
+/* 테이블 스타일 */
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #333;
+}
+
+.data-table th, .data-table td {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    text-align: center;
+}
+
+.data-table thead th {
+    font-weight: bold;
+    background-color: #f8f9fa;
+    text-align: center;
+    color: #495057;
+    position: relative;
+    cursor: pointer;
+}
+
+.data-table tbody tr {
+    background-color: #ffffff;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* 테이블 헤더 마우스 오버 효과 */
+.data-table th:hover {
+    color: #010535;
+}
+
+/* 체크박스 헤더에서 화살표 숨기기 */
+.data-table th:has(input[type="checkbox"])::after {
+    content: none;
+}
+
+/* 정렬 가능한 헤더 스타일 */
+.sortable {
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    padding-right: 20px; /* 아이콘 위치 조정 */
+}
+
+/* 정렬 아이콘 스타일 */
+.sortable i {
+    font-size: 12px; /* 아이콘 크기 조정 */
+    color: #888;
+    margin-left: 5px; /* 텍스트와 아이콘 간격 */
+    transition: color 0.3s;
+}
+
+/* 마우스 오버 시 색상 변경 */
+.sortable:hover i {
+    color: #010535;
+}
+
+.data-table tbody td {
+  vertical-align: middle;
+  text-align: center;
+  background-color: #fff;
+}
+
+/* ======================================================================================================= */
+/* 페이지네이션 컨테이너 */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 10px;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 페이지 번호 간 간격 */
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+/* 페이지 번호와 버튼 */
+.pagination-button, .pagination-number {
+    color: #333;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+/* 현재 페이지 스타일 */
+.pagination-active {
+    background-color: #010535;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* 페이지 버튼 및 링크 호버 효과 */
+.pagination-button:hover, .pagination-number:hover {
+    background-color: #ced4da;
+}
+
+/* 이전/다음 버튼 스타일 */
+.pagination-prev, .pagination-next {
+    font-size: 16px;
+    padding: 6px 8px;
+}
+
+/* 페이지 정보 스타일 */
+.pagination-info {
+    margin-left: auto;
+    font-size: 14px;
+    color: #666;
+    position: absolute;
+    right: 20px; /* 오른쪽 끝으로 위치 */
+}
