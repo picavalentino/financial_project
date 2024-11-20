@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="row">
-                <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">Login</a>
+<!--                <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">Login</a>-->
                 <span>
                     <a th:href="@{/mypage}" class="btn">MyPage</a>
                     <a th:href="@{/logout}" class="btn" sec:authorize="isAuthenticated()">Logout</a>

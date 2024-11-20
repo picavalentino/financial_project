@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>GS Bank</title>
+    <!-- 전체 적용될 CSS -->
+    <th:block layout:fragment="css"></th:block>
+    <!-- 전체 적용될 스크립트 -->
+    <th:block layout:fragment="script"></th:block>
+    <!-- 페이지별 고객 조회 CSS -->
+    <link rel="stylesheet" th:href="@{/css/customerDetail.css}">
+</head>
+<body>
+<div layout:fragment="content" class="content">
+    <div class="main-content">
+        <section class="location">
+            <div class="breadcrumb">
+                <span class="icon">🏠</span>
+                <a href="/main">Home</a> &gt;
+                <a href="/customer/list">고객관리</a> &gt;
+                <span>고객정보</span>
+            </div>
+            <h2>고객정보</h2>
+        </section>
+        <!-- ============================================================================================== -->
+        <section class="customer-query">
+            <!-- 고객 정보 섹션 -->
+            <section class="customer-info">
+                <div class="info-fields">
+                    <div class="customerLeft">
+                        <label>고객명 <input type="text" disabled></label>
+                        <label>주민번호 <input type="text" disabled></label>
+                        <label>연락처 <input type="text" disabled></label>
+                        <label>이메일 <input type="text" disabled></label>
+                        <label>직업 <input type="text" disabled></label>
+                    </div>
+                    <div class="customerRight">
+                        <label>주소
+                            <input type="text" class="wide-input" disabled>
+                        </label>
+                        <label>상세주소
+                            <input type="text" class="wide-input" disabled>
+                        </label>
+                        <label>상품명 <select>
+                            <option>선택</option>
+                        </select></label>
+                        <label>이벤트 <select>
+                            <option>선택</option>
+                        </select></label>
+                        <label>활동 상태 <input type="text" disabled></label>
+                    </div>
+                </div>
+                <!-- ===================================================================================== -->
+                <h2>담당 직원</h2>
+                <div class="staff-fields">
+                    <label>담당자
+                        <input class="searchManager" type="text" disabled>
+                        <button class="search-btn">🔍</button>
+                    </label>
+                    <label>연락처 <input type="text" disabled></label>
+                    <label>담당자 부서 / 직급 <input type="text" disabled></label>
+                    <label>담당자ID <input type="text" disabled></label>
+
+                </div>
+                <!-- ===================================================================================== -->
+                <div class="buttons">
+                    <button class="print-btn">인쇄</button>
+                    <button class="edit-btn">변경</button>
+                    <button class="list-btn">목록</button>
+                </div>
+            </section>
+            <!-- ===================================================================================== -->
+            <!-- 상담 내역 및 수정 내역 섹션 -->
+            <section class="consult-info">
+                <div class="consultation">
+                    <div class="consult-bar">
+                        <h2>최근 상담 내역</h2>
+                        <button class="consult-btn">상담일지</button>
+                    </div>
+                    <textarea disabled>작성일자: 2024-11-18
+                      .   ____          _            __ _ _
+                     /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+                    ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+                     \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+                      '  |____| .__|_| |_|_| |_\__, | / / / /
+                     =========|_|==============|___/=/_/_/_/
+                    </textarea>
+                </div>
+
+                <div class="revision">
+                    <h2>수정 내역</h2>
+                    <textarea disabled></textarea>
+                </div>
+            </section>
+        </section>
+    </div>
+</div>
+</body>
+</html>

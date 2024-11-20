@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<meta charset="UTF-8">
+<head>
+    <link rel="stylesheet" th:href="@{/css/customerListModal.css}">
+    <script src="/js/customerListModal.js"></script>
+</head>
+<body>
+<!--       ======================================================================================================         -->
+<!-- 메세지 발송-->
+<div th:fragment="customerMessageModal">
+    <div id="messageModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="close-button" onclick="closeModal('messageModal')">X</button>
+            <div class="message-box">
+                <textarea>
+                ~Web 발신~
+                안녕하십니까 GS-BANK입니다.
+                고객님 평안한 하루 보내고 계십니까
+                저는 퇴근 좀 시켜주세요
+                감사합니다
+                </textarea>
+            </div>
+            <div class="tag-container">
+                <button class="tag-btn">전고객 X</button>
+            </div>
+            <button class="send-button">✉ 메시지 발송</button>
+        </div>
+    </div>
+</div>
+<!--       ======================================================================================================         -->
+<!-- 고객 등록-->
+<div th:fragment="customerInsertModal">
+    <div id="insertModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="close-button" onclick="closeModal('insertModal')">X</button>
+            <div class="message-box">
+                <p>등록 모달 내용이 여기에 표시됩니다.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!--       ======================================================================================================         -->
+<!-- 고객 목록 인쇄-->
+<div th:fragment="customerPrintModal">
+    <div id="printModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="close-button" onclick="closeModal('printModal')">X</button>
+            <div class="message-box">
+                <p>인쇄 모달 내용이 여기에 표시됩니다.</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
