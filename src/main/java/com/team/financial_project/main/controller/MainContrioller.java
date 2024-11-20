@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainContrioller {
     // test용
-    @GetMapping("/test")
+    @GetMapping("/")
     public String test() {
-        return "/financial/test";
+        return "financial/test";
     }
 }
