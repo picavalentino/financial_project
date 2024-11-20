@@ -417,3 +417,14 @@ a:hover {
    margin-right:7px;
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.0);
   }
+input[type="text"],
+input[type="password"] {
+  font-size: 16px; /* 원하는 크기로 설정 */
+  font-family: inherit; /* 동일한 폰트 사용 */
+}
+input[type="text"],
+input[type="password"] {
+  line-height: 1.5;
+  padding: 8px 12px;
+  box-sizing: border-box; /* 패딩 포함하여 크기 계산 */
+}

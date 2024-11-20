@@ -52,16 +52,16 @@
             <td></td>
             <td></td>
             <td></td>
-            <td>1<div class="event-bar">이고객님 생일</div>
+            <td>1<div class="event-bar-birthday">이고객님 생일</div>
             </td>
             <td>2</td>
           </tr>
           <tr>
             <td>3</td>
             <td>4
-              <div class="event-bar">김고객님 생일</div>
-              <div class="event-bar">전고객님 생일</div>
-              <div class="event-bar">장고객님 생일</div>
+              <div class="event-bar-birthday">김고객님 생일</div>
+              <div class="event-bar-birthday">전고객님 생일</div>
+              <div class="event-bar-birthday">장고객님 생일</div>
             </td>
             <td>5</td>
             <td>6</td>
@@ -83,9 +83,9 @@
             <td>18</td>
             <td>19</td>
             <td>20
-              <div class="event-bar multi-day">박고객 만기일</div>
-              <div class="event-bar multi-day">이고객 만기일</div>
-              <div class="event-bar multi-day">차고객 만기일</div>
+              <div class="event-bar-finish">박고객 만기일</div>
+              <div class="event-bar-finish">이고객 만기일</div>
+              <div class="event-bar-finish">차고객 만기일</div>
             </td>
             <td>21</td>
             <td>22</td>
@@ -111,7 +111,7 @@
       <div class="today-tasks">
         <label for="task1"><strong> &middot; 11:30</strong></label>
         <div id="task_text">
-          <p> 나부자 고객님 예금 상담 </p><input type="checkbox" id="task1" checked>
+          <p> 나부자 고객님 예금 상담 </p><input type="checkbox" id="task1" >
         </div>
       </div>
 
@@ -238,7 +238,21 @@
                 $modal.fadeOut(); // 모달 숨기기
             }
         });
+         const $birthdayBtn = $('#brithday_btn'); // 생일 버튼
+    const $finishBtn = $('#finish_btn'); // 만기 버튼
+    const $allEventBars = $('.event-bar-birthday, .event-bar-finish'); // 모든 이벤트 바
 
+    // 생일 버튼 클릭 시
+    $birthdayBtn.on("click", function () {
+      $allEventBars.hide(); // 모든 이벤트 바 숨기기
+      $('.event-bar-birthday').fadeIn(); // 생일 이벤트 바만 표시
+    });
+
+    // 만기 버튼 클릭 시
+    $finishBtn.on("click", function () {
+      $allEventBars.hide(); // 모든 이벤트 바 숨기기
+      $('.event-bar-finish').fadeIn(); // 만기 이벤트 바만 표시
+    });
 
       });
     </script>

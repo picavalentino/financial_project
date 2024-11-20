@@ -219,6 +219,9 @@ label{
     display: flex; /* Flexbox 사용 */
     align-items: center; /* 수직 정렬 */
     margin-bottom: 5px;
+    font-size: 15px;
+    padding-top: 10px;
+    margin-left :10px;
 }
 
 /* 일정 점 스타일 */
@@ -536,3 +539,26 @@ label{
     cursor: pointer;
 
     }
+
+#submit_btn {
+    background-color: #7aaebc;
+    color: white;
+    padding: 10px 0px;
+    border: none;
+    width: 320px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 18px;
+  }
+
+  #submit_btn:hover {
+    background-color: #6795a0;
+  }
+  .event-card img{
+  width: 15px;
+  height:15px;
+  }
+  .card-actions{
+  margin-right: 30px;
+  }

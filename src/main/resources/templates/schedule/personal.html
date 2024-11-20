@@ -60,9 +60,19 @@
             <td class="calendar-cell">
               <div class="calendar-date">6</div>
               <div class="event-bar" data-title="프로젝트 발표" data-date="11월 6일 (수요일)" data-time="오전 10:00~12:00" data-location="회의실" data-person="팀원">프로젝트 발표</div>
+              <div class="event-title-container"
+                   data-title="영화보기"
+                   data-date="11월 6일 (수요일)"
+                   data-time="오전 10:00~12:00"
+                   data-location="영화관"
+                   data-person="친구">
+                <span class="event-dot-personal"></span>영화보기
+              </div>
             </td>
             <td class="calendar-cell">
-              <div class="calendar-date">7</div>
+              <div class="calendar-date">6</div>
+                <div class="event-title-container" data-title="프로젝트 발표" data-date="11월 6일 (수요일)" data-time="오전 10:00~12:00" data-location="회의실" data-person="팀원">
+                  <span class="event-dot-team"></span>프로젝트 발표</div>
             </td>
             <td class="calendar-cell">
               <div class="calendar-date">8</div>
@@ -77,6 +87,22 @@
             </td>
             <td class="calendar-cell">
               <div class="calendar-date">11</div>
+              <div class="event-title-container"
+                   data-title="점심약속"
+                   data-date="11월 11일 (월요일)"
+                   data-time="오전 11:00~01:00"
+                   data-location="영화관"
+                   data-person="혼자">
+                <span class="event-dot-personal"></span>점심 약속
+              </div>
+              <div class="event-title-container"
+                   data-title="콘서트"
+                   data-date="11월 6일 (월요일)"
+                   data-time="오전 18:00~20:00"
+                   data-location="아트홀"
+                   data-person="친구">
+                <span class="event-dot-personal"></span>콘서트
+              </div>
             </td>
             <td class="calendar-cell">
               <div class="calendar-date">12</div>
@@ -100,6 +126,7 @@
             </td>
             <td class="calendar-cell">
               <div class="calendar-date">18</div>
+
             </td>
             <td class="calendar-cell">
               <div class="calendar-date">19</div>
@@ -147,6 +174,21 @@
         </table>
 
       </div>
+    </div>
+    <div class="today_task">
+
+      <h3> <img th:src="@{/css/schedule/img/task_img.png}">
+        오늘의 할 일</h3>
+
+
+      <div class="today-tasks">
+        <label for="task1"><strong> &middot; 11:30</strong></label>
+        <div id="task_text">
+          <p> 점심 미팅 </p><input type="checkbox" id="task1" >
+        </div>
+      </div>
+
+
     </div>
   </div>
 
@@ -227,9 +269,10 @@
         <div class="details">
           <textarea class="details-input" placeholder="Enter detailed information..."></textarea>
         </div>
-        <input type="submit" value="등록">
+        <input type="submit" id="submit_btn" value="등록">
       </div>
     </div>
+
   </div>
 
   <!-- 이벤트 카드 모달 -->
@@ -237,11 +280,16 @@
     <span class="close-event">&times;</span>
     <div class="card-header">
       <h2 class="event-title"></h2>
+      <div class="card-actions">
+        <button><img id="profile_img" th:src="@{/css/schedule/img/delete.png}" alt="Delete"></button>
+        <button><img th:src="@{/css/schedule/img/email.png}" alt="Mail"></button>
+<!--        <button><img th:src="@{/css/schedule/img/etc.png}" alt="More"></button>-->
+      </div>
     </div>
     <div class="card-details">
-      <div><strong>시간:</strong> <span class="event-time"></span></div>
-      <div><strong>장소:</strong> <span class="event-location"></span></div>
-      <div><strong>참석자:</strong> <span class="event-person"></span></div>
+      <div><img th:src="@{/css/schedule/img/time.png}" alt="time"> <span class="event-time"></span></div>
+      <div><img th:src="@{/css/schedule/img/location.png}" alt="place"> <span class="event-location"></span></div>
+      <div><img th:src="@{/css/schedule/img/person.png}" alt="name"> <span class="event-person"></span></div>
     </div>
   </div>
 
@@ -260,8 +308,8 @@
 
         // 날짜 셀 클릭 시 일정 등록 모달 열기
         $('.calendar-cell').on("click", function (event) {
-            if ($(event.target).hasClass('event-bar')) {
-                return; // 이벤트 바 클릭 시 일정 등록 모달 열리지 않음
+            if ($(event.target).hasClass('event-bar') || $(event.target).hasClass('event-title-container')) {
+                return; // 이벤트 관련 요소 클릭 시 일정 등록 모달 열리지 않음
             }
 
             closeAllModals(); // 다른 모달 닫기
@@ -279,14 +327,15 @@
         });
 
         // 이벤트 바 클릭 시 이벤트 카드 모달 열기
-        $('.event-bar').on("click", function (event) {
+        function openEventModal(event) {
             closeAllModals(); // 다른 모달 닫기
 
-            const title = $(this).data('title');
-            const date = $(this).data('date');
-            const time = $(this).data('time');
-            const location = $(this).data('location');
-            const person = $(this).data('person');
+            const $target = $(event.currentTarget); // 클릭된 요소
+            const title = $target.data('title');
+            const date = $target.data('date');
+            const time = $target.data('time');
+            const location = $target.data('location');
+            const person = $target.data('person');
 
             $('.event-title').text(title);
             $('.event-time').text(date + ' - ' + time);
@@ -303,10 +352,16 @@
                 position: "absolute",
                 transform: "translate(-50%, -50%)"
             }).fadeIn();
-        });
+        }
+
+        // 이벤트 바 클릭 시 이벤트 카드 모달 열기
+        $('.event-bar').on("click", openEventModal);
+
+        // 이벤트 타이틀 컨테이너 클릭 시 이벤트 카드 모달 열기
+        $('.event-title-container').on("click", openEventModal);
 
         // 일정 등록 모달 닫기
-       $closeSchedule.on("click", function () {
+        $closeSchedule.on("click", function () {
             $scheduleModal.fadeOut();
         });
 
@@ -334,6 +389,7 @@
         });
     });
   </script>
+
 
 </div>
 </body>
