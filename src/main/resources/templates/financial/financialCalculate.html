@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+
+<meta charset="UTF-8">
+<title>GS Bank</title>
+<!-- 전체 적용될 CSS -->
+<th:block layout:fragment="css"></th:block>
+<!-- 전체 적용될 스크립트 -->
+<th:block layout:fragment="script"></th:block>
+
+<!-- 우리가 작업할 공간 -->
+<body>
+<div layout:fragment="content" class="content">
+    <!-- 탭 메뉴 -->
+    <div class="tabs">
+        <button onclick="showTab('savings')">적금 설계</button>
+        <button onclick="showTab('goal')">목돈마련적금 설계</button>
+        <button onclick="showTab('deposit')">예금 설계</button>
+        <button onclick="showTab('loan')">대출 설계</button>
+    </div>
+
+    <!-- 탭 내용 -->
+    <div id="savings" class="tab-content active">
+        <h1>적금 설계</h1>
+        <div>
+            <h1>설계</h1>
+            <label>설계번호</label>
+            <input type="text">
+
+            <label>상품선택</label>
+            <input type="text">
+            <button id="openModal">찾기</button>
+
+            <!-- 모달창 -->
+            <div id="productModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="closeModal">&times;</span>
+                    <h2>상품 리스트</h2>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>상품코드</th>
+                            <th>상품명</th>
+                            <th>가입대상</th>
+                        </tr>
+                        </thead>
+                        <tbody id="productList">
+                        <!-- 상품 데이터가 여기에 추가됩니다 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <label>납입주기</label>
+            <input type="text">
+
+            <label>시작일자</label>
+            <input type="text">
+
+            <form th:action="@{/calculateSavg}" method="get">
+                <label>불입금액</label>
+                <input type="text" name="inputMoney">
+
+                <label>목표기간</label>
+                <input type="text" name="period">
+
+                <label>적용금리</label>
+                <input type="text" name="interest">
+
+                <label>이자과세</label>
+                <input type="text" name="taxRate">
+
+                <button type="submit">계산하기</button>
+            </form>
+
+            <h1>계산결과</h1>
+            <label>불입금합계</label>
+            <input type="text" th:attr="value=${result != null ? result.totalMoney : ''}">
+
+            <label>세전이자</label>
+            <input type="text" th:attr="value=${result != null ? result.preTaxInterest : ''}">
+
+            <label>세전수령액</label>
+            <input type="text" th:attr="value=${result != null ? result.preTaxMyMoney : ''}">
+
+            <label>이자과세금</label>
+            <input type="text" th:attr="value=${result != null ? result.tax : ''}">
+
+            <label>세후수령액</label>
+            <input type="text" th:attr="value=${result != null ? result.finalMoney : ''}">
+        </div>
+    </div>
+
+    <!-- 다른 탭 내용 -->
+    <div id="goal" class="tab-content">
+        <h1>목돈마련적금 설계</h1>
+        <p>목돈 설계 내용...</p>
+    </div>
+    <div id="deposit" class="tab-content">
+        <h1>예금 설계</h1>
+        <form th:action="@{/calculateDpst}" method="get">
+            <label>예치금액</label>
+            <input type="text" name="inputMoney">
+
+            <label>예치기간</label>
+            <input type="text" name="period">
+
+            <label>적용금리</label>
+            <input type="text" name="interest">
+
+            <label>이자과세</label>
+            <input type="text" name="taxRate">
+
+            <button type="submit">계산하기</button>
+        </form>
+
+        <h1>계산결과</h1>
+        <label>총예치금액</label>
+        <input type="text" th:attr="value=${result != null ? dpstResult.totalMoney : ''}">
+
+        <label>세전이자</label>
+        <input type="text" th:attr="value=${result != null ? dpstResult.preTaxInterest : ''}">
+
+        <label>세전수령액</label>
+        <input type="text" th:attr="value=${result != null ? dpstResult.preTaxMyMoney : ''}">
+
+        <label>이자과세금</label>
+        <input type="text" th:attr="value=${result != null ? dpstResult.tax : ''}">
+
+        <label>세후수령액</label>
+        <input type="text" th:attr="value=${result != null ? dpstResult.finalMoney : ''}">
+    </div>
+    <div id="loan" class="tab-content">
+        <h1>대출 설계</h1>
+        <form id="loanForm" method="get">
+            <label for="repaymentMethod">상환 방법:</label>
+            <select id="repaymentMethod" name="repaymentMethod">
+                <option value="equalPrincipal">원금균등상환</option>
+                <option value="equalPrincipalAndInterest">원리금균등상환</option>
+                <option value="lumpSum">원금만기일시상환</option>
+            </select>
+
+            <label for="loanAmount">대출 금액:</label>
+            <input type="text" id="loanAmount" name="loanAmount" required>
+
+            <label for="loanPeriod">대출 기간 (개월):</label>
+            <input type="text" id="loanPeriod" name="loanPeriod" required>
+
+            <label for="interestRate">대출 금리 (%):</label>
+            <input type="text" id="interestRate" name="interestRate" required>
+
+            <button type="submit">계산하기</button>
+        </form>
+
+        <h1>원금 균등상환 결과</h1>
+        <p>총 이자: <span th:text="${loanResult != null ? loanResult.totalInterest : ''}"></span></p>
+        <p>총 상환 금액: <span th:text="${loanResult != null ? loanResult.totalRepayment : ''}"></span></p>
+
+        <h1>회차별 납입 정보</h1>
+        <table border="1">
+            <thead>
+            <tr>
+                <th>회차</th>
+                <th>납입 날짜</th>
+                <th>납입 원금</th>
+                <th>납입 이자</th>
+                <th>총 납입 금액</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="payment : ${loanResult != null ? loanResult.interestDetails : null}">
+                <td th:text="${payment.installment}"></td>
+                <td th:text="${payment.dueDate}"></td>
+                <td th:text="${payment.principal}"></td>
+                <td th:text="${payment.monthlyInterest}"></td>
+                <td th:text="${payment.totalPayment}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        $(document).ready(function () {
+       $("#loanForm").on("submit", function (event) {
+           // 상환 방법 선택 값 가져오기
+           const repaymentMethod = $("#repaymentMethod").val();
+           const form = $(this);
+
+           // 상환 방법에 따라 액션 설정
+           if (repaymentMethod === "equalPrincipal") {
+               form.attr("action", "/calculateEqualPrincipal"); // 원금균등상환 컨트롤러
+           } else if (repaymentMethod === "equalPrincipalAndInterest") {
+               form.attr("action", "/calculateEqualPrincipalAndInterest"); // 원리금균등상환 컨트롤러
+           } else if (repaymentMethod === "lumpSum") {
+               form.attr("action", "/calculateLumpSum"); // 원금만기일시상환 컨트롤러
+           }
+       });
+   });
+
+       // 탭 전환 함수
+       function showTab(tabId) {
+           $('.tab-content').removeClass('active'); // 모든 탭 숨기기
+           $('#' + tabId).addClass('active');      // 선택한 탭 활성화
+       }
+
+       // 페이지 로드 시 기본 탭 활성화
+       $(document).ready(function() {
+           showTab('savings'); // 기본 활성화 탭
+
+           // 모달창 열기
+           $("#openModal").on("click", function() {
+               $.ajax({
+                   url: "/products", // 서버에서 상품 데이터 가져오기
+                   method: "GET",
+                   dataType: "json",
+                   success: function(data) {
+                       const $tableBody = $("#productList");
+                       $tableBody.empty(); // 기존 데이터 초기화
+                       data.forEach(function(product) {
+                           const row = `
+                               <tr>
+                                   <td>${product.productId}</td>
+                                   <td>${product.productName}</td>
+                                   <td>${product.productDescription}</td>
+                               </tr>
+                           `;
+                           $tableBody.append(row);
+                       });
+                       $("#productModal").show(); // 모달창 열기
+                   },
+                   error: function() {
+                       alert("상품 정보를 가져오는 데 실패했습니다.");
+                   }
+               });
+           });
+
+           // 모달창 닫기
+           $("#closeModal").on("click", function() {
+               $("#productModal").hide(); // 모달창 닫기
+           });
+       });
+    </script>
+
+</div>
+
+</body>
+</html>
