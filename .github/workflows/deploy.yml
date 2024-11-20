@@ -17,6 +17,7 @@ jobs:
       # 2. Gradle로 WAR 파일 빌드
       - name: Build WAR file
         run: |
+          chmod +x ./gradlew
           ./gradlew build -x test
 
       # 3. AWS CLI 설정
