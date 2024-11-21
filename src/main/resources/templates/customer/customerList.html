@@ -31,9 +31,7 @@
             <div class="actions">
                 <!-- 왼쪽 버튼 그룹 -->
                 <div class="left-actions">
-                    <button class="print-button" onclick="openPrintModal()">
-                        <span class="icon">🖨️</span> 인쇄
-                    </button>
+                    <button class="btn-print" onclick="openPrintModal()"><span class="icon">🖨️</span> 인쇄</button>
                     <button class="message-button" onclick="openMessageModal()">
                         <span class="icon">✉️</span> 메시지 발송
                     </button>
@@ -60,7 +58,7 @@
                 </div>
             </div>
             <!--       ======================================================================================================         -->
-            <table>
+            <table class="listTable">
                 <thead>
                 <tr>
                     <th><input type="checkbox" onclick="toggleAll(this)"></th>
@@ -68,7 +66,7 @@
                     <th>고객명</th>
                     <th>생년월일</th>
                     <th>전화번호</th>
-                    <th>Email</th>
+                    <th class="emailTh">Email</th>
                     <th>담당자</th>
                     <th>활동 상태</th>
                     <th>등록일</th>
@@ -82,39 +80,39 @@
                     </td>
                     <td th:text="${customer.custId}">001</td>
                     <td>
-                        <a href="#" th:text="${customer.custNm}">이름</a>
+                        <a th:href="@{'/customer/detail/' + ${customer.custId}}" th:text="${customer.custNm}">이름</a>
                     </td>
-                    <td th:text="${customer.custRrn}">19940926</td>
+                    <td th:text="${customer.birthDate}">19940926</td>
                     <td th:text="${customer.custTelno}">010-1111-1111</td>
                     <td th:text="${customer.custEmail}">aaa@naver.com</td>
-                    <td>김사원</td>
+                    <td th:text="${customer.userName}">김사원</td>
                     <td th:text="${customer.custStateCd}"><span class="status active">상태</span></td>
                     <td th:text="${customer.custCreateAt}">2024-11-18</td>
                 </tr>
                 </tbody>
             </table>
-            <!--       ======================================================================================================         -->
-        <!--    <div class="pagination-container">
+            <!-- ======================================================================================================  -->
+            <div class="pagination-container">
                 <div class="pagination">
-                    &lt;!&ndash; 이전 페이지 버튼 &ndash;&gt;
+                    <!-- 이전 페이지 버튼 -->
                     <button th:disabled="${currentPage == 1}"
-                            th:onclick="'location.href=\'?page=' + (${currentPage - 1}) + '\'">&lt;
+                            th:onclick="|location.href='?page=' + (${currentPage - 1})|">&lt;
                     </button>
 
-                    &lt;!&ndash; 페이지 번호 링크들 &ndash;&gt;
+                    <!-- 페이지 번호 링크들 -->
                     <span th:each="i : ${#numbers.sequence(1, totalPages)}">
                         <a th:href="@{'?page=' + ${i}}" th:text="${i}"
                            th:classappend="${currentPage == i} ? 'active' : ''"></a>
                     </span>
 
-                    &lt;!&ndash; 다음 페이지 버튼 &ndash;&gt;
+                    <!-- 다음 페이지 버튼 -->
                     <button th:disabled="${currentPage == totalPages}"
-                            th:onclick="'location.href=\'?page=' + (${currentPage + 1}) + '\'">&gt;
+                            th:onclick="|location.href='?page=' + (${currentPage + 1})|">&gt;
                     </button>
                 </div>
-                &lt;!&ndash; 현재 페이지와 총 페이지 정보 &ndash;&gt;
+                <!-- 현재 페이지와 총 페이지 정보 -->
                 <span class="pagination-info" th:text="'페이지 ' + ${currentPage} + ' / ' + ${totalPages}"></span>
-            </div>-->
+            </div>
         </section>
     </div>
     <!-- ======================================================================================================================== -->

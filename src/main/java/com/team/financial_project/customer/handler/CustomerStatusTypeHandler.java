@@ -1,4 +1,4 @@
-import com.team.financial_project.customer.Enum.CustomerStatus;
+import com.team.financial_project.customer.enums.CustomerStatus;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 

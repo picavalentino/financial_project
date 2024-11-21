@@ -149,12 +149,16 @@ button {
 }
 
 /* 인쇄 버튼 */
-.print-button {
-    background-color: #6c757d; /* 어두운 회색 */
+.btn-print {
+    background-color: #292D32;
 }
 
-.print-button:hover {
-    background-color: #5a6268;
+.btn-print .icon {
+    background-color: #8E98A8;
+}
+
+.btn-print:hover {
+    background-color: #1d1f22;
 }
 
 .edit-btn {

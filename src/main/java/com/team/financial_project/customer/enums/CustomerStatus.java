@@ -1,4 +1,4 @@
-package com.team.financial_project.customer.Enum;
+package com.team.financial_project.customer.enums;
 
 import lombok.Getter;
 

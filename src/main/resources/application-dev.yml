@@ -11,8 +11,8 @@ spring:
     username: codechef
     password: codechef1234
 
-  mybatis:
-    mapper-locations: classpath:mapper/*.xml
-    type-aliases-package: classpath:/mybatis-config.xml
-    configuration:
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.team.financial_project.dto
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

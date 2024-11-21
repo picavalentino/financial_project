@@ -225,6 +225,7 @@
     margin-bottom: 20px;
 }
 
+
 .print-table th,
 .print-table td {
     padding: 12px;
@@ -256,8 +257,15 @@
     font-weight: bold;
 }
 
+.print-button-container {
+   display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 10px; /* 버튼과 테이블 사이 간격 */
+}
+
 /* 인쇄 버튼 */
-.print-button {
+.btn-print {
+    background-color: #292D32;
     padding: 6px 12px;
     border: none;
     border-radius: 8px;
@@ -267,15 +275,15 @@
     font-size: 14px;
     font-weight: bold;
     color: #ffffff;
-    background-color: #6c757d; /* 어두운 회색 */
-}
-.print-button-container {
-   display: flex;
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    margin-top: 10px; /* 버튼과 테이블 사이 간격 */
 }
 
-.print-button:hover {
-    background-color: #5a6268;
+.btn-print .icon {
+    background-color: #8E98A8;
 }
+
+.btn-print:hover {
+    background-color: #1d1f22;
+}
+
+
 

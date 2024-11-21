@@ -1,6 +1,6 @@
 package com.team.financial_project.dto;
 
-import com.team.financial_project.customer.Enum.CustomerStatus;
+import com.team.financial_project.customer.enums.CustomerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +21,34 @@ public class CustomerDTO {
     private LocalDateTime custCreateAt; // 고객 생성일시
     private LocalDateTime custUpdateAt; // 고객 수정일시
     private CustomerStatus custStateCd = CustomerStatus.ACTIVE; // 고객 상태 코드 (enum)
+
+    private String birthDate; // 생년월일 필드 추가
+    private String custAddrDetail; // 상세 주소 필드 추가
+    private String userId;
+    private String userName; // 담당 유저 필드 추가
+    private String userTelno; // 담당 유저 연락처 필드 추가
+    private String userPosition; // 담당 유저 직책 필드 추가
+    private String userDept; // 담당 유저 부서 필드 추가
+
+    // 주소를 나누는 메소드
+    public void splitAddress() {
+        if (custAddr != null) {
+            String[] splitAddr = custAddr.split(" ", 2);
+            if (splitAddr.length == 2) {
+                this.custAddr = splitAddr[0]; // 기본 주소 (예: '서울특별시')
+                this.custAddrDetail = splitAddr[1]; // 나머지 상세 주소 (예: '강남구 테헤란로 123')
+            } else {
+                this.custAddrDetail = ""; // 나머지 주소가 없는 경우 빈 문자열 설정
+            }
+        }
+    }
+
+    // 주민등록번호에서 생년월일 추출하는 메소드
+    public void extractBirthDateFromRrn() {
+        if (custRrn != null && custRrn.contains("-")) {
+            this.birthDate = custRrn.split("-")[0]; // 주민등록번호에서 '-' 앞의 생년월일 부분만 추출
+        } else {
+            this.birthDate = ""; // 주민등록번호가 없거나 형식이 맞지 않는 경우 빈 문자열 설정
+        }
+    }
 }

@@ -8,6 +8,6 @@
     </typeAliases>
 
     <typeHandlers>
-        <typeHandler javaType="com.team.financial_project.customer.Enum.CustomerStatus" handler="com.team.financial_project.customer.handler.CustomerStatusTypeHandler"/>
+        <typeHandler javaType="com.team.financial_project.customer.enums.CustomerStatus" handler="com.team.financial_project.customer.handler.CustomerStatusTypeHandler"/>
     </typeHandlers>
 </configuration>
