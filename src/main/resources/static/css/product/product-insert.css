@@ -31,25 +31,101 @@
     padding: 10px;
 }
 .table-product-form th{
-    width: 25%;
-    padding: 12px;
-    padding-left: 15px;
+    width: 30%;
+    padding: 13px;
+    padding-left: 18px;
 }
 
 .table-product-form td input[type="text"]{
     width: 40%;
-    border-radius: 5px;
+    border: 1px solid #8E98A8;
+    border-radius: 6px;
+    outline: none;
+    padding: 4px;
+    padding-left: 8px;
 }
 
 .table-product-form td select{
     width: 40%;
-    border-radius: 5px;
-    padding: 3px;
+    border-radius: 6px;
+    padding: 5px;
     text-align: center;
     font-weight: 400;
 }
 .inp_wrap input[type="date"]{
     width: 40%;
-    border-radius: 5px;
+    border: 1px solid #8E98A8;
+    border-radius: 6px;
+    outline: none;
     text-align: center;
+    padding: 3px;
 }
+
+    /* 입력 필드와 버튼을 한 줄로 정렬 */
+    .staff-search-container {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* 입력 필드와 버튼 간의 간격 */
+    }
+
+    /* 돋보기 버튼 스타일 */
+    .staff-search-container button {
+        padding: 5px 8px;
+        color: black;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+
+    /* 돋보기 버튼 아이콘 스타일 */
+    .staff-search-container button i {
+        font-size: 14px;
+    }
+
+    /* 버튼 호버 효과 */
+    .staff-search-container button:hover {
+        background-color: white;
+    }
+
+/* 모달 배경 스타일 */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* 모달 콘텐츠 스타일 */
+    .modal-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 50%;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 닫기 버튼 스타일 */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+    }

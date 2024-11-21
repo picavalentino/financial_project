@@ -61,9 +61,9 @@
                                 <th><label>가입금액</label></th>
                                 <td>
                                     <div class="inp_wrap">
-                                        <input name="prodInstlAmtMin" type="text" placeholder="최소">
+                                        <input id="prodInstlAmtMin" name="prodInstlAmtMin" type="text" placeholder="최소" oninput="formatNumber(this)">
                                         <span>~</span>
-                                        <input name="prodInstlAmtMax" type="text" placeholder="최대">
+                                        <input id="prodInstlAmtMax" name="prodInstlAmtMax" type="text" placeholder="최대" oninput="formatNumber(this)">
                                     </div>
                                 </td>
                             </tr>
@@ -131,7 +131,14 @@
                             </tr>
                             <tr>
                                 <th>담당직원</th>
-                                <td><input type="text"></td>
+                                <td>
+                                    <div class="staff-search-container">
+                                        <input type="text" id="staffName" name="staffName" readonly placeholder="직원 이름을 검색하세요">
+                                        <button id="btn-search" type="button">
+                                            <i class="bi bi-search" ></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -149,15 +156,86 @@
                     <i class="icon bi bi-list"></i> 목록
                 </button>
             </div>
+            <!-- 모달 창 -->
+            <div id="staffSearchModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>직원 검색</h2>
+                    <input type="text" id="staffSearchInput" placeholder="직원 이름 입력">
+                    <button id="staffSearchButton">검색</button>
+                    <div id="staffSearchResults">
+                        <!-- 검색 결과가 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     <script th:inline="javascript">
+        // formatNumber 함수 정의
+        function formatNumber(input) {
+            // 기존 입력값에서 숫자만 추출
+            const value = input.value.replace(/[^0-9]/g, '');
+            // 천 단위 콤마 추가
+            if (value) {
+                input.value = new Intl.NumberFormat('ko-KR').format(value);
+            } else {
+                input.value = ''; // 빈 문자열 처리
+            }
+        }
+
         $(document).ready(function () {
+            // 필드 유효성 검사 함수
+            function validateForm() {
+                let isValid = true;
+                let errorMessage = "";
+
+                // 가장 먼저 비어 있는 필드를 찾기 위한 변수
+                let firstInvalidField = null;
+
+                // 모든 input, select 태그 순회하며 값 확인
+                $("#product-form")
+                    .find("input, select")
+                    .each(function () {
+                        const value = $(this).val().trim();
+                        if (!value) {
+                            if (!firstInvalidField) {
+                                // 비어 있는 필드의 레이블 텍스트 가져오기
+                                const label = $(this).closest("tr").find("th label").text();
+                                firstInvalidField = label;
+                            }
+                        }
+                    });
+
+                if (firstInvalidField) {
+                    isValid = false;
+                    errorMessage = `${firstInvalidField} 필드를 입력해주세요.`;
+                    alert(errorMessage);
+                }
+
+                return isValid;
+            }
+
             // 등록 버튼 클릭
             $(".btn-register").on("click", function (e) {
                 e.preventDefault(); // 기본 동작 방지
+
+                // 유효성 검사 실행
+                if (!validateForm()) {
+                    return;
+                }
+
+                // 가입금액에서 콤마 제거
+                $("#prodInstlAmtMin").val(function () {
+                    return $(this).val().replace(/,/g, '');
+                });
+                $("#prodInstlAmtMax").val(function () {
+                    return $(this).val().replace(/,/g, '');
+                });
+
                 const formData = $("form.product-info").serialize(); // 폼 데이터 직렬화
-                const insertUrl = "/product/insert" // 등록 요청 URL
+                const insertUrl = "/product/insert"; // 등록 요청 URL
+                console.log("등록 데이터: ", formData);
 
                 $.ajax({
                     url: insertUrl,
@@ -165,7 +243,6 @@
                     data: formData,
                     success: function (response) {
                         alert("신규 상품이 등록되었습니다.");
-                        // 성공 시 원하는 동작 추가 (예: 상세 페이지 새로고침)
                         window.location.href = "/product/list"; // 목록 페이지로 이동
                     },
                     error: function (xhr, status, error) {
@@ -174,6 +251,7 @@
                     },
                 });
             });
+
 
             // 초기화 버튼 클릭
             $(".btn-reset").on("click", function (e) {
@@ -186,8 +264,69 @@
                 e.preventDefault(); // 기본 동작 방지
                 window.location.href = "/product/list"; // 목록 페이지로 이동
             });
+
+            // 모달 열기
+            $("#btn-search").on("click", function () {
+                $("#staffSearchModal").fadeIn();
+            });
+
+            // 모달 닫기
+            $(".close").on("click", function () {
+                $("#staffSearchModal").fadeOut();
+            });
+
+            // 모달 외부 클릭 시 닫기
+            $(window).on("click", function (event) {
+                if ($(event.target).is("#staffSearchModal")) {
+                    $("#staffSearchModal").fadeOut();
+                }
+            });
+
+            // 직원 검색 버튼 클릭 이벤트
+            $("#staffSearchButton").on("click", function () {
+                const searchTerm = $("#staffSearchInput").val();
+                if (!searchTerm) {
+                    alert("검색어를 입력하세요.");
+                    return;
+                }
+
+                // 검색 결과 예제 데이터
+                const sampleResults = [
+                    { id: 1, name: "홍길동" },
+                    { id: 2, name: "김철수" },
+                    { id: 3, name: "이영희" },
+                ];
+
+                // 검색 결과 필터링
+                const filteredResults = sampleResults.filter((staff) =>
+                    staff.name.includes(searchTerm)
+                );
+
+                // 결과 표시
+                const resultsContainer = $("#staffSearchResults");
+                resultsContainer.empty();
+                if (filteredResults.length === 0) {
+                    resultsContainer.append("<p>검색 결과가 없습니다.</p>");
+                } else {
+                    filteredResults.forEach((staff) => {
+                        const staffItem = $(`
+                            <div class="staff-item" data-id="${staff.id}">
+                                ${staff.name}
+                            </div>
+                        `);
+                        staffItem.on("click", function () {
+                            // 직원 선택 시 이름을 입력 필드에 추가
+                            $("#staffName").val(staff.name);
+                            $("#staffSearchModal").fadeOut();
+                        });
+                        resultsContainer.append(staffItem);
+                    });
+                }
+            });
+        });
         });
     </script>
+
 </div>
 </body>
 </html>
