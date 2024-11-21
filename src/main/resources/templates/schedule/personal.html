@@ -75,19 +75,15 @@
                             <div class="event-bar-team-allday" data-title="프로젝트 발표" data-date="11월 6일 (수요일)"
                                  data-time="오전 10:00~12:00" data-location="회의실" data-memo="팀원">프로젝트 발표
                             </div>
-                            <div class="event-bar-personal"
-                                 data-title="영화보기"
-                                 data-date="11월 6일 (수요일)"
-                                 data-time="오전 10:00~12:00"
-                                 data-location="영화관"
-                                 data-person="친구">
+                            <div class="event-bar-personal" data-title="영화보기" data-date="11월 6일 (수요일)" data-time="오전 10:00~12:00"
+                                 data-location="영화관" data-person="친구">
                                 <span class="event-dot-personal"></span>영화보기
                             </div>
                         </td>
                         <td class="calendar-cell">
                             <div class="calendar-date">6</div>
-                            <div class="event-bar-team" data-title="프로젝트 발표" data-date="11월 6일 (수요일)"
-                                 data-time="오전 10:00~12:00" data-location="회의실" data-memo="팀원">
+                            <div class="event-bar-team" data-title="프로젝트 발표" data-date="11월 6일 (수요일)" data-time="오전 10:00~12:00"
+                                 data-location="회의실" data-memo="팀원">
                                 <span class="event-dot-team"></span>프로젝트 발표
                             </div>
                         </td>
@@ -104,20 +100,12 @@
                         </td>
                         <td class="calendar-cell">
                             <div class="calendar-date">11</div>
-                            <div class="event-bar-personal"
-                                 data-title="점심약속"
-                                 data-date="11월 11일 (월요일)"
-                                 data-time="오전 11:00~01:00"
-                                 data-location="영화관"
-                                 data-memo="혼자">
+                            <div class="event-bar-personal" data-title="점심약속" data-date="11월 11일 (월요일)" data-time="오전 11:00~01:00"
+                                 data-location="영화관" data-memo="혼자">
                                 <span class="event-dot-personal"></span>점심 약속
                             </div>
-                            <div class="event-bar-personal"
-                                 data-title="콘서트"
-                                 data-date="11월 6일 (월요일)"
-                                 data-time="오전 18:00~20:00"
-                                 data-location="아트홀"
-                                 data-memo="친구">
+                            <div class="event-bar-personal" data-title="콘서트" data-date="11월 6일 (월요일)" data-time="오전 18:00~20:00"
+                                 data-location="아트홀" data-memo="친구">
                                 <span class="event-dot-personal"></span>콘서트
                             </div>
                         </td>
@@ -301,7 +289,7 @@
             <h2 class="event-title"></h2>
             <div class="card-actions">
                 <button><img id="profile_img" th:src="@{/css/schedule/img/delete.png}" alt="Delete"></button>
-                <button><img th:src="@{/css/schedule/img/email.png}" alt="Mail"></button>
+                <button><img id="email_img" th:src="@{/css/schedule/img/email.png}" alt="Mail"></button>
                 <!--        <button><img th:src="@{/css/schedule/img/etc.png}" alt="More"></button>-->
             </div>
         </div>
@@ -314,139 +302,140 @@
 
     <script th:inline="javascript">
         $(document).ready(function () {
-         const $scheduleModal = $('.schedule_detail'); // 일정 등록 모달
-         const $eventModal = $('.event-card'); // 이벤트 카드 모달
-         const $closeSchedule = $('.schedule_detail .close');
-         const $closeEvent = $('.close-event'); // 이벤트 카드 모달 닫기 버튼
+          const $scheduleModal = $('.schedule_detail'); // 일정 등록 모달
+          const $eventModal = $('.event-card'); // 이벤트 카드 모달
+          const $closeSchedule = $('.schedule_detail .close');
+          const $closeEvent = $('.close-event'); // 이벤트 카드 모달 닫기 버튼
 
-         // 다른 모달 닫기
-         function closeAllModals() {
-             $scheduleModal.fadeOut();
-             $eventModal.fadeOut();
-         }
+          // 다른 모달 닫기
+          function closeAllModals() {
+            $scheduleModal.fadeOut();
+            $eventModal.fadeOut();
+          }
 
-         // 날짜 셀 클릭 시 일정 등록 모달 열기
-         $('.calendar-cell').on("click", function (event) {
-             if ($(event.target).hasClass('event-bar-team-allday') || $(event.target).hasClass('event-bar-personal-allday')|| $(event.target).hasClass('event-bar-personal')|| $(event.target).hasClass('event-bar-team')) {
-                 return; // 이벤트 관련 요소 클릭 시 일정 등록 모달 열리지 않음
-             }
+          // 날짜 셀 클릭 시 일정 등록 모달 열기
+          $('.calendar-cell').on("click", function (event) {
+            if ($(event.target).hasClass('event-bar-team-allday') || $(event.target).hasClass('event-bar-personal-allday') || $(event.target).hasClass('event-bar-personal') || $(event.target).hasClass('event-bar-team')) {
+              return; // 이벤트 관련 요소 클릭 시 일정 등록 모달 열리지 않음
+            }
 
-             closeAllModals(); // 다른 모달 닫기
+            closeAllModals(); // 다른 모달 닫기
 
-             // 모달 위치 설정
-             const clickX = event.pageX; // 클릭한 X 좌표
-             const clickY = event.pageY; // 클릭한 Y 좌표
-             $scheduleModal.css({
-                 display: "block",
-                 top: clickY + "px",
-                 left: clickX + "px",
-                 position: "absolute",
-                 transform: "translate(-50%, -5%)"
-             }).fadeIn();
-         });
+            // 모달 위치 설정
+            const clickX = event.pageX; // 클릭한 X 좌표
+            const clickY = event.pageY; // 클릭한 Y 좌표
+            $scheduleModal.css({
+              display: "block",
+              top: clickY + "px",
+              left: clickX + "px",
+              position: "absolute",
+              transform: "translate(-50%, -5%)"
+            }).fadeIn();
+          });
 
-         // 이벤트 바 클릭 시 이벤트 카드 모달 열기
-         function openEventModal(event) {
-             closeAllModals(); // 다른 모달 닫기
+          // 이벤트 바 클릭 시 이벤트 카드 모달 열기
+          function openEventModal(event) {
+            closeAllModals(); // 다른 모달 닫기
 
-             const $target = $(event.currentTarget); // 클릭된 요소
-             const title = $target.data('title');
-             const date = $target.data('date');
-             const time = $target.data('time');
-             const location = $target.data('location');
-             const memo = $target.data('memo');
+            const $target = $(event.currentTarget); // 클릭된 요소
+            const title = $target.data('title');
+            const date = $target.data('date');
+            const time = $target.data('time');
+            const location = $target.data('location');
+            const memo = $target.data('memo');
 
-             $('.event-title').text(title);
-             $('.event-time').text(date + ' - ' + time);
-             $('.event-location').text(location);
-             $('.event-memo').text(memo);
+            $('.event-title').text(title);
+            $('.event-time').text(date + ' - ' + time);
+            $('.event-location').text(location);
+            $('.event-memo').text(memo);
 
-             // 모달 위치 설정
-             const clickX = event.pageX; // 클릭한 X 좌표
-             const clickY = event.pageY; // 클릭한 Y 좌표
-             $eventModal.css({
-                 display: "block",
-                 top: clickY + "px",
-                 left: clickX + "px",
-                 position: "absolute",
-                 transform: "translate(-50%, 12%)"
-             }).fadeIn();
-         }
+            // 모달 위치 설정
+            const clickX = event.pageX; // 클릭한 X 좌표
+            const clickY = event.pageY; // 클릭한 Y 좌표
+            $eventModal.css({
+              display: "block",
+              top: clickY + "px",
+              left: clickX + "px",
+              position: "absolute",
+              transform: "translate(-50%, 12%)"
+            }).fadeIn();
+          }
 
-         // 이벤트 바 클릭 시 이벤트 카드 모달 열기
-         $('.event-bar-team-allday').off("click").on("click", openEventModal);
-         $('.event-bar-personal-allday').off("click").on("click", openEventModal);
-         $('.event-bar-team').off("click").on("click", openEventModal);
-         $('.event-bar-personal').off("click").on("click", openEventModal);
+          // 이벤트 바 클릭 시 이벤트 카드 모달 열기
+          $('.event-bar-team-allday').off("click").on("click", openEventModal);
+          $('.event-bar-personal-allday').off("click").on("click", openEventModal);
+          $('.event-bar-team').off("click").on("click", openEventModal);
+          $('.event-bar-personal').off("click").on("click", openEventModal);
 
-         // 일정 등록 모달 닫기
-         $closeSchedule.on("click", function () {
-             $scheduleModal.fadeOut();
-         });
+          // 일정 등록 모달 닫기
+          $closeSchedule.on("click", function () {
+            $scheduleModal.fadeOut();
+          });
 
-         // 이벤트 카드 모달 닫기
-         $closeEvent.on("click", function () {
-             $eventModal.fadeOut();
-         });
+          // 이벤트 카드 모달 닫기
+          $closeEvent.on("click", function () {
+            $eventModal.fadeOut();
+          });
 
-         // 모달 외부 클릭 시 닫기
-         $(window).on("click", function (event) {
-             if ($(event.target).is($scheduleModal)) {
-                 $scheduleModal.fadeOut();
-             }
-             if ($(event.target).is($eventModal)) {
-                 $eventModal.fadeOut();
-             }
-         });
+          // 모달 외부 클릭 시 닫기
+          $(window).on("click", function (event) {
+            if ($(event.target).is($scheduleModal)) {
+              $scheduleModal.fadeOut();
+            }
+            if ($(event.target).is($eventModal)) {
+              $eventModal.fadeOut();
+            }
+          });
 
-         // 체크박스 하나만 선택 가능
-         const checkboxes = $('.select-checkbox');
-         checkboxes.on('change', function () {
-             if ($(this).is(':checked')) {
-                 checkboxes.not(this).prop('checked', false); // 다른 체크박스를 비활성화
-             }
-         });
+          // 체크박스 하나만 선택 가능
+          const checkboxes = $('.select-checkbox');
+          checkboxes.on('change', function () {
+            if ($(this).is(':checked')) {
+              checkboxes.not(this).prop('checked', false); // 다른 체크박스를 비활성화
+            }
+          });
 
-         // 팀 버튼과 개인 버튼 클릭 이벤트
-         const $scheduleTeamBtn = $('#schedule_team_btn');
-         const $schedulePersonalBtn = $('#schedule_personal_btn');
-         const $scheduleAllBtn = $('#schedule_all_btn');
-         const $allEventBars = $('.event-bar-team-allday, .event-bar-team, .event-bar-personal-allday, .event-bar-personal');
+          // 팀 버튼과 개인 버튼 클릭 이벤트
+          const $scheduleTeamBtn = $('#schedule_team_btn');
+          const $schedulePersonalBtn = $('#schedule_personal_btn');
+          const $scheduleAllBtn = $('#schedule_all_btn');
+          const $allEventBars = $('.event-bar-team-allday, .event-bar-team, .event-bar-personal-allday, .event-bar-personal');
 
-         $scheduleTeamBtn.on("click", function () {
-             $allEventBars.hide(); // 모든 이벤트 바 숨기기
-             $('.event-bar-team-allday').fadeIn();
-             $('.event-bar-team').fadeIn();
-         });
+          $scheduleTeamBtn.on("click", function () {
+            $allEventBars.hide(); // 모든 이벤트 바 숨기기
+            $('.event-bar-team-allday').fadeIn();
+            $('.event-bar-team').fadeIn();
+          });
 
-         $schedulePersonalBtn.on("click", function () {
-             $allEventBars.hide(); // 모든 이벤트 바 숨기기
-             $('.event-bar-personal-allday').fadeIn();
-             $('.event-bar-personal').fadeIn();
-         });
+          $schedulePersonalBtn.on("click", function () {
+            $allEventBars.hide(); // 모든 이벤트 바 숨기기
+            $('.event-bar-personal-allday').fadeIn();
+            $('.event-bar-personal').fadeIn();
+          });
 
-           $scheduleAllBtn.on("click", function () {
-             $allEventBars.hide(); // 모든 이벤트 바 숨기기
-             $('.event-bar-personal-allday').fadeIn();
-             $('.event-bar-personal').fadeIn();
-             $('.event-bar-team-allday').fadeIn();
-             $('.event-bar-team').fadeIn();
-         });
+          $scheduleAllBtn.on("click", function () {
+            $allEventBars.hide(); // 모든 이벤트 바 숨기기
+            $('.event-bar-personal-allday').fadeIn();
+            $('.event-bar-personal').fadeIn();
+            $('.event-bar-team-allday').fadeIn();
+            $('.event-bar-team').fadeIn();
+          });
           document.querySelectorAll('.today-tasks input[type="checkbox"]').forEach((checkbox) => {
-                checkbox.addEventListener('change', function () {
-                  const taskContainer = this.closest('.today-tasks'); // 가장 가까운 부모 요소
-                  if (this.checked) {
-                    taskContainer.style.backgroundColor = '#ababab'; // 체크 시 배경색
-                  } else {
-                    taskContainer.style.backgroundColor = '#f8f9fa'; // 체크 해제 시 기본 배경색
-                  }
-                });
-              });
-     });
+            checkbox.addEventListener('change', function () {
+              const taskContainer = this.closest('.today-tasks'); // 가장 가까운 부모 요소
+              if (this.checked) {
+                taskContainer.style.backgroundColor = '#ababab'; // 체크 시 배경색
+              } else {
+                taskContainer.style.backgroundColor = '#f8f9fa'; // 체크 해제 시 기본 배경색
+              }
+            });
+          });
+        });
 
     </script>
 
 
 </div>
 </body>
+
 </html>
