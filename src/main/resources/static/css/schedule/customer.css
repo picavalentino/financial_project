@@ -22,6 +22,7 @@
    width: 90%;
      max-width: 1200px;
      margin: 20px auto;
+     margin-bottom: -20px;
      background-color: white;
      border: 1px solid #ddd;
      border-radius: 15px;
@@ -96,29 +97,29 @@ h1 {
     position: relative;
 }
 .event-bar-birthday{
-    background-color: #f4f4f9;
-    border: 4px solid #7aaebc;
-    color: black;
-    padding: 4px;
-    margin-top: 5px;
-    margin-left: -5px;
-    border-radius: 20px;
-    font-size: 18px;
-    text-align: center;
-    width: 110%;
-    overflow: hidden;
-    white-space: nowrap;
+   background-color: #f4f4f9;
+   border: 3px solid #7aaebc;
+   color: rgba(0, 0, 0, 0.6);
+   padding: 3px;
+   margin-top: 5px;
+   margin-left: -8px;
+   border-radius: 20px;
+   font-size: 14px;
+   text-align: center;
+   width: 110%;
+   overflow: hidden;
+   white-space: nowrap;
 }
 
 .event-bar-finish {
     background-color: #f4f4f9;
-    border: 4px solid #ff7672;
+    border: 3px solid #ff7672;
     color: black;
-    padding: 4px;
+    padding: 3px;
     margin-top: 5px;
     margin-left: -8px;
     border-radius: 20px;
-    font-size: 18px;
+    font-size: 14px;
     text-align: center;
     width: 110%;
     overflow: hidden;
@@ -164,6 +165,7 @@ h1 {
 }
 #task_text{
     display: flex;
+     color: rgba(0, 0, 0, 0.6);
     width: 90%;
     justify-content: space-between;
 
@@ -174,12 +176,15 @@ margin-left: 50px;
 }
 .today_task img{
     width: 25px;
+     margin-top:-3px;
 
 }
 .today_task h3 {
-    margin-left: 10px;
-    margin-top: 90px;
+    margin-left: 15px;
+    margin-top: 96px;
     font-size: 25px;
+    font-weight: 500;
+
 }
 
 
@@ -199,6 +204,8 @@ margin-left: 50px;
 }
 label{
     font-size: 22px;
+    color: rgba(0, 0, 0, 0.6);
+
 }
 
 #ps{
@@ -456,7 +463,7 @@ label{
     justify-content: flex-start; /* 왼쪽 정렬 */
     gap: 10px; /* 버튼 간격 */
     margin-right: auto;
-    margin-left: 750px;
+    margin-left: 130px;
   }
 
   #birthday_btn {

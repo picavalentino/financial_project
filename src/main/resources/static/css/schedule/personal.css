@@ -22,6 +22,7 @@
     width: 90%;
     max-width: 1200px;
     margin: 20px auto;
+    margin-bottom: -20px;
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 15px;
@@ -173,12 +174,15 @@ margin-left: 50px;
 }
 .today_task img{
     width: 25px;
+    margin-top:-3px;
 
 }
 .today_task h3 {
-    margin-left: 10px;
-    margin-top: 90px;
+    margin-left: 15px;
+    margin-top: 96px;
     font-size: 25px;
+    font-weight: 500;
+
 }
 
 
@@ -193,11 +197,14 @@ margin-left: 50px;
 
 .today-tasks p {
    font-size: 21px;
+    color: rgba(0, 0, 0, 0.6);
    font-weight: 600;
    margin-top: 8px;
 }
 label{
     font-size: 22px;
+    color: rgba(0, 0, 0, 0.6);
+
 }
 
 #ps{
@@ -575,7 +582,7 @@ label{
       justify-content: flex-start; /* 왼쪽 정렬 */
       gap: 10px; /* 버튼 간격 */
       margin-right: auto;
-      margin-left: 760px;
+      margin-left: 140px;
     }
 
     #schedule_team_btn {

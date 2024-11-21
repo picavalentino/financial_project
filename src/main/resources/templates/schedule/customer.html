@@ -18,22 +18,20 @@
     <div class="container1">
         <div class="content1">
           <!--  <h1>고객 이벤트 관리</h1>-->
-
             <div class="calendar-container">
-                <div class="button-container">
-                    <button id="schedule_all_btn">전체</button>
-                    <button id="birthday_btn">생일</button>
-                    <button id="finish_btn">만기</button>
-                </div>
 
                 <div class="calendar-header">
-
                     <h2><a>
                         <button id="btn_left">&lt;</button>
                     </a>2024년 11월<a>
                         <button id="btn_right">&gt;</button>
                     </a>
                     </h2>
+                    <div class="button-container">
+                        <button id="schedule_all_btn">전체</button>
+                        <button id="birthday_btn">생일</button>
+                        <button id="finish_btn">만기</button>
+                    </div>
 
                 </div>
 
@@ -113,7 +111,7 @@
         <div class="today_task">
 
             <h3><img th:src="@{/css/schedule/img/task_img.png}">
-                오늘의 할 일</h3>
+                오늘의 고객 상담 일정</h3>
             <div class="today-tasks">
                 <label for="task1"><strong> &middot; 11:30</strong></label>
                 <div id="task_text">
