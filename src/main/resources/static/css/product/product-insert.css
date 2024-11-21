@@ -1,28 +1,36 @@
-.box_wrap{
+.box_wrap {
     display: flex;
-    flex-direction: row;
-    width: 100%
-}
-.produce{
-    margin-bottom: 20px;
-}
-.product-info{
-    position: left;
-    background-color: white;
-    border-radius: 15px;
-    margin-right: 30px;
-    padding: 10px;
-    width: 800px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.air-info{
-    position: right;
-    background-color: white;
-    border-radius: 15px;
-    padding: 10px;
-    width: 500px;
+    flex-direction: column;
+    align-items: flex-start; /* 왼쪽 정렬 */
+    width: 100%;
+    margin-left: 50px; /* 왼쪽에 여백 추가 */
 }
 
+.product-info {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    width: 60%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* 아래 버튼과 간격 추가 */
+}
+
+.button-wrap {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    width: 60%; /* product-info와 동일한 폭 */
+    margin-left: 0; /* 왼쪽 여백 없음 */
+}
+
+.button-wrap {
+    display: flex; /* 버튼들을 한 줄로 정렬 */
+    gap: 15px; /* 버튼 간격 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    margin: 10px auto; /* 상하 간격 및 중앙 정렬 */
+}
+
+/* 테이블 */
 .table-product-form{
     padding: 10px;
 }
@@ -60,7 +68,7 @@
     text-align: center;
     padding: 3px;
 }
-
+/* 직원 검색 */
     /* 입력 필드와 버튼을 한 줄로 정렬 */
     .staff-search-container {
         display: flex;
