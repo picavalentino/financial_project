@@ -1,7 +1,28 @@
 package com.team.financial_project.customer.Enum;
 
+import lombok.Getter;
+
+@Getter
 public enum CustomerStatus {
-    ACTIVE, // 활성 상태
-    INACTIVE, // 비활성 상태
-    SUSPENDED // 일시 정지 상태
+    ACTIVE(1),
+    INACTIVE(2);
+
+    private final int value;
+
+    CustomerStatus(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public static CustomerStatus fromValue(int value) {
+        for (CustomerStatus status : CustomerStatus.values()) {
+            if (status.value == value) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant for value: " + value);
+    }
 }

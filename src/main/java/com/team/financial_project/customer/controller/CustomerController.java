@@ -1,19 +1,40 @@
 package com.team.financial_project.customer.controller;
 
+import com.team.financial_project.customer.dto.CustomerDTO;
+import com.team.financial_project.customer.service.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/customer")
 public class CustomerController {
 
-    // 고객 목록 페이지
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
     @GetMapping("/list")
-    public String customerList() {
-        return "customer/customerList"; // 고객 목록 페이지로 이동
+    public String customerList(@RequestParam(defaultValue = "1") int page,
+                               @RequestParam(defaultValue = "10") int pageSize,
+                               Model model) {
+
+        // 고객 목록 및 총 고객 수 가져오기
+        List<CustomerDTO> customers = customerService.getCustomersWithPagination(page, pageSize);
+        int totalCustomers = customerService.getTotalCustomerCount();
+        int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
+
+        // 모델에 데이터 추가
+        model.addAttribute("customers", customers);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        return "customer/customerList";
     }
 
     // 고객 메시지 페이지

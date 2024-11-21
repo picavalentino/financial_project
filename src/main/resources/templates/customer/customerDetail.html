@@ -30,7 +30,7 @@
         <!-- ============================================================================================== -->
         <section class="customerInfo">
             <!-- 고객 정보 섹션 -->
-            <section class="leftSide">
+            <section class="leftSide" id="leftSide">
                 <div class="customer">
                     <div class="customerLeft">
                         <label>고객명 <input type="text" disabled></label>
@@ -103,7 +103,6 @@
         <button class="print-button" onclick="DetailPrint()">🖨️인쇄</button>
         <button class="edit-btn">변경</button>
         <button class="list-btn" onclick="goList()">목록</button>
-        <a class="list-btn" href="/customer/list">목록</a>
     </div>
     <div th:replace="~{customer/customerDetailModal :: managerSearchModal}"></div>
 </div>

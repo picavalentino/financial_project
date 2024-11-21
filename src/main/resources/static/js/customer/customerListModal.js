@@ -61,3 +61,13 @@ function printTable() {
     // 원래 페이지로 복구
     document.body.innerHTML = originalContents;
 }
+
+/* =========================================================================== */
+/* 고객 목록 */
+
+function toggleAll(source) {
+    let checkboxes = document.querySelectorAll('input[type="checkbox"][name="selectedCustomers"]');
+    for (let checkbox of checkboxes) {
+        checkbox.checked = source.checked;
+    }
+}
