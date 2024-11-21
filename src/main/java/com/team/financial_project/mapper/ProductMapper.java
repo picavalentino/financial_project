@@ -2,6 +2,7 @@ package com.team.financial_project.mapper;
 
 import com.team.financial_project.product.dto.ProductDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,4 +18,6 @@ public interface ProductMapper {
     void deleteProduct(BigDecimal prodSn);
 
     void insertProduct(ProductDTO dto);
+
+    int findCdSizeByName(@Param("keyword") String keyword);
 }

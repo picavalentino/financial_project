@@ -134,6 +134,7 @@
                                 <td>
                                     <div class="staff-search-container">
                                         <input type="text" id="staffName" name="staffName" readonly placeholder="직원 이름을 검색하세요">
+                                        <input type="hidden" id="userId" name="userId">
                                         <button id="btn-search" type="button">
                                             <i class="bi bi-search" ></i>
                                         </button>
@@ -266,65 +267,84 @@
             });
 
             // 모달 열기
-            $("#btn-search").on("click", function () {
-                $("#staffSearchModal").fadeIn();
-            });
+        $("#btn-search").on("click", function () {
+            $("#staffSearchModal").fadeIn();
+        });
 
-            // 모달 닫기
-            $(".close").on("click", function () {
+        // 모달 닫기 버튼
+        $(".close").on("click", function () {
+            $("#staffSearchModal").fadeOut();
+        });
+
+        // 모달 외부 클릭 시 닫기
+        $(window).on("click", function (event) {
+            if ($(event.target).is("#staffSearchModal")) {
                 $("#staffSearchModal").fadeOut();
-            });
+            }
+        });
 
-            // 모달 외부 클릭 시 닫기
-            $(window).on("click", function (event) {
-                if ($(event.target).is("#staffSearchModal")) {
-                    $("#staffSearchModal").fadeOut();
-                }
-            });
+        $("#staffSearchButton").on("click", function () {
+            const searchTerm = $("#staffSearchInput").val().trim();
 
-            // 직원 검색 버튼 클릭 이벤트
-            $("#staffSearchButton").on("click", function () {
-                const searchTerm = $("#staffSearchInput").val();
-                if (!searchTerm) {
-                    alert("검색어를 입력하세요.");
-                    return;
-                }
+            if (!searchTerm) {
+                alert("검색어를 입력하세요.");
+                return;
+            }
 
-                // 검색 결과 예제 데이터
-                const sampleResults = [
-                    { id: 1, name: "홍길동" },
-                    { id: 2, name: "김철수" },
-                    { id: 3, name: "이영희" },
-                ];
+            // 서버로 Ajax 요청 보내기
+            $.ajax({
+                url: "/product/user/search", // API 엔드포인트
+                type: "GET",
+                data: { name: searchTerm }, // 요청 파라미터
+                success: function (response) {
+                    const resultsContainer = $("#staffSearchResults");
+                    resultsContainer.empty();
 
-                // 검색 결과 필터링
-                const filteredResults = sampleResults.filter((staff) =>
-                    staff.name.includes(searchTerm)
-                );
-
-                // 결과 표시
-                const resultsContainer = $("#staffSearchResults");
-                resultsContainer.empty();
-                if (filteredResults.length === 0) {
-                    resultsContainer.append("<p>검색 결과가 없습니다.</p>");
-                } else {
-                    filteredResults.forEach((staff) => {
-                        const staffItem = $(`
-                            <div class="staff-item" data-id="${staff.id}">
-                                ${staff.name}
-                            </div>
+                    if (response.length === 0) {
+                        resultsContainer.append("<p>검색 결과가 없습니다.</p>");
+                    } else {
+                        // 테이블 생성
+                        const table = $(`
+                            <table class="staff-table">
+                                <thead>
+                                    <tr>
+                                        <th>사원번호</th>
+                                        <th>사원이름</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         `);
-                        staffItem.on("click", function () {
-                            // 직원 선택 시 이름을 입력 필드에 추가
-                            $("#staffName").val(staff.name);
-                            $("#staffSearchModal").fadeOut();
+
+                        // 결과 추가
+                        response.forEach((item) => {
+                            const row = $(`
+                                <tr class="result-item" data-id="${item.id}">
+                                    <td>${item.id}</td>
+                                    <td>${item.name}</td>
+                                </tr>
+                            `);
+
+                            // 행 클릭 이벤트 추가
+                            row.on("click", function () {
+                                $("#staffName").val(item.name); // 입력 필드에 이름 설정
+                                $("#userId").val(item.id);
+                                $("#staffSearchModal").fadeOut(); // 모달 닫기
+                            });
+
+                            table.find("tbody").append(row);
                         });
-                        resultsContainer.append(staffItem);
-                    });
-                }
+
+                        resultsContainer.append(table);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("검색 실패: ", error);
+                    alert("검색에 실패했습니다. 다시 시도해주세요.");
+                },
             });
         });
-        });
+    });
     </script>
 
 </div>

@@ -37,6 +37,55 @@ public class ProductService {
     }
 
     public void insertProduct(ProductDTO dto) {
+        // 상품코드 생성 로직
+        if (dto.getProdTyCd().equals("1")) { // 적금
+            if (dto.getProdNm().contains("목돈")) {
+                // A1로 시작하는 상품코드 사이즈 가져오기
+                int size = productMapper.findCdSizeByName("A1");
+                // 상품코드 생성: A1 + (size + 1)
+                String prodCd;
+                if (size < 10) {
+                    prodCd = "A10" + (size + 1);
+                } else {
+                    prodCd = "A1" + (size + 1);
+                }
+                dto.setProdCd(prodCd);
+            } else {
+                // A0으로 시작하는 상품코드 사이즈 가져오기
+                int size = productMapper.findCdSizeByName("A0");
+                // 상품코드 생성: A0 + (size + 1)
+                String prodCd;
+                if (size < 10) {
+                    prodCd = "A00" + (size + 1);
+                } else {
+                    prodCd = "A0" + (size + 1);
+                }
+                dto.setProdCd(prodCd);
+            }
+        } else if (dto.getProdTyCd().equals("2")) { // 예금
+            // B0으로 시작하는 상품코드 사이즈 가져오기
+            int size = productMapper.findCdSizeByName("B0");
+            // 상품코드 생성: B0 + (size + 1)
+            String prodCd;
+            if (size < 10) {
+                prodCd = "B00" + (size + 1);
+            } else {
+                prodCd = "B0" + (size + 1);
+            }
+            dto.setProdCd(prodCd);
+        } else if (dto.getProdTyCd().equals("3")) { // 대출
+            // C0으로 시작하는 상품코드 사이즈 가져오기
+            int size = productMapper.findCdSizeByName("C0");
+            // 상품코드 생성: C0 + (size + 1)
+            String prodCd;
+            if (size < 10) {
+                prodCd = "C00" + (size + 1);
+            } else {
+                prodCd = "C0" + (size + 1);
+            }
+            dto.setProdCd(prodCd);
+        }
+        System.out.println("### create prodCd: " + dto.getProdCd());
         productMapper.insertProduct(dto);
     }
 }

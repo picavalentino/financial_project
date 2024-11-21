@@ -92,7 +92,29 @@
     }
 
 /* 모달 배경 스타일 */
-    .modal {
+.staff-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .staff-table th,
+    .staff-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .staff-table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+    }
+
+    .result-item:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+.modal {
         display: none;
         position: fixed;
         z-index: 1000;
@@ -101,10 +123,9 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
     }
 
-    /* 모달 콘텐츠 스타일 */
     .modal-content {
         background-color: #fff;
         margin: 15% auto;
@@ -113,12 +134,14 @@
         width: 50%;
         border-radius: 10px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        position: relative;
     }
 
-    /* 닫기 버튼 스타일 */
     .close {
+        position: absolute;
+        right: 20px;
+        top: 10px;
         color: #aaa;
-        float: right;
         font-size: 28px;
         font-weight: bold;
         cursor: pointer;

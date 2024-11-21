@@ -108,8 +108,51 @@
     </select>
 
     <insert id="insertProduct" parameterType="com.team.financial_project.product.dto.ProductDTO">
-
+        INSERT INTO tb_product (
+        prod_nm,             -- 상품명
+        prod_instl_amt_min,  -- 최소 가입금액
+        prod_instl_amt_max,  -- 최대 가입금액
+        prod_create_at,      -- 생성일
+        user_id,             -- 담당자 ID
+        prod_cd,             -- 상품 코드
+        prod_ty_cd,          -- 상품 유형 코드
+        prod_sbstg_ty_cd,    -- 가입 대상 코드
+        prod_pay_ty_cd,      -- 납입 주기 코드
+        prod_air_min,        -- 최소 적용이율
+        prod_air_max,        -- 최대 적용이율
+        prod_air_bgn_ymd,    -- 적용 시작일
+        prod_air_end_ymd,    -- 적용 종료일
+        prod_int_tax_ty_cd,  -- 이자 과세 구분 코드
+        prod_curr_stcd,      -- 현재 상태 코드
+        prod_ntsl_bgn_ymd,   -- 판매 시작일
+        prod_ntsl_end_ymd    -- 판매 종료일
+        )
+        VALUES (
+        #{prodNm},
+        #{prodInstlAmtMin},
+        #{prodInstlAmtMax},
+        NOW(),              -- 생성일 현재 시각
+        #{userId},
+        #{prodCd},
+        #{prodTyCd},
+        #{prodSbstgTyCd},
+        #{prodPayTyCd},
+        #{prodAirMin},
+        #{prodAirMax},
+        #{prodAirBgnYmd},
+        #{prodAirEndYmd},
+        #{prodIntTaxTyCd},
+        #{prodCurrStcd},
+        #{prodNtslBgnYmd},
+        #{prodNtslEndYmd}
+        )
     </insert>
+
+    <select id="findCdSizeByName" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_product
+        WHERE prod_cd LIKE CONCAT(#{keyword}, '%')
+    </select>
 
     <update id="updateProduct" parameterType="com.team.financial_project.product.dto.ProductDTO">
         <!-- 기존 데이터를 tb_prod_hist 테이블에 추가 -->

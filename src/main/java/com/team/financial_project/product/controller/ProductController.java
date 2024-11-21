@@ -1,8 +1,11 @@
 package com.team.financial_project.product.controller;
 
+import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.product.dto.ProductDTO;
 import com.team.financial_project.product.service.ProductService;
+import com.team.financial_project.product.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 //@RestController
 @Controller
@@ -18,9 +22,11 @@ import java.util.List;
 @Slf4j
 public class ProductController {
     private final ProductService productService;
+    private final UserService userService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     // 상품 전체 목록 조회
@@ -69,6 +75,17 @@ public class ProductController {
         // 신규 productDTO 보내기
         model.addAttribute("dto", new ProductDTO());
         return "/product/product-insert";
+    }
+
+    // 직원 이름 검색 API
+    @GetMapping("/user/search")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> searchUserByName(@RequestParam String name) {
+        List<Map<String, Object>> users = userService.findByNameContaining(name);
+        if (users.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        }
+        return ResponseEntity.ok(users); // 검색 결과 반환
     }
 
     @PostMapping("/insert")
