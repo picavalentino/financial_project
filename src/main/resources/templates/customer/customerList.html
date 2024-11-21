@@ -94,27 +94,27 @@
                 </tbody>
             </table>
             <!--       ======================================================================================================         -->
-            <div class="pagination-container">
+        <!--    <div class="pagination-container">
                 <div class="pagination">
-                    <!-- 이전 페이지 버튼 -->
+                    &lt;!&ndash; 이전 페이지 버튼 &ndash;&gt;
                     <button th:disabled="${currentPage == 1}"
                             th:onclick="'location.href=\'?page=' + (${currentPage - 1}) + '\'">&lt;
                     </button>
 
-                    <!-- 페이지 번호 링크들 -->
+                    &lt;!&ndash; 페이지 번호 링크들 &ndash;&gt;
                     <span th:each="i : ${#numbers.sequence(1, totalPages)}">
                         <a th:href="@{'?page=' + ${i}}" th:text="${i}"
                            th:classappend="${currentPage == i} ? 'active' : ''"></a>
                     </span>
 
-                    <!-- 다음 페이지 버튼 -->
+                    &lt;!&ndash; 다음 페이지 버튼 &ndash;&gt;
                     <button th:disabled="${currentPage == totalPages}"
                             th:onclick="'location.href=\'?page=' + (${currentPage + 1}) + '\'">&gt;
                     </button>
                 </div>
-                <!-- 현재 페이지와 총 페이지 정보 -->
+                &lt;!&ndash; 현재 페이지와 총 페이지 정보 &ndash;&gt;
                 <span class="pagination-info" th:text="'페이지 ' + ${currentPage} + ' / ' + ${totalPages}"></span>
-            </div>
+            </div>-->
         </section>
     </div>
     <!-- ======================================================================================================================== -->

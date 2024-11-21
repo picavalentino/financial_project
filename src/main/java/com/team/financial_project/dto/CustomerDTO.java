@@ -1,4 +1,4 @@
-package com.team.financial_project.customer.dto;
+package com.team.financial_project.dto;
 
 import com.team.financial_project.customer.Enum.CustomerStatus;
 import lombok.AllArgsConstructor;

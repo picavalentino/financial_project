@@ -2,9 +2,8 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-
     <typeAliases>
-        <typeAlias type="com.team.financial_project.customer.dto.CustomerDTO" alias="customerDTO"/>
+        <typeAlias type="com.team.financial_project.dto.CustomerDTO" alias="customerDTO"/>
         <typeAlias type="com.team.financial_project.login.dto.UserDTO" alias="userDTO"></typeAlias>
     </typeAliases>
 
