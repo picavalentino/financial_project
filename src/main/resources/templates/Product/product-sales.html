@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+
+<meta charset="UTF-8">
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/css/product/common.css">
+  <link rel="stylesheet" href="/css/product/product-sales.css">
+  <link rel="stylesheet" href="/css/buttons/button.css">
+</head>
+<title>GS Bank</title>
+<!-- 전체 적용될 CSS -->
+<th:block layout:fragment="css"></th:block>
+<!-- 전체 적용될 스크립트 -->
+<th:block layout:fragment="script"></th:block>
+
+<!-- 우리가 작업할 공간 -->
+<body>
+<div layout:fragment="content" class="content">
+  <div class="sub_content">
+    <div class="location">
+      <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+      <a th:href="@{/product/list}"> / 상품관리</a>
+      <p> / 매출조회 </p>
+    </div>
+    <div class="produce">
+      <h1 class="title">매출조회</h1>
+      <div class="select">
+        <div class="inform">
+          <div class="inform-section inform-section-left">
+            <div class="inform_wrap flex type01">
+              <ul class="flex">
+                <li>
+                  연도
+                  <select>
+                    <option value="">선택하세요</option>
+                  </select>
+                </li>
+                <li>
+                  월
+                  <select>
+                    <option value="">선택하세요</option>
+                  </select>
+                </li>
+              </ul>
+            </div>
+            <div class="inform_wrap flex type02 mt10">
+              <ul class="flex">
+                <li>
+                  기간
+                  <div class="inp_wrap">
+                    <input type="date" value="" required />
+                    <span>~</span>
+                    <input type="date" value="" required />
+                  </div>
+                </li>
+                <li>
+                  상품분류
+                  <select>
+                    <option value="">선택하세요</option>
+                  </select>
+                </li>
+                <li>
+                  <label>상품명</label>
+                  <input type="text" />
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+                  class="inform-section inform-section-right inform-button-wrapper"
+          >
+            <div class="flex">
+              <a href="" class="btn navy search mr10">
+                <i class="bi bi-search"></i>
+                <span>조건검색</span></a
+              >
+              <a href="" class="btn navy reset">
+                <i class="bi bi-search"></i>
+                <span>초기화</span></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tbl_wrap mt20">
+        <p class="text_right mb20">
+          <a href="" class="btn gray"
+          ><i class="bi bi-printer-fill"></i><span>인쇄</span></a
+          >
+        </p>
+        <table class="tbl">
+          <colgroup>
+            <col width="*" />
+            <col width="*" />
+            <col width="*" />
+            <col width="*" />
+            <col width="*" />
+            <col width="*" />
+            <col width="*" />
+            <col width="*" />
+            <col width="*" />
+          </colgroup>
+          <thead>
+          <tr>
+            <th><input type="checkbox" /></th>
+            <th>번호</th>
+            <th>상품분류</th>
+            <th>상품명</th>
+            <th>매출액</th>
+            <th>설계건수</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>1</td>
+            <td>text column</td>
+            <td>10,000</td>
+            <td>1,000,000,000</td>
+            <td>월납</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>2</td>
+            <td>text column</td>
+            <td>10,000</td>
+            <td>1,000,000,000</td>
+            <td>월납</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>3</td>
+            <td>text column</td>
+            <td>10,000</td>
+            <td>1,000,000,000</td>
+            <td>월납</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>4</td>
+            <td>text column</td>
+            <td>10,000</td>
+            <td>1,000,000,000</td>
+            <td>월납</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>5</td>
+            <td>text column</td>
+            <td>10,000</td>
+            <td>1,000,000,000</td>
+            <td>월납</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>6</td>
+            <td>text column</td>
+            <td>10,000</td>
+            <td>1,000,000,000</td>
+            <td>월납</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>7</td>
+            <td>text column</td>
+            <td>10,000</td>
+            <td>1,000,000,000</td>
+            <td>월납</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>8</td>
+            <td>text column</td>
+            <td>10,000</td>
+            <td>1,000,000,000</td>
+            <td>월납</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>9</td>
+            <td>text column</td>
+            <td>10,000</td>
+            <td>1,000,000,000</td>
+            <td>월납</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="paging_box">
+      <div class="paging flex">
+        <a href="" class="prv"><i class="bi bi-chevron-left"></i></a>
+        <a class="active">1</a>
+        <a href="">2</a>
+        <a href="">3</a>
+        <a href="">4</a>
+        <a href="">5</a>
+        <a href="" class="next"><i class="bi bi-chevron-right"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
