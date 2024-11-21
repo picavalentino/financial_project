@@ -71,11 +71,6 @@ body {
     width: 75%;
 }
 
-.input-icon{
-    width: 20px;
-    height: 20px;
-}
-
 .id-input,
 .password-input{
     border: none;
@@ -87,6 +82,9 @@ body {
     outline: none;
 }
 
+#btn-show{
+    display: none;
+}
 .remember_id{
     font-size: small;
     color: #929292;

@@ -7,4 +7,9 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
+    UserDTO findById(String id);
+
+    List<UserDTO> findUsersByKeyword(String keyword);
+
+    UserDTO certifyByUserTelno(String telno);
 }

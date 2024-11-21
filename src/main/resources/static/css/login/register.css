@@ -71,68 +71,169 @@ body {
 .title img {
     width: 20px;
     height: 20px;
+    cursor: pointer;
 }
 
 .input-container label {
-  display: block;
-  color: #4a4a4a;
+    display: block;
+    color: #4a4a4a;
 }
 
 .input-container input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid rgb(103, 103, 103);
-  font-size: small;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgb(103, 103, 103);
+    font-size: small;
 }
 
 .employee-info {
-  display: flex;
-  margin-bottom: 15px;
-  justify-content: space-between;
+    display: flex;
+    margin-bottom: 15px;
+    justify-content: space-between;
 }
 .left-info{
-  width: 45%;
+    width: 45%;
 }
 .left-info label{
-  display: block;
-  color: #525252;
+    display: block;
+    color: #525252;
 }
 .left-info p{
-  width: 100%;
-  padding: 10px 0;
-  text-align: center;
-  color: #525252;
-  border-bottom: 2px solid #525252;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    color: #525252;
+    border-bottom: 2px solid #525252;
 }
 
 .right-img{
-  width: 50%;
+    width: 50%;
 }
 .right-img img{
-  width: 100%;
+    width: 100%;
 }
-
+.msg{
+    color: rgb(172, 35, 35);
+    font-size: smaller;
+    margin-left: 10px;
+}
 .user_telno{
-  display: flex;
-  align-items: center;
-  gap: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 .user_telno input{
-  text-align: center;
+    text-align: center;
+    width: 80px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgb(103, 103, 103);
+    font-size: small;
 }
 .user_telno select{
-  padding: 10px 0;
-  border-radius: 8px;
-  border: 1px solid rgb(103, 103, 103);
-  font-size: small;
-  color: #696969;
+    text-align: center;
+    width: 80px;
+    padding: 10px 0;
+    border-radius: 8px;
+    border: 1px solid rgb(103, 103, 103);
+    font-size: small;
+    color: #696969;
 }
-.btn-phone{
-  background-color: #a17777;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
+.user_telno span{
+    font-size: larger;
+}
+/* 모든 브라우저에서 스핀 버튼 제거 */
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+    -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
+    appearance: none; /* 일반적인 속성 */
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
+    margin: 0; /* 스핀 버튼의 여백 제거 */
+}
+
+.img-btns{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+.img-btns button {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    height: 25px;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    color: white;
+    padding: 0;
+    gap: 5px;
+}
+.img-btns button .icon i{
+    display: flex;
+    font-size: 14px;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+}
+.icon {
+    border-radius: 8px;
+    display: flex;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+}
+/* 등록 버튼 */
+.btn-photoReg {
+    width: 65px;
+    background-color: #5ba1aa;
+}
+
+.btn-photoReg .icon {
+    background-color: #4a8b92;
+}
+
+.btn-photoReg:hover {
+    background-color: #4a8b92;
+}
+/* 초기화 버튼 */
+.btn-reset {
+    background-color: #5a5a5a;
+    width: 80px;
+}
+
+.btn-reset .icon {
+    background-color: #4d4d4d;
+}
+
+.btn-reset:hover {
+    background-color: #4d4d4d;
+}
+#btn-show{
+    display: none;
+}
+.btn-certify{
+    display: flex;
+    margin-left: auto;
+    background-color: #a17777;
+    color: #ffffff;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    font-weight: bold;
+}
+.btn-certify:disabled{
+    background-color: rgb(140 140 140);
+    cursor: default;
 }
 
 .btn-register{
@@ -143,4 +244,36 @@ body {
     border: none;
     width: 100%;
     color: #ffffff;
+    font-weight: bold;
+}
+.btn-register:disabled{
+    background-color: rgb(140 140 140);
+    cursor: not-allowed;
+}
+
+/* 드롭다운 */
+.dropdown {
+    display: none; /* JavaScript에서 조건에 따라 표시 */
+    position: absolute; /* 부모 요소 기준 위치 설정 */
+    max-height: 200px; /* 드롭다운 최대 높이 설정 (스크롤을 위한 제한) */
+    overflow-y: auto; /* 최대 높이를 넘길 경우 스크롤 */
+    border: 1px solid #ccc; /* 테두리 추가 */
+    background-color: white; /* 배경색 흰색 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+    z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
+}
+
+.dropdown .dropdown-item {
+    width: 100%;
+    padding: 10px; /* 항목 간격 설정 */
+    cursor: pointer; /* 커서 모양 변경 */
+    border-bottom: 1px solid #f0f0f0; /* 항목 구분선 */
+}
+
+.dropdown .dropdown-item:last-child {
+    border-bottom: none; /* 마지막 항목은 구분선 제거 */
+}
+
+.dropdown .dropdown-item:hover {
+    background-color: #f8f8f8; /* 항목에 마우스를 올렸을 때 배경색 변경 */
 }

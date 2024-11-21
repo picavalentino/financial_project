@@ -1,9 +1,9 @@
 package com.team.financial_project.dto;
 
-import com.team.financial_project.login.dto.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,10 +16,10 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthorit  y> getAuthorities() {
-        return userDTO.getUser_auth_cd() != null
-                ? List.of(new SimpleGrantedAuthority("ROLE_" +userDTO.getUser_auth_cd()))
-                : List.of();
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return ObjectUtils.isEmpty(userDTO.getUser_auth_cd())
+                ? List.of()
+                : List.of(new SimpleGrantedAuthority(userDTO.getUser_auth_cd()));
     }
 
     @Override
@@ -49,6 +49,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return "ACTIVE".equals(userDTO.getUser_status_cd());
+        return "ACTIVE".equals(userDTO.getUser_status());
     }
 }

@@ -20,4 +20,6 @@ public class UserDTO {
     private String user_status_code_cl;    // 직원 현재상태 분류코드
     private String user_dept_cd_code_cl;   // 직원 부서 분류코드
     private String user_jbps_ty_cd_code_cl;  // 직위 분류코드
+    private String dept_name; // 부서 이름
+    private String position_name; // 직위 이름
 }
