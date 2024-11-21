@@ -456,34 +456,45 @@ label{
     justify-content: flex-start; /* 왼쪽 정렬 */
     gap: 10px; /* 버튼 간격 */
     margin-right: auto;
-    margin-left: 900px;
+    margin-left: 750px;
   }
 
-  #brithday_btn {
+  #birthday_btn {
     background-color: #7AAEBC; /* 버튼 배경색 */
-    color: white; /* 버튼 텍스트 색상 */
+     color: rgba(0, 0, 0, 0.6);
     border: none; /* 테두리 제거 */
     padding: 10px 20px; /* 여백 */
-    border-radius: 10px;
+    border-radius: 20px;
     cursor: pointer; /* 클릭 가능한 커서 */
     font-size: 16px; /* 텍스트 크기 */
-    font-weight: 500; /* 텍스트 굵기 */
+     font-weight: bold; /* 텍스트 굵기 */
     transition: background 0.3s ease; /* 배경색 전환 효과 */
   }
   #finish_btn {
     background-color: #FF7672; /* 버튼 배경색 */
-    color: white; /* 버튼 텍스트 색상 */
+    color: rgba(0, 0, 0, 0.6);
     border: none; /* 테두리 제거 */
     padding: 10px 20px; /* 여백 */
-    border-radius: 10px;
+    border-radius: 20px;
     cursor: pointer; /* 클릭 가능한 커서 */
-    font-size: 14px; /* 텍스트 크기 */
+    font-size: 16px; /* 텍스트 크기 */
     font-weight: bold; /* 텍스트 굵기 */
     transition: background 0.3s ease; /* 배경색 전환 효과 */
   }
 
+  #schedule_all_btn {
+      background-color: #d9d9d9; /* 버튼 배경색 */
+       color: rgba(0, 0, 0, 0.5);
+      border: none; /* 테두리 제거 */
+      padding: 10px 20px; /* 여백 */
+      border-radius: 20px;
+      cursor: pointer; /* 클릭 가능한 커서 */
+      font-size: 16px; /* 텍스트 크기 */
+      font-weight: bold; /* 텍스트 굵기 */
+      transition: background 0.3s ease; /* 배경색 전환 효과 */
+    }
 
 
-  .button-container button:hover {
-    background-color: #5D9BA8; /* 호버 시 색상 변경 */
+   #schedule_all_btn:hover, #finish_btn:hover,#birthday_btn:hover {
+    background-color: #ababab; /* 호버 시 색상 변경 */
   }

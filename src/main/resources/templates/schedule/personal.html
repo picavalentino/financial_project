@@ -2,393 +2,438 @@
 <html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>개인 일정 관리</title>
-  <link rel="stylesheet" th:href="@{/css/schedule/personal.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개인 일정 관리</title>
+    <link rel="stylesheet" th:href="@{/css/schedule/personal.css}">
 </head>
 
 <body>
 <div layout:fragment="content" class="content">
-  <div class="container1">
-    <div class="content1">
-      <h1>개인 일정 관리</h1>
-      <div class="calendar-container">
+    <div class="container1">
+        <div class="content1">
+   <!--         <h1>개인 일정 관리</h1>-->
+            <div class="calendar-container">
+                <div class="button-container">
+                    <button id="schedule_all_btn">전체</button>
+                    <button id="schedule_team_btn">팀</button>
+                    <button id="schedule_personal_btn">개인</button>
+                </div>
+                <div class="calendar-header">
+                    <h2><a>
+                        <button id="btn_left">&lt;</button>
+                    </a>2024년 11월<a>
+                        <button id="btn_right">&gt;</button>
+                    </a></h2>
+                </div>
 
-        <div class="calendar-header">
-          <h2><a><button id="btn_left">&lt;</button></a>2024년 11월<a><button id="btn_right">&gt;</button></a></h2>
+                <table class="calendar-table">
+                    <thead>
+                    <tr>
+                        <th id="sun">일</th>
+                        <th>월</th>
+                        <th>화</th>
+                        <th>수</th>
+                        <th>목</th>
+                        <th>금</th>
+                        <th id="sat">토</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="calendar-cell"></td>
+                        <td class="calendar-cell"></td>
+                        <td class="calendar-cell"></td>
+                        <td class="calendar-cell"></td>
+                        <td class="calendar-cell"></td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">1</div>
+                            <div class="event-bar-team-allday" data-title="금융프로젝트" data-date="11월 1일 (금요일)"
+                                 data-time="오전 9:00~11:00" data-location="강남역" data-person="김철수">금융프로젝트
+                            </div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">2</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">3</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">4</div>
+                            <div class="event-bar-team-allday" data-title="점심 약속" data-date="11월 4일 (월요일)"
+                                 data-time="오후 12:00~13:00" data-location="회사 식당" data-person="홍길동">점심 약속
+                            </div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">5</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">6</div>
+                            <div class="event-bar-team-allday" data-title="프로젝트 발표" data-date="11월 6일 (수요일)"
+                                 data-time="오전 10:00~12:00" data-location="회의실" data-person="팀원">프로젝트 발표
+                            </div>
+                            <div class="event-bar-personal"
+                                 data-title="영화보기"
+                                 data-date="11월 6일 (수요일)"
+                                 data-time="오전 10:00~12:00"
+                                 data-location="영화관"
+                                 data-person="친구">
+                                <span class="event-dot-personal"></span>영화보기
+                            </div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">6</div>
+                            <div class="event-bar-team" data-title="프로젝트 발표" data-date="11월 6일 (수요일)"
+                                 data-time="오전 10:00~12:00" data-location="회의실" data-person="팀원">
+                                <span class="event-dot-team"></span>프로젝트 발표
+                            </div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">8</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">9</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">10</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">11</div>
+                            <div class="event-bar-personal"
+                                 data-title="점심약속"
+                                 data-date="11월 11일 (월요일)"
+                                 data-time="오전 11:00~01:00"
+                                 data-location="영화관"
+                                 data-person="혼자">
+                                <span class="event-dot-personal"></span>점심 약속
+                            </div>
+                            <div class="event-bar-personal"
+                                 data-title="콘서트"
+                                 data-date="11월 6일 (월요일)"
+                                 data-time="오전 18:00~20:00"
+                                 data-location="아트홀"
+                                 data-person="친구">
+                                <span class="event-dot-personal"></span>콘서트
+                            </div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">12</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">13</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">14</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">15</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">16</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">17</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">18</div>
+
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">19</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">20</div>
+                            <div class="event-bar-personal-allday" data-title="제주도 여행" data-date="11월 20일 (월요일)"
+                                 data-time="오전 8:00~오후 6:00" data-location="제주도" data-person="여행팀">제주도 여행
+                            </div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">21</div>
+                            <div class="event-bar-personal-allday"></div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">22</div>
+                            <div class="event-bar-personal-allday"></div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">23</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">24</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">25</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">26</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">27</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">28</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">29</div>
+                        </td>
+                        <td class="calendar-cell">
+                            <div class="calendar-date">30</div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="today_task">
+
+            <h3><img th:src="@{/css/schedule/img/task_img.png}">
+                오늘의 할 일</h3>
+
+
+            <div class="today-tasks">
+                <label for="task1"><strong> &middot; 11:30</strong></label>
+                <div id="task_text">
+                    <p> 점심 미팅 </p><input type="checkbox" id="task1">
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- 일정 등록 모달 -->
+    <div class="schedule_detail">
+        <div class="scheduler-container">
+
+            <h1>일정 등록</h1>
+
+            <div class="date-display">
+                <button id="prev-day">&lt;</button>
+                <span id="current-date">2024.11.20</span>
+                <button id="next-day">&gt;</button>
+            </div>
+
+            <div class="scheduler">
+                <span class="close">&times;</span>
+                <div class="row">
+                    <select class="time-select">
+                        <!-- Generate time slots dynamically -->
+                        <!-- 00:00 ~ 23:30 in 30-minute intervals -->
+                        <option value="00:00">00:00</option>
+                        <option value="00:30">00:30</option>
+                        <option value="01:00">01:00</option>
+                        <option value="01:30">01:30</option>
+                        <option value="02:00">02:00</option>
+                        <option value="02:30">02:30</option>
+                        <option value="03:00">03:00</option>
+                        <option value="03:30">03:30</option>
+                        <option value="04:00">04:00</option>
+                        <option value="04:30">04:30</option>
+                        <option value="05:00">05:00</option>
+                        <option value="05:30">05:30</option>
+                        <option value="06:00">06:00</option>
+                        <option value="06:30">06:30</option>
+                        <option value="07:00">07:00</option>
+                        <option value="07:30">07:30</option>
+                        <option value="08:00">08:00</option>
+                        <option value="08:30">08:30</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                        <option value="17:00">17:00</option>
+                        <option value="17:30">17:30</option>
+                        <option value="18:00">18:00</option>
+                        <option value="18:30">18:30</option>
+                        <option value="19:00">19:00</option>
+                        <option value="19:30">19:30</option>
+                        <option value="20:00">20:00</option>
+                        <option value="20:30">20:30</option>
+                        <option value="21:00">21:00</option>
+                        <option value="21:30">21:30</option>
+                        <option value="22:00">22:00</option>
+                        <option value="22:30">22:30</option>
+                        <option value="23:00">23:00</option>
+                        <option value="23:30">23:30</option>
+                    </select>
+                    <input type="text" class="task-title" placeholder="Enter title...">
+                    <input type="text" class="location-input" placeholder="Enter location...">
+                    <div class="checkboxes">
+                        <label><input type="checkbox" class="select-checkbox" id="team-team"> 팀 </label>
+                        <label><input type="checkbox" class="select-checkbox" id="team-personal"> 개인 </label>
+                    </div>
+                </div>
+                <div class="details">
+                    <textarea class="details-input" placeholder="Enter detailed information..."></textarea>
+                </div>
+                <input type="submit" id="submit_btn" value="등록">
+            </div>
         </div>
 
-        <table class="calendar-table">
-          <thead>
-          <tr>
-            <th id="sun">일</th>
-            <th>월</th>
-            <th>화</th>
-            <th>수</th>
-            <th>목</th>
-            <th>금</th>
-            <th id="sat">토</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td class="calendar-cell"></td>
-            <td class="calendar-cell"></td>
-            <td class="calendar-cell"></td>
-            <td class="calendar-cell"></td>
-            <td class="calendar-cell"></td>
-            <td class="calendar-cell">
-              <div class="calendar-date">1</div>
-              <div class="event-bar" data-title="금융프로젝트" data-date="11월 1일 (금요일)" data-time="오전 9:00~11:00" data-location="강남역" data-person="김철수">금융프로젝트</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">2</div>
-            </td>
-          </tr>
-          <tr>
-            <td class="calendar-cell">
-              <div class="calendar-date">3</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">4</div>
-              <div class="event-bar" data-title="점심 약속" data-date="11월 4일 (월요일)" data-time="오후 12:00~13:00" data-location="회사 식당" data-person="홍길동">점심 약속</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">5</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">6</div>
-              <div class="event-bar" data-title="프로젝트 발표" data-date="11월 6일 (수요일)" data-time="오전 10:00~12:00" data-location="회의실" data-person="팀원">프로젝트 발표</div>
-              <div class="event-title-container"
-                   data-title="영화보기"
-                   data-date="11월 6일 (수요일)"
-                   data-time="오전 10:00~12:00"
-                   data-location="영화관"
-                   data-person="친구">
-                <span class="event-dot-personal"></span>영화보기
-              </div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">6</div>
-                <div class="event-title-container" data-title="프로젝트 발표" data-date="11월 6일 (수요일)" data-time="오전 10:00~12:00" data-location="회의실" data-person="팀원">
-                  <span class="event-dot-team"></span>프로젝트 발표</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">8</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">9</div>
-            </td>
-          </tr>
-          <tr>
-            <td class="calendar-cell">
-              <div class="calendar-date">10</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">11</div>
-              <div class="event-title-container"
-                   data-title="점심약속"
-                   data-date="11월 11일 (월요일)"
-                   data-time="오전 11:00~01:00"
-                   data-location="영화관"
-                   data-person="혼자">
-                <span class="event-dot-personal"></span>점심 약속
-              </div>
-              <div class="event-title-container"
-                   data-title="콘서트"
-                   data-date="11월 6일 (월요일)"
-                   data-time="오전 18:00~20:00"
-                   data-location="아트홀"
-                   data-person="친구">
-                <span class="event-dot-personal"></span>콘서트
-              </div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">12</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">13</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">14</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">15</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">16</div>
-            </td>
-          </tr>
-          <tr>
-            <td class="calendar-cell">
-              <div class="calendar-date">17</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">18</div>
-
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">19</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">20</div>
-              <div class="event-bar multi-day" data-title="제주도 여행" data-date="11월 20일 (월요일)" data-time="오전 8:00~오후 6:00" data-location="제주도" data-person="여행팀">제주도 여행</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">21</div>
-              <div class="event-bar multi-day"></div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">22</div>
-              <div class="event-bar multi-day"></div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">23</div>
-            </td>
-          </tr>
-          <tr>
-            <td class="calendar-cell">
-              <div class="calendar-date">24</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">25</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">26</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">27</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">28</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">29</div>
-            </td>
-            <td class="calendar-cell">
-              <div class="calendar-date">30</div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-
-      </div>
     </div>
-    <div class="today_task">
 
-      <h3> <img th:src="@{/css/schedule/img/task_img.png}">
-        오늘의 할 일</h3>
-
-
-      <div class="today-tasks">
-        <label for="task1"><strong> &middot; 11:30</strong></label>
-        <div id="task_text">
-          <p> 점심 미팅 </p><input type="checkbox" id="task1" >
+    <!-- 이벤트 카드 모달 -->
+    <div class="event-card" style="display:none;">
+        <span class="close-event">&times;</span>
+        <div class="card-header">
+            <h2 class="event-title"></h2>
+            <div class="card-actions">
+                <button><img id="profile_img" th:src="@{/css/schedule/img/delete.png}" alt="Delete"></button>
+                <button><img th:src="@{/css/schedule/img/email.png}" alt="Mail"></button>
+                <!--        <button><img th:src="@{/css/schedule/img/etc.png}" alt="More"></button>-->
+            </div>
         </div>
-      </div>
-
-
-    </div>
-  </div>
-
-  <!-- 일정 등록 모달 -->
-  <div class="schedule_detail">
-    <div class="scheduler-container">
-
-      <h1>일정 등록</h1>
-
-      <div class="date-display">
-        <button id="prev-day">&lt;</button>
-        <span id="current-date">2024.11.20</span>
-        <button id="next-day">&gt;</button>
-      </div>
-
-      <div class="scheduler">
-        <span class="close">&times;</span>
-        <div class="row">
-          <select class="time-select">
-            <!-- Generate time slots dynamically -->
-            <!-- 00:00 ~ 23:30 in 30-minute intervals -->
-            <option value="00:00">00:00</option>
-            <option value="00:30">00:30</option>
-            <option value="01:00">01:00</option>
-            <option value="01:30">01:30</option>
-            <option value="02:00">02:00</option>
-            <option value="02:30">02:30</option>
-            <option value="03:00">03:00</option>
-            <option value="03:30">03:30</option>
-            <option value="04:00">04:00</option>
-            <option value="04:30">04:30</option>
-            <option value="05:00">05:00</option>
-            <option value="05:30">05:30</option>
-            <option value="06:00">06:00</option>
-            <option value="06:30">06:30</option>
-            <option value="07:00">07:00</option>
-            <option value="07:30">07:30</option>
-            <option value="08:00">08:00</option>
-            <option value="08:30">08:30</option>
-            <option value="09:00">09:00</option>
-            <option value="09:30">09:30</option>
-            <option value="10:00">10:00</option>
-            <option value="10:30">10:30</option>
-            <option value="11:00">11:00</option>
-            <option value="11:30">11:30</option>
-            <option value="12:00">12:00</option>
-            <option value="12:30">12:30</option>
-            <option value="13:00">13:00</option>
-            <option value="13:30">13:30</option>
-            <option value="14:00">14:00</option>
-            <option value="14:30">14:30</option>
-            <option value="15:00">15:00</option>
-            <option value="15:30">15:30</option>
-            <option value="16:00">16:00</option>
-            <option value="16:30">16:30</option>
-            <option value="17:00">17:00</option>
-            <option value="17:30">17:30</option>
-            <option value="18:00">18:00</option>
-            <option value="18:30">18:30</option>
-            <option value="19:00">19:00</option>
-            <option value="19:30">19:30</option>
-            <option value="20:00">20:00</option>
-            <option value="20:30">20:30</option>
-            <option value="21:00">21:00</option>
-            <option value="21:30">21:30</option>
-            <option value="22:00">22:00</option>
-            <option value="22:30">22:30</option>
-            <option value="23:00">23:00</option>
-            <option value="23:30">23:30</option>
-          </select>
-          <input type="text" class="task-title" placeholder="Enter title...">
-          <input type="text" class="location-input" placeholder="Enter location...">
-          <div class="checkboxes">
-            <label><input type="checkbox" class="select-checkbox" id="team-team"    > 팀 </label>
-            <label><input type="checkbox" class="select-checkbox" id="team-personal"    > 개인 </label>
-          </div>
+        <div class="card-details">
+            <div><img th:src="@{/css/schedule/img/time.png}" alt="time"> <span class="event-time"></span></div>
+            <div><img th:src="@{/css/schedule/img/location.png}" alt="place"> <span class="event-location"></span></div>
+            <div><img th:src="@{/css/schedule/img/person.png}" alt="name"> <span class="event-person"></span></div>
         </div>
-        <div class="details">
-          <textarea class="details-input" placeholder="Enter detailed information..."></textarea>
-        </div>
-        <input type="submit" id="submit_btn" value="등록">
-      </div>
     </div>
 
-  </div>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+         const $scheduleModal = $('.schedule_detail'); // 일정 등록 모달
+         const $eventModal = $('.event-card'); // 이벤트 카드 모달
+         const $closeSchedule = $('.schedule_detail .close');
+         const $closeEvent = $('.close-event'); // 이벤트 카드 모달 닫기 버튼
 
-  <!-- 이벤트 카드 모달 -->
-  <div class="event-card" style="display:none;">
-    <span class="close-event">&times;</span>
-    <div class="card-header">
-      <h2 class="event-title"></h2>
-      <div class="card-actions">
-        <button><img id="profile_img" th:src="@{/css/schedule/img/delete.png}" alt="Delete"></button>
-        <button><img th:src="@{/css/schedule/img/email.png}" alt="Mail"></button>
-<!--        <button><img th:src="@{/css/schedule/img/etc.png}" alt="More"></button>-->
-      </div>
-    </div>
-    <div class="card-details">
-      <div><img th:src="@{/css/schedule/img/time.png}" alt="time"> <span class="event-time"></span></div>
-      <div><img th:src="@{/css/schedule/img/location.png}" alt="place"> <span class="event-location"></span></div>
-      <div><img th:src="@{/css/schedule/img/person.png}" alt="name"> <span class="event-person"></span></div>
-    </div>
-  </div>
+         // 다른 모달 닫기
+         function closeAllModals() {
+             $scheduleModal.fadeOut();
+             $eventModal.fadeOut();
+         }
 
-  <script th:inline="javascript">
-    $(document).ready(function () {
-        const $scheduleModal = $('.schedule_detail'); // 일정 등록 모달
-        const $eventModal = $('.event-card'); // 이벤트 카드 모달
-        const $closeSchedule = $('.schedule_detail .close');
-        const $closeEvent = $('.close-event'); // 이벤트 카드 모달 닫기 버튼
+         // 날짜 셀 클릭 시 일정 등록 모달 열기
+         $('.calendar-cell').on("click", function (event) {
+             if ($(event.target).hasClass('event-bar-team-allday') || $(event.target).hasClass('event-bar-personal-allday')|| $(event.target).hasClass('event-bar-personal')|| $(event.target).hasClass('event-bar-team')) {
+                 return; // 이벤트 관련 요소 클릭 시 일정 등록 모달 열리지 않음
+             }
 
-        // 다른 모달 닫기
-        function closeAllModals() {
-            $scheduleModal.fadeOut();
-            $eventModal.fadeOut();
-        }
+             closeAllModals(); // 다른 모달 닫기
 
-        // 날짜 셀 클릭 시 일정 등록 모달 열기
-        $('.calendar-cell').on("click", function (event) {
-            if ($(event.target).hasClass('event-bar') || $(event.target).hasClass('event-title-container')) {
-                return; // 이벤트 관련 요소 클릭 시 일정 등록 모달 열리지 않음
-            }
+             // 모달 위치 설정
+             const clickX = event.pageX; // 클릭한 X 좌표
+             const clickY = event.pageY; // 클릭한 Y 좌표
+             $scheduleModal.css({
+                 display: "block",
+                 top: clickY + "px",
+                 left: clickX + "px",
+                 position: "absolute",
+                 transform: "translate(-50%, -50%)"
+             }).fadeIn();
+         });
 
-            closeAllModals(); // 다른 모달 닫기
+         // 이벤트 바 클릭 시 이벤트 카드 모달 열기
+         function openEventModal(event) {
+             closeAllModals(); // 다른 모달 닫기
 
-            // 모달 위치 설정
-            const clickX = event.pageX; // 클릭한 X 좌표
-            const clickY = event.pageY; // 클릭한 Y 좌표
-            $scheduleModal.css({
-                display: "block",
-                top: clickY + "px",
-                left: clickX + "px",
-                position: "absolute",
-                transform: "translate(-50%, -50%)"
-            }).fadeIn();
-        });
+             const $target = $(event.currentTarget); // 클릭된 요소
+             const title = $target.data('title');
+             const date = $target.data('date');
+             const time = $target.data('time');
+             const location = $target.data('location');
+             const person = $target.data('person');
 
-        // 이벤트 바 클릭 시 이벤트 카드 모달 열기
-        function openEventModal(event) {
-            closeAllModals(); // 다른 모달 닫기
+             $('.event-title').text(title);
+             $('.event-time').text(date + ' - ' + time);
+             $('.event-location').text(location);
+             $('.event-person').text(person);
 
-            const $target = $(event.currentTarget); // 클릭된 요소
-            const title = $target.data('title');
-            const date = $target.data('date');
-            const time = $target.data('time');
-            const location = $target.data('location');
-            const person = $target.data('person');
+             // 모달 위치 설정
+             const clickX = event.pageX; // 클릭한 X 좌표
+             const clickY = event.pageY; // 클릭한 Y 좌표
+             $eventModal.css({
+                 display: "block",
+                 top: clickY + "px",
+                 left: clickX + "px",
+                 position: "absolute",
+                 transform: "translate(-50%, -50%)"
+             }).fadeIn();
+         }
 
-            $('.event-title').text(title);
-            $('.event-time').text(date + ' - ' + time);
-            $('.event-location').text(location);
-            $('.event-person').text(person);
+         // 이벤트 바 클릭 시 이벤트 카드 모달 열기
+         $('.event-bar-team-allday').off("click").on("click", openEventModal);
+         $('.event-bar-personal-allday').off("click").on("click", openEventModal);
+         $('.event-bar-team').off("click").on("click", openEventModal);
+         $('.event-bar-personal').off("click").on("click", openEventModal);
 
-            // 모달 위치 설정
-            const clickX = event.pageX; // 클릭한 X 좌표
-            const clickY = event.pageY; // 클릭한 Y 좌표
-            $eventModal.css({
-                display: "block",
-                top: clickY + "px",
-                left: clickX + "px",
-                position: "absolute",
-                transform: "translate(-50%, -50%)"
-            }).fadeIn();
-        }
+         // 일정 등록 모달 닫기
+         $closeSchedule.on("click", function () {
+             $scheduleModal.fadeOut();
+         });
 
-        // 이벤트 바 클릭 시 이벤트 카드 모달 열기
-        $('.event-bar').on("click", openEventModal);
+         // 이벤트 카드 모달 닫기
+         $closeEvent.on("click", function () {
+             $eventModal.fadeOut();
+         });
 
-        // 이벤트 타이틀 컨테이너 클릭 시 이벤트 카드 모달 열기
-        $('.event-title-container').on("click", openEventModal);
+         // 모달 외부 클릭 시 닫기
+         $(window).on("click", function (event) {
+             if ($(event.target).is($scheduleModal)) {
+                 $scheduleModal.fadeOut();
+             }
+             if ($(event.target).is($eventModal)) {
+                 $eventModal.fadeOut();
+             }
+         });
 
-        // 일정 등록 모달 닫기
-        $closeSchedule.on("click", function () {
-            $scheduleModal.fadeOut();
-        });
+         // 체크박스 하나만 선택 가능
+         const checkboxes = $('.select-checkbox');
+         checkboxes.on('change', function () {
+             if ($(this).is(':checked')) {
+                 checkboxes.not(this).prop('checked', false); // 다른 체크박스를 비활성화
+             }
+         });
 
-        // 이벤트 카드 모달 닫기
-        $closeEvent.on("click", function () {
-            $eventModal.fadeOut();
-        });
+         // 팀 버튼과 개인 버튼 클릭 이벤트
+         const $scheduleTeamBtn = $('#schedule_team_btn');
+         const $schedulePersonalBtn = $('#schedule_personal_btn');
+         const $scheduleAllBtn = $('#schedule_all_btn');
+         const $allEventBars = $('.event-bar-team-allday, .event-bar-team, .event-bar-personal-allday, .event-bar-personal');
 
-        // 모달 외부 클릭 시 닫기
-        $(window).on("click", function (event) {
-            if ($(event.target).is($scheduleModal)) {
-                $scheduleModal.fadeOut();
-            }
-            if ($(event.target).is($eventModal)) {
-                $eventModal.fadeOut();
-            }
-        });
+         $scheduleTeamBtn.on("click", function () {
+             $allEventBars.hide(); // 모든 이벤트 바 숨기기
+             $('.event-bar-team-allday').fadeIn();
+             $('.event-bar-team').fadeIn();
+         });
 
-        // 체크박스 하나만 선택 가능
-        const checkboxes = $('.select-checkbox');
-        checkboxes.on('change', function () {
-            if ($(this).is(':checked')) {
-                checkboxes.not(this).prop('checked', false); // 다른 체크박스를 비활성화
-            }
-        });
-    });
-  </script>
+         $schedulePersonalBtn.on("click", function () {
+             $allEventBars.hide(); // 모든 이벤트 바 숨기기
+             $('.event-bar-personal-allday').fadeIn();
+             $('.event-bar-personal').fadeIn();
+         });
+
+           $scheduleAllBtn.on("click", function () {
+             $allEventBars.hide(); // 모든 이벤트 바 숨기기
+             $('.event-bar-personal-allday').fadeIn();
+             $('.event-bar-personal').fadeIn();
+             $('.event-bar-team-allday').fadeIn();
+             $('.event-bar-team').fadeIn();
+         });
+     });
+
+    </script>
 
 
 </div>

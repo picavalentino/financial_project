@@ -96,9 +96,9 @@ h1 {
     vertical-align: top;
     position: relative;
 }
-.event-bar {
+.event-bar-team-allday {
     background-color: #7ac6dc;
-    color: black;
+    color: rgba(0, 0, 0, 0.6);
     padding: 5px;
     margin-top: 5px;
     margin-left: -5px;
@@ -109,9 +109,9 @@ h1 {
     overflow: hidden;
     white-space: nowrap;
 }
-.multi-day {
+.event-bar-personal-allday {
     background-color: #ffa366;
-    color: black;
+    color: rgba(0, 0, 0, 0.6);
     padding: 5px;
     margin-top: 5px;
     margin-left: -8px;
@@ -215,7 +215,15 @@ label{
 }
 
 /* 이벤트 제목 컨테이너 */
-.event-title-container {
+.event-bar-personal {
+    display: flex; /* Flexbox 사용 */
+    align-items: center; /* 수직 정렬 */
+    margin-bottom: 5px;
+    font-size: 15px;
+    padding-top: 10px;
+    margin-left :10px;
+}
+.event-bar-team {
     display: flex; /* Flexbox 사용 */
     align-items: center; /* 수직 정렬 */
     margin-bottom: 5px;
@@ -562,3 +570,49 @@ label{
   .card-actions{
   margin-right: 30px;
   }
+  .button-container {
+      display: flex;
+      justify-content: flex-start; /* 왼쪽 정렬 */
+      gap: 10px; /* 버튼 간격 */
+      margin-right: auto;
+      margin-left: 760px;
+    }
+
+    #schedule_team_btn {
+      background-color: #7AAEBC; /* 버튼 배경색 */
+       color: rgba(0, 0, 0, 0.6);
+      border: none; /* 테두리 제거 */
+      padding: 10px 20px; /* 여백 */
+      border-radius: 20px;
+      cursor: pointer; /* 클릭 가능한 커서 */
+      font-size: 16px; /* 텍스트 크기 */
+      font-weight: bold; /* 텍스트 굵기 */
+      transition: background 0.3s ease; /* 배경색 전환 효과 */
+    }
+    #schedule_personal_btn {
+      background-color: #ffa366; /* 버튼 배경색 */
+       color: rgba(0, 0, 0, 0.6);
+      border: none; /* 테두리 제거 */
+      padding: 10px 20px; /* 여백 */
+      border-radius: 20px;
+      cursor: pointer; /* 클릭 가능한 커서 */
+      font-size: 16px; /* 텍스트 크기 */
+      font-weight: bold; /* 텍스트 굵기 */
+      transition: background 0.3s ease; /* 배경색 전환 효과 */
+    }
+  #schedule_all_btn {
+      background-color: #d9d9d9; /* 버튼 배경색 */
+       color: rgba(0, 0, 0, 0.6);
+      border: none; /* 테두리 제거 */
+      padding: 10px 20px; /* 여백 */
+      border-radius: 20px;
+      cursor: pointer; /* 클릭 가능한 커서 */
+      font-size: 16px; /* 텍스트 크기 */
+      font-weight: bold; /* 텍스트 굵기 */
+      transition: background 0.3s ease; /* 배경색 전환 효과 */
+    }
+
+
+    #schedule_all_btn:hover, #schedule_personal_btn:hover,  #schedule_team_btn:hover{
+      background-color: #ababab; /* 호버 시 색상 변경 */
+    }
