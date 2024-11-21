@@ -12,7 +12,7 @@
 <div layout:fragment="content" class="content">
     <div class="container1">
         <div class="content1">
-   <!--         <h1>개인 일정 관리</h1>-->
+            <!--         <h1>개인 일정 관리</h1>-->
             <div class="calendar-container">
 
                 <div class="calendar-header">
@@ -50,7 +50,7 @@
                         <td class="calendar-cell">
                             <div class="calendar-date">1</div>
                             <div class="event-bar-team-allday" data-title="금융프로젝트" data-date="11월 1일 (금요일)"
-                                 data-time="오전 9:00~11:00" data-location="강남역" data-person="김철수">금융프로젝트
+                                 data-time="오전 9:00~11:00" data-location="강남역" data-memo="김철수">금융프로젝트
                             </div>
                         </td>
                         <td class="calendar-cell">
@@ -64,7 +64,7 @@
                         <td class="calendar-cell">
                             <div class="calendar-date">4</div>
                             <div class="event-bar-team-allday" data-title="점심 약속" data-date="11월 4일 (월요일)"
-                                 data-time="오후 12:00~13:00" data-location="회사 식당" data-person="홍길동">점심 약속
+                                 data-time="오후 12:00~13:00" data-location="회사 식당" data-memo="홍길동">점심 약속
                             </div>
                         </td>
                         <td class="calendar-cell">
@@ -73,7 +73,7 @@
                         <td class="calendar-cell">
                             <div class="calendar-date">6</div>
                             <div class="event-bar-team-allday" data-title="프로젝트 발표" data-date="11월 6일 (수요일)"
-                                 data-time="오전 10:00~12:00" data-location="회의실" data-person="팀원">프로젝트 발표
+                                 data-time="오전 10:00~12:00" data-location="회의실" data-memo="팀원">프로젝트 발표
                             </div>
                             <div class="event-bar-personal"
                                  data-title="영화보기"
@@ -87,7 +87,7 @@
                         <td class="calendar-cell">
                             <div class="calendar-date">6</div>
                             <div class="event-bar-team" data-title="프로젝트 발표" data-date="11월 6일 (수요일)"
-                                 data-time="오전 10:00~12:00" data-location="회의실" data-person="팀원">
+                                 data-time="오전 10:00~12:00" data-location="회의실" data-memo="팀원">
                                 <span class="event-dot-team"></span>프로젝트 발표
                             </div>
                         </td>
@@ -109,7 +109,7 @@
                                  data-date="11월 11일 (월요일)"
                                  data-time="오전 11:00~01:00"
                                  data-location="영화관"
-                                 data-person="혼자">
+                                 data-memo="혼자">
                                 <span class="event-dot-personal"></span>점심 약속
                             </div>
                             <div class="event-bar-personal"
@@ -117,7 +117,7 @@
                                  data-date="11월 6일 (월요일)"
                                  data-time="오전 18:00~20:00"
                                  data-location="아트홀"
-                                 data-person="친구">
+                                 data-memo="친구">
                                 <span class="event-dot-personal"></span>콘서트
                             </div>
                         </td>
@@ -151,7 +151,7 @@
                         <td class="calendar-cell">
                             <div class="calendar-date">20</div>
                             <div class="event-bar-personal-allday" data-title="제주도 여행" data-date="11월 20일 (월요일)"
-                                 data-time="오전 8:00~오후 6:00" data-location="제주도" data-person="여행팀">제주도 여행
+                                 data-time="오전 8:00~오후 6:00" data-location="제주도" data-memo="여행팀">제주도 여행
                             </div>
                         </td>
                         <td class="calendar-cell">
@@ -308,7 +308,7 @@
         <div class="card-details">
             <div><img th:src="@{/css/schedule/img/time.png}" alt="time"> <span class="event-time"></span></div>
             <div><img th:src="@{/css/schedule/img/location.png}" alt="place"> <span class="event-location"></span></div>
-            <div><img th:src="@{/css/schedule/img/person.png}" alt="name"> <span class="event-person"></span></div>
+            <div><img th:src="@{/css/schedule/img/memo.png}" alt="memo"> <span class="event-memo"></span></div> <!--작성자명-->
         </div>
     </div>
 
@@ -354,12 +354,12 @@
              const date = $target.data('date');
              const time = $target.data('time');
              const location = $target.data('location');
-             const person = $target.data('person');
+             const memo = $target.data('memo');
 
              $('.event-title').text(title);
              $('.event-time').text(date + ' - ' + time);
              $('.event-location').text(location);
-             $('.event-person').text(person);
+             $('.event-memo').text(memo);
 
              // 모달 위치 설정
              const clickX = event.pageX; // 클릭한 X 좌표
@@ -432,6 +432,16 @@
              $('.event-bar-team-allday').fadeIn();
              $('.event-bar-team').fadeIn();
          });
+          document.querySelectorAll('.today-tasks input[type="checkbox"]').forEach((checkbox) => {
+                checkbox.addEventListener('change', function () {
+                  const taskContainer = this.closest('.today-tasks'); // 가장 가까운 부모 요소
+                  if (this.checked) {
+                    taskContainer.style.backgroundColor = '#ababab'; // 체크 시 배경색
+                  } else {
+                    taskContainer.style.backgroundColor = '#f8f9fa'; // 체크 해제 시 기본 배경색
+                  }
+                });
+              });
      });
 
     </script>

@@ -179,6 +179,13 @@ margin-left: 50px;
      margin-top:-3px;
 
 }
+.today_task button{
+     border: none;
+     background: none;
+     margin-top: -5px;
+     margin-left: 223px;
+
+}
 .today_task h3 {
     margin-left: 15px;
     margin-top: 96px;
@@ -510,7 +517,7 @@ label{
       color: white;
       padding: 10px 0px;
       border: none;
-      width: 320px;
+      width: 350px;
       border-radius: 20px;
       cursor: pointer;
       margin-top: 10px;
@@ -518,5 +525,111 @@ label{
     }
 
   #add_cs {
-  margin-left: 100px;
+  margin-left: 95px;
+  width:35px;
   }
+ .event-card img{
+  width: 15px;
+  height:15px;
+  }
+  .event-card {
+    background: #f0f9fc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 400px;
+    margin: auto;
+    border: 1px solid #dfe6e9;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-right:25px;
+  }
+
+  .event-color {
+    width: 10px;
+    height: 10px;
+    background-color: #3498db;
+    border-radius: 50%;
+  }
+
+  .event-title {
+    font-size: 18px;
+    font-weight: bold;
+    flex-grow: 1;
+    margin-left: 10px;
+    color: #2c3e50;
+  }
+
+  .card-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 5px;
+  }
+
+  .card-actions img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .card-details {
+    color: #2c3e50;
+  }
+
+  .card-details p {
+    font-size: 14px;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+
+  .card-reminder, .card-participant {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+
+  .card-reminder img, .card-participant img {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+  }
+
+  .card-reminder span, .card-participant span {
+    font-size: 14px;
+    color: #636e72;
+  }
+  .close-event{
+   position: absolute;
+      top: 10px;
+      right: 20px;
+      color: #aaa;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+
+      }
+#cs_etc_btn {
+margin-top: -55px;
+margin-left: 30px;
+width:30px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
