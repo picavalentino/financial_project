@@ -11,7 +11,7 @@ import java.util.List;
 public class ManagementService {
     private final UserMapper userMapper;
 
-    public ManagementService(UserMapper userMapper){
+    public ManagementService(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
 
@@ -26,10 +26,12 @@ public class ManagementService {
     }
 
     // 셀렉트 박스 상태
-    public List<UserDTO> getStatusList() { return userMapper.selectStatusList();
+    public List<UserDTO> getStatusList() {
+        return userMapper.selectStatusList();
     }
 
-    public List<UserDTO> getauthList() { return userMapper.selectAuthList();
+    public List<UserDTO> getauthList() {
+        return userMapper.selectAuthList();
     }
 
     // 전체 직원 수 가져오기 (검색 조건 포함)
@@ -79,4 +81,14 @@ public class ManagementService {
         return userMapper.selectInsertList(offset, pageSize, yearMonth);
     }
 
+    // employee modal에서 받아 온 번호로 user 정보 찾기
+    public UserDTO findByUserId(String userId) {
+        return userMapper.selectUserById(userId);
+    }
+
+    // employee modal에서 user 정보 수정하기
+    public void updateUser(UserDTO userDTO) {
+        // 매퍼 또는 JPA 리포지토리를 이용해 사용자 정보 업데이트
+        userMapper.updateUser(userDTO);
+    }
 }

@@ -5,11 +5,12 @@ import com.team.financial_project.main.service.PaginationService;
 import com.team.financial_project.management.service.ManagementService;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +24,7 @@ public class ManagementController {
 
     private final ManagementService managementService;
 
-    public  ManagementController(ManagementService managementService){
+    public ManagementController(ManagementService managementService) {
         this.managementService = managementService;
     }
 
@@ -131,6 +132,48 @@ public class ManagementController {
         return "management/managementEmployees";
     }
 
+    //    employeeModal
+    @GetMapping("/employee/modal")
+    @ResponseBody
+    public UserDTO managementEmployeeModal(@RequestParam(name = "userId") String userId , Model model) {
+        UserDTO users = managementService.findByUserId(userId);
+        System.out.println("****************************" + users);
+
+        // 셀렉트 박스에 쓸 부서 정보 가져오기
+        List<UserDTO> departmentList = managementService.getDepartmentList();
+        model.addAttribute("DepartmentList", departmentList);
+
+        // 셀렉트 박스에 쓸 직위 정보 가져오기
+        List<UserDTO> jobPositionList = managementService.getJopPositionList();
+        model.addAttribute("JopPositionList", jobPositionList);
+
+        // 셀렉트 박스에 쓸 상태 정보 가져오기
+        List<UserDTO> statusList = managementService.getStatusList();
+        model.addAttribute("statusList", statusList);
+
+        // 셀렉트 박스에 쓸 권한 정보 가져오기
+        List<UserDTO> authList = managementService.getauthList();
+        model.addAttribute("authList", authList);
+
+        return users;
+    }
+
+//    modal에서 정보 변경
+@PostMapping("/employees/edit")
+public String editEmployee(
+        @ModelAttribute UserDTO userDTO,
+        RedirectAttributes redirectAttributes) {
+    try {
+        // 업데이트 서비스 호출
+        managementService.updateUser(userDTO);
+        redirectAttributes.addFlashAttribute("message", "직원 정보가 성공적으로 수정되었습니다.");
+    } catch (Exception e) {
+        redirectAttributes.addFlashAttribute("error", "직원 정보 수정 중 오류가 발생했습니다.");
+    }
+    return "redirect:/management/employees";
+}
+
+
 
     @GetMapping("/insert")
     public String managementInsert(Model model,
@@ -162,6 +205,5 @@ public class ManagementController {
 
         return "/management/managementInsert";
     }
-
 
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.financial_project.mapper.UserMapper">
-<!--셀렉트 박스에서 쓸 부서이름 가져오는 구문-->
+    <!--셀렉트 박스에서 쓸 부서이름 가져오는 구문-->
     <select id="selectDepartmentList" resultType="com.team.financial_project.dto.UserDTO">
         SELECT
         code_no AS user_dept_cd,  -- 부서 코드 (코드 번호)
@@ -193,6 +193,35 @@
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
+<!--    employee modal에서 출력할 데이터 찾기-->
+    <select id="selectUserById" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        user_dept_cd,
+        user_jbps_ty_cd,
+        user_status,
+        user_auth_cd,
+        user_id,
+        user_name,
+        user_birthday
+        FROM
+        tb_user
+        WHERE
+        user_id = #{userId}
+    </select>
+
+<!--    modal에서 수정할 데이터 정보-->
+    <update id="updateUser">
+        UPDATE tb_user
+        SET
+        user_name = #{user_name},
+        user_birthday = #{user_birthday},
+        user_dept_cd = #{user_dept_cd},
+        user_jbps_ty_cd = #{user_jbps_ty_cd},
+        user_auth_cd = #{user_auth_cd},
+        user_status = #{user_status}
+        WHERE user_id = #{user_id}
+    </update>
+
     <!-- 직원 총 수 가져오기 (검색 조건 포함) / insert -->
     <select id="getTotalInsertCount" parameterType="string" resultType="java.lang.Integer">
         SELECT COUNT(*)
@@ -232,5 +261,6 @@
         tu.user_dept_cd, jbps_cd.code_no
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
+
 
 </mapper>

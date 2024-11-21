@@ -46,4 +46,10 @@ public interface UserMapper {
     List<UserDTO> selectInsertList(@Param("offset") int offset, @Param("pageSize") int pageSize,
                                    @Param("yearMonth") String yearMonth);
 
+
+    // employee modal에서 출력할 user 찾기
+    UserDTO selectUserById(@Param("userId") String userId);
+
+    // employee modal에서 정보 변경하기
+    void updateUser(UserDTO userDTO);
 }
