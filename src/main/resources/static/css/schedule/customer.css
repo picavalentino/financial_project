@@ -98,7 +98,7 @@ position: relative;
 .event-bar-birthday{
 background-color: #f4f4f9;
 border: 3px solid #7aaebc;
-color: rgba(0, 0, 0, 0.6);
+color: black;
 padding: 3px;
 margin-top: 5px;
 margin-left: -8px;
@@ -167,6 +167,7 @@ display: flex;
 color: rgba(0, 0, 0, 0.6);
 width: 90%;
 justify-content: space-between;
+margin-top: -20px;
 
 
 }
@@ -478,6 +479,7 @@ color: rgba(0, 0, 0, 0.6);
 border: none; /* 테두리 제거 */
 padding: 10px 20px; /* 여백 */
 border-radius: 20px;
+border: none;
 cursor: pointer; /* 클릭 가능한 커서 */
 font-size: 16px; /* 텍스트 크기 */
 font-weight: bold; /* 텍스트 굵기 */
