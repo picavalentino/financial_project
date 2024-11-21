@@ -23,7 +23,7 @@ public class CustomerController {
     }
 
     // 고객 목록 출력 페이지
-    @GetMapping("list/print")
+    @GetMapping("/list/print")
     public String customerListPrint() {
         return "customer/customerListModal"; // 고객 목록 출력 페이지로 이동
     }
@@ -35,7 +35,7 @@ public class CustomerController {
     }
 
     // 고객 상세 정보 페이지 (ID 기준 조회)
-    @GetMapping("detail/*{id}")
+    @GetMapping("/detail/id")
     public String customerDetailById() {
         return "customer/customerDetail"; // 고객 상세 페이지로 이동
     }
@@ -47,13 +47,13 @@ public class CustomerController {
     }
 
     // 고객 상세 정보 출력 페이지
-    @GetMapping("detail/id/print")
+    @GetMapping("/detail/id/print")
     public String customerDetailPrint() {
         return "customer/customerDetailPrint"; // 고객 상세 출력 페이지로 이동
     }
 
     // 담당자 검색 페이지
-    @GetMapping("detail/id/searchManager")
+    @GetMapping("/detail/id/searchManager")
     public String searchManager() {
         return "customer/searchManager"; // 담당자 검색 페이지로 이동
     }

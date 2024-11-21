@@ -47,7 +47,7 @@ updateTagVisibility();
 
 /* ========================================================================= */
 /* 인쇄 */
- function printTable() {
+function printTable() {
     // 모달 안에서 인쇄할 영역을 선택
     var printContents = document.getElementById('print-table').outerHTML;
     var originalContents = document.body.innerHTML;

@@ -100,11 +100,11 @@
     </div>
     <!-- ===================================================================================== -->
     <div class="buttons">
-        <button class="print-btn">인쇄</button>
+        <button class="print-button" onclick="DetailPrint()">🖨️인쇄</button>
         <button class="edit-btn">변경</button>
-        <button class="list-btn">목록</button>
+        <button class="list-btn" onclick="goList()">목록</button>
+        <a class="list-btn" href="/customer/list">목록</a>
     </div>
-
     <div th:replace="~{customer/customerDetailModal :: managerSearchModal}"></div>
 </div>
 </body>
