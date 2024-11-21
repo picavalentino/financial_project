@@ -32,25 +32,15 @@
       <h2 class="mb-4">직원등록</h2>
 
       <div class="mb-3 d-flex justify-content-between">
-        <div class="d-flex">
-          <select class="form-select me-2" style="width: 150px;">
-            <option selected>연도 / 월</option>
-            <option value="1">2024년 11월</option>
-            <option value="2">2024년 10월</option>
-            <option value="3">2024년 9월</option>
-            <option value="4">2024년 8월</option>
-            <option value="5">2024년 7월</option>
-            <option value="5">2024년 6월</option>
-            <option value="5">2024년 5월</option>
-            <option value="5">2024년 4월</option>
-            <option value="5">2024년 3월</option>
-            <option value="5">2024년 2월</option>
-            <option value="5">2024년 1월</option>
-            <option value="5">2023년 12월</option>
-            <option value="5">2023년 11월</option>
-          </select>
-          <button class="btn btn-primary me-2">조회</button>
-          <button class="btn btn-success" onclick="openRegistrationModal()">등록</button>
+        <div class="d-flex align-items-center">
+          <!-- 연도 / 월 선택 셀렉트 박스 -->
+          <form id="searchForm" th:action="@{/management/insert}" method="get" class="d-flex align-items-center">
+            <select id="yearMonthSelect" name="yearMonth" class="form-select me-2" style="width: 150px;">
+              <!-- 자바스크립트를 통해 옵션 추가 -->
+            </select>
+            <button type="submit" class="btn btn-primary me-2">조회</button>
+          </form>
+          <button type="button" class="btn btn-success" onclick="openRegistrationModal()">등록</button>
         </div>
       </div>
 
@@ -207,5 +197,6 @@
 <!--    <th:block layout:fragment="content"></th:block>-->
 
 <script th:src="@{/js/management/employeeModal.js}"></script>
+<script th:src="@{/js/management/managementInsert.js}"></script>
 </body>
 </html>

@@ -68,14 +68,15 @@ public class ManagementService {
     }
 
     // insert 요청에서 신입사원 직원수 가져오기
-    public int getTotalInsertCount(String searchValue) {
-        return userMapper.getTotalInsertCount(searchValue);
+    public int getTotalInsertCount(String yearMonth) {
+        return userMapper.getTotalInsertCount(yearMonth);
     }
 
-    public List<UserDTO> getInsertList(int page, int pageSize,String searchValue) {
+    public List<UserDTO> getInsertList(int page, int pageSize, String yearMonth) {
         int offset = (page - 1) * pageSize;
 
-        System.out.println("검색 조건: searchValue=" + searchValue);
-        return userMapper.selectInsertList(offset, pageSize, searchValue);
+        System.out.println("검색 조건: yearMonth=" + yearMonth);
+        return userMapper.selectInsertList(offset, pageSize, yearMonth);
     }
+
 }

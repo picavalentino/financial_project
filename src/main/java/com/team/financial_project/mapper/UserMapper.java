@@ -41,7 +41,9 @@ public interface UserMapper {
                                      @Param("searchValue") String searchValue);
 
     // 전체 직원 수 가져오기 (검색 조건 포함) - insert
-    int getTotalInsertCount(@Param("searchValue") String searchValue);
+    int getTotalInsertCount(@Param("yearMonth") String yearMonth);
 
-    List<UserDTO> selectInsertList(int offset, int pageSize, String searchValue);
+    List<UserDTO> selectInsertList(@Param("offset") int offset, @Param("pageSize") int pageSize,
+                                   @Param("yearMonth") String yearMonth);
+
 }
