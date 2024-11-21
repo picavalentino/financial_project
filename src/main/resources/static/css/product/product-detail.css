@@ -58,9 +58,9 @@
     outline: none;
 }
 .readonly input{
-    background-color: #EAECF0;
+    background-color: #eceef1;
     border: none;
-    color: #6E7A8C;
+    color: black;
 }
 
 .table-product-form .inp_wrap {
@@ -146,5 +146,25 @@
     left: 50%;
     transform: translate(-50%, -50%);}
     text-align: center; /* 버튼 중앙 정렬 */
-    margin-top: 50px;
+    margin-top: 10px;
+    gap: 20px;
+}
+
+.btn {
+    display: flex; /* 아이콘과 텍스트를 정렬 */
+    justify-content: center;
+    align-items: center;
+    width: 90px;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+}
+
+.icon-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

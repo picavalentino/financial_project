@@ -2,7 +2,7 @@
 <!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.financial_project.mapper.ProductMapper">
-    <resultMap id="ProductResultMap" type="com.team.financial_project.product.dto.ProductDTO">
+    <resultMap id="ProductResultMap" type="com.team.financial_project.dto.ProductDTO">
         <!-- ProductDTO 기본 필드 -->
         <id property="prodSn" column="prod_sn" />
         <result property="prodNm" column="prod_nm" />
@@ -25,7 +25,7 @@
         <result property="prodNtslEndYmd" column="prod_ntsl_end_ymd" />
 
         <!-- prodHist 리스트 매핑 -->
-        <collection property="histList" ofType="com.team.financial_project.product.dto.ProdHistDTO">
+        <collection property="histList" ofType="com.team.financial_project.dto.ProdHistDTO">
             <id property="histId" column="hist_id" />
             <result property="userId" column="user_id" />
             <result property="prodSn" column="prod_sn" />
@@ -38,7 +38,7 @@
         </collection>
     </resultMap>
 
-    <select id="findAll" resultType="com.team.financial_project.product.dto.ProductDTO">
+    <select id="findAll" resultType="com.team.financial_project.dto.ProductDTO">
         SELECT
         p.prod_sn,
         p.prod_nm,
@@ -107,7 +107,26 @@
         WHERE p.prod_sn = #{prodSn}
     </select>
 
-    <insert id="insertProduct" parameterType="com.team.financial_project.product.dto.ProductDTO">
+    <select id="searchProducts" parameterType="map" resultType="com.team.financial_project.dto.ProductDTO">
+        SELECT *
+        FROM tb_product
+        WHERE 1=1
+        <if test="prodTyCd != null and prodTyCd != ''">
+            AND prod_ty_cd = #{prodTyCd}
+        </if>
+        <if test="prodCurrStcd != null and prodCurrStcd != ''">
+            AND prod_curr_stcd = #{prodCurrStcd}
+        </if>
+        <if test="prodPayTyCd != null and prodPayTyCd != ''">
+            AND prod_pay_ty_cd = #{prodPayTyCd}
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND prod_nm LIKE CONCAT('%', #{prodNm}, '%')
+        </if>
+    </select>
+
+
+    <insert id="insertProduct" parameterType="com.team.financial_project.dto.ProductDTO">
         INSERT INTO tb_product (
         prod_nm,             -- 상품명
         prod_instl_amt_min,  -- 최소 가입금액
@@ -154,7 +173,7 @@
         WHERE prod_cd LIKE CONCAT(#{keyword}, '%')
     </select>
 
-    <update id="updateProduct" parameterType="com.team.financial_project.product.dto.ProductDTO">
+    <update id="updateProduct" parameterType="com.team.financial_project.dto.ProductDTO">
         <!-- 기존 데이터를 tb_prod_hist 테이블에 추가 -->
         INSERT INTO tb_prod_hist (
         hist_id,
@@ -176,22 +195,25 @@
         FROM tb_product
         WHERE prod_sn = #{prodSn};
 
-        <!-- tb_product에 새로운 데이터 업데이트 -->
+        <!-- tb_product 테이블에 데이터 업데이트 -->
         UPDATE tb_product
         SET
-        prod_air_min = #{prodAirMin},
-        prod_air_max = #{prodAirMax},
-        prod_air_bgn_ymd = #{prodAirBgnYmd},
-        prod_air_end_ymd = #{prodAirEndYmd},
-        prod_ntsl_bgn_ymd = #{prodNtslBgnYmd},
-        prod_ntsl_end_ymd = #{prodNtslEndYmd},
+        prod_air_min = CASE WHEN #{prodAirMin,jdbcType=NUMERIC} IS NOT NULL THEN CAST(#{prodAirMin,jdbcType=NUMERIC} AS NUMERIC(5, 2)) ELSE prod_air_min END,
+        prod_air_max = CASE WHEN #{prodAirMax,jdbcType=NUMERIC} IS NOT NULL THEN CAST(#{prodAirMax,jdbcType=NUMERIC} AS NUMERIC(5, 2)) ELSE prod_air_max END,
+        prod_air_bgn_ymd = CASE WHEN #{prodAirBgnYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodAirBgnYmd,jdbcType=VARCHAR} ELSE prod_air_bgn_ymd END,
+        prod_air_end_ymd = CASE WHEN #{prodAirEndYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodAirEndYmd,jdbcType=VARCHAR} ELSE prod_air_end_ymd END,
+        prod_ntsl_bgn_ymd = CASE WHEN #{prodNtslBgnYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodNtslBgnYmd,jdbcType=VARCHAR} ELSE prod_ntsl_bgn_ymd END,
+        prod_ntsl_end_ymd = CASE WHEN #{prodNtslEndYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodNtslEndYmd,jdbcType=VARCHAR} ELSE prod_ntsl_end_ymd END,
         prod_update_at = now()
         WHERE prod_sn = #{prodSn};
     </update>
 
+
     <update id="deleteProduct" parameterType="java.math.BigDecimal">
         UPDATE tb_product
-        SET prod_curr_stcd = 2
+        SET prod_curr_stcd = 2,
+            prod_ntsl_end_ymd = CURRENT_DATE, -- 오늘 날짜를 yyyy-MM-dd 형식으로 설정
+            prod_update_at = now() -- 현재 시각으로 업데이트
         WHERE prod_sn = #{prodSn}
     </update>
 

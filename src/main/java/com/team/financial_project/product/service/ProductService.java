@@ -1,12 +1,13 @@
 package com.team.financial_project.product.service;
 
 import com.team.financial_project.mapper.ProductMapper;
-import com.team.financial_project.product.dto.ProductDTO;
+import com.team.financial_project.dto.ProductDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -87,5 +88,9 @@ public class ProductService {
         }
         System.out.println("### create prodCd: " + dto.getProdCd());
         productMapper.insertProduct(dto);
+    }
+
+    public List<ProductDTO> searchProducts(Map<String, Object> searchParams) {
+        return productMapper.searchProducts(searchParams);
     }
 }
