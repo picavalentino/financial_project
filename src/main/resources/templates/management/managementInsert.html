@@ -36,6 +36,7 @@
           <!-- 연도 / 월 선택 셀렉트 박스 -->
           <form id="searchForm" th:action="@{/management/insert}" method="get" class="d-flex align-items-center">
             <select id="yearMonthSelect" name="yearMonth" class="form-select me-2" style="width: 150px;">
+              <option value="" selected>기간</option>
               <!-- 자바스크립트를 통해 옵션 추가 -->
             </select>
             <button type="submit" class="btn btn-primary me-2">조회</button>
