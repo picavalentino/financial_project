@@ -108,23 +108,53 @@
     </select>
 
     <select id="searchProducts" parameterType="map" resultType="com.team.financial_project.dto.ProductDTO">
-        SELECT *
-        FROM tb_product
-        WHERE 1=1
-        <if test="prodTyCd != null and prodTyCd != ''">
-            AND prod_ty_cd = #{prodTyCd}
+        SELECT
+        p.prod_sn,
+        p.prod_nm,
+        p.prod_instl_amt_min,
+        p.prod_instl_amt_max,
+        p.prod_create_at,
+        p.prod_update_at,
+        p.user_id,
+        p.prod_cd,
+        c1.code_nm AS prodTyCd,
+        c2.code_nm AS prodSbstgTyCd,
+        c3.code_nm AS prodPayTyCd,
+        c4.code_nm AS prodIntTaxTyCd,
+        p.prod_air_min,
+        p.prod_air_max,
+        p.prod_air_bgn_ymd,
+        p.prod_air_end_ymd,
+        p.prod_curr_stcd,
+        p.prod_ntsl_bgn_ymd,
+        p.prod_ntsl_end_ymd
+        FROM
+        tb_product p
+        LEFT JOIN tb_code c1 ON c1.code_cl = p.prod_ty_cd_code_cl AND c1.code_no = p.prod_ty_cd
+        LEFT JOIN tb_code c2 ON c2.code_cl = p.prod_sbstg_ty_cd_code_cl AND c2.code_no = p.prod_sbstg_ty_cd
+        LEFT JOIN tb_code c3 ON c3.code_cl = p.prod_pay_ty_cd_code_cl AND c3.code_no = p.prod_pay_ty_cd
+        LEFT JOIN tb_code c4 ON c4.code_cl = p.prod_int_tax_ty_cd_code_cl AND c4.code_no = p.prod_int_tax_ty_cd
+        WHERE
+        1=1
+        <if test="prodTyCd != null and prodTyCd.trim() != ''">
+            AND p.prod_ty_cd = #{prodTyCd}
         </if>
-        <if test="prodCurrStcd != null and prodCurrStcd != ''">
-            AND prod_curr_stcd = #{prodCurrStcd}
+        <if test="prodCurrStcd != null and prodCurrStcd.trim() != ''">
+            AND p.prod_curr_stcd = #{prodCurrStcd}
         </if>
-        <if test="prodPayTyCd != null and prodPayTyCd != ''">
-            AND prod_pay_ty_cd = #{prodPayTyCd}
+        <if test="prodPayTyCd != null and prodPayTyCd.trim() != ''">
+            AND p.prod_pay_ty_cd = #{prodPayTyCd}
         </if>
-        <if test="prodNm != null and prodNm != ''">
-            AND prod_nm LIKE CONCAT('%', #{prodNm}, '%')
+        <if test="prodNm != null and prodNm.trim() != ''">
+            AND p.prod_nm LIKE CONCAT('%', #{prodNm}, '%')
+        </if>
+        <if test="prodNtslBgnYmdRange != null">
+            AND p.prod_ntsl_bgn_ymd BETWEEN #{prodNtslBgnYmdRange[0]} AND #{prodNtslBgnYmdRange[1]}
+        </if>
+        <if test="prodNtslEndYmdRange != null">
+            AND p.prod_ntsl_end_ymd BETWEEN #{prodNtslEndYmdRange[0]} AND #{prodNtslEndYmdRange[1]}
         </if>
     </select>
-
 
     <insert id="insertProduct" parameterType="com.team.financial_project.dto.ProductDTO">
         INSERT INTO tb_product (

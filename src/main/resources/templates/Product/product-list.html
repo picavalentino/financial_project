@@ -46,7 +46,7 @@
               <option value="1">판매</option>
               <option value="0">준비</option>
               <option value="2">판매종료</option>
-              <option value="">전체</option>
+              <option value="all">전체</option>
             </select>
           </div>
           <div class="condition">
@@ -68,9 +68,9 @@
         <div class="condition-bottom">
           <div class="condition-period">
             <label>구분</label>
-            <select>
-              <option id="prodNtslBgnYmd" value="begin">판매시작일</option>
-              <option id="prodNtslEndYmd" value="end">판매종료일</option>
+            <select name="dateType" id="dateType">
+              <option id="prodNtslBgnYmd" value="prodNtslBgnYmd">판매시작일</option>
+              <option id="prodNtslEndYmd" value="prodNtslEndYmd">판매종료일</option>
             </select>
             <input name="searchBgnYmd" type="date">
             <span>~</span>
@@ -90,13 +90,16 @@
 
     </div>
     <div class="bottom">
-      <div class="btn-wrap">
-        <button class="btn btn-register">
-          <div class="icon"><i class="icon bi bi-plus-circle-fill"></i></div> 등록
-        </button>
-        <button class="btn btn-print">
-          <div class="icon"><i class="icon bi bi-printer"></i></div> 인쇄
-        </button>
+      <div class="bottom-menu">
+        <div class="btn-wrap" id="btn-bottom-menu">
+          <button class="btn btn-register">
+            <div class="icon"><i class="icon bi bi-plus-circle-fill"></i></div> 등록
+          </button>
+          <button class="btn btn-print">
+            <div class="icon"><i class="icon bi bi-printer"></i></div> 인쇄
+          </button>
+        </div>
+        <div class="product-size"> 총 : <span th:text="${productSize}"></span></div>
       </div>
       <table class="table-product">
         <thead>
@@ -131,13 +134,23 @@
       </table>
       <div class="pagination-container">
         <div class="pagination">
-          <button class="prev" th:if="${currentPage > 1}" th:onclick="'window.location.href=\'/product/list?page=' + (${currentPage} - 1) + '\';'">이전</button>
+          <!-- 이전 버튼 -->
+          <button class="prev"
+                  th:if="${currentPage > 1}"
+                  th:data-url="@{${requestURI}(page=${currentPage - 1}, prodTyCd=${prodTyCd ?: ''}, prodCurrStcd=${prodCurrStcd ?: ''}, prodPayTyCd=${prodPayTyCd ?: ''}, prodNm=${prodNm ?: ''})}">
+            이전
+          </button>
           <span th:each="page : ${#numbers.sequence(1, totalPages)}"
                 th:classappend="${page == currentPage} ? 'active' : ''"
-                th:onclick="'window.location.href=\'/product/list?page=' + ${page} + '\';'">
-          <span th:text="${page}"></span>
+                th:data-url="@{${requestURI}(page=${page}, prodTyCd=${prodTyCd ?: ''}, prodCurrStcd=${prodCurrStcd ?: ''}, prodPayTyCd=${prodPayTyCd ?: ''}, prodNm=${prodNm ?: ''})}">
+              <span th:text="${page}"></span>
           </span>
-          <button class="next" th:if="${currentPage < totalPages}" th:onclick="'window.location.href=\'/product/list?page=' + (${currentPage} + 1) + '\';'">다음</button>
+          <!-- 다음 버튼 -->
+          <button class="next"
+                  th:if="${currentPage < totalPages}"
+                  data-url="@{${requestURI}(page=${currentPage + 1}, prodTyCd=${prodTyCd}, prodCurrStcd=${prodCurrStcd}, prodPayTyCd=${prodPayTyCd}, prodNm=${prodNm})}">
+            다음
+          </button>
         </div>
       </div>
     </div>
@@ -186,8 +199,18 @@
           $(".btn-search-all").on("click", function(e){
             window.location.href = "/product/list";
           });
+
+          $(".pagination button, .pagination span").on("click", function (e) {
+              e.preventDefault(); // 기본 동작 방지
+              const url = $(this).data("url");
+              console.log("Navigating to URL:", url);
+              if (url) {
+                  window.location.href = url;
+              }
+          });
         });
   </script>
+
 </div>
 </body>
 </html>

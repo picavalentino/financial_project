@@ -90,6 +90,19 @@
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    justify-content: space-between; /* 좌우 끝으로 배치 */
+}
+.bottom-menu {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+}
+#btn-bottom-menu {
+    display: flex;
+    gap: 10px; /* 버튼 간 간격 */
+}
+.product-size {
+    font-weight: bold; /* 강조 표시 */
+    color: #333; /* 텍스트 색상 */
 }
 
 /* 테이블 스타일 */
