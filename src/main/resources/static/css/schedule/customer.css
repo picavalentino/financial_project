@@ -505,3 +505,18 @@ label{
    #schedule_all_btn:hover, #finish_btn:hover,#birthday_btn:hover {
     background-color: #ababab; /* 호버 시 색상 변경 */
   }
+  #submit_btn {
+      background-color: #7aaebc;
+      color: white;
+      padding: 10px 0px;
+      border: none;
+      width: 320px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+  #add_cs {
+  margin-left: 100px;
+  }

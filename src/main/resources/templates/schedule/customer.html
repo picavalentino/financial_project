@@ -109,9 +109,8 @@
             </div>
         </div>
         <div class="today_task">
-
-            <h3><img th:src="@{/css/schedule/img/task_img.png}">
-                오늘의 고객 상담 일정</h3>
+            <h3 ><img th:src="@{/css/schedule/img/task_img.png}">
+                오늘의 고객 상담 일정 <img id="add_cs" th:src="@{/css/schedule/img/add.png}"></h3>
             <div class="today-tasks">
                 <label for="task1"><strong> &middot; 11:30</strong></label>
                 <div id="task_text">
@@ -127,7 +126,7 @@
     <div class="schedule_detail">
         <div class="scheduler-container">
 
-            <h1>일정 등록</h1>
+            <h1>상담 등록</h1>
 
             <div class="date-display">
                 <button id="prev-day">&lt;</button>
@@ -190,8 +189,8 @@
                         <option value="23:00">23:00</option>
                         <option value="23:30">23:30</option>
                     </select>
-                    <input type="text" class="task-title" placeholder="Enter title...">
-                    <input type="text" class="location-input" placeholder="Enter location...">
+                    <input type="text" class="task-title" placeholder="Enter Title...">
+                    <input type="text" class="location-input" placeholder="Enter Customer...">
                     <div class="checkboxes">
                         <label><input type="checkbox" class="select-checkbox" id="team-customer" checked disabled> 고객
                         </label>
@@ -209,7 +208,7 @@
 
               // 모달 관련 요소 가져오기
               const $modal = $('.schedule_detail'); // 모달 창
-              const $calendarCells = $('.calendar-cell'); // 날짜 셀
+              const $calendarCells = $('#add_cs'); // 고객 상담일정 추가
               const $closeBtn = $('.schedule_detail .close'); // 닫기 버튼
 
               // 날짜 클릭 시 모달 열기
@@ -225,7 +224,7 @@
                       top: clickY + "px",
                       left: clickX + "px",
                       position: "absolute",
-                      transform: "translate(-50%, -50%)"
+                      transform: "translate(-80%, 5%)"
                   });
 
                   // 부드러운 나타나기 효과
