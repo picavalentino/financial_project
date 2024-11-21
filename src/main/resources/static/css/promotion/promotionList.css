@@ -31,7 +31,7 @@
 .search-item label {
     font-size: 14px;
     font-weight: bold;
-    color: #333;
+    color: #303249;
     white-space: nowrap; /* 라벨이 줄바꿈되지 않도록 설정 */
     width: 80px; /* 고정 너비로 정렬 */
 }
@@ -39,11 +39,13 @@
 /* 입력 필드 및 셀렉트 박스 */
 .search-item input,
 .search-item select {
-    padding: 10px;
     border: 1px solid #ced4da;
     border-radius: 8px;
     font-size: 14px;
     width: 100%;
+    /*max-width: 150px;*/
+    height: 32px;
+    padding: 0 8px;
 }
 
 /* 버튼 그룹 */
@@ -51,7 +53,9 @@
     display: flex;
     gap: 20px;
     align-items: center;
-    margin-left: 100px; /* 필드 그룹과의 간격 추가 */
+    margin-left: 20px;
+    /* 필드 그룹과의 간격 추가 */
+    right: 0px;
 }
 
 /* ======================================================================================================= */

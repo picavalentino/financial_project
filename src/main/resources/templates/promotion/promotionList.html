@@ -252,7 +252,7 @@
 
                             const row = `
                                 <tr data-dsgn-sn="${productDesign.dsgnSn}" onclick="handleRowClick(this, event)">
-                                    <td><input type="checkbox"></td>
+                                    <td><input type="checkbox" class="row-checkbox"></td>
                                     <td>${productDesign.custNm}</td>
                                     <td>${productDesign.userNm}</td>
                                     <td>${getProductType(productDesign.dsTyCd)}</td>
@@ -359,20 +359,20 @@
         // 전체 선택 및 개별 체크박스 동기화
         $(document).ready(() => {
             const selectAllCheckbox = $('#selectAll');
-            const rowCheckboxes = $('#result-table-body .row-checkbox');
 
             // 상단 체크박스 클릭 시
             selectAllCheckbox.on('change', function () {
                 const isChecked = this.checked;
-                rowCheckboxes.prop('checked', isChecked);
+                $('#result-table-body .row-checkbox').prop('checked', isChecked);
             });
 
             // 개별 체크박스 클릭 시
-            rowCheckboxes.on('change', function () {
-                const allChecked = rowCheckboxes.length === rowCheckboxes.filter(':checked').length;
+            $(document).on('change', '#result-table-body .row-checkbox', function () {
+                const allChecked = $('#result-table-body .row-checkbox').length === $('#result-table-body .row-checkbox:checked').length;
                 selectAllCheckbox.prop('checked', allChecked);
             });
         });
+
     </script>
 </div>
 </body>

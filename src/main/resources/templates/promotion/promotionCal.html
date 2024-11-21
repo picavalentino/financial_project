@@ -14,6 +14,7 @@
     <link rel="stylesheet" th:href="@{/css/promotion/button.css}">
     <link rel="stylesheet" th:href="@{/css/promotion/common.css}">
     <link rel="stylesheet" th:href="@{/css/promotion/promotionCal.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div layout:fragment="content" class="content">
@@ -39,56 +40,68 @@
 
         <!-- 입력 폼 -->
         <div class="form-container">
-            <div class="label-group">
-                <label for="designNo">설계번호</label>
-                <label for="productCode">상품선택</label>
-                <label for="paymentCycle">납입주기</label>
-                <label for="startDate">시작일자</label>
-                <label for="depositAmount">불입금액 (원)</label>
-                <label for="targetPeriod">목표기간 (개월)</label>
-                <label for="interestRate">적용금리 (%)</label>
-                <label for="taxType">이자과세</label>
-                <label for="designDate">설계일자</label>
-                <label for="writeDate">작성일자</label>
-            </div>
-            <div class="input-group">
-                <div class="input-group-left">
-                    <input type="text" id="designNo" name="designNo">
-                    <div class="input-with-button">
-                        <input type="text" id="productCode" name="productCode">
-                        <input type="text" id="productName" name="productName">
-                        <button><i class="bi bi-search"></i></button>
-                    </div>
-                    <select id="paymentCycle" name="paymentCycle">
-                        <option>월납</option>
-                        <option>연납</option>
-                    </select>
-                    <input type="date" id="startDate" name="startDate">
-                    <div class="button-row">
-                        <input type="text" id="depositAmount" name="depositAmount">
-                        <div class="button-group">
-                            <button class="button-plus">+ 10만원</button>
-                            <button class="button-plus">+ 50만원</button>
-                            <button class="button-plus">+ 100만원</button>
-                            <button class="button-reset">정정</button>
+            <div class="form-content">
+                <div class="label-group">
+                    <label for="dsgnSn">설계번호</label>
+                    <label for="prodSn">상품선택</label>
+                    <label for="prodPayTyCd">납입주기</label>
+                    <label for="savgStrtDt">시작일자</label>
+                    <label for="savgCircleAmt">불입금액 (원)</label>
+                    <label for="savgGoalPrd">목표기간 (개월)</label>
+                    <label for="savgAplyRate">적용금리 (%)</label>
+                    <label for="savgIntTaxTyCd">이자과세</label>
+                    <label for="dsgnCreateAt">설계일자</label>
+                    <label for="dsgnUpdateAt">작성일자</label>
+                </div>
+                <div class="input-group">
+                    <div class="input-group-content">
+                        <!-- 설계번호 -->
+                        <input type="text" id="dsgnSn" name="dsgnSn" disabled>
+                        <!-- 상품선택 -->
+                        <div class="input-with-button">
+                            <input type="text" id="prodSn" name="prodSn" disabled>
+                            <input type="text" id="prodNm" name="prodNm" readonly>
+                            <button><i class="bi bi-search"></i></button>
                         </div>
-                    </div>
-                    <div class="button-row">
-                        <input type="text" id="targetPeriod" name="targetPeriod">
-                        <div class="button-group">
-                            <button class="button-plus">+ 3개월</button>
-                            <button class="button-plus">+ 6개월</button>
-                            <button class="button-plus">+ 12개월</button>
-                            <button class="button-reset">정정</button>
+                        <!-- 납입주기 -->
+                        <input type="text" id="prodPayTyCd" name="prodPayTyCd" disabled>
+                        <!-- 시작일자 -->
+                        <input type="date" id="savgStrtDt" name="savgStrtDt">
+                        <!-- 불입금액 -->
+                        <div class="button-row">
+                            <input type="text" id="savgCircleAmt" name="savgCircleAmt">
+                            <div class="button-group">
+                                <button class="button-plus">+ 10만원</button>
+                                <button class="button-plus">+ 50만원</button>
+                                <button class="button-plus">+ 100만원</button>
+                                <button class="button-reset">정정</button>
+                            </div>
                         </div>
+                        <!-- 목표기간 -->
+                        <div class="button-row">
+                            <input type="text" id="savgGoalPrd" name="savgGoalPrd">
+                            <div class="button-group">
+                                <button class="button-plus">+ 3개월</button>
+                                <button class="button-plus">+ 6개월</button>
+                                <button class="button-plus">+ 12개월</button>
+                                <button class="button-reset">정정</button>
+                            </div>
+                        </div>
+                        <!-- 적용금리 -->
+                        <div class="input-rate">
+                            <select id="selectSavgAplyRate" name="selectSavgAplyRate">
+                                <option>최소</option>
+                                <option>최대</option>
+                            </select>
+                            <input type="text" id="savgAplyRate" name="savgAplyRate" disabled>
+                        </div>
+                        <!-- 이자과세 -->
+                        <input type="text" id="savgIntTaxTyCd" name="savgIntTaxTyCd" disabled>
+                        <!-- 설계일자 -->
+                        <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" disabled>
+                        <!-- 작성일자 -->
+                        <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" disabled>
                     </div>
-                    <input type="text" id="interestRate" name="interestRate">
-                    <select id="taxType" name="taxType">
-                        <option>일반과세 (15.4%)</option>
-                        <option>비과세</option>
-                    </select>
-                    <input type="date" id="designDate" name="designDate">
-                    <input type="date" id="writeDate" name="writeDate">
                 </div>
             </div>
         </div>
@@ -98,24 +111,195 @@
             <!-- 설계 유형 선택 -->
             <div class="radio-group">
                 <label><input type="radio" name="calculationType" value="detailed"> 정상설계</label>
-                <label><input type="radio" name="calculationType" value="simple"> 간편설계</label>
+                <label><input type="radio" name="calculationType" value="simple" checked> 간편설계</label>
             </div>
 
-            <!-- 우측 버튼 -->
-            <div class="button-wrap">
-                <button class="btn btn-calculate">이자계산</button>
-                <button class="btn btn-status">진행상태</button>
-                <button class="btn btn-save">저장</button>
-                <button class="btn btn-send">발송</button>
-                <button class="btn btn-print">인쇄</button>
-                <button class="btn btn-list">목록</button>
+            <!-- 우측 버튼 그룹 -->
+            <div class="button-group-right">
+                <button class="btn-int-cal">이자계산</button>
+                <select id="prgStcd" name="prgStcd">
+                    <option value="">진행상태</option>
+                    <option value="0">제안중</option>
+                    <option value="1">추가상담필요</option>
+                    <option value="2">가입대기</option>
+                    <option value="3">가입완료</option>
+                    <option value="4">만기예정</option>
+                    <option value="5">취소/보류</option>
+                    <option value="6">만기완료</option>
+                    <option value="9">해지</option>
+                </select>
+                <button class="btn btn-register">
+                    <i class="icon bi bi-plus-circle-fill"></i> 저장
+                </button>
+                <button class="btn btn-print">
+                    <i class="icon bi bi-printer"></i> 발송
+                </button>
+                <button class="btn btn-mail">
+                    <i class="icon bi bi-envelope"></i> 인쇄
+                </button>
+                <button class="btn btn-list">
+                    <i class="icon bi bi-list"></i> 목록
+                </button>
             </div>
         </div>
+
+        <!--  계산 결과 컨테이너 -->
+        <div class="calculation-container">
+            <!-- 왼쪽 섹션 -->
+            <div class="left-section">
+                <div class="cal-tab calculation-result-tab">계산 결과</div>
+                <div class="calculation-summary">
+                    <!-- 계산 결과 간단히 보여주는 입력 필드 -->
+                    <div class="result-row">
+                        <label>불입금액합계</label>
+                        <input type="text" value="1,800,000" readonly>
+                    </div>
+                    <div class="result-row">
+                        <label>세전이자</label>
+                        <input type="text" value="28,500" readonly>
+                    </div>
+                    <div class="result-row">
+                        <label>세전수령액</label>
+                        <input type="text" value="1,828,500" readonly>
+                    </div>
+                    <div class="result-row">
+                        <label>이자과세금</label>
+                        <input type="text" value="4,389" readonly>
+                    </div>
+                    <div class="result-row">
+                        <label>세후수령액</label>
+                        <input type="text" value="1,824,111" readonly>
+                    </div>
+                </div>
+                <div class="cal-tab calculation-chart-tab">계산 차트</div>
+                <div class="chart-container">
+                    <!-- 차트 출력 -->
+                    <canvas id="resultChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 오른쪽 섹션 -->
+            <div class="right-section">
+                <div class="non-display">계산 테이블</div>
+                <div class="interest-details">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>회차</th>
+                            <th>회차불입금액</th>
+                            <th>누적불입금액</th>
+                            <th>회차이자</th>
+                            <th>회차원리금</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 이자내역 데이터 반복 -->
+                        <tr>
+                            <td>1</td>
+                            <td>100,000</td>
+                            <td>100,000</td>
+                            <td>167</td>
+                            <td>100,000</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>100,000</td>
+                            <td>200,000</td>
+                            <td>333</td>
+                            <td>100,000</td>
+                        </tr>
+                        <!-- ... -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
+        // 오늘 날짜를 yyyy-mm-dd 형식으로 변환
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // 설계일자, 작성일자, 시작일자 오늘 날짜 설정
+        document.addEventListener('DOMContentLoaded', function () {
+            const dsgnCreateAt = document.getElementById('dsgnCreateAt');
+            const dsgnUpdateAt = document.getElementById('dsgnUpdateAt');
+            const savgStrtDt = document.getElementById('savgStrtDt');
+
+            if (dsgnCreateAt) dsgnCreateAt.value = getTodayDate();
+            if (dsgnUpdateAt) dsgnUpdateAt.value = getTodayDate();
+            // 시작일자 기본값과 최소값 설정
+            if (savgStrtDt) {
+                const today = getTodayDate();
+                savgStrtDt.value = today; // 기본값 설정
+                savgStrtDt.min = today;  // 최소값 설정
+            }
+        });
+
+        <!-- 차트 -->
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('resultChart').getContext('2d');
+
+            const data = {
+                labels: ['불입금액합계', '세전이자', '세전수령액', '이자과세금', '세후수령액'],
+                datasets: [{
+                    label: '계산 결과',
+                    data: [1800000, 28500, 1828500, 4389, 1824111], // 예시 데이터
+                    backgroundColor: [
+                        '#4CAF50', // 불입금액합계
+                        '#FF9800', // 세전이자
+                        '#03A9F4', // 세전수령액
+                        '#F44336', // 이자과세금
+                        '#9C27B0'  // 세후수령액
+                    ],
+                    borderWidth: 0 // 테두리 제거
+                }]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // 부모 컨테이너 크기에 맞춤
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString(); // 숫자에 천 단위 쉼표 추가
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // 그래프 설명 숨기기
+                        },
+                        tooltip: {
+                            mode: 'index', // 마우스 호버 시 모든 데이터 표시
+                            intersect: false, // 마우스가 특정 기둥에 닿지 않아도 툴팁 표시
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw.toLocaleString()}원`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            new Chart(ctx, config);
+        });
+
     </script>
 </div>
 </body>

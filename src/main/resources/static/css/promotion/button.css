@@ -24,7 +24,7 @@
 
 /* 버튼 공통 호버 스타일 */
 .btn:hover {
-    color: white;
+    color: #FFF;
 }
 
 .btn i.icon {
@@ -63,7 +63,7 @@
 
 .btn-register:hover {
     background-color: #4a8b92;
-    transform: scale(1.05);
+/*    transform: scale(1.05);*/
 }
 
 /* 초기화(전체) 버튼 */
@@ -78,7 +78,7 @@
 
 .btn-reset:hover {
     background-color: #4d4d4d;
-    transform: scale(1.05);
+/*    transform: scale(1.05);*/
 }
 
 /* 목록 버튼 */
@@ -92,7 +92,7 @@
 
 .btn-list:hover {
     background-color: #151835;
-    transform: scale(1.05);
+/*    transform: scale(1.05);*/
 }
 
 /* 검색 버튼 */
@@ -131,6 +131,19 @@
 }
 
 .btn-print:hover {
+    background-color: #1d1f22;
+}
+
+/* 메일 버튼 */
+.btn-mail {
+    background-color: #292D32; /* 청록색 */
+}
+
+.btn-mail .icon {
+    background-color: #8E98A8; /* 진한 청록색 */
+}
+
+.btn-mail:hover {
     background-color: #1d1f22;
 }
 
