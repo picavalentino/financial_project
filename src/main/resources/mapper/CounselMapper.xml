@@ -9,8 +9,47 @@
     </select>
 
     <!-- 상담 목록 페이징 -->
-    <select id="getPagedCounselData" parameterType="java.util.Map" resultType="com.team.financial_project.counsel.dto.TbCounselDTO">
-        SELECT * FROM TB_COUNSEL ORDER BY tb_counsel.counsel_id ASC LIMIT #{limit} OFFSET #{offset}
+<!--    <select id="getPagedCounselData" parameterType="java.util.Map" resultType="com.team.financial_project.counsel.dto.TbCounselDTO">-->
+<!--        SELECT cust_id, user_id, counsel_category, counsel_content, counsel_create_at, counsel_update_at, counsel_stcd, counsel_id, counsel_stcd_code_cl, counsel_category_code_cl, user_dept_cd, user_name-->
+<!--        FROM TB_COUNSEL ORDER BY tb_counsel.counsel_id ASC LIMIT #{limit} OFFSET #{offset}-->
+<!--    </select>-->
+
+    <!-- 상담 목록 페이징 -->
+    <select id="getPagedCounselData" resultType="com.team.financial_project.counsel.dto.TbCounselDTO">
+        SELECT * FROM TB_COUNSEL
+        ORDER BY counsel_id ASC
+        LIMIT #{limit} OFFSET #{offset}
     </select>
+
+    <!-- 총 레코드 수를 가져오는 쿼리 -->
+    <select id="getTotalCounselCount" resultType="long">
+        SELECT COUNT(*) FROM TB_COUNSEL
+    </select>
+
+    <!-- 상담 작성 -->
+    <insert id="insertCounsel" parameterType="com.team.financial_project.counsel.dto.TbCounselDTO">
+        INSERT INTO TB_COUNSEL (
+        cust_id,
+        user_id,
+        counsel_category,
+        counsel_content,
+        counsel_create_at,
+        counsel_update_at,
+        counsel_stcd,
+        user_dept_cd,
+        user_name
+        ) VALUES (
+        #{dto.cust_id},
+        #{dto.user_id},
+        #{dto.counsel_category},
+        #{dto.counsel_content},
+        CURRENT_TIMESTAMP,
+        #{dto.counsel_update_at},
+        #{dto.counsel_stcd},
+        #{dto.user_dept_cd},
+        #{dto.user_name}
+        )
+    </insert>
+
 
 </mapper>

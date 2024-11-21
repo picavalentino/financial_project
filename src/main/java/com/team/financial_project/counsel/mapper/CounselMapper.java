@@ -12,11 +12,11 @@ public interface CounselMapper {
     // MyBatis Test
     int checkConnection();
 
-    // 상담 목록 페이징
-    List<TbCounselDTO> getPagedCounselData(
-            @Param("limit") int limit,
-            @Param("offset") int offset
-    );
+    List<TbCounselDTO> getPagedCounselData(@Param("limit") int limit, @Param("offset") int offset);
 
+    // 총 레코드 수를 가져오는 사용자 정의 방법
+    long getTotalCounselCount();
 
+    // 상담 작성
+    void insertCounsel(@Param("dto") TbCounselDTO dto);
 }

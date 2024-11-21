@@ -8,14 +8,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class TbCounselDTO {
-    private String custId;      // 고객 번호
-    private String userId;      // 사원번호
-    private String counselCategory; // 상담 내용 카테고리
-    private String counselContent;  // 상담 내용 상세
-    private LocalDateTime counselCreateAt;  // 작성일시
-    private LocalDateTime counselUpdateAt;  // 수정일시
-    private String counselStcd;     // 상담 내용 상태 코드
-    private Long counselId;     // 상담 인덱스
-    private String counselStcdCodeCl;   // 상담내용상태코드분류 : DEFAULT 100
-    private String counselCategoryCodeCl;   // 상담내용 카테고리 코드분류 : DEFAULT 400
+    private String cust_id;      // 고객 번호
+    private String user_id;      // 사원번호
+    private String counsel_category; // 상담 내용 카테고리
+    private String counsel_content;  // 상담 내용 상세
+    private LocalDateTime counsel_create_at;  // 작성일시
+    private LocalDateTime counsel_update_at;  // 수정일시
+    private String counsel_stcd;     // 상담 내용 상태 코드
+    private Long counsel_id;     // 상담 인덱스
+    private String counsel_stcd_code_cl;   // 상담내용상태코드분류 : DEFAULT 100
+    private String counsel_category_code_cl;   // 상담내용 카테고리 코드분류 : DEFAULT 400
+    private String user_dept_cd;   // 부서 코드
+    private String user_name;   // 사원이름
 }

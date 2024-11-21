@@ -29,11 +29,12 @@ public class CounselController {
         return "/counsel/counsel";
     }
 
-//    @PostMapping("/counsel/insertCounsel")
-//    public String insertCounsel(TbCounselDTO dto){
-//        counselService.insertCounsel(dto);
-//        return "redirect:/customer/counsel";
-//    }
+    @PostMapping("/counsel/insertCounsel")
+    public String insertCounsel(TbCounselDTO dto){
+        System.out.println(dto);
+        counselService.insertCounsel(dto);
+        return "redirect:/customer/counsel";
+    }
 
     @GetMapping("/managementEmployees")
     public String managementEmployees(){

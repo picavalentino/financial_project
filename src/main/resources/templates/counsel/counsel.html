@@ -44,14 +44,7 @@
                 </tbody>
             </table>
             <nav aria-label="Page navigation">
-                <ul id="pagination" class="pagination justify-content-center">
-<!--                    <li class="page-item disabled">-->
-<!--                        <a class="page-link" href="#" tabindex="-1">&lt;</a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item">-->
-<!--                        <a class="page-link" href="#">&gt;</a>-->
-<!--                    </li>-->
-                </ul>
+                <ul id="pagination" class="pagination justify-content-center"></ul>
             </nav>
         </div>
     </div>
@@ -63,6 +56,8 @@
                 <div class="d-flex justify-content-between">
                     <h2>### 고객님 상담상세</h2>
                     <div>
+                        <button type="button" id="counsel_update" class="btn btn-success">수정</button>
+                        <button type="button" id="counsel_delete" class="btn btn-danger">삭제</button>
                         <span class="close" id="closeDetailModalBtn" style="font-size: 40px; padding-right: 20px; padding-left: 70px;">&times;</span>
                     </div>
                 </div>
@@ -70,17 +65,17 @@
                 <div class="form-group row" style="margin: 10px;">
                     <label class="col-sm-1 col-form-label">작성자</label>
                     <div class="col-sm-3">
-                        <input type="text" readonly class="form-control-plaintext" value="김사람">
+                        <input type="text" id="user_id" readonly class="form-control-plaintext">
                     </div>
 
                     <label class="col-sm-1 col-form-label text-right">작성부서</label>
                     <div class="col-sm-3">
-                        <input type="text" readonly class="form-control-plaintext" value="영업부">
+                        <input type="text" id="user_dept_cd" readonly class="form-control-plaintext">
                     </div>
 
                     <label class="col-sm-1 col-form-label text-right">작성일</label>
                     <div class="col-sm-3">
-                        <input type="text" readonly class="form-control-plaintext" value="2024-04-02">
+                        <input type="text" id="counsel_create_at" readonly class="form-control-plaintext">
                     </div>
                 </div>
 
@@ -88,8 +83,13 @@
 
                 <div class="form-group row" style="margin: 10px;">
                     <label class="col-sm-1 col-form-label text-right">상담유형</label>
+                    <div class="col-sm-7">
+                        <input type="text" id="counsel_category" readonly class="form-control-plaintext">
+                    </div>
+
+                    <label class="col-sm-1 col-form-label text-right">수정일</label>
                     <div class="col-sm-3">
-                        <input type="text" readonly class="form-control-plaintext" value="기타">
+                        <input type="text" id="counsel_update_at" readonly class="form-control-plaintext">
                     </div>
                 </div>
 
@@ -98,7 +98,7 @@
                 <div class="form-group row" style="margin: 10px;">
                     <label class="col-sm-1 col-form-label text-right">상담내용</label>
                     <div class="col-sm-10">
-                        <textarea readonly class="form-control-plaintext" rows="10">안녕하세요 고객님, 사랑과 정성을 다하는 GS은행입니다. 무엇을 도와드릴까요? 네네 대출 상품을 문의하신다고요? 어떤 대출 상품을 문의하시는 걸까요? 담보대출인지요? 신용대출인지요? 주택담보대출은 LTV와 DSR 규제에 따라서 금액이 달라집니다.  LTV는 70%가 적용되고 DSR은 40% 가 적용됩니다. 이율은 코픽스가 신규취급액 기준 전달보다 소폭 하향되어서 변동금리에 반영 될 예정이라 실제 부담하실 이율은 변동금리 기준 4%내외가 되실 것 같습니다만 정확한 금리는 대출이 실행될때 안내 드릴 수 있습니다.</textarea>
+                        <textarea id="counsel_content" readonly class="form-control-plaintext" rows="10"></textarea>
                     </div>
                 </div>
             </form>
@@ -110,6 +110,14 @@
     <div id="writeModal" class="modal">
         <div class="modal-content">
             <form th:action="@{/customer/counsel/insertCounsel}" id="insertCounsel" method="post">
+
+                <!-- 고객 아이디를 넣어주기 -->
+                <input type="hidden" id="cust_id" name="cust_id">
+                <!-- 직원 아이디를 넣어주기 -->
+                <input type="hidden" id="writer_user_id" name="user_id">
+                <!-- 상담 내용 상태 코드 = 상담완료 : 1, 상담대기 : 0 -->
+                <input type="hidden" name="counsel_stcd" value="0">
+
                 <div class="d-flex justify-content-between">
                     <h2>### 고객님 상담작성</h2>
                     <div>
@@ -120,12 +128,12 @@
                 <div class="form-group row" style="margin: 10px;">
                     <label class="col-sm-1 col-form-label">작성자</label>
                     <div class="col-sm-5">
-                        <input type="text" readonly class="form-control-plaintext" name="userName" value="김사람">
+                        <input type="text" id="writer_user_name" readonly class="form-control-plaintext" name="user_name">
                     </div>
 
                     <label class="col-sm-1 col-form-label text-right">작성부서</label>
                     <div class="col-sm-3">
-                        <input type="text" readonly class="form-control-plaintext" name="userDeptCd" value="영업부">
+                        <input type="text" id="writer_user_dept_cd" readonly class="form-control-plaintext" name="user_dept_cd">
                     </div>
                 </div>
 
@@ -134,13 +142,13 @@
                 <div class="form-group row" style="margin: 10px;">
                     <label class="col-sm-1 col-form-label text-right">상담유형</label>
                     <div class="col-sm-3">
-                        <select name="counselCategory" class="form-select me-2" style="width: 150px;">
+                        <select name="counsel_category" class="form-select me-2" style="width: 150px;">
                             <option selected>선택</option>
-                            <option value="적금">적금</option>
-                            <option value="예금">예금</option>
-                            <option value="목돈적금">목돈적금</option>
-                            <option value="대출">대출</option>
-                            <option value="기타">기타</option>
+                            <option value="1">적금</option>
+                            <option value="2">예금</option>
+                            <option value="3">목돈적금</option>
+                            <option value="4">대출</option>
+                            <option value="5">기타</option>
                         </select>
                     </div>
                 </div>
@@ -150,7 +158,7 @@
                 <div class="form-group row" style="margin: 10px;">
                     <label class="col-sm-1 col-form-label text-right">상담내용</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control-plaintext" name="counselContent" rows="10" style="border: 1px solid lightgray;border-radius: 10px;resize: none;"></textarea>
+                        <textarea class="form-control-plaintext" name="counsel_content" rows="10" style="border: 1px solid lightgray;border-radius: 10px;resize: none;"></textarea>
                     </div>
                 </div>
 
