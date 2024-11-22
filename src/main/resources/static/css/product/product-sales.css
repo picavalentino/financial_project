@@ -1,296 +1,114 @@
-/* General styles */
-
-html {
-  height: 100vh;
-  overflow-y: hidden;
+.condition-box, .bottom-content{
+    margin: 20px auto;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    padding-left: 40px;
+    padding-right: 40px;
+    width: 100%;
+    max-width: 1440px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+/* 검색 폼 스타일 */
+#search-form{
+    width: 100%;
+}
+.menu-top, .menu-bottom{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    width: 100%;
 }
 
-body {
-  height: 100%;
-  font-family: "Arial", sans-serif;
-  color: #333;
-  background-color: #efeff1;
-  margin: 0;
-  padding: 0;
+.menu-top {
+    margin-bottom: 10px;
+    margin-right: 50px;
+}
+/* 개별 조건 필드 */
+.condition {
+    display: flex;
+    flex-direction: column; /* 라벨과 입력 필드 수직 배치 */
+    max-width: 300px; /* 최소 크기 */
+    flex: 1; /* 각 필드가 동일한 비율로 확장 */
+    margin-right: 20px;
+}
+.condition label{
+    margin-bottom: 5px;
+}
+.condition input, .condition select {
+    padding: 10px; /* 동일한 패딩 적용 */
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    height: 38px; /* 높이를 명시적으로 지정 */
+    width: 100%;
+    box-sizing: border-box; /* 테두리와 패딩 포함 */
+    text-align: center;
 }
 
-/* SECTION - [캘린더 Select의 default placeholder 제거] */
-
-input[type="date"]::-webkit-datetime-edit-text {
-  color: #afb1b7;
-}
-input[type="date"]::-webkit-datetime-edit-month-field {
-  color: #afb1b7;
-}
-input[type="date"]::-webkit-datetime-edit-day-field {
-  color: #afb1b7;
-}
-input[type="date"]::-webkit-datetime-edit-year-field {
-  color: #afb1b7;
+/* 기간 조건 */
+#condition-period {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+    max-width: 600px;
 }
 
-/* 기본 옵션 스타일 */
-
-.flex li select option {
-  color: black;
+#condition-period label {
+    margin-bottom: 5px;
 }
 
-.flex li select {
-  color: #afb1b7;
+#condition-period input,
+#condition-period span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
 }
 
-.content {
-  height: 100%;
+#condition-period input {
+    width: calc(50% - 10px); /* 두 인풋 필드를 반반으로 나눔 */
 }
 
-.sub_content {
-  display: flex;
-  flex-flow: column nowrap;
-  height: 100%;
-  background: #f4f5f7;
-  border-radius: 8px;
-  padding: 20px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* 버튼 그룹 */
+.btn-wrap {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center;
+    gap: 20px;
+    flex: 2; /* 버튼도 동일 비율로 배치 */
 }
-
-/* SECTION - [Breadcrumb UI 영역 (class="location")] */
-.location {
-  border-bottom: 1px solid;
-  padding: 0 1.5rem;
+/* 하단 컨텐츠 */
+.bottom-menu {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: space-between;
 }
-
-.location ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  font-size: 20px;
-}
-
-.location li {
-  display: flex;
-  align-items: center;
-  color: #666;
-}
-
-.location li i {
-  margin-right: 4px;
-}
-
-/* SECTION - [메인 컨텐츠 영역 (class="produce")] */
-
-.produce {
-  padding: 1rem 1.5rem;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.inform {
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.inform-section {
-  display: flex;
-  flex-flow: column nowrap;
-}
-
-.inform-section-left {
-  flex: 0.8;
-  row-gap: 0.75rem;
-}
-
-.inform-section-right {
-  flex: 0.2;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.inform-section-right .flex {
-  display: flex;
-  flex-flow: column nowrap;
-  gap: 0.75rem;
-}
-
-.inform_wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.inform_wrap ul {
-  display: flex;
-  gap: 1.5rem;
-  padding: 0 1rem;
-  margin: 0;
-}
-
-.inform_wrap ul li {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 18px;
-  color: #3d3f54; /* 필터 라벨 텍스트 색상 */
-}
-
-.inform_wrap ul li select,
-.inform_wrap ul li input[type="text"],
-.inform_wrap ul li input[type="date"] {
-  padding: 0.25rem;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  width: 8rem; /* 필터 입력 UI 너비 */
-  max-height: 2rem;
-}
-
-.inform_wrap .inp_wrap {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-.inform-button-wrapper {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: flex-end;
-  gap: 0.75rem;
-  width: 100%;
-  margin: 0;
-}
-
-.inform-button-wrapper .btn {
-  display: flex;
-  align-items: center;
-  padding: 0.365rem 1rem;
-  text-decoration: none;
-  border-radius: 0.5rem;
-  font-size: 16px;
-  font-weight: 400;
-  width: 115px;
-  max-height: 2rem; /* inform 의 입력UI (select, input 등) 높이와 동일 */
-  justify-content: center;
-  cursor: pointer;
-}
-
-.btn.search {
-  background-color: #303249;
-
-  color: #fff;
-}
-
-.btn.reset {
-  background-color: #292d32;
-  color: #fff;
-}
-
-.btn.navy {
-  background-color: #292d32;
-  color: #fff;
-}
-
-.btn.gray {
-  background-color: #292d32;
-  color: #fff;
-}
-
-/* Table styles */
-.tbl_wrap {
-  margin-top: 20px;
-  background: #ffffff;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1.5rem;
-}
-
-.tbl_wrap .btn {
-  align-items: center;
-  padding: 0.365rem 1rem;
-  text-decoration: none;
-  border-radius: 0.5rem;
-  font-size: 16px;
-  cursor: pointer;
-  width: 83px;
-}
-
-.tbl {
+.table-sales {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #ddd;
-  margin-top: 10px;
+  margin-top: 15px;
+  background-color: #ffffff;
 }
 
-.tbl colgroup col {
-  width: auto;
-}
-
-.tbl th,
-.tbl td {
+.table-sales th,
+.table-sales td {
   text-align: center;
-  padding: 12px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  border: 1px solid #dee2e6;
   font-size: 14px;
-  color: #828a9b;
 }
 
-.tbl th {
-  background: #fcfcfd;
+.table-sales th {
+  background-color: #f1f3f5;
+  color: #495057;
   font-weight: bold;
 }
 
-.tbl td input[type="checkbox"] {
-  cursor: pointer;
+.table-sales tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
 }
 
-/* Pagination styles */
-.paging_box {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.paging {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.paging a {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  color: #9ea5b2;
-  font-size: 14px;
-}
-
-.paging a.active {
-  background-color: #010535;
-  color: #fff;
-  pointer-events: none;
-}
-
-.paging a:hover {
-  background-color: #ddd;
-}
-
-.paging .prv,
-.paging .next {
-  font-size: 16px;
-}
-
-/* Print button alignment */
-.text_right {
-  text-align: right;
-  margin-bottom: 10px;
+.table-sales tbody tr:hover {
+  background-color: #e9ecef;
 }

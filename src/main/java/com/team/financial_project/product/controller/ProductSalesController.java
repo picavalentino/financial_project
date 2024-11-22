@@ -18,4 +18,9 @@ public class ProductSalesController {
     public String viewProductSales(){
         return "/product/product-sales";
     }
+
+    @GetMapping("/sales/search")
+    public String salesByKeyword(){
+        return "/product/product-sales";
+    }
 }

@@ -35,12 +35,13 @@
                             <tbody>
                             <tr>
                                 <th><label>상품명</label></th>
-                                <td><input name="prodNm" type="text"></td>
+                                <td><input name="prodNm" type="text" placeholder="상품명을 입력하세요"></td>
                             </tr>
                             <tr>
                                 <th><label>상품유형</label></th>
                                 <td>
                                     <select name="prodTyCd">
+                                        <option value="">적금/예금/대출</option>
                                         <option value="1">적금</option>
                                         <option value="2">예금</option>
                                         <option value="3">대출</option>
@@ -135,7 +136,7 @@
                                     <div class="staff-search-container">
                                         <input type="text" id="staffName" name="staffName" readonly placeholder="직원 이름을 검색하세요">
                                         <input type="hidden" id="userId" name="userId">
-                                        <button id="btn-search" type="button">
+                                        <button id="btn-search-icon" type="button">
                                             <i class="bi bi-search" ></i>
                                         </button>
                                     </div>
@@ -145,14 +146,14 @@
                         </table>
                     </form>
                     <div class="button-wrap">
-                        <button class="btn btn-register">
-                            <i class="icon bi bi-plus-circle-fill"></i> 등록
+                        <button class="btn" id="btn-register">
+                            <div class="icon-container"><i class="icon bi bi-plus-circle-fill"></i></div> 등록
                         </button>
-                        <button class="btn btn-reset">
-                            <i class="icon bi bi-arrow-left-circle-fill"></i> 초기화
+                        <button class="btn" id="btn-reset">
+                            <div class="icon-container"><i class="icon bi bi-arrow-left-circle-fill"></i></div> 초기화
                         </button>
-                        <button class="btn btn-list">
-                            <i class="icon bi bi-list"></i> 목록
+                        <button class="btn" id="btn-list">
+                            <div class="icon-container"><i class="icon bi bi-list"></i></div> 목록
                         </button>
                     </div>
                 </div>
@@ -220,7 +221,7 @@
             }
 
             // 등록 버튼 클릭
-            $(".btn-register").on("click", function (e) {
+            $("#btn-register").on("click", function (e) {
                 e.preventDefault(); // 기본 동작 방지
 
                 // 유효성 검사 실행
@@ -257,13 +258,13 @@
 
 
             // 초기화 버튼 클릭
-            $(".btn-reset").on("click", function (e) {
+            $("#btn-reset").on("click", function (e) {
                 e.preventDefault(); // 기본 동작 방지
                 document.getElementById("product-form").reset(); // 폼 초기화
             });
 
             // 목록 버튼 클릭
-            $(".btn-list").on("click", function (e) {
+            $("#btn-list").on("click", function (e) {
                 e.preventDefault(); // 기본 동작 방지
                 window.location.href = "/product/list"; // 목록 페이지로 이동
             });
@@ -345,6 +346,13 @@
                     alert("검색에 실패했습니다. 다시 시도해주세요.");
                 },
             });
+        });
+        // 직원 이름 검색 인풋 필드에서 엔터 키 입력 처리
+        $("#staffSearchInput").on("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // 기본 Enter 키 동작(폼 제출) 방지
+                $("#staffSearchButton").click(); // 검색 버튼 클릭 이벤트 트리거
+            }
         });
     });
     </script>

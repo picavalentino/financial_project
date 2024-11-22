@@ -140,11 +140,11 @@
                         </div>
                     </div>
                     <div class="button-wrap">
-                        <button class="btn btn-register" th:if="${(dto.prodCurrStcd ?: '').trim() != '판매종료'}">
-                            <div class="icon-div"><i class="icon bi bi-plus-circle-fill"></i></div> 수정
+                        <button class="btn" id="btn-register" th:if="${(dto.prodCurrStcd ?: '').trim() != '판매종료'}">
+                            <div class="icon-container"><i class="icon bi bi-plus-circle-fill"></i></div> 수정
                         </button>
-                        <button class="btn btn-list">
-                            <div class="icon-div"><i class="icon bi bi-list"></i></div> 목록
+                        <button class="btn" id="btn-list">
+                            <div class="icon-container"><i class="icon bi bi-list"></i></div> 목록
                         </button>
                     </div>
                 </div>
@@ -161,7 +161,7 @@
             });
 
             // 수정 버튼 클릭
-            $(".btn-register").on("click", function (e) {
+            $("#btn-register").on("click", function (e) {
                 e.preventDefault(); // 기본 동작 방지
                 const productId = $("input[name='prodSn']").val(); // 상품코드 또는 ID 가져오기
                 const updateUrl = "/product/detail/" + productId + "/update"; // 수정 요청 URL
@@ -227,7 +227,7 @@
             });
 
             // 목록 버튼 클릭
-            $(".btn-list").on("click", function (e) {
+            $("#btn-list").on("click", function (e) {
                 e.preventDefault(); // 기본 동작 방지
                 window.location.href = "/product/list"; // 목록 페이지로 이동
             });

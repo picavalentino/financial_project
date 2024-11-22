@@ -20,189 +20,124 @@
 <body>
 <div layout:fragment="content" class="content">
   <div class="sub_content">
+    <!-- 위치 -->
     <div class="location">
       <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
       <a th:href="@{/product/list}"> / 상품관리</a>
       <p> / 매출조회 </p>
     </div>
-    <div class="produce">
+    <!-- 상단 -->
+    <div class="top-content">
       <h1 class="title">매출조회</h1>
-      <div class="select">
-        <div class="inform">
-          <div class="inform-section inform-section-left">
-            <div class="inform_wrap flex type01">
-              <ul class="flex">
-                <li>
-                  연도
-                  <select>
-                    <option value="">선택하세요</option>
-                  </select>
-                </li>
-                <li>
-                  월
-                  <select>
-                    <option value="">선택하세요</option>
-                  </select>
-                </li>
-              </ul>
+      <div class="condition-box">
+        <form id="search-form" action="/product/sales/search" method="GET">
+          <div class="menu-top">
+            <div class="condition">
+              <label>연도</label>
+              <select name="year">
+                <option value="">연도 선택</option>
+                <option th:each="year : ${#numbers.sequence(2020, T(java.time.Year).now().getValue())}"
+                        th:value="${year}" th:text="${year}">
+                </option>
+              </select>
             </div>
-            <div class="inform_wrap flex type02 mt10">
-              <ul class="flex">
-                <li>
-                  기간
-                  <div class="inp_wrap">
-                    <input type="date" value="" required />
-                    <span>~</span>
-                    <input type="date" value="" required />
-                  </div>
-                </li>
-                <li>
-                  상품분류
-                  <select>
-                    <option value="">선택하세요</option>
-                  </select>
-                </li>
-                <li>
-                  <label>상품명</label>
-                  <input type="text" />
-                </li>
-              </ul>
+            <div class="condition">
+              <label>월</label>
+              <select name="month">
+                <option value="">월 선택</option>
+                <option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}">
+                </option>
+              </select>
+            </div>
+            <div class="condition" id="condition-period">
+              <label>기간</label>
+              <div style="display: flex; align-items: center;">
+                <input name="searchBgnYmd" type="date">
+                <span>~</span>
+                <input name="searchEndYmd" type="date">
+              </div>
             </div>
           </div>
-          <div
-                  class="inform-section inform-section-right inform-button-wrapper"
-          >
-            <div class="flex">
-              <a href="" class="btn navy search mr10">
-                <i class="bi bi-search"></i>
-                <span>조건검색</span></a
-              >
-              <a href="" class="btn navy reset">
-                <i class="bi bi-search"></i>
-                <span>초기화</span></a
-              >
+          <div class="menu-bottom">
+            <div class="condition">
+              <label>상품유형</label>
+              <select name="prodCd">
+                <option value="">적금/예금/대출</option>
+                <option value="1">적금</option>
+                <option value="2">예금</option>
+                <option value="3">대출</option>
+              </select>
+            </div>
+            <div class="condition">
+              <label>상품명</label>
+              <input name="prodNm" type="text" placeholder="상품명을 입력하세요">
+            </div>
+            <div class="btn-wrap">
+              <button type="submit" class="btn" id="btn-search">
+                <div class="icon-container"><i class="icon bi bi-search"></i></div> 검색
+              </button>
+              <button type="button" class="btn" id="btn-search-all">
+                <div class="icon-container"><i class="icon bi bi-search"></i></div> 전체
+              </button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
-
-      <div class="tbl_wrap mt20">
-        <p class="text_right mb20">
-          <a href="" class="btn gray"
-          ><i class="bi bi-printer-fill"></i><span>인쇄</span></a
-          >
-        </p>
-        <table class="tbl">
-          <colgroup>
-            <col width="*" />
-            <col width="*" />
-            <col width="*" />
-            <col width="*" />
-            <col width="*" />
-            <col width="*" />
-            <col width="*" />
-            <col width="*" />
-            <col width="*" />
-          </colgroup>
+    </div>
+    <!-- 하단 매출 리스트 출력 -->
+    <div class="bottom-content">
+      <div class="btn-wrap" id="btn-bottom-menu">
+        <button class="btn" id="btn-print">
+          <div class="icon-container"><i class="icon bi bi-printer"></i></div> 인쇄
+        </button>
+      </div>
+      <div class="sales-list">
+        <table class="table-sales">
           <thead>
           <tr>
-            <th><input type="checkbox" /></th>
-            <th>번호</th>
-            <th>상품분류</th>
+            <th><input type="checkbox" id="checkAll"></th>
+            <th>NO.</th>
+            <th>상품코드</th>
             <th>상품명</th>
-            <th>매출액</th>
             <th>설계건수</th>
+            <th>설계금액</th>
           </tr>
           </thead>
           <tbody>
           <tr>
-            <td><input type="checkbox" /></td>
+            <td><input type="checkbox" class="row-checkbox"></td>
             <td>1</td>
-            <td>text column</td>
-            <td>10,000</td>
-            <td>1,000,000,000</td>
-            <td>월납</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>2</td>
-            <td>text column</td>
-            <td>10,000</td>
-            <td>1,000,000,000</td>
-            <td>월납</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>3</td>
-            <td>text column</td>
-            <td>10,000</td>
-            <td>1,000,000,000</td>
-            <td>월납</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>4</td>
-            <td>text column</td>
-            <td>10,000</td>
-            <td>1,000,000,000</td>
-            <td>월납</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>5</td>
-            <td>text column</td>
-            <td>10,000</td>
-            <td>1,000,000,000</td>
-            <td>월납</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>6</td>
-            <td>text column</td>
-            <td>10,000</td>
-            <td>1,000,000,000</td>
-            <td>월납</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>7</td>
-            <td>text column</td>
-            <td>10,000</td>
-            <td>1,000,000,000</td>
-            <td>월납</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>8</td>
-            <td>text column</td>
-            <td>10,000</td>
-            <td>1,000,000,000</td>
-            <td>월납</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>9</td>
-            <td>text column</td>
-            <td>10,000</td>
-            <td>1,000,000,000</td>
-            <td>월납</td>
+            <td>A001</td>
+            <td>적금</td>
+            <td>10</td>
+            <td>10,000,000</td>
           </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <div class="paging_box">
-      <div class="paging flex">
-        <a href="" class="prv"><i class="bi bi-chevron-left"></i></a>
-        <a class="active">1</a>
-        <a href="">2</a>
-        <a href="">3</a>
-        <a href="">4</a>
-        <a href="">5</a>
-        <a href="" class="next"><i class="bi bi-chevron-right"></i></a>
-      </div>
-    </div>
+    <!-- 페이지네이션 -->
   </div>
+  <script th:inline="javascript">
+      $(document).ready(function(){
+        // 전체 버튼 클릭
+        $(".btn-search-all").on("click", function(e){
+            window.location.href = "/product/list";
+        });
+        // 전체 선택 체크박스 클릭 이벤트
+        $("#checkAll").on("click", function () {
+           const isChecked = $(this).is(":checked");
+           $(".row-checkbox").prop("checked", isChecked);
+        });
+
+        // 개별 체크박스 클릭 이벤트로 전체 체크박스 상태 업데이트
+        $(".table-product").on("change", ".row-checkbox", function () {
+           const total = $(".row-checkbox").length;
+           const checked = $(".row-checkbox:checked").length;
+          $("#checkAll").prop("checked", total === checked);
+        });
+      });
+  </script>
 </div>
 </body>
 </html>
