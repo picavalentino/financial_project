@@ -7,14 +7,21 @@ const pagination = document.getElementById("pagination");
 
 // 상담 상세 관련 변수
 const detailModal = document.getElementById("detailModal");
-const backBtn = document.getElementById("backBtn");
+const backBtn1 = document.getElementById("backBtn1");
 const closeDetailModalBtn = document.getElementById("closeDetailModalBtn");
+
+const updateModal = document.getElementById("updateModal");
 const counsel_update_btn = document.getElementById("counsel_update");
+const counsel_update_btn_2 = document.getElementById("counsel_update_btn_2");
+const closeUpdateModalBtn = document.getElementById("closeUpdateModalBtn");
+
+const counsel_delete_btn = document.getElementById("counsel_delete");
 
 // 상담 작성 관련 변수
 const writeModal = document.getElementById("writeModal");
 const counselWriteBtn = document.getElementById("counselWriteBtn");
 const closeWriteModalBtn = document.getElementById("closeWriteModalBtn");
+const backBtn2 = document.getElementById("backBtn2");
 
 let global_currentPage = 1;  // 현재 페이지
 const pageSize = 10;   // 한 페이지에 표시할 데이터 수
@@ -38,6 +45,11 @@ closeDetailModalBtn.onclick = function() {
 // 상담 작성 모달 닫기
 closeWriteModalBtn.onclick = function() {
     writeModal.style.display = "none";
+}
+
+// 상담 수정 모달 닫기
+closeUpdateModalBtn.onclick = function() {
+   updateModal.style.display = "none";
 }
 
 // 모달 외부 클릭 시 닫기
@@ -126,6 +138,8 @@ function renderUserList(counsels, currentPage) {
                 document.getElementById("counsel_category").value = counsel_category_f(counsel.counsel_category);
                 document.getElementById("counsel_content").textContent = `${counsel.counsel_content}`;
 
+                document.getElementById("counsel_id").value = `${counsel.counsel_id}`;
+
                 // 새 모달을 열기
                 detailModal.style.display = "block";
             });
@@ -170,9 +184,21 @@ function counsel_category_f(counsel_category){
 }
 
 // 뒤로가기 버튼 클릭
-backBtn.onclick = function() {
+backBtn1.onclick = function() {
     detailModal.style.display = "none";
     listModal.style.display = "block";
+}
+
+backBtn2.onclick = function(event) {
+    event.preventDefault();
+    writeModal.style.display = "none";
+    listModal.style.display = "block";
+}
+
+backBtn3.onclick = function(event) {
+    event.preventDefault();
+    updateModal.style.display = "none";
+    detailModal.style.display = "block";
 }
 
 // 페이징 버튼 렌더링
@@ -264,8 +290,133 @@ counselWriteBtn.onclick = function() {
     writeModal.style.display = "block";
 }
 
-// 상담수정 버튼 클릭
-counsel_update_btn.onclick = function() {
-    console.log("ok");
+// 상담작성 insert 버튼 클릭
+insert_counsel_btn.onclick = function(event) {
+    event.preventDefault();
+
+    if(document.getElementById("insert_counsel_category").value === "선택"){
+        alert("상담유형을 선택해주세요");
+        return;
+    }
+
+    if(document.getElementById("insert_counsel_content").value.trim() === ""){
+        alert("상담내용을 입력해주세요");
+        return;
+    }
+
+    // AJAX 제출을 위한 FormData 객체 생성
+    var formData = new FormData(document.getElementById("insertCounsel"));
+
+    // Fetch API(AJAX)를 사용하여 양식 데이터 보내기
+    fetch(document.getElementById("insertCounsel").action, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log("Form submitted successfully:", data);
+
+        // 양식 제출이 완료된 후 모달 표시
+        writeModal.style.display = "none";
+        listModal.style.display = "block";
+    })
+    .catch(error => {
+        console.error("Error submitting form:", error);
+    });
 }
 
+// 상담수정 버튼 클릭
+counsel_update_btn.onclick = function() {
+    detailModal.style.display = "none";
+
+    document.getElementById("update_user_name").value = document.getElementById("user_id").value;
+    document.getElementById("update_user_dept_cd").value = document.getElementById("user_dept_cd").value;
+
+    const el = document.getElementById("update_counsel_category");
+    const len = el.options.length;
+    const str = document.getElementById("counsel_category").value;
+    for (let i=0; i<len; i++){
+        if(el.options[i].textContent == str){
+            el.options[i].selected = true;
+        }
+    }
+
+    document.getElementById("update_counsel_content").textContent = document.getElementById("counsel_content").textContent;
+
+    updateModal.style.display = "block";
+}
+
+// 상담수정 버튼 클릭 2
+counsel_update_btn_2.onclick = function(event) {
+    event.preventDefault();
+
+    if(document.getElementById("update_counsel_content").value.trim() === ""){
+        alert("상담내용을 입력해주세요");
+        return;
+    }
+
+    // AJAX 제출을 위한 FormData 객체 생성
+    var formData = new FormData(document.getElementById("updateCounsel"));
+
+    // Fetch API(AJAX)를 사용하여 양식 데이터 보내기
+    fetch(document.getElementById("updateCounsel").action, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log("Form submitted successfully:", data);
+
+        loadPageData(global_currentPage); // 이 함수가 먼저 다 실행된 뒤에 아래 코드 실행하는 방법
+
+
+
+        // 양식 제출이 완료된 후 모달 표시
+        updateModal.style.display = "none";
+        detailModal.style.display = "block";
+    })
+    .catch(error => {
+        console.error("Error submitting form:", error);
+    });
+}
+
+// 상담삭제 버튼 클릭
+counsel_delete.onclick = function() {
+    detailModal.style.display = "none";
+
+    deleteCouncel(document.getElementById("counsel_id").value);
+
+    loadPageData(global_currentPage);
+
+    listModal.style.display = "block";
+}
+
+function deleteCouncel(id) {
+    fetch('http://localhost:4000/customer/counsel/deleteCounsel?id='+id)
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// POST 요청을 보내는 예시
+//const message = { content: "Hello from JavaScript!" };
+//
+//fetch('http://localhost:8080/api/greeting', {
+//    method: 'POST',
+//    headers: {
+//        'Content-Type': 'application/json',
+//    },
+//    body: JSON.stringify(message)  // JSON 형식으로 요청 본문(body)을 설정
+//})
+//    .then(response => response.json())  // 응답을 JSON으로 파싱
+//    .then(data => {
+//        console.log('Response:', data);
+//        // 서버에서 응답 받은 데이터를 처리하는 로직
+//    })
+//    .catch(error => {
+//        console.error('Error:', error);
+//    });

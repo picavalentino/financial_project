@@ -19,4 +19,8 @@ public interface CounselMapper {
 
     // 상담 작성
     void insertCounsel(@Param("dto") TbCounselDTO dto);
+
+    void updateCounsel(@Param("id") Long id, @Param("category") String category, @Param("content") String content);
+
+    void deleteCounsel(@Param("id") Long id);
 }

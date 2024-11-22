@@ -51,5 +51,15 @@
         )
     </insert>
 
+    <update id="updateCounsel" parameterType="java.util.Map">
+        UPDATE TB_COUNSEL
+        SET counsel_category = #{category}, counsel_content = #{content}, counsel_update_at = CURRENT_TIMESTAMP
+        WHERE counsel_id = #{id}
+    </update>
+
+    <delete id="deleteCounsel" parameterType="Long">
+        DELETE FROM TB_COUNSEL
+        WHERE counsel_id = #{id}
+    </delete>
 
 </mapper>

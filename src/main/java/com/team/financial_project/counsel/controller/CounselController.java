@@ -4,10 +4,7 @@ import com.team.financial_project.counsel.dto.TbCounselDTO;
 import com.team.financial_project.counsel.service.CounselService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/customer")
@@ -29,12 +26,13 @@ public class CounselController {
         return "/counsel/counsel";
     }
 
-    @PostMapping("/counsel/insertCounsel")
-    public String insertCounsel(TbCounselDTO dto){
-        System.out.println(dto);
-        counselService.insertCounsel(dto);
-        return "redirect:/customer/counsel";
-    }
+//    @PostMapping("/counsel/updateCounsel")
+//    public String updateCounsel(@RequestParam("counsel_id") Long id,
+//                                @RequestParam("update_counsel_category") String category,
+//                                @RequestParam("update_counsel_content") String content){
+//        counselService.updateCounsel(id, category, content);
+//        return "redirect:/customer/counsel";
+//    }
 
     @GetMapping("/managementEmployees")
     public String managementEmployees(){

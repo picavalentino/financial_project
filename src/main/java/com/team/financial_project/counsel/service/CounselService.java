@@ -47,4 +47,12 @@ public class CounselService {
     public void insertCounsel(TbCounselDTO dto) {
         mapper.insertCounsel(dto);
     }
+
+    public void updateCounsel(Long id, String category, String content) {
+        mapper.updateCounsel(id, category, content);
+    }
+
+    public void deleteCounsel(Long id) {
+        mapper.deleteCounsel(id);
+    }
 }
