@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>GS Bank:등록</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -16,7 +18,7 @@
         <img src="/images/common/big-logo.png" alt="GS Bank Logo">
     </div>
     <div class="right">
-        <form class="register">
+        <div class="register">
             <div class="title">
                 <div class="text">등록하기</div>
                 <button type="button" class="btn btn-link p-0 ms-2" id="btn-cross">
@@ -25,7 +27,7 @@
             </div>
             <div class="mb-2 input-container">
                 <label for="user_id">사원번호</label>
-                <input type="text" name="user_id" id="user_id" class="id-input" placeholder="이름으로 사원번호를 검색해주세요.">
+                <input type="text" name="user_id" id="user_id" class="id-input" placeholder="이름으로 사원번호를 검색해주세요." autocomplete="off">
                 <ul id="userResults" class="dropdown"></ul>
             </div>
             <div class="mb-2 employee-info">
@@ -40,12 +42,13 @@
                     </div>
                 </div>
                 <div class="right-img">
-                    <img src="/images/common/default-img.png" alt="img">
+                    <img src="/images/common/default-img.png" alt="img" id="previewImg">
                     <div class="img-btns">
-                        <button class="btn-photoReg">
-                            <div class="icon"><i class="icon bi bi-image-fill"></i></div>등록
+                        <button class="btn-photoReg" id="btn-photoReg">
+                            <div class="icon"><i class="icon bi bi-image-fill"></i></div>사진등록
                         </button>
-                        <button class="btn-reset">
+                        <input type="file" id="fileInput" class="d-none">
+                        <button type="buttonb" class="btn-reset" id="btn-reset">
                             <div class="icon"><i class="icon bi bi-arrow-repeat"></i></div>초기화
                         </button>
                     </div>
@@ -53,7 +56,7 @@
             </div>
             <div class="mb-2 input-container position-relative">
                 <label for="user_pw">비밀번호<span id="msg-invalid-pw" class="msg"></span></label>
-                <input type="password" name="user_pw" id="user_pw" class="password-input" placeholder="숫자와 영문 조합의 6~13자리">
+                <input type="password" name="user_pw" id="user_pw" class="password-input" placeholder="숫자+영문 6~13자리">
                 <button type="button" class="btn position-absolute end-0 btn-eye" id="btn-eye">
                     <i class="bi bi-eye-slash text-secondary" id="btn-hide"></i>
                     <i class="bi bi-eye text-secondary" id="btn-show"></i>
@@ -61,16 +64,16 @@
             </div>
             <div class="mb-2 input-container">
                 <label for="confirm-user_pw">비밀번호 확인<span id="msg-not-match" class="msg"></span></label>
-                <input type="password" name="user_pw" id="confirm-user_pw" class="confirm-user_pw" placeholder="비밀번호를 입력해주세요.">
+                <input type="password" id="confirm-user_pw" class="confirm-user_pw" placeholder="비밀번호를 입력해주세요.">
             </div>
             <div class="mb-2 input-container">
-                <label for="user_email">Email</label>
-                <input type="email" name="user_email" id="user_email" class="user_email" placeholder="example@gsitm.co.kr">
+                <label for="user_email">Email<span id="msg-invalid-email" class="msg"></span></label>
+                <input type="email" name="user_email" id="user_email" class="user_email" placeholder="example@gsitm.co.kr" autocomplete="off">
             </div>
             <div class="mb-2 input-container">
                 <label for="user_telno">휴대전화<span id="msg-already-exist" class="msg"></span></label>
-                <div id="user_telno" name="user_telno" class="user_telno">
-                    <select name="phone1" id="phone1">
+                <div class="user_telno">
+                    <select id="phone1">
                         <option value="010">010</option>
                         <option value="011">011</option>
                         <option value="016">016</option>
@@ -78,13 +81,14 @@
                         <option value="018">018</option>
                         <option value="019">019</option>
                     </select><span>-</span>
-                    <input type="number" id="phone2" class="phone2" placeholder="0000"><span>-</span>
-                    <input type="number" id="phone3" class="phone3" placeholder="0000">
+                    <input type="number" id="phone2" class="phone2" placeholder="0000" autocomplete="off"><span>-</span>
+                    <input type="number" id="phone3" class="phone3" placeholder="0000" autocomplete="off">
                     <input type="button" value="인증" class="btn-certify" id="btn-certify" disabled>
+                    <input type="hidden" name="user_telno" id="user_telno">
                 </div>
             </div>
-            <input type="submit" value="회원가입" class="btn-register mt-3" disabled id="btn-register">
-        </form>
+            <input type="button" value="회원가입" class="btn-register mt-3" disabled id="btn-register">
+        </div>
     </div>
 </div>
 </body>

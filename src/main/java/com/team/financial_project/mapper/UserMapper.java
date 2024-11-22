@@ -12,4 +12,6 @@ public interface UserMapper {
     List<UserDTO> findUsersByKeyword(String keyword);
 
     UserDTO certifyByUserTelno(String telno);
+
+    void updateUserFromReg(UserDTO user);
 }

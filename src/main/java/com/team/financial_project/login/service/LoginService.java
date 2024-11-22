@@ -2,6 +2,7 @@ package com.team.financial_project.login.service;
 
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.UserMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -10,9 +11,11 @@ import java.util.List;
 @Service
 public class LoginService {
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder pwEncoder;
 
-    public LoginService(UserMapper userMapper) {
+    public LoginService(UserMapper userMapper, BCryptPasswordEncoder pwEncoder) {
         this.userMapper = userMapper;
+        this.pwEncoder = pwEncoder;
     }
 
     public List<UserDTO> findUsersByKeyword(String keyword) {
@@ -26,5 +29,10 @@ public class LoginService {
         }else {
             return false;
         }
+    }
+
+    public void register(UserDTO user) {
+        user.setUser_pw(pwEncoder.encode(user.getUser_pw()));
+        userMapper.updateUserFromReg(user);
     }
 }

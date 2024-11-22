@@ -2,13 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.team.financial_project.mapper.UserMapper">
+
+    <!--  로그인화면 해당 아이디의 정보 불러오기  -->
     <select id="findById" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
         SELECT * FROM tb_user WHERE user_id=#{id}
     </select>
+
+    <!--  등록화면 사번찾기  -->
     <select id="findUsersByKeyword" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
         SELECT * FROM tb_user WHERE user_name LIKE CONCAT('%', #{keyword}, '%') AND user_pw IS NULL
     </select>
+
+    <!--  등록화면 핸드폰 유니크 검사 -->
     <select id="certifyByUserTelno" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
         SELECT * FROM tb_user WHERE user_telno=#{telno}
     </select>
+
+    <!--  등록버튼 동작  -->
+    <update id="updateUserFromReg" parameterType="com.team.financial_project.dto.UserDTO">
+        UPDATE tb_user
+        SET user_pw = #{user_pw},
+            user_email = #{user_email},
+            user_telno = #{user_telno},
+            user_imgpath = #{user_imgpath}
+        WHERE user_id = #{user_id}
+    </update>
+
 </mapper>

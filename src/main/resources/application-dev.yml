@@ -16,6 +16,9 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-logging:
-  level:
-    org.springframework.security: DEBUG
+aws:
+  s3:
+    bucket: codechef
+    access-key: ${ACCESS}
+    secret-key: ${SECRET}
+    region: ap-northeast-2
