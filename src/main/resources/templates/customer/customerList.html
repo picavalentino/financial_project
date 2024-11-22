@@ -74,20 +74,20 @@
                 </thead>
                 <!--       ======================================================================================================         -->
                 <tbody>
-                <tr th:each="customer : ${customers}">
+                <tr th:each="customerAndUser : ${customersAndUsers}">
                     <td>
-                        <input type="checkbox" name="selectedCustomers" th:value="${customer.custId}">
+                        <input type="checkbox" name="selectedCustomers" th:value="#{customerAndUser.customer.custId}">
                     </td>
-                    <td th:text="${customer.custId}">001</td>
+                    <td th:text="${customerAndUser.customer.custId}">001</td>
                     <td>
-                        <a th:href="@{'/customer/detail/' + ${customer.custId}}" th:text="${customer.custNm}">이름</a>
+                        <a th:href="@{'/customer/detail/' + ${customerAndUser.customer.custId}}" th:text="${customerAndUser.customer.custNm}">이름</a>
                     </td>
                     <td th:text="${customer.birthDate}">19940926</td>
-                    <td th:text="${customer.custTelno}">010-1111-1111</td>
-                    <td th:text="${customer.custEmail}">aaa@naver.com</td>
-                    <td th:text="${customer.userName}">김사원</td>
-                    <td th:text="${customer.custStateCd}"><span class="status active">상태</span></td>
-                    <td th:text="${customer.custCreateAt}">2024-11-18</td>
+                    <td th:text="${customerAndUser.customer.custTelno}">010-1111-1111</td>
+                    <td th:text="${customerAndUser.customer.custEmail}">aaa@naver.com</td>
+                    <td th:text="${customerAndUser.user.user_name}">김사원</td>
+                    <td th:text="${customerAndUser.customer.custStateCd}"><span class="status active">상태</span></td>
+                    <td th:text="${customerAndUser.customer.custCreateAt}">2024-11-18</td>
                 </tr>
                 </tbody>
             </table>

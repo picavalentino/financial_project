@@ -1,6 +1,5 @@
 package com.team.financial_project.dto;
 
-import com.team.financial_project.customer.enums.CustomerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,16 +19,10 @@ public class CustomerDTO {
     private String custAddr; // 고객 주소
     private LocalDateTime custCreateAt; // 고객 생성일시
     private LocalDateTime custUpdateAt; // 고객 수정일시
-    private CustomerStatus custStateCd = CustomerStatus.ACTIVE; // 고객 상태 코드 (enum)
+    private String custStateCd; // 고객 상태 코드
 
     private String birthDate; // 생년월일 필드 추가
     private String custAddrDetail; // 상세 주소 필드 추가
-
-    private String userId;
-    private String userName; // 담당 유저 필드 추가
-    private String userTelno; // 담당 유저 연락처 필드 추가
-    private String userPosition; // 담당 유저 직책 필드 추가
-    private String userDept; // 담당 유저 부서 필드 추가
 
     // 주소를 나누는 메소드
     public void splitAddress() {

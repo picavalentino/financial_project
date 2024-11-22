@@ -4,25 +4,39 @@
 <mapper namespace="com.team.financial_project.mapper.CustomerMapper">
 
     <!-- 고객 목록 조회 (페이징 처리) -->
-    <select id="getCustomersWithPagination" resultType="com.team.financial_project.dto.CustomerDTO">
+    <select id="getCustomersUsersWithPagination" resultType="com.team.financial_project.dto.CustomerAndUserCrossDTO">
         SELECT cust.cust_id AS custId,
         cust.cust_nm AS custNm,
-        cust.cust_rrn AS custRrn,
         cust.cust_telno AS custTelno,
         cust.cust_email AS custEmail,
         code.code_nm AS custOccpTyCd, -- 직업 코드 이름 매핑
         cust.cust_addr AS custAddr,
         cust.cust_create_at AS custCreateAt,
         cust.cust_update_at AS custUpdateAt,
-        usr.user_name AS userName, -- 담당자 이름 매핑
-        cust.cust_state_cd
+        statCode.code_nm AS custStateCd, -- 고객 상태
+
+        usr.user_id AS user_id, -- 담당자 아이디 매핑
+        usr.user_name AS user_name, -- 담당자 이름 매핑
+        usr.user_telno AS user_telno, -- 담당자 연락처 매핑
+        codeUserPosit.code_nm AS position_name, -- 담당자 직책 매핑
+        codeUserDept.code_nm AS dept_name -- 담당자 부서 매핑
 
         FROM tb_customer AS cust
+        LEFT JOIN tb_code AS statCode
+        ON cust.cust_state_cd = statCode.code_no
+        AND cust.cust_state_cd_code_cl = statCode.code_cl
         LEFT JOIN tb_code AS code
         ON cust.cust_occp_ty_cd = code.code_no
         AND cust.cust_occp_ty_cd_code_cl = code.code_cl
-        LEFT JOIN tb_user AS usr -- 'user'를 'usr'로 별칭 변경하여 예약어 충돌 방지
+        LEFT JOIN tb_user AS usr
         ON usr.user_id = cust.user_id
+        LEFT JOIN tb_code AS codeUserPosit
+        ON codeUserPosit.code_cl = usr.user_jbps_ty_cd_code_cl
+        AND codeUserPosit.code_no = usr.user_jbps_ty_cd
+        LEFT JOIN tb_code AS codeUserDept
+        ON codeUserDept.code_cl = usr.user_dept_cd_code_cl
+        AND codeUserDept.code_no = usr.user_dept_cd
+
         ORDER BY cust.cust_create_at
         LIMIT #{limit}
         OFFSET #{offset};
@@ -33,8 +47,14 @@
         SELECT COUNT(*) FROM tb_customer
     </select>
 
+    <!-- 고객 생일 조회 -->
+    <select id="getCustomer" resultType="com.team.financial_project.dto.CustomerDTO">
+        SELECT cust_rrn AS custRrn FROM tb_customer
+    </select>
+
+
     <!-- 고객 아이디 기반 검색 -->
-    <select id="getCustomerById" parameterType="String" resultType="com.team.financial_project.dto.CustomerDTO">
+    <select id="getCustomerById" parameterType="String" resultType="com.team.financial_project.dto.CustomerAndUserCrossDTO">
         SELECT cust.cust_id AS custId,
         cust.cust_nm AS custNm,
         cust.cust_rrn AS custRrn,
@@ -44,14 +64,18 @@
         cust.cust_addr AS custAddr,
         cust.cust_create_at AS custCreateAt,
         cust.cust_update_at AS custUpdateAt,
-        usr.user_Id AS userId, -- 담당자 아이디 매핑
-        usr.user_name AS userName, -- 담당자 이름 매핑
-        usr.user_telno AS userTelno, -- 담당자 연락처 매핑
-        codeUserPosit.code_nm AS userPosition, -- 담당자 직책 매핑
-        codeUserDept.code_nm AS userDept, -- 담당자 부서 매핑
-        cust.cust_state_cd -- ENUM 없애야댐
+        statCode.code_nm AS custStateCd, -- 고객 상태
+
+        usr.user_id AS user_id, -- 담당자 아이디 매핑
+        usr.user_name AS user_name, -- 담당자 이름 매핑
+        usr.user_telno AS user_telno, -- 담당자 연락처 매핑
+        codeUserPosit.code_nm AS position_name, -- 담당자 직책 매핑
+        codeUserDept.code_nm AS dept_name -- 담당자 부서 매핑
 
         FROM tb_customer AS cust
+        LEFT JOIN tb_code AS statCode
+        ON cust.cust_state_cd = statCode.code_no
+        AND cust.cust_state_cd_code_cl = statCode.code_cl
         LEFT JOIN tb_code AS code
         ON cust.cust_occp_ty_cd = code.code_no
         AND cust.cust_occp_ty_cd_code_cl = code.code_cl

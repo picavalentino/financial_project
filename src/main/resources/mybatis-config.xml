@@ -4,10 +4,6 @@
 <configuration>
     <typeAliases>
         <typeAlias type="com.team.financial_project.dto.CustomerDTO" alias="customerDTO"/>
-        <typeAlias type="com.team.financial_project.login.dto.UserDTO" alias="userDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.UserDTO" alias="userDTO"></typeAlias>
     </typeAliases>
-
-    <typeHandlers>
-        <typeHandler javaType="com.team.financial_project.customer.enums.CustomerStatus" handler="com.team.financial_project.customer.handler.CustomerStatusTypeHandler"/>
-    </typeHandlers>
 </configuration>

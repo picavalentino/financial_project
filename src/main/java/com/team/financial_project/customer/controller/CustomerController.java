@@ -1,6 +1,7 @@
 package com.team.financial_project.customer.controller;
 
 import com.team.financial_project.customer.service.CustomerService;
+import com.team.financial_project.dto.CustomerAndUserCrossDTO;
 import com.team.financial_project.dto.CustomerDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,12 +24,15 @@ public class CustomerController {
                                   @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
                                   Model model) {
         // 고객 목록 조회 및 총 고객 수 조회
-        List<CustomerDTO> customers = customerService.getCustomersWithPagination(page, pageSize);
+        List<CustomerAndUserCrossDTO> customers = customerService.getUsersWithPagination(page, pageSize);
+        List<CustomerAndUserCrossDTO> users = customerService.getCustomersWithPagination(page, pageSize);
+
         int totalCustomers = customerService.getTotalCustomerCount();
         int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
 
         // 모델에 데이터 추가
         model.addAttribute("customers", customers);
+        model.addAttribute("users", users);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         return "customer/customerList";
@@ -44,9 +48,10 @@ public class CustomerController {
     @GetMapping("/detail/{custId}")
     public String getCustomerDetail(@PathVariable("custId") String custId, Model model) {
         // 고객 상세 정보 가져오기
-        CustomerDTO customer = customerService.getCustomerById(custId);
-        customer.splitAddress(); // 주소를 기본 주소와 상세 주소로 나누기
-        model.addAttribute("customer", customer);
+
+        CustomerAndUserCrossDTO customerAndUser = customerService.getCustomerById(custId);
+        customerAndUser.getCustomer().splitAddress(); // 주소를 기본 주소와 상세 주소로 나누기
+        model.addAttribute("customerAndUser", customerAndUser);
         return "customer/customerDetail"; // 고객 상세 정보 페이지로 이동
     }
 
