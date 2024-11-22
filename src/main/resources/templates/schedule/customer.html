@@ -35,75 +35,75 @@
 
 
                 <!--<table class="calendar-table">
-                    <thead>
-                    <tr>
-                        <th id="sun">일</th>
-                        <th>월</th>
-                        <th>화</th>
-                        <th>수</th>
-                        <th>목</th>
-                        <th>금</th>
-                        <th id="sat">토</th>
-                    </tr>
-                    </thead>
-                    <tbody class="calendar-cell">
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>1
-                            <div class="event-bar-birthday">이고객님 생일</div>
-                        </td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>4
-                            <div class="event-bar-birthday">김고객님 생일</div>
-                            <div class="event-bar-birthday">전고객님 생일</div>
-                            <div class="event-bar-birthday">장고객님 생일</div>
-                        </td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                        <td>8</td>
-                        <td>9</td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td>11</td>
-                        <td>12</td>
-                        <td>13</td>
-                        <td>14</td>
-                        <td>15</td>
-                        <td>16</td>
-                    </tr>
-                    <tr>
-                        <td>17</td>
-                        <td>18</td>
-                        <td>19</td>
-                        <td>20
-                            <div class="event-bar-finish">박고객 만기일</div>
-                            <div class="event-bar-finish">이고객 만기일</div>
-                            <div class="event-bar-finish">차고객 만기일</div>
-                        </td>
-                        <td>21</td>
-                        <td>22</td>
-                        <td>23</td>
-                    </tr>
-                    <tr>
-                        <td>24</td>
-                        <td>25</td>
-                        <td>26</td>
-                        <td>27</td>
-                        <td>28</td>
-                        <td>29</td>
-                        <td>30</td>
-                    </tr>
-                    </tbody>
-                </table>-->
+    <thead>
+    <tr>
+        <th id="sun">일</th>
+        <th>월</th>
+        <th>화</th>
+        <th>수</th>
+        <th>목</th>
+        <th>금</th>
+        <th id="sat">토</th>
+    </tr>
+    </thead>
+    <tbody class="calendar-cell">
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>1
+            <div class="event-bar-birthday">이고객님 생일</div>
+        </td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>4
+            <div class="event-bar-birthday">김고객님 생일</div>
+            <div class="event-bar-birthday">전고객님 생일</div>
+            <div class="event-bar-birthday">장고객님 생일</div>
+        </td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+        <td>14</td>
+        <td>15</td>
+        <td>16</td>
+    </tr>
+    <tr>
+        <td>17</td>
+        <td>18</td>
+        <td>19</td>
+        <td>20
+            <div class="event-bar-finish">박고객 만기일</div>
+            <div class="event-bar-finish">이고객 만기일</div>
+            <div class="event-bar-finish">차고객 만기일</div>
+        </td>
+        <td>21</td>
+        <td>22</td>
+        <td>23</td>
+    </tr>
+    <tr>
+        <td>24</td>
+        <td>25</td>
+        <td>26</td>
+        <td>27</td>
+        <td>28</td>
+        <td>29</td>
+        <td>30</td>
+    </tr>
+    </tbody>
+</table>-->
 
                 <table class="calendar-table">
                     <thead>
@@ -159,7 +159,8 @@
                     <input type="text" class="task-title" placeholder="Enter Title...">
                     <input type="text" class="location-input" placeholder="Enter Customer...">
                     <div class="checkboxes">
-                        <label><input type="checkbox" class="select-checkbox" id="team-customer" checked disabled> 고객</label>
+                        <label><input type="checkbox" class="select-checkbox" id="team-customer" checked disabled>
+                            고객</label>
                     </div>
                 </div>
                 <div class="details">
@@ -181,181 +182,186 @@
         </div>
         <div class="card-details">
             <div><img th:src="@{/css/schedule/img/time.png}" alt="time"> <span class="event-time"></span></div>
-            <div><img th:src="@{/css/schedule/img/person.png}" alt="person"> <span class="event-person"></span></div>
+            <div><img th:src="@{/css/schedule/img/person.png}" alt="person"> <span class="event-person"></span>
+            </div>
             <div><img th:src="@{/css/schedule/img/memo.png}" alt="memo"> <span class="event-memo"></span></div>
         </div>
     </div>
 
     <script th:inline="javascript">
         $(document).ready(function () {
-          console.log("jQuery가 준비되었습니다.");
+            console.log("jQuery가 준비되었습니다.");
 
-          // 모달 관련 요소 가져오기
-          const $modal = $('.schedule_detail'); // 모달 창
-          const $calendarCells = $('#add_cs'); // 고객 상담일정 추가
-          const $closeBtn = $('.schedule_detail .close'); // 닫기 버튼
+            // 모달 관련 요소 가져오기
+            const $modal = $('.schedule_detail'); // 모달 창
+            const $calendarCells = $('#add_cs'); // 고객 상담일정 추가
+            const $closeBtn = $('.schedule_detail .close'); // 닫기 버튼
 
-          // 날짜 클릭 시 모달 열기
-          $calendarCells.on("click", function (event) {
-            // 클릭한 위치에 모달 배치
-            $modal.fadeIn();
-            const clickX = event.pageX; // 클릭한 X 좌표
-            const clickY = event.pageY; // 클릭한 Y 좌표
+            // 날짜 클릭 시 모달 열기
+            $calendarCells.on("click", function (event) {
+                // 클릭한 위치에 모달 배치
+                $modal.fadeIn();
+                const clickX = event.pageX; // 클릭한 X 좌표
+                const clickY = event.pageY; // 클릭한 Y 좌표
 
-            // 모달 위치 설정
-            $modal.css({
-              display: "block",
-              top: clickY + "px",
-              left: clickX + "px",
-              position: "absolute",
-              transform: "translate(-80%, 3%)"
+                // 모달 위치 설정
+                $modal.css({
+                    display: "block",
+                    top: clickY + "px",
+                    left: clickX + "px",
+                    position: "absolute",
+                    transform: "translate(-80%, 3%)"
+                });
+
+                // 부드러운 나타나기 효과
+                $modal.fadeIn();
             });
 
-            // 부드러운 나타나기 효과
-            $modal.fadeIn();
-          });
-
-          // 닫기 버튼 클릭 시 모달 닫기
-          $closeBtn.on("click", function () {
-            $modal.fadeOut(); // 모달 숨기기
-          });
-
-          // 모달 외부 클릭 시 닫기
-          $(window).on("click", function (event) {
-            if ($(event.target).hasClass('schedule_detail')) {
-              $modal.fadeOut(); // 모달 숨기기
-            }
-          });
-          const $birthdayBtn = $('#birthday_btn'); // 생일 버튼
-          const $finishBtn = $('#finish_btn'); // 만기 버튼
-          const $scheduleAllBtn = $('#schedule_all_btn');
-          const $allEventBars = $('.event-bar-birthday, .event-bar-finish'); // 모든 이벤트 바
-
-          // 생일 버튼 클릭 시
-          $birthdayBtn.on("click", function () {
-            $allEventBars.hide(); // 모든 이벤트 바 숨기기
-            $('.event-bar-birthday').fadeIn(); // 생일 이벤트 바만 표시
-          });
-
-          // 만기 버튼 클릭 시
-          $finishBtn.on("click", function () {
-            $allEventBars.hide(); // 모든 이벤트 바 숨기기
-            $('.event-bar-finish').fadeIn(); // 만기 이벤트 바만 표시
-          });
-          $scheduleAllBtn.on("click", function () {
-            $allEventBars.hide(); // 모든 이벤트 바 숨기기
-            $('.event-bar-birthday').fadeIn();
-            $('.event-bar-finish').fadeIn();
-          });
-          document.querySelectorAll('.today-tasks input[type="checkbox"]').forEach((checkbox) => {
-            checkbox.addEventListener('change', function () {
-              const taskContainer = this.closest('.today-tasks'); // 가장 가까운 부모 요소
-              if (this.checked) {
-                taskContainer.style.backgroundColor = '#ababab'; // 체크 시 배경색
-              } else {
-                taskContainer.style.backgroundColor = '#f8f9fa'; // 체크 해제 시 기본 배경색
-              }
+            // 닫기 버튼 클릭 시 모달 닫기
+            $closeBtn.on("click", function () {
+                $modal.fadeOut(); // 모달 숨기기
             });
-          });
+
+            // 모달 외부 클릭 시 닫기
+            $(window).on("click", function (event) {
+                if ($(event.target).hasClass('schedule_detail')) {
+                    $modal.fadeOut(); // 모달 숨기기
+                }
+            });
+            const $birthdayBtn = $('#birthday_btn'); // 생일 버튼
+            const $finishBtn = $('#finish_btn'); // 만기 버튼
+            const $scheduleAllBtn = $('#schedule_all_btn');
+            const $allEventBars = $('.event-bar-birthday, .event-bar-finish'); // 모든 이벤트 바
+
+            // 생일 버튼 클릭 시
+            $birthdayBtn.on("click", function () {
+                $allEventBars.hide(); // 모든 이벤트 바 숨기기
+                $('.event-bar-birthday').fadeIn(); // 생일 이벤트 바만 표시
+            });
+
+            // 만기 버튼 클릭 시
+            $finishBtn.on("click", function () {
+                $allEventBars.hide(); // 모든 이벤트 바 숨기기
+                $('.event-bar-finish').fadeIn(); // 만기 이벤트 바만 표시
+            });
+            $scheduleAllBtn.on("click", function () {
+                $allEventBars.hide(); // 모든 이벤트 바 숨기기
+                $('.event-bar-birthday').fadeIn();
+                $('.event-bar-finish').fadeIn();
+            });
+            document.querySelectorAll('.today-tasks input[type="checkbox"]').forEach((checkbox) => {
+                checkbox.addEventListener('change', function () {
+                    const taskContainer = this.closest('.today-tasks'); // 가장 가까운 부모 요소
+                    if (this.checked) {
+                        taskContainer.style.backgroundColor = '#ababab'; // 체크 시 배경색
+                    } else {
+                        taskContainer.style.backgroundColor = '#f8f9fa'; // 체크 해제 시 기본 배경색
+                    }
+                });
+            });
 
 
-          // 모달 관련 요소 가져오기
-          const $eventModal = $('.event-card'); // 이벤트 카드 모달
-          const $closeEvent = $('.close-event'); // 이벤트 모달 닫기 버튼
+            // 모달 관련 요소 가져오기
+            const $eventModal = $('.event-card'); // 이벤트 카드 모달
+            const $closeEvent = $('.close-event'); // 이벤트 모달 닫기 버튼
 
-          // 이벤트 바 클릭 시 이벤트 카드 모달 열기
-          function openEventModal(event) {
-            const $target = $(event.currentTarget); // 클릭된 요소
-            const title = $target.data('title');
-            const date = $target.data('date');
-            const time = $target.data('time');
-            const person = $target.data('person');
-            const memo = $target.data('memo');
+            // 이벤트 바 클릭 시 이벤트 카드 모달 열기
+            function openEventModal(event) {
+                const $target = $(event.currentTarget); // 클릭된 요소
+                const title = $target.data('title');
+                const date = $target.data('date');
+                const time = $target.data('time');
+                const person = $target.data('person');
+                const memo = $target.data('memo');
 
-            // 모달 내용 설정
-            $('.event-title').text(title);
-            $('.event-time').text(`${date} - ${time}`);
-            $('.event-person').text(person);
-            $('.event-memo').text(memo);
+                // 모달 내용 설정
+                $('.event-title').text(title);
+                $('.event-time').text(`${date} - ${time}`);
+                $('.event-person').text(person);
+                $('.event-memo').text(memo);
 
-            // 모달 위치 설정
-            const clickX = event.pageX; // 클릭한 X 좌표
-            const clickY = event.pageY; // 클릭한 Y 좌표
-            $eventModal.css({
-              display: "block",
-              top: clickY + "px",
-              left: clickX + "px",
-              position: "absolute",
-              transform: "translate(-80%, 12%)"
-            }).fadeIn();
-          }
-
-          // `cs_etc` 버튼 클릭 이벤트 연결
-          $('.cs_etc').off("click").on("click", openEventModal);
-
-          // 이벤트 카드 모달 닫기
-          $closeEvent.on("click", function () {
-            $eventModal.fadeOut();
-          });
-
-          // 모달 외부 클릭 시 닫기
-          $(window).on("click", function (event) {
-            if ($(event.target).is($eventModal)) {
-              $eventModal.fadeOut();
+                // 모달 위치 설정
+                const clickX = event.pageX; // 클릭한 X 좌표
+                const clickY = event.pageY; // 클릭한 Y 좌표
+                $eventModal.css({
+                    display: "block",
+                    top: clickY + "px",
+                    left: clickX + "px",
+                    position: "absolute",
+                    transform: "translate(-80%, 12%)"
+                }).fadeIn();
             }
-          });
+
+            // `cs_etc` 버튼 클릭 이벤트 연결
+            $('.cs_etc').off("click").on("click", openEventModal);
+
+            // 이벤트 카드 모달 닫기
+            $closeEvent.on("click", function () {
+                $eventModal.fadeOut();
+            });
+
+            // 모달 외부 클릭 시 닫기
+            $(window).on("click", function (event) {
+                if ($(event.target).is($eventModal)) {
+                    $eventModal.fadeOut();
+                }
+            });
 
 
 
 
-          //날짜관련
-
-          const currentDateElement = document.getElementById('current-date');
-        let selectedDate = new Date(); // 현재 날짜로 초기화
-
-        // 날짜를 "YYYY.MM.DD" 형식으로 반환
-        function formatDate(date) {
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
-            return `${year}.${month}.${day}`;
-        }
-
-        // 현재 날짜 업데이트
-        function updateDateDisplay() {
-            currentDateElement.textContent = formatDate(selectedDate);
-        }
-
-        // 왼쪽 버튼 클릭: 전날로 이동
-        document.getElementById('prev-day').addEventListener('click', () => {
-            selectedDate.setDate(selectedDate.getDate() - 1); // 하루 감소
-            updateDateDisplay();
-        });
-
-        // 오른쪽 버튼 클릭: 다음날로 이동
-        document.getElementById('next-day').addEventListener('click', () => {
-            selectedDate.setDate(selectedDate.getDate() + 1); // 하루 증가
-            updateDateDisplay();
-        });
-
-        // 초기 날짜 설정
-        updateDateDisplay();
-
-       const timeSelect = document.getElementById('time-select');
-
-    // 시간 옵션 동적 생성
-    for (let i = 0; i < 48; i++) {
-        const hour = Math.floor(i / 2).toString().padStart(2, '0'); // 시간 계산
-        const minute = (i % 2 === 0 ? '00' : '30'); // 분 계산
-        const option = document.createElement('option');
-        option.value = `${hour}:${minute}`;
-        option.textContent = `${hour}:${minute}`;
-        timeSelect.appendChild(option);
-    } // 시간 선택 박스 생성
+            //날짜관련
 
 
+     const $scheduleModal = $('.schedule_detail'); // 일정 등록 모달
+    const $currentDateSpan = $('#current-date'); // 날짜 및 요일 표시 요소
 
-          const currentMonthYear = document.getElementById('current-month-year');
+    let modalSelectedDate = new Date(); // 선택된 날짜
+
+    function formatDateWithDay(date) {
+        const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const dayName = days[date.getDay()]; // 요일 계산
+        return `${year}.${month}.${day} (${dayName})`;
+    }
+
+    function updateModalDateDisplay() {
+        const formattedDate = formatDateWithDay(modalSelectedDate);
+        $currentDateSpan.text(formattedDate);
+    }
+
+    // 초기 날짜 표시
+    updateModalDateDisplay();
+
+    // 이전 날짜 버튼 클릭
+    $('#prev-day').on('click', function () {
+        modalSelectedDate.setDate(modalSelectedDate.getDate() - 1); // 하루 감소
+        updateModalDateDisplay();
+    });
+
+    // 다음 날짜 버튼 클릭
+    $('#next-day').on('click', function () {
+        modalSelectedDate.setDate(modalSelectedDate.getDate() + 1); // 하루 증가
+        updateModalDateDisplay();
+    });
+
+            const timeSelect = document.getElementById('time-select');
+
+            // 시간 옵션 동적 생성
+            for (let i = 0; i < 48; i++) {
+                const hour = Math.floor(i / 2).toString().padStart(2, '0'); // 시간 계산
+                const minute = (i % 2 === 0 ? '00' : '30'); // 분 계산
+                const option = document.createElement('option');
+                option.value = `${hour}:${minute}`;
+                option.textContent = `${hour}:${minute}`;
+                timeSelect.appendChild(option);
+            } // 시간 선택 박스 생성
+
+
+
+            const currentMonthYear = document.getElementById('current-month-year');
             const calendarBody = document.querySelector('.calendar-body');
             const leftButton = document.getElementById('btn_left');
             const rightButton = document.getElementById('btn_right');
@@ -388,63 +394,70 @@
 
             // 달력 생성
             function generateCalendar() {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
-    const lastDate = new Date(year, month + 1, 0).getDate();
-    const prevLastDate = new Date(year, month, 0).getDate();
+                const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(); // 현재 달 첫날 요일
+                const lastDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(); // 현재 달 마지막 날짜
 
-    calendarBody.innerHTML = ''; // 달력 초기화
-    let date = 1; // 이번 달 날짜
-    let isLastDatePassed = false; // 마지막 날짜 이후 플래그
+                // 이전 달 마지막 날짜 계산
+                const prevLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
 
-    for (let i = 0; i < 6; i++) { // 최대 6주 (달력에 6줄 표시 가능)
-        const row = document.createElement('tr');
-        for (let j = 0; j < 7; j++) { // 1주일 = 7일
-            const cell = document.createElement('td');
-            cell.classList.add('calendar-cell');
+                calendarBody.innerHTML = '';
+                let date = 1;
+                let isLastDateDisplayed = false; // 마지막 날짜가 표시되었는지 확인
 
-            if (i === 0 && j < firstDay) {
-                // 이전 달 날짜 출력
-                cell.textContent = '';
-                cell.classList.add('prev-month'); // 이전 달 스타일 클래스 추가
-            } else if (date <= lastDate) {
-                // 이번 달 날짜 출력
-                const currentFullDate = new Date(year, month, date);
-                cell.textContent = date;
+                for (let i = 0; i < 6; i++) { // 최대 6줄까지 출력
+                    const row = document.createElement('tr');
 
-                // 이벤트 추가
-                const eventForDate = events.filter(event => event.date === formatDate(currentFullDate));
-                if (eventForDate.length > 0) {
-                    eventForDate.forEach(event => {
-                        const eventDiv = document.createElement('div');
-                        eventDiv.classList.add(`event-bar-${event.type}`);
-                        eventDiv.textContent = event.title;
-                        eventDiv.dataset.title = event.title;
-                        eventDiv.dataset.date = formatDate(currentFullDate);
-                        eventDiv.dataset.type = event.type;
-                        eventDiv.addEventListener('click', openEventModal);
-                        cell.appendChild(eventDiv);
-                    });
+                    for (let j = 0; j < 7; j++) {
+                        const cell = document.createElement('td');
+                        cell.classList.add('calendar-cell');
+
+                        if (i === 0 && j < firstDay) {
+                            // 이전 달 날짜 채우기
+                            const prevDate = prevLastDate - (firstDay - j - 1);
+                            cell.textContent = prevDate;
+                            cell.classList.add('prev-month-cell');
+                            cell.style.color = '#aaaaaa';
+                            cell.style.backgroundColor = '#f0f0f0';
+                        } else if (date <= lastDate) {
+                            // 현재 달 날짜
+                            const currentFormattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                            cell.innerHTML = `<div class="calendar-date">${date}</div>`;
+
+                            const dayEvents = events.filter(event => event.date === currentFormattedDate);
+                            dayEvents.forEach(event => {
+                                const dotClass = event.type.includes('personal') ? 'event-dot-personal' : 'event-dot-team';
+                                cell.innerHTML += `
+                    <div class="event-bar-${event.type}" data-title="${event.title}" data-date="${event.date}" data-time="${event.time}" data-location="${event.location}" ${event.memo ? `data-memo="${event.memo}"` : ''}>
+                        <span class="${dotClass}"></span>${event.title}
+                    </div>`;
+                            });
+
+                            if (date === lastDate) {
+                                isLastDateDisplayed = true; // 마지막 날짜가 표시됨
+                            }
+
+                            date++;
+                        } else {
+                            // 다음 달 날짜 채우기
+                            const nextDate = date - lastDate;
+                            cell.textContent = nextDate;
+                            cell.classList.add('next-month-cell');
+                            cell.style.color = '#aaaaaa';
+                            cell.style.backgroundColor = '#f0f0f0';
+                            date++;
+                        }
+
+                        row.appendChild(cell);
+                    }
+
+                    calendarBody.appendChild(row);
+
+                    // 마지막 날짜가 표시되었고, 5줄 내에 출력이 완료되었으면 루프 종료
+                    if (isLastDateDisplayed && i === 4) {
+                        break;
+                    }
                 }
-
-                date++; // 다음 날짜로 이동
-            } else {
-                // 마지막 날짜 이후 공백 처리
-                cell.textContent = '';
-                cell.classList.add('empty-cell'); // 공백 셀 스타일 클래스 추가
-                isLastDatePassed = true;
             }
-
-            row.appendChild(cell);
-        }
-
-        calendarBody.appendChild(row);
-
-        // 모든 날짜를 출력하고 공백 셀을 채웠으면 루프 종료
-        if (isLastDatePassed) break;
-    }
-}
 
             // 이벤트 모달 열기
             function openEventModal(event) {
@@ -454,14 +467,14 @@
                 const type = target.dataset.type || '';
 
                 const clickX = event.pageX; // 클릭한 X 좌표
-                 const clickY = event.pageY; // 클릭한 Y 좌표
-                 $eventModal.css({
-                  display: "block",
-                  top: clickY + "px",
-                 left: clickX + "px",
-                  position: "absolute",
-                transform: "translate(-80%, 4%)"
-                 }).fadeIn();
+                const clickY = event.pageY; // 클릭한 Y 좌표
+                $eventModal.css({
+                    display: "block",
+                    top: clickY + "px",
+                    left: clickX + "px",
+                    position: "absolute",
+                    transform: "translate(-80%, 4%)"
+                }).fadeIn();
 
                 document.querySelector('.event-title').textContent = title;
                 document.querySelector('.event-time').textContent = `${date}`;
