@@ -6,14 +6,17 @@
     margin: 20px auto;
     width: 100%;
     max-width: 1440px;
-    background-color: #F4F4F6;
+/*    background-color: #F4F4F6;*/
+    background-color: white;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+/*
 .bottom{
     background-color: white;
 }
+*/
 
 /* 검색 폼 */
 #search-form {
@@ -50,7 +53,8 @@
     width: 100%;
     box-sizing: border-box; /* 테두리와 패딩 포함 */
     text-align: center;
-    background-color: #F4F4F6;
+    background-color: white;
+/*    background-color: #F4F4F6;*/
 }
 
 .condition-dates {
