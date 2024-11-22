@@ -1,95 +1,191 @@
-/* 공통 스타일 */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
+/* 공통 조건 박스 */
+.condition-box, .bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 1440px;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.container {
-  padding: 20px;
+/* 개별 조건 필드 */
+.condition {
+    display: flex;
+    flex-direction: column; /* 라벨과 입력 필드 수직 배치 */
+    max-width: 300px;
+    flex: 1; /* 각 필드가 동일한 비율로 확장 */
+    margin-right: 20px;
 }
 
-.breadcrumb {
-  background-color: #f8f9fa;
+.condition input, .condition select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    height: 38px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: white;
 }
 
-.breadcrumb-item a {
-  color: #007bff;
-  text-decoration: none;
+/* 기본 콘텐츠 설정 */
+.content {
+    margin-top: 40px; /* 기존의 제목과 위치 경로와의 간격을 추가 */
+    padding: 0 15px;
 }
 
-.breadcrumb-item a:hover {
-  text-decoration: underline;
+/* 하위 콘텐츠 */
+.sub_content {
+    background-color: #f8f9fa; /* 페이지 배경과 대비되도록 연한 회색 사용 */
+    padding: 25px 20px;
+    border-radius: 8px;
 }
 
-/* 직원 목록 조회 페이지 스타일 */
-h2 {
-  font-size: 1.75rem;
-  font-weight: bold;
-  color: #333;
+/* 페이지 위치 경로 설정 */
+.location {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* 간격 축소 */
+    font-size: 16px;
+    font-weight: 500;
 }
 
-.form-select,
-.form-control {
-  border-radius: 4px;
+.location a {
+    color: #333;
+    text-decoration: none;
 }
 
-.table-hover tbody tr:hover {
-  background-color: #f1f1f1;
+.location a:hover {
+    text-decoration: underline;
 }
 
-.table thead th {
-  font-weight: bold;
-  background-color: #e9ecef;
-  text-align: center;
+.location i {
+    font-size: 20px;
+    margin-right: 5px;
 }
 
-.table tbody td {
-  vertical-align: middle;
-  text-align: center;
+/* 제목 설정 */
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #004085; /* 이미지와 비슷한 색상 */
+    margin-bottom: 10px; /* 간격 축소 */
 }
 
-.pagination .page-item.active .page-link {
-  background-color: #007bff;
-  border-color: #007bff;
-  color: #fff;
+/* 상단 설정 */
+.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
 }
 
-.pagination .page-link {
-  color: #007bff;
+/* 테이블 스타일 */
+.table-managementList {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
 }
 
-.pagination .page-link:hover {
-  color: #0056b3;
+.table-managementList th, .table-managementList td {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    font-size: 14px;
 }
 
-.mt-2 {
-  margin-top: 1rem;
-}
-
-.text-end {
-  text-align: end;
+.table-managementList th {
+    background-color: #f1f3f5;
+    color: #495057;
+    font-weight: bold;
 }
 
 /* 버튼 스타일 */
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
+.btn-wrap {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-left: auto;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #004085;
+#btn-bottom-menu {
+    display: flex;
+    gap: 10px;
+}
+
+/* Pagination Container */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 20px; /* 간격 증가 */
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+/* Page Item Styles */
+.page-item {
+    list-style: none;
+}
+
+.page-item .page-link {
+    color: #333;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover and Active Styles */
+.page-item .page-link:hover {
+    background-color: #f0f0f0;
+}
+
+.page-item.active .page-link {
+    background-color: #010535;
+    color: white;
+}
+
+.page-item.disabled .page-link {
+    cursor: not-allowed;
+    background-color: #e9ecef;
+    color: #6c757d;
 }
 
 /* 반응형 스타일 */
 @media (max-width: 768px) {
-  .form-select,
-  .form-control {
-    width: 100%;
-    margin-bottom: 10px;
-  }
+    .form-select, .form-control {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 
-  .d-flex {
-    flex-direction: column;
-  }
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .sidebar {
+        display: none;
+    }
 }
