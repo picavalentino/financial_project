@@ -20,13 +20,11 @@
   <div class="content">
     <!-- 실제 콘텐츠가 이 부분에 들어갑니다 -->
     <div class="container mt-5">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item">직원관리</li>
-          <li class="breadcrumb-item active" aria-current="page">직원목록</li>
-        </ol>
-      </nav>
+      <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a th:href="@{/management/list}"> / 직원조회</a>
+        <p style="display: inline;"> / 직원목록조회 </p>
+      </div>
 
       <h2 class="mb-4">직원목록조회</h2>
 
@@ -54,9 +52,8 @@
 
         <input type="text" name="searchValue" class="form-control me-2" style="width: 200px;" placeholder="검색어 입력" th:value="${searchValue}">
         <button type="submit" class="btn btn-primary">검색</button>
+        <button type="button" class="btn btn-secondary" id="resetButton">초기화</button>
       </form>
-
-
 
       <table class="table table-hover">
         <thead>
@@ -85,28 +82,41 @@
       <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
           <li th:classappend="${currentPageNumber == 1} ? 'disabled' : ''" class="page-item">
-            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber - 1})}" aria-label="Previous">
+            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber - 1}, dept=${dept}, position=${position}, searchField=${searchField}, searchValue=${searchValue})}" aria-label="Previous">
               &lt;
             </a>
           </li>
           <li th:each="pageNumber : ${paginationBarNumbers}" th:classappend="${pageNumber == currentPageNumber} ? 'active' : ''" class="page-item">
-            <a class="page-link" th:href="@{/management/list(page=${pageNumber})}" th:text="${pageNumber}">1</a>
+            <a class="page-link" th:href="@{/management/list(page=${pageNumber}, dept=${dept}, position=${position}, searchField=${searchField}, searchValue=${searchValue})}" th:text="${pageNumber}">1</a>
           </li>
           <li th:classappend="${currentPageNumber == totalPageNumber} ? 'disabled' : ''" class="page-item">
-            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber + 1})}" aria-label="Next">
+            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber + 1}, dept=${dept}, position=${position}, searchField=${searchField}, searchValue=${searchValue})}" aria-label="Next">
               &gt;
             </a>
           </li>
         </ul>
       </nav>
-
-      <div class="mt-2 text-end">
-        <span th:text="'1-' + pageSize + ' of ' + totalDataCount + ' items'"></span>
-      </div>
     </div>
-
   </div>
 </div>
+<script>
+  document.getElementById('resetButton').addEventListener('click', function() {
+    // 검색 폼의 모든 값을 초기화
+    document.getElementById('searchForm').reset();
+    // 폼을 다시 제출하여 초기 상태로 이동
+    window.location.href = '/management/list';
+  });
 
+  document.getElementById('searchForm').addEventListener('submit', function (e) {
+    const searchField = document.querySelector('select[name="searchField"]').value;
+    const searchValue = document.querySelector('input[name="searchValue"]').value;
+
+    if (!searchField && searchValue) {
+      // 검색어는 입력되었으나 카테고리가 선택되지 않은 경우 경고창 띄우기
+      e.preventDefault();
+      alert('검색 카테고리를 선택해주세요.');
+    }
+  });
+</script>
 </body>
 </html>

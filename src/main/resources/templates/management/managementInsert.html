@@ -21,13 +21,11 @@
   <!-- content 영역 -->
   <div layout:fragment="content" class="content">
     <div class="container mt-5">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item">직원관리</li>
-          <li class="breadcrumb-item active" aria-current="page">직원등록</li>
-        </ol>
-      </nav>
+      <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a th:href="@{/management/insert}"> / 직원등록</a>
+        <p style="display: inline;"> / 직원등록조회 </p>
+      </div>
 
       <h2 class="mb-4">직원등록</h2>
 
@@ -40,8 +38,9 @@
               <!-- 자바스크립트를 통해 옵션 추가 -->
             </select>
             <button type="submit" class="btn btn-primary me-2">조회</button>
+            <button type="button" class="btn btn-secondary" id="resetButton">초기화</button>
           </form>
-          <button type="button" class="btn-insertEmployee">등록</button>
+          <button type="button" class="btn btn-primary btn-insertEmployee" data-bs-toggle="modal" data-bs-target="#InsertModal">등록</button>
         </div>
       </div>
 
@@ -70,7 +69,7 @@
           <td th:text="${insert.status_name}">활동상태</td>
         </tr>
         <tr th:if="${insertList == null or #lists.isEmpty(insertList)}">
-          <td colspan="7">데이터가 없습니다.</td>
+          <td colspan="8">데이터가 없습니다.</td>
         </tr>
         </tbody>
       </table>
@@ -79,29 +78,26 @@
         <ul class="pagination justify-content-center">
           <!-- 이전 페이지 -->
           <li th:classappend="${currentPageNumber == 1} ? 'disabled' : ''" class="page-item">
-            <a class="page-link" th:href="@{/management/insert(page=${currentPageNumber - 1}, searchField=${searchField}, searchValue=${searchValue})}" aria-label="Previous">
+            <a class="page-link" th:href="@{/management/insert(page=${currentPageNumber - 1}, searchField=${searchField}, searchValue=${searchValue}, yearMonth=${yearMonth})}" aria-label="Previous">
               &lt;
             </a>
           </li>
           <!-- 페이지 번호 -->
           <li th:each="pageNumber : ${paginationBarNumbers}" th:classappend="${pageNumber == currentPageNumber} ? 'active' : ''" class="page-item">
-            <a class="page-link" th:href="@{/management/insert(page=${pageNumber}, searchField=${searchField}, searchValue=${searchValue})}" th:text="${pageNumber}">1</a>
+            <a class="page-link" th:href="@{/management/insert(page=${pageNumber}, searchField=${searchField}, searchValue=${searchValue}, yearMonth=${yearMonth})}" th:text="${pageNumber}">1</a>
           </li>
           <!-- 다음 페이지 -->
           <li th:classappend="${currentPageNumber == totalPageNumber} ? 'disabled' : ''" class="page-item">
-            <a class="page-link" th:href="@{/management/insert(page=${currentPageNumber + 1}, searchField=${searchField}, searchValue=${searchValue})}" aria-label="Next">
+            <a class="page-link" th:href="@{/management/insert(page=${currentPageNumber + 1}, searchField=${searchField}, searchValue=${searchValue}, yearMonth=${yearMonth})}" aria-label="Next">
               &gt;
             </a>
           </li>
         </ul>
       </nav>
-
-      <div class="mt-2 text-end">
-        1-05 of 18 items
-      </div>
     </div>
   </div>
 </div>
+
 
 <!-- 직원 등록 모달 -->
 <div class="modal fade" id="InsertModal" tabindex="-1" aria-labelledby="InsertModalLabel" aria-hidden="true">
@@ -131,7 +127,8 @@
           </div>
           <div class="mb-3">
             <label for="user_birthday" class="form-label">생년월일</label>
-            <input type="text" class="form-control" id="user_birthday" name="user_birthday" required>
+            <input type="text" class="form-control" id="user_birthday" name="user_birthday"
+                   placeholder="yyyy-mm-dd" required>
           </div>
 
           <div class="mb-3 d-flex justify-content-between">
@@ -173,8 +170,8 @@
             </select>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-            <button type="submit" class="btn btn-primary">등록</button>
+            <button type="button" class="btn-close">닫기</button>
+            <button type="submit" class="btn-submit">등록</button>
           </div>
         </form>
       </div>
@@ -191,5 +188,7 @@
 
 <script th:src="@{/js/management/employeeInsertModal.js}"></script>
 <script th:src="@{/js/management/managementInsert.js}"></script>
+<script>
+</script>
 </body>
 </html>

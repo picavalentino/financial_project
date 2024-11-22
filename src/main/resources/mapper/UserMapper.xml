@@ -258,7 +258,8 @@
         tu.user_jncmp_ymd LIKE '2024%'
         AND tu.user_jncmp_ymd LIKE #{yearMonth} || '%'
         ORDER BY
-        tu.user_dept_cd, jbps_cd.code_no
+        tu.user_jncmp_ymd,   -- 1차 정렬 기준: 입사일자
+        tu.user_id           -- 2차 정렬 기준: 사원번호
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
 

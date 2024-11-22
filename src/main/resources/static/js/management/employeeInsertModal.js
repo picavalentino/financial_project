@@ -69,4 +69,14 @@ $(document).ready(function () {
                 }
             });
         });
+
+    $(".btn-close").on("click", function () {
+        var insertModal = bootstrap.Modal.getInstance(document.getElementById('InsertModal'));
+        if (insertModal) {
+            insertModal.hide(); // 모달 닫기
+        }
+
+        // 모달이 닫힌 후 페이지를 리디렉션
+        window.location.href = '/management/insert';
+    });
 });
