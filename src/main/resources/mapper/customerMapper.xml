@@ -3,10 +3,34 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.financial_project.mapper.CustomerMapper">
 
+
+    <resultMap id="CustomerUserMap" type="com.team.financial_project.dto.CustomerDTO">
+        <id property="custId" column="custId"/>
+        <result property="custNm" column="custNm"/>
+        <result property="custRrn" column="custRrn"/>
+        <result property="custTelno" column="custTelno"/>
+        <result property="custEmail" column="custEmail"/>
+        <result property="custOccpTyCd" column="custOccpTyCd"/>
+        <result property="custAddr" column="custAddr"/>
+        <result property="custCreateAt" column="custCreateAt"/>
+        <result property="custUpdateAt" column="custUpdateAt"/>
+        <result property="custStateCd" column="custStateCd"/>
+
+        <!-- UserDTO 매핑 -->
+        <association property="users" javaType="com.team.financial_project.dto.UserDTO">
+            <id property="user_id" column="user_id"/>
+            <result property="user_name" column="user_name"/>
+            <result property="user_telno" column="user_telno"/>
+            <result property="position_name" column="position_name"/>
+            <result property="dept_name" column="dept_name"/>
+        </association>
+    </resultMap>
+
     <!-- 고객 목록 조회 (페이징 처리) -->
-    <select id="getCustomersUsersWithPagination" resultType="com.team.financial_project.dto.CustomerAndUserCrossDTO">
+    <select id="getCustomersWithPagination" resultMap="CustomerUserMap">
         SELECT cust.cust_id AS custId,
         cust.cust_nm AS custNm,
+        cust.cust_rrn AS custRrn,
         cust.cust_telno AS custTelno,
         cust.cust_email AS custEmail,
         code.code_nm AS custOccpTyCd, -- 직업 코드 이름 매핑
@@ -28,6 +52,7 @@
         LEFT JOIN tb_code AS code
         ON cust.cust_occp_ty_cd = code.code_no
         AND cust.cust_occp_ty_cd_code_cl = code.code_cl
+
         LEFT JOIN tb_user AS usr
         ON usr.user_id = cust.user_id
         LEFT JOIN tb_code AS codeUserPosit
@@ -47,15 +72,34 @@
         SELECT COUNT(*) FROM tb_customer
     </select>
 
-    <!-- 고객 생일 조회 -->
-    <select id="getCustomer" resultType="com.team.financial_project.dto.CustomerDTO">
-        SELECT cust_rrn AS custRrn FROM tb_customer
-    </select>
+    <!-- ================================================================================================= -->
+    <!-- 고객 아이디 기반 검색 -->
+    <resultMap id="CustomerUserDetailMap" type="com.team.financial_project.dto.CustomerDTO">
+        <id property="custId" column="custId"/>
+        <result property="custNm" column="custNm"/>
+        <result property="custRrn" column="custRrn"/>
+        <result property="custTelno" column="custTelno"/>
+        <result property="custEmail" column="custEmail"/>
+        <result property="custOccpTyCd" column="custOccpTyCd"/>
+        <result property="custAddr" column="custAddr"/>
+        <result property="custCreateAt" column="custCreateAt"/>
+        <result property="custUpdateAt" column="custUpdateAt"/>
+        <result property="custStateCd" column="custStateCd"/>
 
+        <!-- 담당자 정보 매핑 -->
+        <association property="users" javaType="com.team.financial_project.dto.UserDTO">
+            <id property="user_id" column="user_id"/>
+            <result property="user_name" column="user_name"/>
+            <result property="user_telno" column="user_telno"/>
+            <result property="position_name" column="position_name"/>
+            <result property="dept_name" column="dept_name"/>
+        </association>
+    </resultMap>
 
     <!-- 고객 아이디 기반 검색 -->
-    <select id="getCustomerById" parameterType="String" resultType="com.team.financial_project.dto.CustomerAndUserCrossDTO">
-        SELECT cust.cust_id AS custId,
+    <select id="getCustomerById" parameterType="String" resultMap="CustomerUserDetailMap">
+        SELECT
+        cust.cust_id AS custId,
         cust.cust_nm AS custNm,
         cust.cust_rrn AS custRrn,
         cust.cust_telno AS custTelno,
@@ -87,6 +131,21 @@
         LEFT JOIN tb_code AS codeUserDept
         ON codeUserDept.code_cl = usr.user_dept_cd_code_cl
         AND codeUserDept.code_no = usr.user_dept_cd
+
         WHERE cust.cust_id = #{custId};
+    </select>
+
+    <!-- ============================================================================================================= -->
+    <!-- 고객 메세지 보내기 -->
+    <select id="getCustomersByIds" parameterType="java.util.List" resultType="com.team.financial_project.dto.CustomerDTO">
+        SELECT cust.cust_id AS custId,
+        cust.cust_nm AS custNm,
+        cust.cust_rrn AS custRrn,
+        cust.cust_telno AS custTelno
+        FROM tb_customer AS cust
+        WHERE cust.cust_id IN
+        <foreach item="custId" index="index" collection="list" open="(" separator="," close=")">
+            #{custId}
+        </foreach>
     </select>
 </mapper>

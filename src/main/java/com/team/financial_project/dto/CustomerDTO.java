@@ -24,6 +24,8 @@ public class CustomerDTO {
     private String birthDate; // 생년월일 필드 추가
     private String custAddrDetail; // 상세 주소 필드 추가
 
+    private UserDTO users; // 유저 필드 추가
+
     // 주소를 나누는 메소드
     public void splitAddress() {
         if (custAddr != null) {

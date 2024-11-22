@@ -12,11 +12,6 @@ function openPrintModal() {
     document.getElementById("printModal").style.display = "flex";
 }
 
-function openMessageModal() {
-    closeAllModals();  // 다른 모달 닫기
-    document.getElementById("messageModal").style.display = "flex";
-}
-
 function openInsertModal() {
     closeAllModals();  // 다른 모달 닫기
     document.getElementById("insertModal").style.display = "flex";
@@ -28,20 +23,94 @@ function closeModal(modalId) {
 }
 
 /* ========================================================================= */
-/* 메세지 발송 */
 
-// 태그 지우기
-function removeTag(event) {
-    event.stopPropagation(); // 클릭 이벤트가 부모 요소로 전달되지 않도록 방지
-    const tagButton = event.target.closest(".tag-btn, .hidden-tag-btn"); // 현재 클릭된 "X" 버튼의 부모 태그 버튼 찾기
-    if (tagButton) {
-        tagButton.remove(); // 태그 버튼 삭제
-        updateTagVisibility(); // 태그 삭제 후 태그 상태 업데이트
+// 선택된 고객 모달 열기
+function openSelectedCustomersModal() {
+    // 체크된 체크박스 선택
+    const selectedCheckboxes = document.querySelectorAll('.customer-checkbox:checked');
+    const selectedValues = Array.from(selectedCheckboxes).map(checkbox => {
+        return {
+            id: checkbox.value,
+            name: checkbox.closest('tr').querySelector('td:nth-child(3) a').innerText,
+            tel: checkbox.closest('tr').querySelector('td:nth-child(5)').innerText
+        };
+    });
+
+    if (selectedValues.length === 0) {
+        alert('선택된 고객이 없습니다.');
+        return;
+    }
+
+    // 모달에 선택된 값 전달
+    updateModalContent(selectedValues);
+}
+
+// 모달 내용 업데이트
+function updateModalContent(selectedValues) {
+    const buttonsContainer = document.getElementById('buttonsContainer');
+    buttonsContainer.innerHTML = ''; // 이전 버튼 초기화
+
+    selectedValues.forEach(value => {
+        const button = document.createElement('button');
+        button.className = 'tag-btn';
+        button.innerHTML = `${value.name} (${value.tel}) <span class="close-tag" onclick="removeTag(event)">X</span>`;
+
+        // 버튼 클릭 시 관련 작업 추가 가능
+        button.onclick = function () {
+            alert(`고객 ID: ${value.id} - ${value.name} 선택됨`);
+        };
+
+        buttonsContainer.appendChild(button);
+    });
+
+    // 모달 열기
+    openMessageModal();
+}
+
+// 태그 컨테이너 업데이트
+function updateTagContainer(selectedValues) {
+    const tagContainer = document.getElementById('tagContainer');
+    const noCustomerMessage = document.getElementById('noCustomerMessage');
+
+    // 선택된 고객이 있으면 안내 메시지 숨기고 태그 버튼 추가
+    if (selectedValues.length > 0) {
+        noCustomerMessage.style.display = 'none';
+        tagContainer.innerHTML = ''; // 기존 태그 초기화
+
+        selectedValues.forEach(value => {
+            const tagButton = document.createElement('button');
+            tagButton.className = 'tag-btn';
+            tagButton.innerHTML = `${value.name} (${value.tel}) <span class="close-tag" onclick="removeTag(event)">X</span>`;
+
+            tagContainer.appendChild(tagButton);
+        });
+    } else {
+        // 선택된 고객이 없으면 안내 메시지 표시
+        noCustomerMessage.style.display = 'block';
+        tagContainer.innerHTML = ''; // 기존 태그 초기화
     }
 }
-// 초기 상태에서 태그 가시성 업데이트
-updateTagVisibility();
 
+// 태그 제거
+function removeTag(event) {
+    event.stopPropagation(); // 클릭 이벤트 전파 방지
+    const tagButton = event.target.closest('.tag-btn'); // 부모 태그 버튼 찾기
+    if (tagButton) {
+        tagButton.remove(); // 태그 버튼 삭제
+    }
+
+    // 태그 제거 후 남은 태그가 없으면 안내 메시지 표시
+    const tagContainer = document.getElementById('tagContainer');
+    if (tagContainer.querySelectorAll('.tag-btn').length === 0) {
+        document.getElementById('noCustomerMessage').style.display = 'block';
+    }
+}
+
+// 모달 열기
+function openMessageModal() {
+    closeAllModals(); // 다른 모달 닫기
+    document.getElementById('messageModal').style.display = 'flex'; // 메시지 모달 열기
+}
 /* ========================================================================= */
 /* 고객등록 */
 
@@ -64,10 +133,9 @@ function printTable() {
 
 /* =========================================================================== */
 /* 고객 목록 */
-
 function toggleAll(source) {
-    let checkboxes = document.querySelectorAll('input[type="checkbox"][name="selectedCustomers"]');
-    for (let checkbox of checkboxes) {
+    const checkboxes = document.querySelectorAll('.customer-checkbox');
+    checkboxes.forEach((checkbox) => {
         checkbox.checked = source.checked;
-    }
+    });
 }

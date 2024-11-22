@@ -13,7 +13,6 @@
 
             <!-- 상단 핸드폰 스피커 부분 -->
             <div class="phone-speaker"></div>
-
             <button class="close-button" onclick="closeModal('messageModal')">✖</button>
             <div class="message-box">
                 <textarea>
@@ -25,17 +24,27 @@
 감사합니다.
                 </textarea>
             </div>
-            <div class="tag-container" id="tagContainer">
-                <button class="tag-btn">전고객 <span onclick="removeTag(event)">X</span></button>
-                <button class="tag-btn">V고객 <span onclick="removeTag(event)">X</span></button>
-                <button class="tag-btn">규고객 <span onclick="removeTag(event)">X</span></button>
-                <button class="tag-btn">일고객 <span onclick="removeTag(event)">X</span></button>
-                <button class="tag-btn">삼고객 <span onclick="removeTag(event)">X</span></button>
-                <button class="tag-btn">신고객 <span onclick="removeTag(event)">X</span></button>
-                <button class="tag-btn">일고객 <span onclick="removeTag(event)">X</span></button>
-                <button class="tag-btn">전고객 <span onclick="removeTag(event)">X</span></button>
-                <button class="tag-btn">전고객 <span onclick="removeTag(event)">X</span></button>
+
+            <div>
+                <button> 일반</button>
+                <button> 생일</button>
             </div>
+
+                <div id="tagContainer" class="tag-container">
+                    <!-- 선택된 고객이 있는 경우 태그 버튼 추가 -->
+                    <div th:if="${selectCustomers != null && !selectCustomers.isEmpty()}">
+                        <div th:each="customer : ${selectCustomers}">
+                            <button class="tag-btn" th:text="${customer.custNm} + ' (' + ${customer.custTelno} + ')'">
+                                <span class="close-tag" onclick="removeTag(event)">X</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- 선택된 고객이 없을 경우 기본 안내 메시지 -->
+                    <div th:if="${selectCustomers == null || selectCustomers.isEmpty()}">
+                        <p>선택된 고객이 없습니다. 고객을 선택하세요.</p>
+                    </div>
+                </div>
+
             <button class="message-button" id="send-button">✉ 메시지 발송</button>
         </div>
     </div>

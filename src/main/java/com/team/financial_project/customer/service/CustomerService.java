@@ -1,12 +1,11 @@
 package com.team.financial_project.customer.service;
 
-import com.team.financial_project.dto.CustomerAndUserCrossDTO;
 import com.team.financial_project.dto.CustomerDTO;
-import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,18 +18,14 @@ public class CustomerService {
     }
 
     // ======================================================================================================
-    // 페이징 처리된 고객 목록 / 담당자 조회
-    public List<CustomerAndUserCrossDTO> getCustomersUsersWithPagination(int page, int pageSize) {
+    // 페이징 처리된 고객 목록 조회
+    public List<CustomerDTO> getCustomersWithPagination(int page, int pageSize) {
         int offset = (page - 1) * pageSize;
-        return customerMapper.getCustomersUsersWithPagination(pageSize, offset);
-    }
-
-    public List<CustomerDTO> getCustomersBirth(){
-        List<CustomerDTO> customers = customerMapper.getCustomer();
-           for (CustomerDTO customer : customers) {
+        List<CustomerDTO> customers = customerMapper.getCustomersWithPagination(pageSize, offset);
+        for (CustomerDTO customer : customers) {
             customer.extractBirthDateFromRrn(); // 각 고객의 생년월일을 추출
         }
-           return customers;
+        return customers;
     }
 
     // 총 고객 수 조회
@@ -38,9 +33,19 @@ public class CustomerService {
         return customerMapper.getTotalCustomerCount();
     }
 
+
+    // ======================================================================================================
+    // 고객 메세지 보내기
+    public List<CustomerDTO> getCustomersByIds(List<String> selectedCustomers) {
+        if (selectedCustomers == null || selectedCustomers.isEmpty()) {
+            return Collections.emptyList(); // 선택된 고객이 없을 경우 빈 리스트 반환
+        }
+        return customerMapper.getCustomersByIds(selectedCustomers);
+    }
     // ======================================================================================================
     // 고객 상세 페이지로 이동
-    public CustomerAndUserCrossDTO getCustomerById(String custId) {
+    public CustomerDTO getCustomerById(String custId) {
         return customerMapper.getCustomerById(custId);
     }
+
 }
