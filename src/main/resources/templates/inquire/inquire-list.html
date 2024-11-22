@@ -63,11 +63,11 @@
 
           <!-- 버튼 그룹 -->
           <div class="btn-wrap">
-            <button type="submit" class="btn btn-search">
-              <i class="bi bi-search"></i> 검색
+            <button type="submit" class="btn" id="btn-search">
+              <div class="icon-container"><i class="bi bi-search"></i></div> 검색
             </button>
-            <button type="button" class="btn btn-search-all">
-              <i class="bi bi-search"></i> 전체
+            <button type="button" class="btn" id="btn-search-all">
+              <div class="icon-container"><i class="bi bi-search"></i></div> 전체
             </button>
           </div>
         </form>
@@ -78,8 +78,8 @@
       <div class="bottom-menu">
         <div class="inquire-size"> 총 : <span>n</span>개</div>
         <div class="btn-wrap" id="btn-bottom-menu">
-          <button class="btn btn-register">
-            <div class="icon"><i class="icon bi bi-plus-circle-fill"></i></div> 등록
+          <button class="btn" id="btn-register">
+            <div class="icon-container"><i class="icon bi bi-plus-circle-fill"></i></div> 등록
           </button>
         </div>
       </div>
@@ -135,7 +135,7 @@
   <script th:inline="javascript">
       $(document).ready(function(){
           //등록 버튼 클릭
-          $(".btn-register).on("click", function (e){
+          $("#btn-register").on("click", function (e){
             window.location.href="/inquire/insert";
           });
       });
