@@ -11,6 +11,9 @@
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+.bottom{
+    background-color: white;
+}
 
 /* 검색 폼 */
 #search-form {
@@ -28,39 +31,54 @@
 /* 개별 조건 필드 */
 .condition {
     display: flex;
-    flex-direction: column;
-    max-width: 300px;
-    flex: 1;
+    flex-direction: column; /* 라벨과 입력 필드 수직 배치 */
+    max-width: 300px; /* 최소 크기 */
+    flex: 1; /* 각 필드가 동일한 비율로 확장 */
     margin-right: 20px;
 }
-
-.condition label {
+.condition label{
     font-size: 15px;
     color: #495057;
     margin-bottom: 5px;
 }
-
-.condition input, .condition select,
-.condition-period input, .condition-period select {
-    padding: 10px;
+.condition input, .condition select {
+    padding: 10px; /* 동일한 패딩 적용 */
     font-size: 14px;
     border: 1px solid #ced4da;
     border-radius: 5px;
-    height: 38px;
+    height: 38px; /* 높이를 명시적으로 지정 */
     width: 100%;
-    box-sizing: border-box;
+    box-sizing: border-box; /* 테두리와 패딩 포함 */
     text-align: center;
     background-color: #F4F4F6;
-    outline: none;
 }
 
-/* 기간 조건 */
 .condition-dates {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+.condition input, .condition select,
+.condition-period input, .condition-period select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    outline: none;
+    flex: 1;
+}
+
+.condition-period input[type="date"] {
+    width: 150px;
+}
+
+.condition span {
+    font-size: 14px;
+    color: #495057;
+    align-self: center;
+}
+/* 기간 조건 */
 #condition-period {
     display: flex;
     flex-direction: row;
@@ -72,15 +90,15 @@
     margin-right: 20px;
 }
 
-#condition-period input {
-    width: calc(50% - 10px);
+#condition-period input,
+#condition-period span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
 }
 
-#condition-period span {
-    font-size: 14px;
-    color: #495057;
-    align-self: center;
-    margin-right: 10px;
+#condition-period input {
+    width: calc(50% - 10px); /* 두 인풋 필드를 반반으로 나눔 */
 }
 
 /* 버튼 스타일 */
