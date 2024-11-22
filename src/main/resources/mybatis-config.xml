@@ -5,4 +5,7 @@
     <typeAliases>
         <typeAlias type="com.team.financial_project.login.dto.UserDTO" alias="userDTO"></typeAlias>
     </typeAliases>
+    <mappers>
+        <mapper resource="com/example/mapper/MypageMapper.xml"/>
+    </mappers>
 </configuration>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.financial_project.mypage.mapper.MypageMapper">
+    <!-- 유저 정보 -->
+    <select id="selectUserInfo" parameterType="String" resultType="com.team.financial_project.mypage.dto.MypageDTO">
+        SELECT
+        u.user_id AS userId,
+        u.user_jncmp_ymd AS userIncmpYmd,
+        u.user_dept_cd AS userDeptCd,
+        u.user_dept_cd_code_cl AS userDeptCdCodeCl,
+        u.user_jbps_ty_cd AS userJbpsTyCd,
+        u.user_jbps_ty_cd_code_cl AS userJbpsTyCdCodeCl,
+        u.user_name AS userName,
+        u.user_telno AS userTelno,
+        u.user_email AS userEmail
+        FROM tb_user u
+        WHERE u.user_id = #{userId};
+    </select>
+
+    <!-- 상담 리스트 -->
+    <select id="selectInquiriesByUserId" parameterType="String" resultType="com.team.financial_project.mypage.dto.InquireDTO">
+        SELECT
+        inq_title AS inqTitle,
+        inq_create_at AS inqCreateAt
+        FROM t_inquire
+        WHERE user_id = #{userId};
+    </select>
+
+    <!-- 가입 상품 리스트 -->
+    <select id="selectCustProdsByUserId" parameterType="String" resultType="com.team.financial_project.mypage.dto.CustProdDTO">
+        SELECT DISTINCT ON (cust.cust_id)
+        cust.cust_nm AS custNm,
+        cust.cust_email AS custEmail,
+        d.dsgn_ds_ty_cd AS dsgnDsTyCd,
+        d.dsgn_ds_ty_cd_code_cl AS dsgnDsTyCdCodeCl,
+        d.dsgn_prg_stcd AS dsgnPrgStcd,
+        d.dsgn_prg_stcd_code_cl AS dsgnPrgStcdCodeCl
+        FROM tb_custprod_dsgn d
+        LEFT JOIN tb_customer cust
+        ON cust.user_id = d.user_id
+        WHERE d.user_id = #{userId}
+        ORDER BY cust.cust_id DESC
+
+    </select>
+</mapper>
