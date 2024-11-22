@@ -1,5 +1,6 @@
 package com.team.financial_project.promotion.controller;
 
+import com.team.financial_project.promotion.dto.ProductInfoDto;
 import com.team.financial_project.promotion.dto.PromotionListDto;
 import com.team.financial_project.promotion.dto.UserInfoDto;
 import com.team.financial_project.promotion.mapper.PromotionMapper;
@@ -109,7 +110,16 @@ public class PromotionController {
         return "promotion/promotionDetail";
     }
 
-    // 고객 정보 리스트 조회
+    // 상품 리스트 조회
+    @GetMapping("/cal/productList")
+    @ResponseBody
+    public List<ProductInfoDto> getProductList(
+            @RequestParam(value = "prodCd", required = false) String prodCd,
+            @RequestParam(value = "prodNm", required = false) String prodNm) {
+        return promotionService.getProductList(prodCd, prodNm);
+    }
+
+    // 고객 리스트 조회
     @GetMapping("/cal/userInfoList")
     @ResponseBody
     public List<UserInfoDto> getUserInfoList(

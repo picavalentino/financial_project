@@ -4,6 +4,7 @@ import com.team.financial_project.promotion.calculator.AccumulatedFundCalculator
 import com.team.financial_project.promotion.calculator.DepositCalculator;
 import com.team.financial_project.promotion.calculator.LoanCalculator;
 import com.team.financial_project.promotion.calculator.SavingsCalculator;
+import com.team.financial_project.promotion.dto.ProductInfoDto;
 import com.team.financial_project.promotion.dto.PromotionListDto;
 import com.team.financial_project.promotion.dto.UserInfoDto;
 import com.team.financial_project.promotion.mapper.PromotionMapper;
@@ -130,6 +131,11 @@ public class PromotionService {
     }
 
     // 금융계산기 페이지
+
+    // 상품 정보 리스트 조회
+    public List<ProductInfoDto> getProductList(String prodCd, String prodNm) {
+        return mapper.getProductList(prodCd, prodNm);
+    }
 
     // 고객 정보 리스트 조회
     public List<UserInfoDto> getUserInfoList(String custNm, String custTelno) {

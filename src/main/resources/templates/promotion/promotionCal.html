@@ -63,7 +63,7 @@
                         <input type="text" id="custEmail" disabled>
                         <input type="text" id="custTelno" disabled>
                         <input type="text" id="custOccp" disabled>
-                        <textarea id="custAddr" disabled>서울특별시 양천구 목동</textarea>
+                        <textarea id="custAddr" disabled></textarea>
                         <input type="text" id="userId" disabled>
                     </div>
                 </div>
@@ -177,8 +177,8 @@
                             <input type="text" id="savgIntTaxTyCd" name="savgIntTaxTyCd" disabled>
                             <!-- 설계일자 -->
                             <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" disabled>
-                            <!-- 작성일자 -->
-                            <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" disabled>
+                            <!-- 수정일자 -->
+                            <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" placeholder="" disabled>
                         </div>
                     </div>
                 </div>
@@ -351,6 +351,7 @@
                 today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); // UTC -> 로컬 시간으로 변환
                 return today.toISOString().split('T')[0]; // yyyy-mm-dd
             }
+
             // 날짜 필드 설정 (오늘 날짜)
             const dsgnCreateAt = document.getElementById('dsgnCreateAt');
             const dsgnUpdateAt = document.getElementById('dsgnUpdateAt');
@@ -358,6 +359,7 @@
 
             if (dsgnCreateAt) dsgnCreateAt.value = getTodayDate();
             if (dsgnUpdateAt) dsgnUpdateAt.value = getTodayDate();
+
             // 시작일자 기본값과 최소값 설정
             if (savgStrtDt) {
                 const today = getTodayDate();
@@ -492,12 +494,69 @@
             new Chart(ctx, config);
 
 
+            // 상품 모달
+            const productModal = document.getElementById("productModal");
+            const productTableBody = document.getElementById("productList");
+            const openProductModalButton = document.getElementById("openProductModalButton");
+            const closeProductModalButton = document.getElementById("closeProductModalButton");
+            const searchProductButton = document.querySelector(".btn-search-prod");
+
+            async function loadProductList(productCode = '', productName = '') {
+                try {
+                    const response = await fetch(`/promotion/cal/productList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const productList = await response.json();
+                    renderProductTable(productList);
+                } catch (error) {
+                    console.error('Error fetching product list:', error);
+                    alert('상품 데이터를 불러오는 중 오류가 발생했습니다.');
+                }
+            }
+
+            function renderProductTable(productList) {
+                productTableBody.innerHTML = '';
+                if (productList.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="3">검색 결과가 없습니다.</td>`;
+                    productTableBody.appendChild(row);
+                    return;
+                }
+                productList.forEach(product => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${product.prodCd}</td>
+                        <td>${product.prodNm}</td>
+                        <td>${product.prodSbstgTy}</td>
+                    `;
+                    productTableBody.appendChild(row);
+                });
+            }
+
+            // 상품 모달 열기
+            openProductModalButton.addEventListener("click", () => {
+                productModal.style.display = "flex";
+                loadProductList(); // 전체 리스트 로드
+            });
+
+            // 상품 모달 닫기
+            closeProductModalButton.addEventListener("click", () => {
+                productModal.style.display = "none";
+            });
+
+            // 상품 검색 버튼 클릭 이벤트
+            searchProductButton.addEventListener("click", () => {
+                const productCode = document.getElementById('prodCdSearch').value.trim();
+                const productName = document.getElementById('prodNmSearch').value.trim();
+                loadProductList(productCode, productName);
+            });
+
+
             // 고객 모달
+            const customerModal = document.getElementById("customerModal");
+            const customerTableBody = document.getElementById("customerList");
             const openCustomerModalButton = document.getElementById("openCustomerModalButton");
             const closeCustomerModalButton = document.getElementById("closeCustomerModalButton");
-            const customerModal = document.getElementById("customerModal");
-            const searchButton = document.querySelector(".btn-search-cust"); // 검색 버튼
-            const tableBody = document.getElementById('customerList');
+            const searchCustomerButton = document.querySelector(".btn-search-cust");
 
             // 고객 리스트 가져오기
             async function loadCustomerList(custNm = '', custTelno = '') {
@@ -512,16 +571,17 @@
                     renderCustomerList(userInfoList);
                 } catch (error) {
                     console.error('Error fetching customer list:', error);
+                    alert('고객 데이터를 불러오는 중 오류가 발생했습니다.');
                 }
             }
 
             // 테이블 데이터를 렌더링하는 함수
             function renderCustomerList(userInfoList) {
-                tableBody.innerHTML = ''; // 기존 데이터를 초기화
+                customerTableBody.innerHTML = ''; // 기존 데이터를 초기화
                 if (userInfoList.length === 0) {
                     const row = document.createElement('tr');
                     row.innerHTML = `<td colspan="4">검색 결과가 없습니다.</td>`;
-                    tableBody.appendChild(row);
+                    customerTableBody.appendChild(row);
                     return;
                 }
                 userInfoList.forEach(user => {
@@ -540,8 +600,7 @@
                         // 모달 닫기
                         customerModal.style.display = "none";
                     });
-
-                    tableBody.appendChild(row);
+                    customerTableBody.appendChild(row);
                 });
             }
 
@@ -570,23 +629,10 @@
             });
 
             // 검색 버튼 클릭 이벤트
-            searchButton.addEventListener("click", async () => {
+            searchCustomerButton.addEventListener("click", async () => {
                 const custNm = document.getElementById('custNmSearch').value.trim();
                 const custTelno = document.getElementById('custTelnoSearch').value.trim();
                 await loadCustomerList(custNm, custTelno); // 검색 조건으로 데이터 로드
-            });
-
-            // 상품 모달
-            const openProductModalButton = document.getElementById("openProductModalButton");
-            const closeProductModalButton = document.getElementById("closeProductModalButton");
-            const productModal = document.getElementById("productModal");
-
-            openProductModalButton.addEventListener("click", () => {
-                productModal.style.display = "flex";
-            });
-
-            closeProductModalButton.addEventListener("click", () => {
-                productModal.style.display = "none";
             });
 
             // 모달 외부 클릭 시 닫기
