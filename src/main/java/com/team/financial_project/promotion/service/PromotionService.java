@@ -5,6 +5,7 @@ import com.team.financial_project.promotion.calculator.DepositCalculator;
 import com.team.financial_project.promotion.calculator.LoanCalculator;
 import com.team.financial_project.promotion.calculator.SavingsCalculator;
 import com.team.financial_project.promotion.dto.PromotionListDto;
+import com.team.financial_project.promotion.dto.UserInfoDto;
 import com.team.financial_project.promotion.mapper.PromotionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class PromotionService {
         return mapper.checkConnection();
     }
 
+    // 설계 조회 페이지
     // 전체 데이터 개수 조회
     public int getTotalCount(
             String prgStcd, String dsTyCd, String custNm, String userNm, String prodNm) {
@@ -126,4 +128,12 @@ public class PromotionService {
             return false; // 업데이트 실패
         }
     }
+
+    // 금융계산기 페이지
+
+    // 고객 정보 리스트 조회
+    public List<UserInfoDto> getUserInfoList(String custNm, String custTelno) {
+        return mapper.getUserInfoList(custNm, custTelno);
+    }
+
 }

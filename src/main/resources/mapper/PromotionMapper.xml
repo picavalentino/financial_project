@@ -8,6 +8,7 @@
         SELECT 1
     </select>
 
+    <!-- 설계 조회 페이지 -->
     <!-- 전체 데이터 개수 조회 -->
     <select id="getTotalCount" parameterType="java.util.Map" resultType="int">
         SELECT COUNT(*)
@@ -194,5 +195,40 @@
         SET DSGN_PRG_STCD = #{newStatus}
         WHERE DSGN_SN = #{dsgnSn}
     </update>
+
+    <!-- 금융계산기 페이지 -->
+
+    <!-- 고객 정보 리스트 조회 -->
+    <select id="getUserInfoList" resultType="com.team.financial_project.promotion.dto.UserInfoDto">
+        SELECT
+            C.CUST_ID AS custId,              -- 고객 ID
+            C.CUST_NM AS custNm,              -- 고객명
+            CASE
+                WHEN CAST(SUBSTR(C.CUST_RRN, 1, 2) AS INTEGER) &lt;= 22
+                THEN CONCAT('20', SUBSTR(C.CUST_RRN, 1, 2), '-', SUBSTR(C.CUST_RRN, 3, 2), '-', SUBSTR(C.CUST_RRN, 5, 2))
+                ELSE CONCAT('19', SUBSTR(C.CUST_RRN, 1, 2), '-', SUBSTR(C.CUST_RRN, 3, 2), '-', SUBSTR(C.CUST_RRN, 5, 2))
+            END AS custBirth,                 -- 생년월일
+            C.CUST_EMAIL AS custEmail,        -- 이메일
+            C.CUST_TELNO AS custTelno,        -- 전화번호
+            CD.CODE_NM AS custOccp,           -- 직업명
+            C.CUST_ADDR AS custAddr,          -- 주소
+            TO_CHAR(C.CUST_CREATE_AT, 'YYYY-MM-DD') AS custCreateAt, -- 작성일자
+            U.USER_ID AS userId,              -- 담당자 ID
+            U.USER_NAME AS userName           -- 담당자명
+        FROM TB_CUSTOMER C
+        LEFT JOIN TB_USER U
+            ON C.USER_ID = U.USER_ID
+        LEFT JOIN TB_CODE CD
+            ON CD.CODE_CL = C.CUST_OCCP_TY_CD_CODE_CL
+            AND CD.CODE_NO = C.CUST_OCCP_TY_CD
+        WHERE 1 = 1
+        <if test="custNm != null and custNm != ''">
+            AND C.CUST_NM LIKE CONCAT('%', #{custNm}, '%')
+        </if>
+        <if test="custTelno != null and custTelno != ''">
+            AND C.CUST_TELNO LIKE CONCAT('%', #{custTelno}, '%')
+        </if>
+        ORDER BY C.CUST_NM ASC
+    </select>
 
 </mapper>

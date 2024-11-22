@@ -1,6 +1,7 @@
 package com.team.financial_project.promotion.controller;
 
 import com.team.financial_project.promotion.dto.PromotionListDto;
+import com.team.financial_project.promotion.dto.UserInfoDto;
 import com.team.financial_project.promotion.mapper.PromotionMapper;
 import com.team.financial_project.promotion.service.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,16 @@ public class PromotionController {
 
         return "promotion/promotionDetail";
     }
+
+    // 고객 정보 리스트 조회
+    @GetMapping("/cal/userInfoList")
+    @ResponseBody
+    public List<UserInfoDto> getUserInfoList(
+        @RequestParam(value = "custNm", required = false) String custNm,
+        @RequestParam(value = "custTelno", required = false) String custTelno) {
+        return promotionService.getUserInfoList(custNm, custTelno);
+    }
+
 }
 
 

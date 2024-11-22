@@ -33,8 +33,300 @@
 }
 
 /* ============================================================ */
-/* 입력 폼 컨테이너 */
+/* 부모 컨테이너 */
+.main-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+/*    align-items: flex-start;*/
+    transition: all 0.3s ease-in-out;
+}
+
+/* 활성화 상태: 가로 배치 */
+.main-form-container.horizontal {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+/* 고객 컨테이너 숨김 */
+.customer-container {
+    display: none;
+    flex: 1px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    margin-bottom: 32px;
+    padding: 30px;
+/*    justify-content: flex-start;
+    align-items: center;*/
+    height: 100%;
+}
+
+/* 고객 컨테이너 활성화 */
+.customer-container.visible {
+    display: flex; /* 숨김 상태 해제 */
+}
+
+/* label/input 그룹 감싸는 부모 요소 */
+.customer-content {
+    display: flex;
+    gap: 20px;
+}
+
+/* label 그룹 */
+.customer-label-group {
+    min-width: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+/* label */
+.customer-label-group label {
+    height: 32px;
+    color: #303249;
+    font-size: 16px;
+    line-height: 32px;
+}
+
+/* input 그룹 */
+.customer-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+/* input 그룹 내 input, select 공통 */
+.customer-input-group input,
+.customer-input-group select {
+    width: 100%;
+    max-width: 180px;
+    height: 32px;
+    border: 1px solid #8E98A8;
+    border-radius: 8px;
+    padding: 0 8px;
+    font-size: 14px;
+    font-weight: none;
+    color: #8E98A8;
+}
+
+/* input 및 select 안의 텍스트 스타일 */
+.customer-input-group input::placeholder,
+.customer-input-group select {
+    color: #8E98A8; /* 텍스트 색상 */
+    font-size: 14px;
+}
+
+/* 비활성화된 input 및 select 스타일 */
+input[disabled],
+select[disabled] {
+    background-color: #F5F5F5;
+    color: #8E98A8;
+    border: 1px solid #E0E0E0;
+    cursor: not-allowed;
+}
+
+.customer-input-with-button {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.customer-input-with-button button {
+    width: 32px;
+    height: 32px;
+    background-color: #303249;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* 주소 라벨 */
+.custAddr-label {
+    display: flex;
+    align-items: flex-start;
+    height: 130px !important;
+    line-height: normal;
+}
+
+/* 주소 input */
+textarea {
+    width: 180px;
+    height: 130px;
+    resize: none; /* 크기 조정 비활성화 */
+    background-color: #F5F5F5;
+    color: #8E98A8;
+    border: 1px solid #E0E0E0;
+    cursor: not-allowed;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* ============================================================ */
+/* 모달 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow: hidden; /* 내부 스크롤만 허용 */
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    gap: 30px; /* 부모 요소 내 세로 갭 */
+}
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 0;
+    border-bottom: none;
+}
+
+.modal-title {
+    font-size: 23px;
+    font-weight: bold;
+    color: #303249;
+}
+
+button#closeCustomerModalButton,
+button#closeProductModalButton {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    background: #EAECF0;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #667085;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button#closeCustomerModalButton:hover,
+button#closeProductModalButton:hover {
+    background: #e0e0e0; /* 마우스 오버 시 더 진한 회색 */
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 35px; /* 서치바와 테이블 간격 */
+    align-items: center;
+    width: 100%;
+    padding: 0;
+}
+
+/* 서치 바 스타일 */
+.search-bar {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.search-bar label {
+    font-size: 16px;
+    color: #303249;
+    flex: 1; /* 유연한 크기 */
+    text-align: center;
+}
+
+.search-bar input {
+    width: 60%; /* 검색 필드 크기 조정 */
+    height: 32px;
+    border: 1px solid #303249;
+    border-radius: 10px;
+    padding: 0 8px;
+    font-size: 14px;
+    flex: 2; /* 유연한 크기 */
+}
+
+.search-bar .btn-search {
+    background-color: #303249;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    height: 32px;
+    width: 60px;
+    cursor: pointer;
+    flex: 0 0 auto; /* 크기 고정 */
+}
+
+/* 테이블 감싸는 부모 요소 */
+.table-container {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* 테이블 스타일 */
+.modal-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 14px;
+    color: #8E98A8;
+}
+
+.modal-table th {
+    background-color: #f5f5f5;
+    font-size: 15px;
+    padding: 12px 8px;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.modal-table td {
+    font-weight: normal;
+    padding: 10px 8px;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+/* 모달 상품 테이블 3등분 */
+.prod-tb th,
+.prod-tb td {
+    width: calc(100% / 3);
+}
+
+/* 모달 고객 테이블 4등분 */
+.cust-tb th,
+.cust-tb td {
+    width: calc(100% / 4);
+}
+
+.modal-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* ============================================================ */
+/* 설계 폼 컨테이너 */
 .form-container {
+    flex: 2;
     display: flex;
     background-color: #FFFFFF;
     border-radius: 10px;
@@ -82,35 +374,42 @@
 /* input 그룹 내 input, select 공통 */
 .input-group-content input,
 .input-group-content select {
-    width: 180px;
+    width: 100%;
+    max-width: 180px;
     height: 32px;
     border: 1px solid #8E98A8;
     border-radius: 8px;
     padding: 0 8px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     color: #8E98A8;
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
 }
 
 /* input 및 select 안의 텍스트 스타일 */
 .input-group-content input::placeholder,
 .input-group-content select {
     color: #8E98A8; /* 텍스트 색상 */
-    font-size: 15px;
+    font-size: 14px;
 }
 
 /* 비활성화된 input 및 select 스타일 */
 input[disabled],
 select[disabled] {
-    background-color: #F5F5F5; /* 비활성화 상태 배경색 */
-    color: #8E98A8; /* 텍스트 색상 */
-    border: 1px solid #E0E0E0; /* 경계선 색상 */
-    cursor: not-allowed; /* 마우스 커서 변경 */
+    background-color: #F5F5F5;
+    color: #8E98A8;
+    border: 1px solid #E0E0E0;
+    cursor: not-allowed;
 }
 
 /* date 타입 input 내부 텍스트 위치 조정 */
 input[type="date"] {
-    padding: 0 12px; /* 기존 패딩보다 약간 더 여유를 줍니다 */
+    width: 100%;
+    max-width: 180px;
+
+    height: 32px;
+    padding: 0 12px;
+    font-size: 14px;
 }
 
 .input-with-button {
@@ -135,16 +434,20 @@ input[type="date"] {
 .button-row {
     display: flex;
     gap: 16px;
+    width: 100%;
 }
 
 .button-group {
     display: flex;
-    flex-direction: row;
     gap: 16px;
+    width: 100%;
 }
 
 .button-group button {
-    width: 180px;
+    flex: 1;
+    width: 100%;
+    max-width: 180px;
+    min-width: 82px;
     height: 32px;
     border: 1px solid #303249;
     border-radius: 8px;
@@ -152,6 +455,7 @@ input[type="date"] {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    font-size: 14px;
 }
 
 .button-plus {

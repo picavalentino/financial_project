@@ -38,73 +38,195 @@
             <button class="tab inactive">대출 설계</button>
         </div>
 
-        <!-- 입력 폼 -->
-        <div class="form-container">
-            <div class="form-content">
-                <div class="label-group">
-                    <label for="dsgnSn">설계번호</label>
-                    <label for="prodSn">상품선택</label>
-                    <label for="prodPayTyCd">납입주기</label>
-                    <label for="savgStrtDt">시작일자</label>
-                    <label for="savgCircleAmt">불입금액 (원)</label>
-                    <label for="savgGoalPrd">목표기간 (개월)</label>
-                    <label for="savgAplyRate">적용금리 (%)</label>
-                    <label for="savgIntTaxTyCd">이자과세</label>
-                    <label for="dsgnCreateAt">설계일자</label>
-                    <label for="dsgnUpdateAt">작성일자</label>
+        <div class="main-form-container">
+            <!-- 고객 폼 -->
+            <div class="customer-container hidden">
+                <div class="customer-content">
+                    <div class="customer-label-group">
+                        <label for="custCreateAt">작성일자</label>
+                        <label for="custNm">고객명</label>
+                        <label for="custBirth">생년월일</label>
+                        <label for="custEmail">이메일</label>
+                        <label for="custTelno">전화번호</label>
+                        <label for="custOccp">직업</label>
+                        <label for="custAddr" class="custAddr-label">주소</label>
+                        <label for="userId">담당자</label>
+                    </div>
+                    <div class="customer-input-group">
+                        <input type="hidden" id="custId" disabled>
+                        <input type="text" id="custCreateAt" disabled>
+                        <div class="customer-input-with-button">
+                            <input type="text" id="custNm" disabled>
+                            <button class="btn-icon" id="openCustomerModalButton"><i class="bi bi-search"></i></button>
+                        </div>
+                        <input type="text" id="custBirth" disabled>
+                        <input type="text" id="custEmail" disabled>
+                        <input type="text" id="custTelno" disabled>
+                        <input type="text" id="custOccp" disabled>
+                        <textarea id="custAddr" disabled>서울특별시 양천구 목동</textarea>
+                        <input type="text" id="userId" disabled>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <div class="input-group-content">
-                        <!-- 설계번호 -->
-                        <input type="text" id="dsgnSn" name="dsgnSn" disabled>
-                        <!-- 상품선택 -->
-                        <div class="input-with-button">
-                            <input type="text" id="prodSn" name="prodSn" disabled>
-                            <input type="text" id="prodNm" name="prodNm" readonly>
-                            <button><i class="bi bi-search"></i></button>
+            </div>
+
+            <!-- 고객 모달 -->
+            <div class="modal" id="customerModal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">고객 선택</div>
+                        <button id="closeCustomerModalButton">X</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 검색 필드 -->
+                        <div class="search-bar">
+                            <label for="custNmSearch">고객명</label>
+                            <input type="text" id="custNmSearch">
+                            <label for="custTelnoSearch">전화번호</label>
+                            <input type="text" id="custTelnoSearch">
+                            <button class="btn-search btn-search-cust">검색</button>
                         </div>
-                        <!-- 납입주기 -->
-                        <input type="text" id="prodPayTyCd" name="prodPayTyCd" disabled>
-                        <!-- 시작일자 -->
-                        <input type="date" id="savgStrtDt" name="savgStrtDt">
-                        <!-- 불입금액 -->
-                        <div class="button-row">
-                            <input type="text" id="savgCircleAmt" name="savgCircleAmt">
-                            <div class="button-group">
-                                <button class="button-plus">+ 10만원</button>
-                                <button class="button-plus">+ 50만원</button>
-                                <button class="button-plus">+ 100만원</button>
-                                <button class="button-reset">정정</button>
+                        <!-- 모달 테이블 -->
+                        <div class="table-container">
+                            <table class="modal-table cust-tb">
+                                <thead>
+                                <tr>
+                                    <th>고객명</th>
+                                    <th>생년월일</th>
+                                    <th>전화번호</th>
+                                    <th>담당자</th>
+                                </tr>
+                                </thead>
+                                <tbody id="customerList">
+                                <tr>
+                                    <td>김고객</td>
+                                    <td>99-05-01</td>
+                                    <td>010-1234-5678</td>
+                                    <td>김담당</td>
+                                </tr>
+                                <tr>
+                                    <td>이고객</td>
+                                    <td>88-12-21</td>
+                                    <td>010-1111-1234</td>
+                                    <td>김담당</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 설계 폼 -->
+            <div class="form-container">
+                <div class="form-content">
+                    <div class="label-group">
+                        <label for="dsgnSn">설계번호</label>
+                        <label for="prodCd">상품선택</label>
+                        <label for="prodPayTyCd">납입주기</label>
+                        <label for="savgStrtDt">시작일자</label>
+                        <label for="savgCircleAmt">불입금액 (원)</label>
+                        <label for="savgGoalPrd">목표기간 (개월)</label>
+                        <label for="savgAplyRate">적용금리 (%)</label>
+                        <label for="savgIntTaxTyCd">이자과세</label>
+                        <label for="dsgnCreateAt">설계일자</label>
+                        <label for="dsgnUpdateAt">작성일자</label>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-content">
+                            <!-- 설계번호 -->
+                            <input type="text" id="dsgnSn" name="dsgnSn" disabled>
+                            <!-- 상품선택 -->
+                            <div class="input-with-button">
+                                <input type="text" id="prodCd" name="prodCd" disabled>
+                                <input type="text" id="prodNm" name="prodNm" readonly>
+                                <button><i class="bi bi-search" id="openProductModalButton"></i></button>
                             </div>
-                        </div>
-                        <!-- 목표기간 -->
-                        <div class="button-row">
-                            <input type="text" id="savgGoalPrd" name="savgGoalPrd">
-                            <div class="button-group">
-                                <button class="button-plus">+ 3개월</button>
-                                <button class="button-plus">+ 6개월</button>
-                                <button class="button-plus">+ 12개월</button>
-                                <button class="button-reset">정정</button>
+                            <!-- 납입주기 -->
+                            <input type="text" id="prodPayTyCd" name="prodPayTyCd" disabled>
+                            <!-- 시작일자 -->
+                            <input type="date" id="savgStrtDt" name="savgStrtDt">
+                            <!-- 불입금액 -->
+                            <div class="button-row">
+                                <input type="text" id="savgCircleAmt" name="savgCircleAmt" value="0">
+                                <div class="button-group">
+                                    <button class="button-plus button-plus-amt">+ 10만원</button>
+                                    <button class="button-plus button-plus-amt">+ 50만원</button>
+                                    <button class="button-plus button-plus-amt">+ 100만원</button>
+                                    <button class="button-reset button-reset-amt">정정</button>
+                                </div>
                             </div>
+                            <!-- 목표기간 -->
+                            <div class="button-row">
+                                <input type="text" id="savgGoalPrd" name="savgGoalPrd" value="0">
+                                <div class="button-group">
+                                    <button class="button-plus button-plus-prd">+ 3개월</button>
+                                    <button class="button-plus button-plus-prd">+ 6개월</button>
+                                    <button class="button-plus button-plus-prd">+ 12개월</button>
+                                    <button class="button-reset button-reset-prd">정정</button>
+                                </div>
+                            </div>
+                            <!-- 적용금리 -->
+                            <div class="input-rate">
+                                <select id="selectSavgAplyRate" name="selectSavgAplyRate">
+                                    <option>최소</option>
+                                    <option>최대</option>
+                                </select>
+                                <input type="text" id="savgAplyRate" name="savgAplyRate" disabled>
+                            </div>
+                            <!-- 이자과세 -->
+                            <input type="text" id="savgIntTaxTyCd" name="savgIntTaxTyCd" disabled>
+                            <!-- 설계일자 -->
+                            <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" disabled>
+                            <!-- 작성일자 -->
+                            <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" disabled>
                         </div>
-                        <!-- 적용금리 -->
-                        <div class="input-rate">
-                            <select id="selectSavgAplyRate" name="selectSavgAplyRate">
-                                <option>최소</option>
-                                <option>최대</option>
-                            </select>
-                            <input type="text" id="savgAplyRate" name="savgAplyRate" disabled>
-                        </div>
-                        <!-- 이자과세 -->
-                        <input type="text" id="savgIntTaxTyCd" name="savgIntTaxTyCd" disabled>
-                        <!-- 설계일자 -->
-                        <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" disabled>
-                        <!-- 작성일자 -->
-                        <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" disabled>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 상품 모달 -->
+        <div class="modal" id="productModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">상품 선택</div>
+                    <button id="closeProductModalButton">X</button>
+                </div>
+                <div class="modal-body">
+                    <!-- 검색 필드 -->
+                    <div class="search-bar">
+                        <label for="prodCdSearch">상품코드</label>
+                        <input type="text" id="prodCdSearch">
+                        <label for="prodNmSearch">상품명</label>
+                        <input type="text" id="prodNmSearch">
+                        <button class="btn-search btn-search-prod">검색</button>
+                    </div>
+                    <!-- 모달 테이블 -->
+                    <table class="modal-table prod-tb">
+                        <thead>
+                        <tr>
+                            <th>상품코드</th>
+                            <th>상품명</th>
+                            <th>가입대상</th>
+                        </tr>
+                        </thead>
+                        <tbody id="productList">
+                        <tr>
+                            <td>A1000</td>
+                            <td>GS사랑행복적금</td>
+                            <td>일반 개인</td>
+                        </tr>
+                        <tr>
+                            <td>B2000</td>
+                            <td>GS청년희망예금</td>
+                            <td>일반 개인</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
 
         <!-- 컨트롤 컨테이너-->
         <div class="control-container">
@@ -220,17 +342,16 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
-        // 오늘 날짜를 yyyy-mm-dd 형식으로 변환
-        function getTodayDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
 
-        // 설계일자, 작성일자, 시작일자 오늘 날짜 설정
         document.addEventListener('DOMContentLoaded', function () {
+
+            // 날짜 가져오기
+            function getTodayDate() {
+                const today = new Date();
+                today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); // UTC -> 로컬 시간으로 변환
+                return today.toISOString().split('T')[0]; // yyyy-mm-dd
+            }
+            // 날짜 필드 설정 (오늘 날짜)
             const dsgnCreateAt = document.getElementById('dsgnCreateAt');
             const dsgnUpdateAt = document.getElementById('dsgnUpdateAt');
             const savgStrtDt = document.getElementById('savgStrtDt');
@@ -243,10 +364,81 @@
                 savgStrtDt.value = today; // 기본값 설정
                 savgStrtDt.min = today;  // 최소값 설정
             }
-        });
 
-        <!-- 차트 -->
-        document.addEventListener("DOMContentLoaded", function() {
+
+            // 불입금액 버튼 처리
+            const savgCircleAmtInput = document.getElementById('savgCircleAmt');
+            const savgCircleAmtButtons = document.querySelectorAll('.button-plus-amt');
+            const savgCircleAmtReset = document.querySelector('.button-reset-amt');
+
+            savgCircleAmtButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // 버튼 텍스트에서 숫자 추출 (ex: "+ 10만원" -> "10")
+                    const amountToAdd = parseInt(button.innerText.replace(/[^0-9]/g, '')) * 10000;
+                    const currentAmount = parseInt(savgCircleAmtInput.value.replace(/,/g, '')) || 0;
+                    const newAmount = currentAmount + amountToAdd;
+
+                    savgCircleAmtInput.value = newAmount.toLocaleString(); // 3자리 콤마 추가
+                });
+            });
+
+            savgCircleAmtReset.addEventListener('click', () => {
+                savgCircleAmtInput.value = '0'; // 값 초기화
+            });
+
+            // 목표기간 처리
+            const savgGoalPrdInput = document.getElementById('savgGoalPrd');
+            const savgGoalPrdButtons = document.querySelectorAll('.button-plus-prd');
+            const savgGoalPrdReset = document.querySelector('.button-reset-prd');
+
+            savgGoalPrdButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // 버튼 텍스트에서 개월 수 추출 (ex: "+ 3개월" -> "3")
+                    const monthsToAdd = parseInt(button.innerText.replace(/[^0-9]/g, ''));
+                    const currentMonths = parseInt(savgGoalPrdInput.value) || 0;
+                    const newMonths = currentMonths + monthsToAdd;
+
+                    savgGoalPrdInput.value = newMonths; // 새로운 값 설정
+                });
+            });
+
+            savgGoalPrdReset.addEventListener('click', () => {
+                savgGoalPrdInput.value = '0'; // 값 초기화
+            });
+
+
+            // 설계유형 선택에 따른 화면 출력
+            const calculationTypeRadios = document.querySelectorAll('input[name="calculationType"]');
+            const mainFormContainer = document.querySelector('.main-form-container');
+            const customerContainer = document.querySelector('.customer-container');
+
+            calculationTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'detailed') {
+                        // 정상설계 선택: 고객 컨테이너 표시 및 가로 배치 활성화
+                        mainFormContainer.classList.add('horizontal');
+                        customerContainer.classList.add('visible');
+                    } else {
+                        // 간편설계 선택: 고객 컨테이너 숨기고 세로 배치로 복귀
+                        mainFormContainer.classList.remove('horizontal');
+                        customerContainer.classList.remove('visible');
+                    }
+                });
+            });
+
+
+            // 라디오 버튼 선택에 따라 출력 변경
+            const defaultRadio = document.querySelector('input[name="calculationType"]:checked');
+            if (defaultRadio && defaultRadio.value === 'detailed') {
+                mainFormContainer.classList.add('horizontal');
+                customerContainer.classList.add('visible');
+            } else {
+                mainFormContainer.classList.remove('horizontal');
+                customerContainer.classList.remove('visible');
+            }
+
+
+            // 차트
             const ctx = document.getElementById('resultChart').getContext('2d');
 
             const data = {
@@ -298,8 +490,115 @@
                 }
             };
             new Chart(ctx, config);
-        });
 
+
+            // 고객 모달
+            const openCustomerModalButton = document.getElementById("openCustomerModalButton");
+            const closeCustomerModalButton = document.getElementById("closeCustomerModalButton");
+            const customerModal = document.getElementById("customerModal");
+            const searchButton = document.querySelector(".btn-search-cust"); // 검색 버튼
+            const tableBody = document.getElementById('customerList');
+
+            // 고객 리스트 가져오기
+            async function loadCustomerList(custNm = '', custTelno = '') {
+                try {
+                    // 검색 조건에 따라 API 호출 URL 생성
+                    const url = `/promotion/cal/userInfoList?custNm=${encodeURIComponent(custNm)}&custTelno=${encodeURIComponent(custTelno)}`;
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const userInfoList = await response.json();
+                    renderCustomerList(userInfoList);
+                } catch (error) {
+                    console.error('Error fetching customer list:', error);
+                }
+            }
+
+            // 테이블 데이터를 렌더링하는 함수
+            function renderCustomerList(userInfoList) {
+                tableBody.innerHTML = ''; // 기존 데이터를 초기화
+                if (userInfoList.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="4">검색 결과가 없습니다.</td>`;
+                    tableBody.appendChild(row);
+                    return;
+                }
+                userInfoList.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.custNm}</td>
+                        <td>${user.custBirth}</td>
+                        <td>${user.custTelno}</td>
+                        <td>${user.userName}</td>
+                    `;
+
+                    // 테이블 행 클릭 이벤트 추가
+                    row.addEventListener('click', () => {
+                        // 선택한 고객 정보를 폼에 뿌려줌
+                        populateCustomerForm(user);
+                        // 모달 닫기
+                        customerModal.style.display = "none";
+                    });
+
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // 고객 폼에 데이터 뿌려주는 함수
+            function populateCustomerForm(user) {
+                document.getElementById('custId').value = user.custId || ''; // 고객 ID
+                document.getElementById('custCreateAt').value = user.custCreateAt || ''; // 작성일자
+                document.getElementById('custNm').value = user.custNm || ''; // 고객명
+                document.getElementById('custBirth').value = user.custBirth || ''; // 생년월일
+                document.getElementById('custEmail').value = user.custEmail || ''; // 이메일
+                document.getElementById('custTelno').value = user.custTelno || ''; // 전화번호
+                document.getElementById('custOccp').value = user.custOccp || ''; // 직업
+                document.getElementById('custAddr').value = user.custAddr || ''; // 주소
+                document.getElementById('userId').value = user.userName || ''; // 담당자
+            }
+
+            // 모달 열기 (모달이 열릴 때 데이터 로드)
+            openCustomerModalButton.addEventListener("click", async () => {
+                customerModal.style.display = "flex";
+                await loadCustomerList(); // 전체 리스트 로드
+            });
+
+            // 모달 닫기
+            closeCustomerModalButton.addEventListener("click", () => {
+                customerModal.style.display = "none";
+            });
+
+            // 검색 버튼 클릭 이벤트
+            searchButton.addEventListener("click", async () => {
+                const custNm = document.getElementById('custNmSearch').value.trim();
+                const custTelno = document.getElementById('custTelnoSearch').value.trim();
+                await loadCustomerList(custNm, custTelno); // 검색 조건으로 데이터 로드
+            });
+
+            // 상품 모달
+            const openProductModalButton = document.getElementById("openProductModalButton");
+            const closeProductModalButton = document.getElementById("closeProductModalButton");
+            const productModal = document.getElementById("productModal");
+
+            openProductModalButton.addEventListener("click", () => {
+                productModal.style.display = "flex";
+            });
+
+            closeProductModalButton.addEventListener("click", () => {
+                productModal.style.display = "none";
+            });
+
+            // 모달 외부 클릭 시 닫기
+            window.addEventListener("click", (event) => {
+                if (event.target === customerModal) {
+                    customerModal.style.display = "none";
+                }
+                if (event.target === productModal) {
+                    productModal.style.display = "none";
+                }
+            });
+        });
     </script>
 </div>
 </body>

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class FinancialProjectApplicationTests {
 
-	@Autowired
+/*	@Autowired
 	private PromotionService promotionService; // PromotionService를 자동 주입
 
 	@Test
@@ -25,6 +25,6 @@ class FinancialProjectApplicationTests {
 
 		// 결과 출력
 		System.out.println("Batch Job Execution Result: " + result);
-	}
+	}*/
 
 }

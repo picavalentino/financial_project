@@ -1,6 +1,7 @@
 package com.team.financial_project.promotion.mapper;
 
 import com.team.financial_project.promotion.dto.PromotionListDto;
+import com.team.financial_project.promotion.dto.UserInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,6 +13,7 @@ public interface PromotionMapper {
     // MyBatis Test
     int checkConnection();
 
+    // 설계 조회 페이지
     // 전체 데이터 개수 조회
     int getTotalCount(
             @Param("prgStcd") String prgStcd,
@@ -39,4 +41,12 @@ public interface PromotionMapper {
 
     // 진행상태 업데이트
     void updateProgressStatus(String dsgnSn, String newStatus);
+
+
+    // 금융계산기 페이지
+
+    // 고객 정보 리스트 조회
+    List<UserInfoDto> getUserInfoList(
+            @Param("custNm") String custNm, @Param("custTelno") String custTelno);
+
 }
