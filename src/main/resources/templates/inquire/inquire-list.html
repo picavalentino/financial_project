@@ -133,7 +133,12 @@
   </div>
 
   <script th:inline="javascript">
-
+      $(document).ready(function(){
+          //등록 버튼 클릭
+          $(".btn-register).on("click", function (e){
+            window.location.href="/inquire/insert";
+          });
+      });
   </script>
 </div>
 </body>
