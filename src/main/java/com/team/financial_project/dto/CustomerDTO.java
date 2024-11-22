@@ -24,6 +24,7 @@ public class CustomerDTO {
 
     private String birthDate; // 생년월일 필드 추가
     private String custAddrDetail; // 상세 주소 필드 추가
+
     private String userId;
     private String userName; // 담당 유저 필드 추가
     private String userTelno; // 담당 유저 연락처 필드 추가
