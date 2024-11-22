@@ -136,16 +136,4 @@
     </select>
 
     <!-- ============================================================================================================= -->
-    <!-- 고객 메세지 보내기 -->
-    <select id="getCustomersByIds" parameterType="java.util.List" resultType="com.team.financial_project.dto.CustomerDTO">
-        SELECT cust.cust_id AS custId,
-        cust.cust_nm AS custNm,
-        cust.cust_rrn AS custRrn,
-        cust.cust_telno AS custTelno
-        FROM tb_customer AS cust
-        WHERE cust.cust_id IN
-        <foreach item="custId" index="index" collection="list" open="(" separator="," close=")">
-            #{custId}
-        </foreach>
-    </select>
 </mapper>

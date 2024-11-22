@@ -2,6 +2,8 @@ package com.team.financial_project.customer.controller;
 
 import com.team.financial_project.customer.service.CustomerService;
 import com.team.financial_project.dto.CustomerDTO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,19 +34,27 @@ public class CustomerController {
         model.addAttribute("customers", customers);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+
+
         return "customer/customerList";
     }
 
+
+
     /* ================================================================================================================= */
-    // 고객 메시지 페이지
     @GetMapping("/list/message")
-    public String customerMessage(@RequestParam(name = "selectedCustomers", required = false) List<String> selectedCustomers, Model model) {
-        if (selectedCustomers == null) {
-            selectedCustomers = new ArrayList<>(); // 선택된 고객이 없으면 빈 리스트로 초기화
+    public ResponseEntity<?> getCustomerMessage(@RequestParam("custId") String custId) {
+        try {
+            // custId를 이용해 고객 정보를 가져옴 (예: 데이터베이스에서)
+            CustomerDTO customer = customerService.getCustomerById(custId);
+
+            if (customer == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("고객 정보를 찾을 수 없습니다.");
+            }
+            return ResponseEntity.ok(customer);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("고객 정보를 가져오는 중 오류가 발생했습니다.");
         }
-        List<CustomerDTO> customers = customerService.getCustomersByIds(selectedCustomers);
-        model.addAttribute("selectCustomers", customers);
-        return "customer/customerListModal :: customerMessageModal";
     }
 
     /* ================================================================================================================= */

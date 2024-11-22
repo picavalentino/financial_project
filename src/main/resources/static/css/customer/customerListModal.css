@@ -40,14 +40,15 @@
     background-color: #efeff1;
     padding: 20px;
     border-radius: 20px;
-    width: 350px;
-    height: 630px;
+    width: 500px;
+    height: 700px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     border: 3px solid #010535;
+    z-index: 1001;
 }
 
 /* 상단에 스피커 부분 모방 */
@@ -87,7 +88,7 @@
     flex-wrap: wrap;
     gap: 5px;
     height: 80px;
-    width: 304px;
+    width: 100%;
     overflow-y: auto; /* 최대 높이를 초과할 경우 스크롤 활성화 */
     padding-right: 5px; /* 스크롤바와의 간격을 위한 패딩 */
     justify-content: flex-start; /* 항상 왼쪽 정렬 유지 */
@@ -118,7 +119,7 @@
 
 
 /* 메시지 발송 버튼을 하단에 고정 */
-.message-button {
+.message-send-button {
     background-color: #343a40;
     color: #ffffff;
     border: none;
@@ -135,11 +136,11 @@
  margin-top: 10px; /* 상단 여유 공간을 채워 아래쪽에 고정 */
 }
 
-.message-button.icon {
+.message-send-button.icon {
     margin-right: 5px;
 }
 
-.message-button:hover {
+.message-send-button:hover {
     background-color: #292d3e;
 }
 

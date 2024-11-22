@@ -18,5 +18,4 @@ public interface CustomerMapper {
     // 고객 아이디 확인
     CustomerDTO getCustomerById(@Param("custId") String custId);
 
-    List<CustomerDTO> getCustomersByIds(List<String> selectedCustomers);
 }

@@ -35,14 +35,6 @@ public class CustomerService {
 
 
     // ======================================================================================================
-    // 고객 메세지 보내기
-    public List<CustomerDTO> getCustomersByIds(List<String> selectedCustomers) {
-        if (selectedCustomers == null || selectedCustomers.isEmpty()) {
-            return Collections.emptyList(); // 선택된 고객이 없을 경우 빈 리스트 반환
-        }
-        return customerMapper.getCustomersByIds(selectedCustomers);
-    }
-    // ======================================================================================================
     // 고객 상세 페이지로 이동
     public CustomerDTO getCustomerById(String custId) {
         return customerMapper.getCustomerById(custId);

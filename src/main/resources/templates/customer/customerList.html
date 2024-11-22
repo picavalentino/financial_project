@@ -32,7 +32,7 @@
                 <!-- 왼쪽 버튼 그룹 -->
                 <div class="left-actions">
                     <button class="btn-print" onclick="openPrintModal()"><span class="icon">🖨️</span> 인쇄</button>
-                    <button class="message-button" onclick="openMessageModal()">
+                    <button type="button" class="message-button">
                         <span class="icon">✉️</span> 메시지 발송
                     </button>
                 </div>
@@ -61,7 +61,7 @@
             <table class="listTable">
                 <thead>
                 <tr>
-                    <th><input type="checkbox" onclick="toggleAll(this)"></th>
+                    <th><input type="checkbox" id="selectAll"></th>
                     <th>고객ID</th>
                     <th>고객명</th>
                     <th>생년월일</th>

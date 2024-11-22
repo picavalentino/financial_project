@@ -26,26 +26,14 @@
             </div>
 
             <div>
-                <button> 일반</button>
-                <button> 생일</button>
+                <button id="general-button">일반</button>
+                <button id="birthday-button">생일</button>
             </div>
 
-                <div id="tagContainer" class="tag-container">
-                    <!-- 선택된 고객이 있는 경우 태그 버튼 추가 -->
-                    <div th:if="${selectCustomers != null && !selectCustomers.isEmpty()}">
-                        <div th:each="customer : ${selectCustomers}">
-                            <button class="tag-btn" th:text="${customer.custNm} + ' (' + ${customer.custTelno} + ')'">
-                                <span class="close-tag" onclick="removeTag(event)">X</span>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- 선택된 고객이 없을 경우 기본 안내 메시지 -->
-                    <div th:if="${selectCustomers == null || selectCustomers.isEmpty()}">
-                        <p>선택된 고객이 없습니다. 고객을 선택하세요.</p>
-                    </div>
-                </div>
-
-            <button class="message-button" id="send-button">✉ 메시지 발송</button>
+            <div id="tagContainer" class="tag-container">
+                <!-- 선택된 고객을 태그 형태로 추가할 예정 -->
+            </div>
+            <button class="message-send-button" id="send-button">✉ 메시지 발송</button>
         </div>
     </div>
 </div>
