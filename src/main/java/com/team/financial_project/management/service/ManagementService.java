@@ -4,6 +4,7 @@ import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -91,4 +92,20 @@ public class ManagementService {
         // 매퍼 또는 JPA 리포지토리를 이용해 사용자 정보 업데이트
         userMapper.updateUser(userDTO);
     }
+
+    // 사원번호 생성
+    @Transactional
+    public int getNextSequenceForDate(String joiningDate) {
+        // 데이터베이스에서 해당 입사일자에 맞는 등록된 마지막 사원번호를 찾고 시퀀스를 결정
+        // 예를 들어, 'SELECT COUNT(*) FROM employees WHERE joining_date = #{joiningDate}' 를 통해 갯수를 가져와 +1
+        int currentCount = userMapper.getEmployeeCountForDate(joiningDate);
+        return currentCount + 1; // 시퀀스는 등록된 사원 수 + 1
+    }
+
+    // 직원 새로 등록하기
+    @Transactional
+    public void insertEmployee(UserDTO userDTO) {
+        userMapper.insertEmployee(userDTO);
+    }
+
 }

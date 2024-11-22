@@ -1,6 +1,7 @@
 package com.team.financial_project.mapper;
 
 import com.team.financial_project.dto.UserDTO;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -52,4 +53,10 @@ public interface UserMapper {
 
     // employee modal에서 정보 변경하기
     void updateUser(UserDTO userDTO);
+
+    // 사원번호 생성하는 로직
+    int getEmployeeCountForDate(String joiningDate);
+
+    // employee InsertModal에서 직원등록하기
+    void insertEmployee(UserDTO userDTO);
 }

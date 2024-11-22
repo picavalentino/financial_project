@@ -262,5 +262,16 @@
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
+<!--    insetModal에서 사원번호 생성-->
+    <select id="getEmployeeCountForDate" resultType="int" parameterType="String">
+        SELECT COUNT(*) FROM tb_user WHERE user_jncmp_ymd = #{joiningDate}
+    </select>
+
+    <!--    insertModal에서 직원등록-->
+    <insert id="insertEmployee">
+        INSERT INTO tb_user (user_jncmp_ymd, user_id, user_name, user_birthday, user_dept_cd, user_jbps_ty_cd, user_auth_cd, user_status)
+        VALUES (#{user_jncmp_ymd}, #{user_id}, #{user_name}, #{user_birthday}, #{user_dept_cd}, #{user_jbps_ty_cd}, #{user_auth_cd}, #{user_status})
+    </insert>
+
 
 </mapper>

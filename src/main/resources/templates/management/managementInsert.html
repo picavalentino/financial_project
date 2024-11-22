@@ -41,7 +41,7 @@
             </select>
             <button type="submit" class="btn btn-primary me-2">조회</button>
           </form>
-          <button type="button" class="btn btn-success" onclick="openRegistrationModal()">등록</button>
+          <button type="button" class="btn-insertEmployee">등록</button>
         </div>
       </div>
 
@@ -104,7 +104,7 @@
 </div>
 
 <!-- 직원 등록 모달 -->
-<div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
+<div class="modal fade" id="InsertModal" tabindex="-1" aria-labelledby="InsertModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -115,70 +115,61 @@
         <!-- 직원 등록 폼 -->
         <form th:action="@{/management/insert/detail}" method="post">
           <div class="mb-3">
-            <label for="joiningDate" class="form-label">입사일자</label>
-            <input type="date" class="form-control" id="joiningDate" name="joiningDate" required>
+            <label for="user_jncmp_ymd" class="form-label">입사일자</label>
+            <input type="date" class="form-control" id="user_jncmp_ymd" name="user_jncmp_ymd" required>
           </div>
           <div class="mb-3">
-            <label for="employeeId" class="form-label">사원번호</label>
+            <label for="user_id" class="form-label">사원번호</label>
             <div class="input-group">
-              <input type="text" class="form-control" id="employeeId" name="employeeId" required>
-              <button class="btn btn-outline-secondary" type="button">생성</button>
+              <input type="text" class="form-control" id="user_id" name="user_id" readonly>
+              <button class="btn-userIdGenerate" type="button">생성</button>
             </div>
           </div>
           <div class="mb-3">
-            <label for="employeeName" class="form-label">직원 이름</label>
-            <input type="text" class="form-control" id="employeeName" name="employeeName" required>
+            <label for="user_name" class="form-label">직원 이름</label>
+            <input type="text" class="form-control" id="user_name" name="user_name" required>
           </div>
           <div class="mb-3">
-            <label for="birthDate" class="form-label">생년월일</label>
-            <input type="date" class="form-control" id="birthDate" name="birthDate" required>
+            <label for="user_birthday" class="form-label">생년월일</label>
+            <input type="text" class="form-control" id="user_birthday" name="user_birthday" required>
           </div>
+
           <div class="mb-3 d-flex justify-content-between">
             <div class="me-2">
               <label class="form-label">부서</label>
-              <select class="form-select" style="width: 220px;">
-                <option selected>부서</option>
-                <option value="1">임원실</option>
-                <option value="2">인사팀</option>
-                <option value="3">영업1부</option>
-                <option value="4">영업2부</option>
-                <option value="5">영업3부</option>
+              <select name="user_dept_cd" class="form-select me-2" style="width: 150px;" id="department">
+                <option value="" selected>부서</option>
+                <th:block th:each="department : ${DepartmentList}">
+                  <option th:value="${department.user_dept_cd}" th:text="${department.dept_name}"></option>
+                </th:block>
               </select>
             </div>
             <div>
               <label class="form-label">직위</label>
-              <select class="form-select" style="width: 220px;">
-                <option selected>직위</option>
-                <option value="1">회장</option>
-                <option value="2">사장</option>
-                <option value="3">부사장</option>
-                <option value="4">전무이사</option>
-                <option value="5">상무이사</option>
-                <option value="6">이사</option>
-                <option value="7">부장</option>
-                <option value="8">차장</option>
-                <option value="9">과장</option>
-                <option value="10">대리</option>
-                <option value="11">주임</option>
-                <option value="12">계장</option>
-                <option value="13">사원</option>
+              <select name="user_jbps_ty_cd" class="form-select me-2" style="width: 150px;" id="position">
+                <option value="" selected>직위</option>
+                <th:block th:each="JopPosition : ${JopPositionList}">
+                  <option th:value="${JopPosition.user_jbps_ty_cd}" th:text="${JopPosition.position_name}"></option>
+                </th:block>
               </select>
             </div>
           </div>
           <div class="mb-3">
             <label class="form-label">권한</label>
-            <select class="form-select me-2" style="width: 100%;">
-              <option selected>권한</option>
-              <option value="1">총관리자</option>
-              <option value="2">중간관리자</option>
-              <option value="3">인사팀</option>
+            <select name="user_auth_cd" class="form-select me-2" style="width: 150px;" id="auth">
+              <option value="" selected>권한</option>
+              <th:block th:each="auth : ${authList}">
+                <option th:value="${auth.user_auth_cd}" th:text="${auth.auth_name}"></option>
+              </th:block>
             </select>
           </div>
           <div class="mb-3">
-            <label for="activityStatus" class="form-label">활동 상태</label>
-            <select class="form-select" id="activityStatus" name="activityStatus" required>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+            <label class="form-label">활동 상태</label>
+            <select name="user_status" class="form-select me-2" style="width: 150px;" id="status">
+              <option value="" selected>상태</option>
+              <th:block th:each="statusItem : ${statusList}">
+                <option th:value="${statusItem.user_status}" th:text="${statusItem.status_name}"></option>
+              </th:block>
             </select>
           </div>
           <div class="modal-footer">
@@ -191,13 +182,14 @@
   </div>
 </div>
 
+
 <!--    &lt;!&ndash; 사이드바 넣기 &ndash;&gt;-->
 <!--    <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>-->
 
 <!--    &lt;!&ndash; content 영역 &ndash;&gt;-->
 <!--    <th:block layout:fragment="content"></th:block>-->
 
-<script th:src="@{/js/management/employeeModal.js}"></script>
+<script th:src="@{/js/management/employeeInsertModal.js}"></script>
 <script th:src="@{/js/management/managementInsert.js}"></script>
 </body>
 </html>

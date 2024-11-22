@@ -2,14 +2,12 @@ package com.team.financial_project.management.controller;
 
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.main.service.PaginationService;
+import com.team.financial_project.management.dto.ResponseDTO;
 import com.team.financial_project.management.service.ManagementService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
@@ -132,12 +130,11 @@ public class ManagementController {
         return "management/managementEmployees";
     }
 
-    //    employeeModal
+    //    employeeModal 정보 출력
     @GetMapping("/employee/modal")
     @ResponseBody
     public UserDTO managementEmployeeModal(@RequestParam(name = "userId") String userId , Model model) {
         UserDTO users = managementService.findByUserId(userId);
-        System.out.println("****************************" + users);
 
         // 셀렉트 박스에 쓸 부서 정보 가져오기
         List<UserDTO> departmentList = managementService.getDepartmentList();
@@ -158,21 +155,22 @@ public class ManagementController {
         return users;
     }
 
-//    modal에서 정보 변경
-@PostMapping("/employees/edit")
-public String editEmployee(
+//    employeeModal에서 정보 변경
+    @PostMapping("/employees/edit")
+    public String editEmployee(
         @ModelAttribute UserDTO userDTO,
         RedirectAttributes redirectAttributes) {
-    try {
+
+        try {
         // 업데이트 서비스 호출
         managementService.updateUser(userDTO);
         redirectAttributes.addFlashAttribute("message", "직원 정보가 성공적으로 수정되었습니다.");
-    } catch (Exception e) {
+        } catch (Exception e) {
         redirectAttributes.addFlashAttribute("error", "직원 정보 수정 중 오류가 발생했습니다.");
-    }
-    return "redirect:/management/employees";
-}
+        }
 
+        return "redirect:/management/employees";
+    }
 
 
     @GetMapping("/insert")
@@ -206,4 +204,43 @@ public String editEmployee(
         return "/management/managementInsert";
     }
 
+     //직원 등록하는 insertModal
+     @GetMapping("/employee/insertModal")
+     @ResponseBody
+     public ResponseDTO managementInsertModal() {
+         // 셀렉트 박스에 사용할 부서 정보 가져오기
+         List<UserDTO> departmentList = managementService.getDepartmentList();
+
+         // 셀렉트 박스에 사용할 직위 정보 가져오기
+         List<UserDTO> jobPositionList = managementService.getJopPositionList();
+
+         // 셀렉트 박스에 사용할 상태 정보 가져오기
+         List<UserDTO> statusList = managementService.getStatusList();
+
+         // 셀렉트 박스에 사용할 권한 정보 가져오기
+         List<UserDTO> authList = managementService.getauthList();
+
+         // ResponseDTO 생성 및 반환
+         return new ResponseDTO(departmentList, jobPositionList, statusList, authList);
+     }
+
+     // 직원등록시 사원번호 생성
+     @PostMapping("/generate/userId")
+     @ResponseBody
+     public String generateEmployeeId(@RequestParam("joiningDate") String joiningDate) {
+         // 입사일자 8자리 + 등록 순서 번호로 사원번호 생성 로직
+         String datePart = joiningDate.replace("-", ""); // "yyyy-MM-dd" 형식을 "yyyyMMdd"로 변경
+         System.out.println(datePart);
+         int sequence = managementService.getNextSequenceForDate(joiningDate); // 특정 입사일자에 대해 다음 시퀀스를 가져옴
+
+         String sequencePart = String.format("%03d", sequence); // 시퀀스 번호를 3자리로 만들기
+         return datePart + sequencePart;
+     }
+
+    // insertModal로 직원 등록
+     @PostMapping("/insert/detail")
+    public String insertEmployee(UserDTO userDTO){
+        managementService.insertEmployee(userDTO);
+        return "redirect:/management/insert";
+     }
 }
