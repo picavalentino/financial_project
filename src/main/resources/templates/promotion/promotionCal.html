@@ -302,23 +302,23 @@
                     <!-- 계산 결과 간단히 보여주는 입력 필드 -->
                     <div class="result-row">
                         <label>불입금액합계</label>
-                        <input type="text" value="1,800,000" readonly>
+                        <input type="text" id="savgTotDpstAmt" name="savgTotDpstAmt" value="1,800,000" readonly>
                     </div>
                     <div class="result-row">
                         <label>세전이자</label>
-                        <input type="text" value="28,500" readonly>
+                        <input type="text" id="savgTotDpstInt" name="savgTotDpstInt" value="28,500" readonly>
                     </div>
                     <div class="result-row">
                         <label>세전수령액</label>
-                        <input type="text" value="1,828,500" readonly>
+                        <input type="text" id="savgTotRcveAmt" name="savgTotRcveAmt" value="1,828,500" readonly>
                     </div>
                     <div class="result-row">
                         <label>이자과세금</label>
-                        <input type="text" value="4,389" readonly>
+                        <input type="text" id="savgIntTaxAmt" name="savgIntTaxAmt" value="4,389" readonly>
                     </div>
                     <div class="result-row">
                         <label>세후수령액</label>
-                        <input type="text" value="1,824,111" readonly>
+                        <input type="text" id="savgAtxRcveAmt" name="savgAtxRcveAmt" value="1,824,111" readonly>
                     </div>
                 </div>
                 <div class="cal-tab calculation-chart-tab">계산 차트</div>
@@ -343,7 +343,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!-- 이자내역 데이터 반복 -->
+                        <!-- 회차별 상세 정보 데이터 반복 -->
                         <tr>
                             <td>1</td>
                             <td>100,000</td>
@@ -414,7 +414,6 @@
                 }
 
                 const startDate = new Date(startDateValue);
-                console.log("시작일 객체:", startDate); // 시작일 객체 확인
                 startDate.setMonth(startDate.getMonth() + goalPeriodValue); // 목표기간을 더해 만기일 계산
                 savgMtrDt.value = startDate.toISOString().split('T')[0]; // yyyy-mm-dd 형식으로 업데이트
                 console.log("계산된 만기일:", savgMtrDt.value); // 계산된 만기일 확인
@@ -777,7 +776,79 @@
                     productModal.style.display = "none";
                 }
             });
+
+
+            // '이자 계산' 버튼 클릭 이벤트 추가
+            document.querySelector('.btn-int-cal').addEventListener('click', handleInterestCalculation);
         });
+
+    // 이자 계산 핸들러 함수
+    function handleInterestCalculation() {
+        const savgCircleAmt = document.getElementById('savgCircleAmt').value.trim();
+        const savgGoalPrd = document.getElementById('savgGoalPrd').value.trim();
+        const savgAplyRate = document.getElementById('savgAplyRate').value.trim();
+
+        // 유효성 검사
+        if (!savgCircleAmt || parseFloat(savgCircleAmt) <= 0) {
+            alert('불입금액을 입력하세요.');
+            return;
+        }
+        if (!savgGoalPrd || parseInt(savgGoalPrd) <= 0) {
+            alert('목표기간을 입력하세요.');
+            return;
+        }
+        if (!savgAplyRate || parseFloat(savgAplyRate) <= 0) {
+            alert('적용금리를 입력하세요.');
+            return;
+        }
+
+        const requestData = {
+            savgCircleAmt: parseFloat(savgCircleAmt.replace(/,/g, '')),
+            savgGoalPrd: parseInt(savgGoalPrd),
+            savgAplyRate: parseFloat(savgAplyRate),
+            prodIntTaxRate: parseFloat(document.getElementById('prodIntTaxRate').value),
+            savgStrtDt: document.getElementById('savgStrtDt').value,
+        };
+
+        // 서버 요청
+        fetch('/promotion/cal/savg/calculate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestData),
+        })
+            .then((response) => {
+                if (!response.ok) throw new Error('서버 응답 오류');
+                return response.json();
+            })
+            .then(updateCalculationResults)
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('계산 중 오류가 발생했습니다.');
+            });
+    }
+
+    // 계산 결과 업데이트 함수
+    function updateCalculationResults(data) {
+        document.getElementById('savgTotDpstAmt').value = data.savgTotDpstAmt.toLocaleString();
+        document.getElementById('savgTotDpstInt').value = data.savgTotDpstInt.toLocaleString();
+        document.getElementById('savgTotRcveAmt').value = data.savgTotRcveAmt.toLocaleString();
+        document.getElementById('savgIntTaxAmt').value = data.savgIntTaxAmt.toLocaleString();
+        document.getElementById('savgAtxRcveAmt').value = data.savgAtxRcveAmt.toLocaleString();
+
+        const detailTableBody = document.querySelector('.interest-details tbody');
+        detailTableBody.innerHTML = '';
+        data.detailList.forEach((detail) => {
+            const row = `
+                <tr>
+                    <td>${detail.installmentNo}</td>
+                    <td>${detail.installmentAmt.toLocaleString()}</td>
+                    <td>${detail.accumulatedAmt.toLocaleString()}</td>
+                    <td>${detail.installmentInt.toLocaleString()}</td>
+                    <td>${detail.installmentPrincipal.toLocaleString()}</td>
+                </tr>`;
+            detailTableBody.insertAdjacentHTML('beforeend', row);
+        });
+    }
     </script>
 </div>
 </body>
