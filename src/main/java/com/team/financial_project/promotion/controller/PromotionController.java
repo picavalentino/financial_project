@@ -1,5 +1,6 @@
 package com.team.financial_project.promotion.controller;
 
+import com.team.financial_project.promotion.dto.CodeDto;
 import com.team.financial_project.promotion.dto.ProductInfoDto;
 import com.team.financial_project.promotion.dto.PromotionListDto;
 import com.team.financial_project.promotion.dto.UserInfoDto;
@@ -48,6 +49,12 @@ public class PromotionController {
             @RequestParam(value = "ajax", required = false, defaultValue = "false") boolean ajax, // AJAX 여부
             Model model) {
 
+        // 페이지에 출력하기 위한 코드 리스트 조회 --- 진행상태 (430) 상품유형 (401)
+        List<CodeDto> progressStatusList = promotionService.getCodeListByCl("430");
+        List<CodeDto> productTypeList = promotionService.getCodeListByCl("401");
+        model.addAttribute("progressStatusList", progressStatusList);
+        model.addAttribute("productTypeList", productTypeList);
+
         // 전체 데이터의 개수 (필터 조건 포함)
         int totalCount = promotionService.getTotalCount(prgStcd, dsTyCd, custNm, userNm, prodNm);
 
@@ -74,6 +81,8 @@ public class PromotionController {
             response.put("totalPages", totalPages);
             response.put("currentPage", page);
             response.put("totalCount", totalCount);
+            response.put("startPage", startPage);
+            response.put("endPage", endPage);
             return ResponseEntity.ok(response); // JSON 데이터 반환
         }
 
@@ -96,7 +105,12 @@ public class PromotionController {
 
     // 금융계산기 페이지 (등록)
     @GetMapping("/cal")
-    public String viewCalPage() {
+    public String viewCalPage(
+            @RequestParam(value = "codeCl", defaultValue = "430") String codeCl, // 필터 값 기본 430
+            Model model) {
+        // 페이지에 출력하기 위한 진행상태 조회
+        List<CodeDto> progressStatusList = promotionService.getCodeListByCl(codeCl);
+        model.addAttribute("progressStatusList", progressStatusList);
         return "promotion/promotionCal";
     }
 

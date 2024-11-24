@@ -50,10 +50,10 @@
                         <label for="custTelno">전화번호</label>
                         <label for="custOccp">직업</label>
                         <label for="custAddr" class="custAddr-label">주소</label>
-                        <label for="userId">담당자</label>
+                        <label for="userNm">담당자</label>
                     </div>
                     <div class="customer-input-group">
-                        <input type="hidden" id="custId" disabled>
+                        <input type="hidden" id="custId"> <!-- 고객ID -->
                         <input type="text" id="custCreateAt" disabled>
                         <div class="customer-input-with-button">
                             <input type="text" id="custNm" disabled>
@@ -64,7 +64,8 @@
                         <input type="text" id="custTelno" disabled>
                         <input type="text" id="custOccp" disabled>
                         <textarea id="custAddr" disabled></textarea>
-                        <input type="text" id="userId" disabled>
+                        <input type="hidden" id="userId"> <!-- 담당자ID -->
+                        <input type="text" id="userNm" disabled>
                     </div>
                 </div>
             </div>
@@ -78,7 +79,7 @@
                     </div>
                     <div class="modal-body">
                         <!-- 검색 필드 -->
-                        <div class="search-bar">
+                        <div class="modal-search-bar">
                             <label for="custNmSearch">고객명</label>
                             <input type="text" id="custNmSearch">
                             <label for="custTelnoSearch">전화번호</label>
@@ -86,7 +87,7 @@
                             <button class="btn-search btn-search-cust">검색</button>
                         </div>
                         <!-- 모달 테이블 -->
-                        <div class="table-container">
+                        <div class="modal-table-container">
                             <table class="modal-table cust-tb">
                                 <thead>
                                 <tr>
@@ -135,16 +136,36 @@
                         <div class="input-group-content">
                             <!-- 설계번호 -->
                             <input type="text" id="dsgnSn" name="dsgnSn" disabled>
+
                             <!-- 상품선택 -->
                             <div class="input-with-button">
+                                <!-- 상품설계번호 -->
+                                <input type="hidden" id="prodSn" name="prodSn">
+                                <!-- 설계유형코드 -->
+                                <input type="hidden" id="prodDsTyCd" name="prodDsTyCd">
+                                <!-- 상품코드 -->
                                 <input type="text" id="prodCd" name="prodCd" disabled>
+                                <!-- 상품명 -->
                                 <input type="text" id="prodNm" name="prodNm" readonly>
                                 <button><i class="bi bi-search" id="openProductModalButton"></i></button>
                             </div>
+
                             <!-- 납입주기 -->
-                            <input type="text" id="prodPayTyCd" name="prodPayTyCd" disabled>
+                            <!-- 표시용 -->
+                            <input type="text" id="prodPayTy" name="prodPayTy" disabled>
+                            <!-- 저장용 -->
+                            <input type="hidden" id="prodPayTyCd" name="prodPayTyCd">
+
                             <!-- 시작일자 -->
-                            <input type="date" id="savgStrtDt" name="savgStrtDt">
+<!--                            <input type="date" id="savgStrtDt" name="savgStrtDt">-->
+                            <div class="input-with-button">
+                                <!-- 시작일자 -->
+                                <input type="date" id="savgStrtDt" name="savgStrtDt">
+                                <!-- 만기일자 -->
+                                <label for="savgMtrDt">만기일자</label>
+                                <input type="text" id="savgMtrDt" name="savgMtrDt" disabled>
+                            </div>
+
                             <!-- 불입금액 -->
                             <div class="button-row">
                                 <input type="text" id="savgCircleAmt" name="savgCircleAmt" value="0">
@@ -155,6 +176,7 @@
                                     <button class="button-reset button-reset-amt">정정</button>
                                 </div>
                             </div>
+
                             <!-- 목표기간 -->
                             <div class="button-row">
                                 <input type="text" id="savgGoalPrd" name="savgGoalPrd" value="0">
@@ -165,20 +187,29 @@
                                     <button class="button-reset button-reset-prd">정정</button>
                                 </div>
                             </div>
+
                             <!-- 적용금리 -->
                             <div class="input-rate">
                                 <select id="selectSavgAplyRate" name="selectSavgAplyRate">
-                                    <option>최소</option>
-                                    <option>최대</option>
+                                    <option value="prodairmin">최소금리</option>
+                                    <option value="prodairmax">최대금리</option>
                                 </select>
                                 <input type="text" id="savgAplyRate" name="savgAplyRate" disabled>
                             </div>
+
                             <!-- 이자과세 -->
-                            <input type="text" id="savgIntTaxTyCd" name="savgIntTaxTyCd" disabled>
+                            <!-- 표시용 -->
+                            <input type="text" id="prodIntTaxTy" name="prodIntTaxTy" disabled>
+                            <!-- 계산용 -->
+                            <input type="hidden" id="prodIntTaxRate" name="prodIntTaxRate">
+                            <!-- 저장용 -->
+                            <input type="hidden" id="savgIntTaxTyCd" name="savgIntTaxTyCd">
+
                             <!-- 설계일자 -->
                             <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" disabled>
+
                             <!-- 수정일자 -->
-                            <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" placeholder="" disabled>
+                            <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" disabled>
                         </div>
                     </div>
                 </div>
@@ -194,7 +225,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- 검색 필드 -->
-                    <div class="search-bar">
+                    <div class="modal-search-bar">
                         <label for="prodCdSearch">상품코드</label>
                         <input type="text" id="prodCdSearch">
                         <label for="prodNmSearch">상품명</label>
@@ -202,27 +233,29 @@
                         <button class="btn-search btn-search-prod">검색</button>
                     </div>
                     <!-- 모달 테이블 -->
-                    <table class="modal-table prod-tb">
-                        <thead>
-                        <tr>
-                            <th>상품코드</th>
-                            <th>상품명</th>
-                            <th>가입대상</th>
-                        </tr>
-                        </thead>
-                        <tbody id="productList">
-                        <tr>
-                            <td>A1000</td>
-                            <td>GS사랑행복적금</td>
-                            <td>일반 개인</td>
-                        </tr>
-                        <tr>
-                            <td>B2000</td>
-                            <td>GS청년희망예금</td>
-                            <td>일반 개인</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="modal-table-container">
+                        <table class="modal-table prod-tb">
+                            <thead>
+                            <tr>
+                                <th>상품코드</th>
+                                <th>상품명</th>
+                                <th>가입대상</th>
+                            </tr>
+                            </thead>
+                            <tbody id="productList">
+                            <tr>
+                                <td>A1000</td>
+                                <td>GS사랑행복적금</td>
+                                <td>일반 개인</td>
+                            </tr>
+                            <tr>
+                                <td>B2000</td>
+                                <td>GS청년희망예금</td>
+                                <td>일반 개인</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -239,16 +272,11 @@
             <!-- 우측 버튼 그룹 -->
             <div class="button-group-right">
                 <button class="btn-int-cal">이자계산</button>
-                <select id="prgStcd" name="prgStcd">
+                <select id="dsgnPrgStcd" name="dsgnPrgStcd">
                     <option value="">진행상태</option>
-                    <option value="0">제안중</option>
-                    <option value="1">추가상담필요</option>
-                    <option value="2">가입대기</option>
-                    <option value="3">가입완료</option>
-                    <option value="4">만기예정</option>
-                    <option value="5">취소/보류</option>
-                    <option value="6">만기완료</option>
-                    <option value="9">해지</option>
+                    <option th:each="status : ${progressStatusList}"
+                            th:value="${status.codNo}"
+                            th:text="${status.codNm}"></option>
                 </select>
                 <button class="btn btn-register">
                     <i class="icon bi bi-plus-circle-fill"></i> 저장
@@ -259,7 +287,7 @@
                 <button class="btn btn-mail">
                     <i class="icon bi bi-envelope"></i> 인쇄
                 </button>
-                <button class="btn btn-list">
+                <button class="btn btn-list" onclick="location.href='/promotion/list'">
                     <i class="icon bi bi-list"></i> 목록
                 </button>
             </div>
@@ -355,7 +383,7 @@
             // 날짜 필드 설정 (오늘 날짜)
             const dsgnCreateAt = document.getElementById('dsgnCreateAt');
             const dsgnUpdateAt = document.getElementById('dsgnUpdateAt');
-            const savgStrtDt = document.getElementById('savgStrtDt');
+            const savgStrtDt = document.getElementById('savgStrtDt'); // 시작일자
 
             if (dsgnCreateAt) dsgnCreateAt.value = getTodayDate();
             if (dsgnUpdateAt) dsgnUpdateAt.value = getTodayDate();
@@ -366,6 +394,43 @@
                 savgStrtDt.value = today; // 기본값 설정
                 savgStrtDt.min = today;  // 최소값 설정
             }
+
+
+            // 만기일자 계산
+            const savgGoalPrd = document.getElementById('savgGoalPrd'); // 목표기간
+            const savgMtrDt = document.getElementById('savgMtrDt'); // 만기일자
+
+            // 만기일자 계산 함수
+            function calculateMaturityDate() {
+                const startDateValue = savgStrtDt.value; // 시작일자 값
+                const goalPeriodValue = parseInt(savgGoalPrd.value, 10); // 목표기간 값 (개월)
+
+                console.log("시작일자 값:", startDateValue); // 시작일자 확인
+                console.log("목표기간 값:", goalPeriodValue); // 목표기간 확인
+
+                if (!startDateValue || isNaN(goalPeriodValue) || goalPeriodValue <= 0) {
+                    savgMtrDt.value = ''; // 입력값이 없거나 잘못된 경우 초기화
+                    return;
+                }
+
+                const startDate = new Date(startDateValue);
+                console.log("시작일 객체:", startDate); // 시작일 객체 확인
+                startDate.setMonth(startDate.getMonth() + goalPeriodValue); // 목표기간을 더해 만기일 계산
+                savgMtrDt.value = startDate.toISOString().split('T')[0]; // yyyy-mm-dd 형식으로 업데이트
+                console.log("계산된 만기일:", savgMtrDt.value); // 계산된 만기일 확인
+            }
+
+            // 시작일자 변경 시 만기일 계산
+            savgStrtDt.addEventListener('change', () => {
+                console.log("시작일자가 변경되었습니다."); // 시작일 변경 확인
+                calculateMaturityDate();
+            });
+
+            // 목표기간 변경 시 만기일 계산
+            savgGoalPrd.addEventListener('input', () => {
+                console.log("목표기간이 변경되었습니다."); // 목표기간 변경 확인
+                calculateMaturityDate();
+            });
 
 
             // 불입금액 버튼 처리
@@ -400,12 +465,22 @@
                     const currentMonths = parseInt(savgGoalPrdInput.value) || 0;
                     const newMonths = currentMonths + monthsToAdd;
 
-                    savgGoalPrdInput.value = newMonths; // 새로운 값 설정
+                    // input 값 설정
+                    savgGoalPrdInput.value = newMonths; // 값 반영
+                    console.log("목표기간 변경됨:", newMonths); // 디버깅 로그
+
+                    // 만기일 계산 함수 호출
+                    calculateMaturityDate();
                 });
             });
 
             savgGoalPrdReset.addEventListener('click', () => {
+                // input 값 초기화
                 savgGoalPrdInput.value = '0'; // 값 초기화
+                console.log("목표기간 초기화됨:", 0); // 디버깅 로그
+
+                // 만기일 계산 함수 호출
+                calculateMaturityDate();
             });
 
 
@@ -501,6 +576,7 @@
             const closeProductModalButton = document.getElementById("closeProductModalButton");
             const searchProductButton = document.querySelector(".btn-search-prod");
 
+            // 상품 리스트 가져오기
             async function loadProductList(productCode = '', productName = '') {
                 try {
                     const response = await fetch(`/promotion/cal/productList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
@@ -513,6 +589,7 @@
                 }
             }
 
+            // 상품 모달 - 테이블 렌더링
             function renderProductTable(productList) {
                 productTableBody.innerHTML = '';
                 if (productList.length === 0) {
@@ -528,14 +605,66 @@
                         <td>${product.prodNm}</td>
                         <td>${product.prodSbstgTy}</td>
                     `;
+                    // 테이블 행 클릭 이벤트 추가
+                    row.addEventListener('click', () => {
+                        // 선택한 상품 정보를 폼에 뿌려줌
+                        populateProductForm(product);
+                        // 모달 닫기
+                        document.getElementById('productModal').style.display = 'none';
+                    });
                     productTableBody.appendChild(row);
                 });
             }
 
+            // 설계 폼에 데이터 뿌려주는 함수
+            function populateProductForm(product) {
+                // 상품설계번호, 설계유형코드, 상품코드, 상품명
+                document.getElementById('prodSn').value = product.prodSn || '';
+                document.getElementById('prodDsTyCd').value = product.prodDsTyCd || '';
+                document.getElementById('prodCd').value = product.prodCd || '';
+                document.getElementById('prodNm').value = product.prodNm || '';
+
+                // 납입주기
+                // 표시용
+                document.getElementById('prodPayTy').value = product.prodPayTy || '';
+                // 저장용
+                document.getElementById('prodPayTyCd').value = product.prodPayTyCd || '';
+
+                // 적용금리
+                const rateSelect = document.getElementById('selectSavgAplyRate');
+                const rateInput = document.getElementById('savgAplyRate');
+                // 금리 선택 변경 시 동작
+                rateSelect.addEventListener('change', () => {
+                    const selectedValue = rateSelect.value; // 선택된 값 (prodairmin 또는 prodairmax)
+                    if (selectedValue === 'prodairmin') {
+                        rateInput.value = product.prodAirMin ? `${product.prodAirMin}%` : '';
+                    } else if (selectedValue === 'prodairmax') {
+                        rateInput.value = product.prodAirMax ? `${product.prodAirMax}%` : '';
+                    } else {
+                        rateInput.value = ''; // 기본값 (선택되지 않은 경우)
+                    }
+                });
+                // 초기값 설정 (최소금리로 시작)
+                if (rateSelect.value === 'prodairmin') {
+                    rateInput.value = product.prodAirMin ? `${product.prodAirMin}%` : '';
+                }
+
+                // 이자과세
+                const prodIntTaxTy = document.getElementById('prodIntTaxTy'); // 표시용
+                const prodIntTaxRate = document.getElementById('prodIntTaxRate'); // 계산용
+                const savgIntTaxTyCd = document.getElementById('savgIntTaxTyCd'); // 저장용
+                prodIntTaxTy.value = `${product.prodIntTaxTy} (${product.prodIntTaxRate}%)` || ''; // 예: 일반과세 (15.4%)
+                prodIntTaxRate.value = product.prodIntTaxRate || ''; // 예: 15.4
+                savgIntTaxTyCd.value = product.prodIntTaxTyCd || ''; // 예: 1
+            }
+
             // 상품 모달 열기
-            openProductModalButton.addEventListener("click", () => {
+            openProductModalButton.addEventListener("click", async () => {
                 productModal.style.display = "flex";
-                loadProductList(); // 전체 리스트 로드
+                // 모달 필드 초기화
+                document.getElementById('prodCdSearch').value = '';
+                document.getElementById('prodNmSearch').value = '';
+                await loadProductList(); // 전체 리스트 로드
             });
 
             // 상품 모달 닫기
@@ -575,7 +704,7 @@
                 }
             }
 
-            // 테이블 데이터를 렌더링하는 함수
+            // 고객 모달 - 테이블 렌더링
             function renderCustomerList(userInfoList) {
                 customerTableBody.innerHTML = ''; // 기존 데이터를 초기화
                 if (userInfoList.length === 0) {
@@ -606,7 +735,7 @@
 
             // 고객 폼에 데이터 뿌려주는 함수
             function populateCustomerForm(user) {
-                document.getElementById('custId').value = user.custId || ''; // 고객 ID
+                document.getElementById('custId').value = user.custId || ''; // 고객ID
                 document.getElementById('custCreateAt').value = user.custCreateAt || ''; // 작성일자
                 document.getElementById('custNm').value = user.custNm || ''; // 고객명
                 document.getElementById('custBirth').value = user.custBirth || ''; // 생년월일
@@ -614,16 +743,20 @@
                 document.getElementById('custTelno').value = user.custTelno || ''; // 전화번호
                 document.getElementById('custOccp').value = user.custOccp || ''; // 직업
                 document.getElementById('custAddr').value = user.custAddr || ''; // 주소
-                document.getElementById('userId').value = user.userName || ''; // 담당자
+                document.getElementById('userId').value = user.userId || ''; // 담당자ID
+                document.getElementById('userNm').value = user.userName || ''; // 담당자
             }
 
-            // 모달 열기 (모달이 열릴 때 데이터 로드)
+            // 고객 모달 열기 (모달이 열릴 때 데이터 로드)
             openCustomerModalButton.addEventListener("click", async () => {
                 customerModal.style.display = "flex";
+                // 모달 필드 초기화
+                document.getElementById('custNmSearch').value = '';
+                document.getElementById('custTelnoSearch').value = '';
                 await loadCustomerList(); // 전체 리스트 로드
             });
 
-            // 모달 닫기
+            // 고객 모달 닫기
             closeCustomerModalButton.addEventListener("click", () => {
                 customerModal.style.display = "none";
             });
@@ -635,7 +768,7 @@
                 await loadCustomerList(custNm, custTelno); // 검색 조건으로 데이터 로드
             });
 
-            // 모달 외부 클릭 시 닫기
+            // 모달 외부 클릭 시 닫기 (모달 공통)
             window.addEventListener("click", (event) => {
                 if (event.target === customerModal) {
                     customerModal.style.display = "none";

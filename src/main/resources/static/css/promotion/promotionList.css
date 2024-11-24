@@ -75,6 +75,39 @@
     text-align: center;
 }
 
+.data-table th:nth-child(1),
+.data-table td:nth-child(1) {
+    width: 5%;
+}
+.data-table th:nth-child(2),
+.data-table td:nth-child(2) {
+    width: 10%;
+}
+.data-table th:nth-child(3),
+.data-table td:nth-child(3) {
+    width: 10%;
+}
+.data-table th:nth-child(4),
+.data-table td:nth-child(4) {
+    width: 13%;
+}
+.data-table th:nth-child(5),
+.data-table td:nth-child(5) {
+    width: 21%;
+}
+.data-table th:nth-child(6),
+.data-table td:nth-child(6) {
+    width: 13%;
+}
+.data-table th:nth-child(7),
+.data-table td:nth-child(7) {
+    width: 14%;
+}
+.data-table th:nth-child(8),
+.data-table td:nth-child(8) {
+    width: 14%;
+}
+
 /* 테이블 헤더 */
 .data-table thead th {
     font-weight: bold;
@@ -184,8 +217,8 @@
 
 /* 이전/다음 버튼 스타일 */
 .pagination-prev, .pagination-next {
-    font-size: 16px;
-    padding: 6px 8px;
+    font-size: 14px;
+    padding: 6px 12px;
 }
 
 /* 페이지 정보 스타일 */

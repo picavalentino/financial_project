@@ -60,24 +60,18 @@
                     <label for="prgStcd">진행상태</label>
                     <select id="prgStcd" name="prgStcd" onchange="filterResults()">
                         <option value="">전체</option>
-                        <option value="0">제안중</option>
-                        <option value="1">추가상담필요</option>
-                        <option value="2">가입대기</option>
-                        <option value="3">가입완료</option>
-                        <option value="4">만기예정</option>
-                        <option value="5">취소/보류</option>
-                        <option value="6">만기완료</option>
-                        <option value="9">해지</option>
+                        <option th:each="status : ${progressStatusList}"
+                                th:value="${status.codNo}"
+                                th:text="${status.codNm}"></option>
                     </select>
                 </div>
                 <div class="search-item">
                     <label for="dsTyCd">상품유형</label>
                     <select id="dsTyCd" name="dsTyCd" onchange="filterResults()">
                         <option value="">전체</option>
-                        <option value="1">적금설계</option>
-                        <option value="2">목돈마련설계</option>
-                        <option value="3">예금설계</option>
-                        <option value="4">대출설계</option>
+                        <option th:each="type : ${productTypeList}"
+                                th:value="${type.codNo}"
+                                th:text="${type.codNm}"></option>
                     </select>
                 </div>
                 <div class="search-item">
@@ -88,7 +82,7 @@
                     <button class="btn btn-print">
                         <i class="icon bi bi-printer"></i> 인쇄
                     </button>
-                    <button class="btn btn-register">
+                    <button class="btn btn-register" onclick="location.href='/promotion/cal'">
                         <i class="icon bi bi-plus-circle-fill"></i> 등록
                     </button>
                 </div>
@@ -270,7 +264,11 @@
                     }
 
                     // 페이지네이션 갱신
-                    updatePagination(response.totalPages, response.currentPage);
+                    updatePagination(
+                        response.totalPages,
+                        response.currentPage,
+                        response.startPage,
+                        response.endPage);
 
                 },
                 error: function(error) {
@@ -305,7 +303,7 @@
         }
 
         // 페이지네이션 업데이트
-        function updatePagination(totalPages, currentPage) {
+        function updatePagination(totalPages, currentPage, startPage, endPage) {
             const paginationControls = $('#paginationControls');
             paginationControls.empty(); // 기존 페이지네이션 요소 초기화
 
@@ -321,7 +319,7 @@
             }
 
             // 페이지 번호
-            for (let i = 1; i <= totalPages; i++) {
+            for (let i = startPage; i <= endPage; i++) {
                 if (i === currentPage) {
                     paginationDiv.append(`<a href="#" class="pagination-number pagination-active" disabled>${i}</button>`);
                 } else {

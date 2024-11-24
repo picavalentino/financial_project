@@ -1,5 +1,6 @@
 package com.team.financial_project.promotion.mapper;
 
+import com.team.financial_project.promotion.dto.CodeDto;
 import com.team.financial_project.promotion.dto.ProductInfoDto;
 import com.team.financial_project.promotion.dto.PromotionListDto;
 import com.team.financial_project.promotion.dto.UserInfoDto;
@@ -7,12 +8,16 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface PromotionMapper {
 
     // MyBatis Test
     int checkConnection();
+
+    // 페이지에 출력하기 위한 코드 리스트 조회
+    List<CodeDto> getCodeListByCl(@Param("codeCl") String codeCl);
 
     // 설계 조회 페이지
     // 전체 데이터 개수 조회
@@ -45,6 +50,7 @@ public interface PromotionMapper {
 
 
     // 금융계산기 페이지
+
 
     // 상품 정보 리스트 조회
     List<ProductInfoDto> getProductList(@Param("prodCd") String prodCd, @Param("prodNm") String prodNm);

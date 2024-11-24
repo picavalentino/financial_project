@@ -4,6 +4,7 @@ import com.team.financial_project.promotion.calculator.AccumulatedFundCalculator
 import com.team.financial_project.promotion.calculator.DepositCalculator;
 import com.team.financial_project.promotion.calculator.LoanCalculator;
 import com.team.financial_project.promotion.calculator.SavingsCalculator;
+import com.team.financial_project.promotion.dto.CodeDto;
 import com.team.financial_project.promotion.dto.ProductInfoDto;
 import com.team.financial_project.promotion.dto.PromotionListDto;
 import com.team.financial_project.promotion.dto.UserInfoDto;
@@ -16,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PromotionService {
@@ -28,6 +30,11 @@ public class PromotionService {
     // MyBatis Test
     public int checkConnection() {
         return mapper.checkConnection();
+    }
+
+    // 페이지에 출력하기 위한 코드 리스트 조회
+    public List<CodeDto> getCodeListByCl(String codeCl) {
+        return mapper.getCodeListByCl(codeCl);
     }
 
     // 설계 조회 페이지
@@ -131,6 +138,8 @@ public class PromotionService {
     }
 
     // 금융계산기 페이지
+
+
 
     // 상품 정보 리스트 조회
     public List<ProductInfoDto> getProductList(String prodCd, String prodNm) {
