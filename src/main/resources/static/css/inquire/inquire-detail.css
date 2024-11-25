@@ -1,0 +1,157 @@
+html {
+    background-color: #EFEFF1;;
+}
+.form-container{
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    align-items: flex-start;
+    width: 80%;
+    background-color: white;
+    border-radius: 15px;
+}
+
+.inquire-table {
+    padding: 10px;
+    width: 100%;
+    margin: auto;
+    border-collapse: separate; /* 행 간 간격 유지 */
+    border-spacing: 3px; /* 테이블 행 간격 추가 */
+    background-color: white; /* #f8f9fa; */
+    /*background-color: #f8f9fa;*/
+    border-radius: 10px;
+}
+
+.inquire-table th {
+    text-align: left;
+    padding: 10px 15px;
+    font-size: 14px;
+}
+
+.inquire-table td {
+    padding: 10px 15px;
+    vertical-align: middle;
+}
+
+/* 입력 필드 */
+.inquire-table input,
+.inquire-table select,
+.inquire-table textarea {
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    resize: none; /* 텍스트 영역 크기 조정 비활성화 */
+}
+
+/* 내용 텍스트 필드 넓이 확장 */
+.inquire-table input[name="inqContent"],
+.inquire-table textarea[name="inqContent"] {
+    height: 100px; /* 높이를 늘려 더 많은 텍스트 작성 가능 */
+}
+
+.list-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* 댓글 리스트 */
+.comments-container{
+    padding: 20px;
+    padding-top: 0px;
+    padding-left: 30px;
+}
+.comment-table {
+    width: 100%;
+    margin: auto;
+    border-collapse: separate; /* 행 간 간격 유지 */
+    border-spacing: 0px 10px; /* 테이블 행 간격 추가 */
+    border-top: solid 2px #183362;
+    border-bottom: solid 2px #183362;
+    padding: 0px;
+    margin-left: 0px;
+    margin-bottom: 10px;
+}
+.comment-table th{
+    margin-right: 0px;
+    margin-left: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 10%;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.comment-list{
+    display: flex;
+    flex-direction: space-between;
+}
+.comment-content{
+    flex: 3;
+}
+.comment-time{
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+}
+.comment-table td input{
+    border: none;
+}
+.comment-table p{
+    border-top: 2px solid #183362;
+}
+.comment-title{
+    padding: 5px 0px;
+    padding-bottom: 11px;
+    border-bottom: 1px solid #183362;
+}
+.comment-title th{
+    text-align: left;
+    padding-left: 15px;
+    font-size: 17px;
+    font-weight: 700;
+}
+/* 댓글 입력 */
+.comment-form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #e7ebf0;
+    border-radius: 15px;
+    padding: 0px;
+}
+.comment-form div{
+    margin: 0px;
+    margin-left: 15px;
+    margin-right: 10px;
+    padding: 5px 15px;
+    background-color: #cad5df;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: 600;
+}
+.comment-form textarea{
+    flex: 3;
+    margin: 10px 5px;
+    padding: 5px;
+    border: none;
+    background-color: #e7ebf0;
+}
+.comment-form label {
+    margin-left: 10px;
+    font-size: 15px;
+}
+.btn-comment{
+    margin: 0px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    background-color: #183362;
+}
