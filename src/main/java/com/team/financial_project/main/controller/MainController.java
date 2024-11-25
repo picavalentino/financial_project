@@ -63,7 +63,7 @@ public class MainController {
 //         Map<String, Object> kospiData = stockService.getKospiData();
 //        String kospiData = stockService.getKospiData();
 
-        return "/financial/main";
+        return "financial/main";
     }
 
 }
