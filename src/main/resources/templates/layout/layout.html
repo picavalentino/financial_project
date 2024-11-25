@@ -12,7 +12,7 @@
     <!-- header 넣기 -->
     <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-    <div class="d-flex" style="height: 100vh;">
+    <div class="d-flex side-content">
         <!-- 사이드바 넣기 -->
         <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>
 
@@ -21,12 +21,6 @@
             <!-- 실제 콘텐츠가 이 부분에 들어갑니다 -->
         </div>
     </div>
-
-<!--    &lt;!&ndash; 사이드바 넣기 &ndash;&gt;-->
-<!--    <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>-->
-
-<!--    &lt;!&ndash; content 영역 &ndash;&gt;-->
-<!--    <th:block layout:fragment="content"></th:block>-->
 
 </body>
 </html>

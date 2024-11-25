@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.financial_project.mapper.MainMapper">
+
+    <select id="mainInqireList" resultType="mainInquireDTO">
+        SELECT
+        inq_id AS inqId,
+        user_id AS userId,
+        inq_category AS inqCategory,
+        inq_title AS inqTitle,
+        inq_create_at AS inqCreateAt
+        FROM t_inquire
+        WHERE inq_category = '1'
+        ORDER BY inq_create_at DESC
+        LIMIT 4
+    </select>
+
+    <select id="mainCustomerList" resultType="mainStatisticsGenderDTO">
+        SELECT
+        COUNT(*) AS totalCount,
+        SUM(CASE WHEN SUBSTRING(cust_rrn, 8, 1) IN ('1', '3') THEN 1 ELSE 0 END) AS maleCount,
+        SUM(CASE WHEN SUBSTRING(cust_rrn, 8, 1) IN ('2', '4') THEN 1 ELSE 0 END) AS femaleCount
+        FROM tb_customer
+    </select>
+    <select id="getAgeStatistics" resultType="mainStatisticsAgeDTO">
+        SELECT
+            COUNT(*) AS totalCount,
+            SUM(CASE WHEN age &lt;= 19 THEN 1 ELSE 0 END) AS age10sUnder,
+            SUM(CASE WHEN age BETWEEN 20 AND 29 THEN 1 ELSE 0 END) AS age20s,
+            SUM(CASE WHEN age BETWEEN 30 AND 39 THEN 1 ELSE 0 END) AS age30s,
+            SUM(CASE WHEN age BETWEEN 40 AND 49 THEN 1 ELSE 0 END) AS age40s,
+            SUM(CASE WHEN age BETWEEN 50 AND 59 THEN 1 ELSE 0 END) AS age50s,
+            SUM(CASE WHEN age &gt;= 60 THEN 1 ELSE 0 END) AS age60sUp
+        FROM (
+            SELECT
+                EXTRACT(YEAR FROM CURRENT_DATE) -
+                (CASE
+                    WHEN SUBSTRING(cust_rrn, 8, 1) IN ('1', '2') THEN 1900 + SUBSTRING(cust_rrn, 1, 2)::INTEGER
+                    WHEN SUBSTRING(cust_rrn, 8, 1) IN ('3', '4') THEN 2000 + SUBSTRING(cust_rrn, 1, 2)::INTEGER
+                    ELSE NULL
+                END) AS age
+            FROM tb_customer
+        ) AS subquery;
+    </select>
+    <select id="getSalesStatistics" resultType="mainStatisticsSalesDTO">
+        SELECT
+            COUNT(CASE
+                WHEN TO_CHAR(dsgn_create_at, 'YYYY-MM') = TO_CHAR(CURRENT_DATE, 'YYYY-MM') THEN 1
+                END) AS now,
+            COUNT(CASE
+                WHEN TO_CHAR(dsgn_create_at, 'YYYY-MM') = TO_CHAR(CURRENT_DATE - INTERVAL '1 MONTH', 'YYYY-MM') THEN 1
+                END) AS previousMonth1,
+            COUNT(CASE
+                WHEN TO_CHAR(dsgn_create_at, 'YYYY-MM') = TO_CHAR(CURRENT_DATE - INTERVAL '2 MONTH', 'YYYY-MM') THEN 1
+                END) AS previousMonth2,
+            COUNT(CASE
+                WHEN TO_CHAR(dsgn_create_at, 'YYYY-MM') = TO_CHAR(CURRENT_DATE - INTERVAL '3 MONTH', 'YYYY-MM') THEN 1
+                END) AS previousMonth3,
+            COUNT(CASE
+                WHEN TO_CHAR(dsgn_create_at, 'YYYY-MM') = TO_CHAR(CURRENT_DATE - INTERVAL '4 MONTH', 'YYYY-MM') THEN 1
+                END) AS previousMonth4
+        FROM tb_custprod_dsgn
+        WHERE user_id = #{userId} AND dsgn_prg_stcd = '3';
+    </select>
+</mapper>

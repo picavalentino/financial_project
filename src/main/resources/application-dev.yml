@@ -10,10 +10,16 @@ spring:
     url: jdbc:postgresql://codechefdb.czywaum4cloy.ap-northeast-2.rds.amazonaws.com:5432/financialprojectDB
     username: codechef
     password: codechef1234
+    hikari:
+      maximum-pool-size: 10          # 최대 연결 풀 크기
+      minimum-idle: 5               # 최소 유지할 유휴 연결 수
+      connection-timeout: 30000     # 연결 시도 제한 시간 (밀리초)
+      idle-timeout: 600000          # 유휴 연결 종료 시간 (밀리초)
+      max-lifetime: 1800000         # 연결 최대 유지 시간 (밀리초)
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: classpath:/mybatis-config.xml
+  type-aliases-package: com.team.financial_project.dto
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
