@@ -20,24 +20,10 @@ public class CustomerDTO {
     private LocalDateTime custCreateAt; // 고객 생성일시
     private LocalDateTime custUpdateAt; // 고객 수정일시
     private String custStateCd; // 고객 상태 코드
-
     private String birthDate; // 생년월일 필드 추가
-    private String custAddrDetail; // 상세 주소 필드 추가
 
     private UserDTO users; // 유저 필드 추가
 
-    // 주소를 나누는 메소드
-    public void splitAddress() {
-        if (custAddr != null) {
-            String[] splitAddr = custAddr.split(" ", 2);
-            if (splitAddr.length == 2) {
-                this.custAddr = splitAddr[0]; // 기본 주소 (예: '서울특별시')
-                this.custAddrDetail = splitAddr[1]; // 나머지 상세 주소 (예: '강남구 테헤란로 123')
-            } else {
-                this.custAddrDetail = ""; // 나머지 주소가 없는 경우 빈 문자열 설정
-            }
-        }
-    }
 
     // 주민등록번호에서 생년월일 추출하는 메소드
     public void extractBirthDateFromRrn() {

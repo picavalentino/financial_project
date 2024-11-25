@@ -29,50 +29,76 @@
         </section>
         <!-- ============================================================================================== -->
         <section class="customerInfo">
-            <!-- 고객 정보 섹션 -->
-            <section class="leftSide" id="leftSide">
-                <div class="customer">
-                    <div class="customerLeft">
-                        <label>고객명 <input type="text" th:value="${customer.custNm}" disabled></label>
-                        <label>주민번호 <input type="text" th:value="${customer.custRrn}" disabled></label>
-                        <label>연락처 <input type="text" th:value="${customer.custTelno}" disabled></label>
-                        <label>이메일 <input type="text" th:value="${customer.custEmail}" disabled></label>
-                        <label>직업 <input type="text" th:value="${customer.custOccpTyCd}" disabled></label>
-                    </div>
-                    <div class="customerRight">
-                        <label>주소
-                            <input type="text" class="wide-input" th:value="${customer.custAddr}" disabled>
-                        </label>
-                        <label>상세주소
-                            <input type="text" class="wide-input" th:value="${customer.custAddrDetail}" disabled>
-                        </label>
-                        <label>활동 상태 <input type="text" th:value="${customer.custStateCd}" disabled></label>
-                    </div>
-                </div>
-                <!-- ===================================================================================== -->
-                <div class="staff">
-                    <h2>담당 직원</h2>
-                    <div class="staffContainer">
-                        <div class="staffLeft">
-                            <label>담당자
-                                <input class="searchManager" type="text" th:value="${customer.users != null && customer.users.user_name != null ? customer.users.user_name : '없음'}" disabled>
-                                <button class="search-btn" onclick="openSearchModal()">🔍</button>
-                            </label>
-                            <label>담당자ID
-                                <input type="text" th:value="${customer.users != null && customer.users.user_id != null ? customer.users.user_id : '없음'}" disabled>
+            <form id="customerUpdateForm" th:object="${customer}">
+                <!-- 고객 정보 섹션 -->
+                <section class="leftSide" id="leftSide">
+                    <div class="customer">
+                        <div class="customerLeft">
+                            <input type="hidden" id="custId" th:value="${customer.custId}">
+                            <label>고객명 <input type="text" th:value="${customer.custNm}" disabled></label>
+                            <label>주민번호 <input type="text" th:value="${customer.custRrn}" disabled></label>
+                            <label>연락처 <input type="text" th:value="${customer.custTelno}" name="custTelno"></label>
+                            <label>이메일 <input type="text" th:value="${customer.custEmail}" name="custEmail"></label>
+                            <label>직업
+                                <select id="custOccpTyCd" name="custOccpTyCd" th:field="*{custOccpTyCd}">
+                                    <option th:value="${custOccpTyCd}" th:text="${customer.custOccpTyCd}">직업</option>
+                                    <option value="100">관리자(사무직)</option>
+                                    <option value="101">전문가 및 관련 종사자</option>
+                                    <option value="102">사무 종사자</option>
+                                    <option value="103">서비스 종사자</option>
+                                    <option value="104">판매 종사자</option>
+                                    <option value="105">농림어업 숙련 종사자</option>
+                                    <option value="106">기능원 및 관련 기능 종사자</option>
+                                    <option value="107">장치/기계 조작 및 조립 종사자</option>
+                                    <option value="108">단순노무 종사자</option>
+                                    <option value="109">군인</option>
+                                    <option value="110">주부, 학생 및 기타 비경제활동인구</option>
+                                </select>
                             </label>
                         </div>
-                        <div class="staffRight">
-                            <label>연락처
-                                <input type="text" th:value="${customer.users != null && customer.users.user_telno != null ? customer.users.user_telno : '없음'}" disabled>
+                        <div class="customerRight">
+                            <label>주소
+                                <input type="text" class="wide-input" th:value="${customer.custAddr}" name="custAddr">
                             </label>
-                            <label>담당자 부서 / 직급
-                                <input type="text" th:value="${customer.users != null && customer.users.dept_name != null && customer.users.position_name != null ? customer.users.dept_name + ' / ' + customer.users.position_name : '없음'}" disabled>
-                            </label>
+                            <label>활동 상태 <input type="text" th:value="${customer.custStateCd}" disabled></label>
                         </div>
                     </div>
-                </div>
-            </section>
+                    <!-- ===================================================================================== -->
+                    <div class="staff">
+                        <h2>담당 직원</h2>
+                        <div class="staffContainer">
+                            <div class="staffLeft">
+                                <label>담당자
+                                    <input class="searchManager" type="text" name="user_name"
+                                           th:value="${customer.users != null ? customer.users.user_name : '없음'}"
+                                           disabled>
+                                    <button id="openSearchModalBtn" class="search-btn" type="button"
+                                            onclick="openSearchModal()">🔍
+                                    </button>
+                                </label>
+
+                                <label>담당자ID
+                                    <input type="text" name="user_id"
+                                           th:value="${customer.users != null ? customer.users.user_id : ''}"
+                                           disabled>
+                                </label>
+                            </div>
+                            <div class="staffRight">
+                                <label>연락처
+                                    <input type="text" name="user_telno"
+                                           th:value="${customer.users != null ? customer.users.user_telno : ''}"
+                                           disabled>
+                                </label>
+                                <label>담당자 부서 / 직급
+                                    <input type="text" name="user_dept_Position"
+                                           th:value="${customer.users != null ? customer.users.dept_name + ' / ' + customer.users.position_name : ''}"
+                                           disabled>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </form>
             <!-- ===================================================================================== -->
             <!-- 상담 내역 및 수정 내역 섹션 -->
             <section class="rightSide">
@@ -97,6 +123,7 @@
                 </div>
             </section>
         </section>
+
     </div>
     <!-- ===================================================================================== -->
     <div class="buttons">

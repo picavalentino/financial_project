@@ -120,9 +120,11 @@
         LEFT JOIN tb_code AS statCode
         ON cust.cust_state_cd = statCode.code_no
         AND cust.cust_state_cd_code_cl = statCode.code_cl
+
         LEFT JOIN tb_code AS code
         ON cust.cust_occp_ty_cd = code.code_no
         AND cust.cust_occp_ty_cd_code_cl = code.code_cl
+
         LEFT JOIN tb_user AS usr
         ON usr.user_id = cust.user_id
         LEFT JOIN tb_code AS codeUserPosit
@@ -151,4 +153,18 @@
         (#{custId}, #{custNm}, #{custRrn}, #{custTelno}, #{custEmail}, #{custOccpTyCd}, #{custAddr},
         #{custCreateAt}, #{custUpdateAt}, #{custStateCd})
     </insert>
+    <!-- ============================================================================================================= -->
+
+    <!-- 고객 정보 수정 -->
+    <update id="updateCustomer" parameterType="com.team.financial_project.dto.CustomerDTO">
+        UPDATE tb_customer
+        SET
+        cust_telno = #{custTelno},
+        cust_email = #{custEmail},
+        cust_occp_ty_cd = #{custOccpTyCd},
+        cust_addr = #{custAddr},
+        cust_update_at = NOW(),
+        user_id = #{users.user_id}
+        WHERE cust_id = #{custId}
+    </update>
 </mapper>

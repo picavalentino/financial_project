@@ -3,11 +3,13 @@ package com.team.financial_project.customer.controller;
 import com.team.financial_project.customer.service.CustomerService;
 import com.team.financial_project.dto.CustomerDTO;
 import com.team.financial_project.dto.UserDTO;
+import com.team.financial_project.management.service.ManagementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -17,9 +19,11 @@ import java.util.Map;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final ManagementService managementService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, ManagementService managementService) {
         this.customerService = customerService;
+        this.managementService = managementService;
     }
 
     @GetMapping("/list")
@@ -61,11 +65,24 @@ public class CustomerController {
     @GetMapping("/detail/{custId}")
     public String getCustomerDetail(@PathVariable("custId") String custId, Model model) {
         // 고객 상세 정보 가져오기
-
         CustomerDTO customer = customerService.getCustomerById(custId);
-        customer.splitAddress(); // 주소를 기본 주소와 상세 주소로 나누기
         model.addAttribute("customer", customer);
         return "customer/customerDetail"; // 고객 상세 정보 페이지로 이동
+    }
+
+    /* ================================================================================================================= */
+   /* 수정하기 */
+    @PutMapping("/update")
+    @ResponseBody
+    public ResponseEntity<String> updateCustomer(@RequestBody CustomerDTO customerDTO) {
+        try {
+            customerService.updateCustomer(customerDTO);
+            return ResponseEntity.ok("고객 정보가 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();  // 예외의 전체 스택 트레이스를 로그에 출력
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("고객 정보 수정에 실패했습니다. 오류 메시지: " + e.getMessage());
+        }
     }
 
     /* ================================================================================================================= */
@@ -95,13 +112,6 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "고객 등록에 실패했습니다: " + e.getMessage()));
         }
     }
-    /* ================================================================================================================= */
-
-    // 고객 정보 수정
-    @PatchMapping("/detail/id")
-    public String customerUpdate() {
-        return "customer/customerDetail"; // 고객 수정 페이지로 이동
-    }
 
     // 고객 상세 정보 출력 페이지
     @GetMapping("/detail/id/print")
@@ -110,13 +120,11 @@ public class CustomerController {
     }
 
     /* ================================================================================================================= */
-
-      // 담당자 검색 API
+    // 담당자 검색 API
     @GetMapping("/detail/{custId}/searchManager")
-    public ResponseEntity<List<UserDTO>> searchManagers(@RequestParam String name) {
-        List<UserDTO> managers = managerService.getManagersByName(name);
+    public ResponseEntity<List<UserDTO>> searchManagers(@PathVariable("custId") String custId, @RequestParam("name") String name) {
+        List<UserDTO> managers = managementService.getManagersByName(name);
         return ResponseEntity.ok(managers);
     }
-
     /* ================================================================================================================= */
 }

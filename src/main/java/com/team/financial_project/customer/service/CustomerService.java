@@ -1,7 +1,9 @@
 package com.team.financial_project.customer.service;
 
 import com.team.financial_project.dto.CustomerDTO;
+import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.CustomerMapper;
+import com.team.financial_project.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,13 @@ public class CustomerService {
     @Autowired
     private CustomerMapper customerMapper;
 
+    @Autowired
+    private UserMapper userMapper;
 
-    public CustomerService(CustomerMapper customerMapper) {
+
+    public CustomerService(CustomerMapper customerMapper, UserMapper userMapper) {
         this.customerMapper = customerMapper;
+        this.userMapper = userMapper;
     }
 
     // ======================================================================================================
@@ -74,6 +80,13 @@ public class CustomerService {
 
         // 고객 정보 저장
         customerMapper.insertCustomer(customerDto);
+    }
+    // ==========================================================================================================
+    // 고객정보 수정
+
+    public void updateCustomer(CustomerDTO customerDTO) {
+        System.out.println("수정 요청된 고객 정보: " + customerDTO);
+        customerMapper.updateCustomer(customerDTO);
     }
 }
 

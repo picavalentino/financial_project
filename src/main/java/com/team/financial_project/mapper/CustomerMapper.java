@@ -23,4 +23,7 @@ public interface CustomerMapper {
 
     // 오늘 등록된 고객 수 조회
     int countTodayCustomers();
+
+    // 고객 정보 수정
+    void updateCustomer(CustomerDTO customerDTO);
 }
