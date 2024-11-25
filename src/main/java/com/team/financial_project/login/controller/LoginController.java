@@ -22,7 +22,7 @@ public class LoginController {
 
     @GetMapping("")
     public String loginForm(){
-        return "/login/login";
+        return "login/login";
     }
     // 아이디 찾기 ================================================================================
     @GetMapping("retrieve-id")

@@ -25,7 +25,7 @@ public class RegisterController {
 
     @GetMapping("")
     public String registerForm(){
-        return "/login/register";
+        return "login/register";
     }
 
     @GetMapping("search")
