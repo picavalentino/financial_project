@@ -33,7 +33,7 @@
         <form id="search-form" action="/product/sales/search" method="GET">
           <div class="menu-top">
             <div class="condition">
-              <label>연도</label>
+              <label>기간별</label>
               <select name="year">
                 <option value="">연도 선택</option>
                 <option th:each="year : ${#numbers.sequence(2020, T(java.time.Year).now().getValue())}"
@@ -42,7 +42,6 @@
               </select>
             </div>
             <div class="condition">
-              <label>월</label>
               <select name="month">
                 <option value="">월 선택</option>
                 <option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}">
@@ -50,7 +49,6 @@
               </select>
             </div>
             <div class="condition" id="condition-period">
-              <label>기간</label>
               <div style="display: flex; align-items: center;">
                 <input name="searchBgnYmd" type="date">
                 <span>~</span>
@@ -72,6 +70,11 @@
               <label>상품명</label>
               <input name="prodNm" type="text" placeholder="상품명을 입력하세요">
             </div>
+            <div class="condition">
+                <label>담당자</label>
+                <input type="text" id="staffName" name="staffName" readonly placeholder="직원 이름을 검색하세요">
+                <input type="hidden" id="userId" name="userId">
+            </div>
             <div class="btn-wrap">
               <button type="submit" class="btn" id="btn-search">
                 <div class="icon-container"><i class="icon bi bi-search"></i></div> 검색
@@ -82,6 +85,20 @@
             </div>
           </div>
         </form>
+      </div>
+      <!-- 모달 창 -->
+      <div id="staffSearchModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <span id="modal-title">담당자명 검색</span>
+          <div class="input-container">
+            <input type="text" id="staffSearchInput" placeholder="직원 이름 입력">
+            <button id="staffSearchButton">검색</button>
+          </div>
+          <div id="staffSearchResults">
+            <!-- 검색 결과가 여기에 표시됩니다 -->
+          </div>
+        </div>
       </div>
     </div>
     <!-- 하단 매출 리스트 출력 -->
@@ -135,6 +152,93 @@
            const total = $(".row-checkbox").length;
            const checked = $(".row-checkbox:checked").length;
           $("#checkAll").prop("checked", total === checked);
+        });
+
+        // 직원 검색 모달 관련 -------------------------------------
+        // 모달 열기
+        $("#staffName").on("click", function () {
+            $("#staffSearchModal").fadeIn();
+        });
+
+        // 모달 닫기 버튼
+        $(".close").on("click", function () {
+            $("#staffSearchModal").fadeOut();
+        });
+
+        // 모달 외부 클릭 시 닫기
+        $(window).on("click", function (event) {
+            if ($(event.target).is("#staffSearchModal")) {
+                $("#staffSearchModal").fadeOut();
+            }
+        });
+
+        $("#staffSearchButton").on("click", function () {
+            const searchTerm = $("#staffSearchInput").val().trim();
+
+            if (!searchTerm) {
+                alert("검색어를 입력하세요.");
+                return;
+            }
+
+            // 서버로 Ajax 요청 보내기
+            $.ajax({
+                url: "/product/user/search", // API 엔드포인트
+                type: "GET",
+                data: { name: searchTerm }, // 요청 파라미터
+                success: function (response) {
+                    const resultsContainer = $("#staffSearchResults");
+                    resultsContainer.empty();
+
+                    if (response.length === 0) {
+                        resultsContainer.append("<p>검색 결과가 없습니다.</p>");
+                    } else {
+                        // 테이블 생성
+                        const table = $(`
+                            <table class="staff-table">
+                                <thead>
+                                    <tr>
+                                        <th>사원번호</th>
+                                        <th>사원이름</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        `);
+
+                        // 결과 추가
+                        response.forEach((item) => {
+                            const row = $(`
+                                <tr class="result-item" data-id="${item.id}">
+                                    <td>${item.id}</td>
+                                    <td>${item.name}</td>
+                                </tr>
+                            `);
+
+                            // 행 클릭 이벤트 추가
+                            row.on("click", function () {
+                                $("#staffName").val(item.name); // 입력 필드에 이름 설정
+                                $("#userId").val(item.id);
+                                $("#staffSearchModal").fadeOut(); // 모달 닫기
+                            });
+
+                            table.find("tbody").append(row);
+                        });
+
+                        resultsContainer.append(table);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("검색 실패: ", error);
+                    alert("검색에 실패했습니다. 다시 시도해주세요.");
+                },
+            });
+        });
+        // 직원 이름 검색 인풋 필드에서 엔터 키 입력 처리
+        $("#staffSearchInput").on("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // 기본 Enter 키 동작(폼 제출) 방지
+                $("#staffSearchButton").click(); // 검색 버튼 클릭 이벤트 트리거
+            }
         });
       });
   </script>
