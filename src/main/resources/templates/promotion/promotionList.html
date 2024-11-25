@@ -371,6 +371,112 @@
             });
         });
 
+        // 인쇄
+        function printCheckedRows() {
+            // 체크된 행의 데이터 수집
+            const checkedRows = [];
+            $('#result-table-body .row-checkbox:checked').each(function () {
+                const row = $(this).closest('tr'); // 체크박스의 부모 행
+                const rowData = {
+                    custNm: row.find('td:nth-child(2)').text(),
+                    userNm: row.find('td:nth-child(3)').text(),
+                    dsTyCd: row.find('td:nth-child(4)').text(),
+                    prodNm: row.find('td:nth-child(5)').text(),
+                    prgStcd: row.find('td:nth-child(6)').text(),
+                    mtrDt: row.find('td:nth-child(7)').text(),
+                    mtrAmt: row.find('td:nth-child(8)').text()
+                };
+                checkedRows.push(rowData);
+            });
+
+            if (checkedRows.length === 0) {
+                alert('인쇄할 데이터를 선택하세요.');
+                return;
+            }
+
+            // 인쇄 데이터 확인용 로그
+            console.log('Checked Rows:', checkedRows);
+
+            // 인쇄용 HTML 생성
+            const printContent = generatePrintContent(checkedRows);
+
+            // 새 창에 인쇄 데이터 표시
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }
+
+        function generatePrintContent(rows) {
+            let content = `
+                <html>
+                <head>
+                    <title>인쇄</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 20px 0;
+                        }
+                        th, td {
+                            border: 1px solid #ccc;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f4f4f4;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>상품 설계 조회</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>고객명</th>
+                                <th>담당자</th>
+                                <th>상품유형</th>
+                                <th>상품명</th>
+                                <th>진행상태</th>
+                                <th>만기일자</th>
+                                <th>만기금액(잔액)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            rows.forEach(row => {
+                content += `
+                    <tr>
+                        <td>${row.custNm}</td>
+                        <td>${row.userNm}</td>
+                        <td>${row.dsTyCd}</td>
+                        <td>${row.prodNm}</td>
+                        <td>${row.prgStcd}</td>
+                        <td>${row.mtrDt}</td>
+                        <td>${row.mtrAmt}</td>
+                    </tr>
+                `;
+            });
+
+            content += `
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            return content;
+        }
+
+        // 인쇄 버튼 이벤트
+        $(document).on('click', '.btn-print', printCheckedRows);
+
     </script>
 </div>
 </body>
