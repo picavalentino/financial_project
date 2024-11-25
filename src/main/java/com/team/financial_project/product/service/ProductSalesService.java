@@ -1,10 +1,8 @@
 package com.team.financial_project.product.service;
 
-import com.team.financial_project.dto.ProductSalesDTO;
 import com.team.financial_project.dto.TotalSalesDTO;
 import com.team.financial_project.mapper.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
@@ -26,151 +24,57 @@ public class ProductSalesService {
         List<TotalSalesDTO> totalSalesList = new ArrayList<>();
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
 
-        // 1. 적금 매출 조회
-        List<Map<String, Object>> savingsSalesData = productMapper.thisMonthSavingsSales(startOfMonth, endOfMonth);
-        List<Map<String, Object>> rankedSavingsCountsTop2 = productMapper.rankedSavingsCountsTop2(startOfMonth, endOfMonth);
-        List<Map<String, Object>> rankedSavingsAmountsTop2 = productMapper.rankedSavingsAmountsTop2(startOfMonth, endOfMonth);
+        // 날짜 문자열로 변환 (MyBatis에서 사용할 수 있도록)
+//        String startDate = startOfMonth.toString();
+//        String endDate = endOfMonth.toString();
 
-        TotalSalesDTO savingsDTO = new TotalSalesDTO();
-        if (!savingsSalesData.isEmpty()) {
-            Map<String, Object> salesData = savingsSalesData.get(0);
-            savingsDTO.setProdTyCd("적금"); // 상품유형
-            savingsDTO.setTotalCounts(Long.valueOf(String.valueOf(salesData.get("total_design_count"))));
-            savingsDTO.setTotalAmounts(Long.valueOf(String.valueOf(salesData.get("total_sales_amount"))));
-            savingsDTO.setFormattedTotalAmounts(decimalFormat.format(savingsDTO.getTotalAmounts()));
+        // 상품 유형별 매출 조회 (예금, 적금, 목돈, 대출 순서)
+        Map<String, List<Map<String, Object>>> salesDataMap = Map.of(
+                "예금", productMapper.rankedDepositTop2(startOfMonth, endOfMonth),
+                "적금", productMapper.rankedSavingsTop2(startOfMonth, endOfMonth),
+                "목돈", productMapper.rankedLumpSumTop2(startOfMonth, endOfMonth),
+                "대출", productMapper.rankedLoansTop2(startOfMonth, endOfMonth)
+        );
+
+        // 상품 유형별 데이터를 순회하면서 처리
+        for (Map.Entry<String, List<Map<String, Object>>> entry : salesDataMap.entrySet()) {
+            String prodType = entry.getKey();
+            List<Map<String, Object>> rankedTop2 = entry.getValue();
+
+            TotalSalesDTO dto = new TotalSalesDTO();
+            dto.setProdTyCd(prodType);
+
+            // 매출 데이터 처리
+            List<Map<String, Object>> salesData = switch (prodType) {
+                case "예금" -> productMapper.thisMonthDepositSales(startOfMonth, endOfMonth);
+                case "적금" -> productMapper.thisMonthSavingsSales(startOfMonth, endOfMonth);
+                case "목돈" -> productMapper.thisMonthLumpSumSales(startOfMonth, endOfMonth);
+                case "대출" -> productMapper.thisMonthLoanSales(startOfMonth, endOfMonth);
+                default -> List.of();
+            };
+
+            if (!salesData.isEmpty()) {
+                Map<String, Object> data = salesData.get(0);
+                dto.setTotalCounts(Long.valueOf(String.valueOf(data.get("total_design_count"))));
+                dto.setTotalAmounts(Long.valueOf(String.valueOf(data.get("total_sales_amount"))));
+                dto.setFormattedTotalAmounts(decimalFormat.format(dto.getTotalAmounts()));
+            }
+
+            // 상위 2개 데이터 처리
+            List<String> countsTopList = rankedTop2.stream()
+                    .map(row -> row.get("product_name") + " (" + row.get("total_design_count") + ")")
+                    .toList();
+
+            List<String> amountsTopList = rankedTop2.stream()
+                    .map(row -> row.get("product_name") + " (" + decimalFormat.format(row.get("total_deposit_amount")) + ")")
+                    .toList();
+
+            dto.setCountsTop2(countsTopList);
+            dto.setAmountsTop2(amountsTopList);
+
+            totalSalesList.add(dto);
         }
-
-// 상위 2개 데이터 설정
-        List<String> savingsCountsTop2 = new ArrayList<>();
-        List<String> savingsAmountsTop2 = new ArrayList<>();
-
-// 설계 건수 기준 상위 2개 상품
-        for (Map<String, Object> row : rankedSavingsCountsTop2) {
-            String productName = (String) row.get("product_name");
-            Long totalDesignCount = Long.valueOf(String.valueOf(row.get("total_design_count")));
-            savingsCountsTop2.add(productName + " (" + totalDesignCount + ")");
-        }
-
-// 설계 금액 기준 상위 2개 상품
-        for (Map<String, Object> row : rankedSavingsAmountsTop2) {
-            String productName = (String) row.get("product_name");
-            Long totalDepositAmount = Long.valueOf(String.valueOf(row.get("total_deposit_amount")));
-            savingsAmountsTop2.add(productName + " (" + decimalFormat.format(totalDepositAmount) + ")");
-        }
-
-        savingsDTO.setCountsTop2(savingsCountsTop2);
-        savingsDTO.setAmountsTop2(savingsAmountsTop2);
-        totalSalesList.add(savingsDTO);
-
-        // 2. 대출 매출 조회
-        List<Map<String, Object>> loanSalesData = productMapper.thisMonthLoanSales(startOfMonth, endOfMonth);
-        List<Map<String, Object>> rankedLoansCountsTop2 = productMapper.rankedLoansCountsTop2(startOfMonth, endOfMonth);
-        List<Map<String, Object>> rankedLoansAmountsTop2 = productMapper.rankedLoansAmountsTop2(startOfMonth, endOfMonth);
-
-        TotalSalesDTO loanDTO = new TotalSalesDTO();
-        if (!loanSalesData.isEmpty()) {
-            Map<String, Object> salesData = loanSalesData.get(0);
-            loanDTO.setProdTyCd("대출"); // 상품유형
-            loanDTO.setTotalCounts(Long.valueOf(String.valueOf(salesData.get("total_design_count"))));
-            loanDTO.setTotalAmounts(Long.valueOf(String.valueOf(salesData.get("total_sales_amount"))));
-            loanDTO.setFormattedTotalAmounts(decimalFormat.format(loanDTO.getTotalAmounts()));
-        }
-
-// 상위 2개 데이터 설정
-        List<String> loanCountsTop2 = new ArrayList<>();
-        List<String> loanAmountsTop2 = new ArrayList<>();
-
-// 설계 건수 기준 상위 2개 상품
-        for (Map<String, Object> row : rankedLoansCountsTop2) {
-            String productName = (String) row.get("product_name");
-            Long totalDesignCount = Long.valueOf(String.valueOf(row.get("total_design_count")));
-            loanCountsTop2.add(productName + " (" + totalDesignCount + ")");
-        }
-
-// 설계 금액 기준 상위 2개 상품
-        for (Map<String, Object> row : rankedLoansAmountsTop2) {
-            String productName = (String) row.get("product_name");
-            Long totalDepositAmount = Long.valueOf(String.valueOf(row.get("total_deposit_amount")));
-            loanAmountsTop2.add(productName + " (" + decimalFormat.format(totalDepositAmount) + ")");
-        }
-
-        loanDTO.setCountsTop2(loanCountsTop2);
-        loanDTO.setAmountsTop2(loanAmountsTop2);
-        totalSalesList.add(loanDTO);
-
-// 3. 예금 매출 조회
-        List<Map<String, Object>> depositSalesData = productMapper.thisMonthDepositSales(startOfMonth, endOfMonth);
-        List<Map<String, Object>> rankedDepositCountsTop2 = productMapper.rankedDepositCountsTop2(startOfMonth, endOfMonth);
-        List<Map<String, Object>> rankedDepositAmountsTop2 = productMapper.rankedDepositAmountsTop2(startOfMonth, endOfMonth);
-
-        TotalSalesDTO depositDTO = new TotalSalesDTO();
-        if (!depositSalesData.isEmpty()) {
-            Map<String, Object> salesData = depositSalesData.get(0);
-            depositDTO.setProdTyCd("예금"); // 상품유형
-            depositDTO.setTotalCounts(Long.valueOf(String.valueOf(salesData.get("total_design_count"))));
-            depositDTO.setTotalAmounts(Long.valueOf(String.valueOf(salesData.get("total_sales_amount"))));
-            depositDTO.setFormattedTotalAmounts(decimalFormat.format(depositDTO.getTotalAmounts()));
-        }
-
-// 상위 2개 데이터 설정
-        List<String> depositCountsTop2 = new ArrayList<>();
-        List<String> depositAmountsTop2 = new ArrayList<>();
-
-// 설계 건수 기준 상위 2개 상품
-        for (Map<String, Object> row : rankedDepositCountsTop2) {
-            String productName = (String) row.get("product_name");
-            Long totalDesignCount = Long.valueOf(String.valueOf(row.get("total_design_count")));
-            depositCountsTop2.add(productName + " (" + totalDesignCount + ")");
-        }
-
-// 설계 금액 기준 상위 2개 상품
-        for (Map<String, Object> row : rankedDepositAmountsTop2) {
-            String productName = (String) row.get("product_name");
-            Long totalDepositAmount = Long.valueOf(String.valueOf(row.get("total_deposit_amount")));
-            depositAmountsTop2.add(productName + " (" + decimalFormat.format(totalDepositAmount) + ")");
-        }
-
-        depositDTO.setCountsTop2(depositCountsTop2);
-        depositDTO.setAmountsTop2(depositAmountsTop2);
-        totalSalesList.add(depositDTO);
-
-// 4. 목돈 매출 조회
-        List<Map<String, Object>> lumpSumSalesData = productMapper.thisMonthLumpSumSales(startOfMonth, endOfMonth);
-        List<Map<String, Object>> rankedLumpSumCountsTop2 = productMapper.rankedLumpSumCountsTop2(startOfMonth, endOfMonth);
-        List<Map<String, Object>> rankedLumpSumAmountsTop2 = productMapper.rankedLumpSumAmountsTop2(startOfMonth, endOfMonth);
-
-        TotalSalesDTO lumpSumDTO = new TotalSalesDTO();
-        if (!lumpSumSalesData.isEmpty()) {
-            Map<String, Object> salesData = lumpSumSalesData.get(0);
-            lumpSumDTO.setProdTyCd("목돈"); // 상품유형
-            lumpSumDTO.setTotalCounts(Long.valueOf(String.valueOf(salesData.get("total_design_count"))));
-            lumpSumDTO.setTotalAmounts(Long.valueOf(String.valueOf(salesData.get("total_sales_amount"))));
-            lumpSumDTO.setFormattedTotalAmounts(decimalFormat.format(lumpSumDTO.getTotalAmounts()));
-        }
-
-// 상위 2개 데이터 설정
-        List<String> lumpSumCountsTop2 = new ArrayList<>();
-        List<String> lumpSumAmountsTop2 = new ArrayList<>();
-
-// 설계 건수 기준 상위 2개 상품
-        for (Map<String, Object> row : rankedLumpSumCountsTop2) {
-            String productName = (String) row.get("product_name");
-            Long totalDesignCount = Long.valueOf(String.valueOf(row.get("total_design_count")));
-            lumpSumCountsTop2.add(productName + " (" + totalDesignCount + ")");
-        }
-
-// 설계 금액 기준 상위 2개 상품
-        for (Map<String, Object> row : rankedLumpSumAmountsTop2) {
-            String productName = (String) row.get("product_name");
-            Long totalDepositAmount = Long.valueOf(String.valueOf(row.get("total_deposit_amount")));
-            lumpSumAmountsTop2.add(productName + " (" + decimalFormat.format(totalDepositAmount) + ")");
-        }
-
-        lumpSumDTO.setCountsTop2(lumpSumCountsTop2);
-        lumpSumDTO.setAmountsTop2(lumpSumAmountsTop2);
-        totalSalesList.add(lumpSumDTO);
 
         return totalSalesList;
     }
-
 }

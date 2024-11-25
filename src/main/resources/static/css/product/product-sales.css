@@ -117,6 +117,15 @@
 #tb-total-sales{
 
 }
+.bottom-content-top{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.bottom-content-top span{
+    font-size: 20px;
+}
 /* 매출조회 조건 검색 페이지 테이블 */
 
 

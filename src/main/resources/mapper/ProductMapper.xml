@@ -252,6 +252,7 @@
 
     <!-- 매출 조회; 디폴트: 이번달 매출 조회 -->
     <!-- 적금 매출 조회 -->
+    <!-- 적금 매출 조회 -->
     <select id="thisMonthSavingsSales" parameterType="map" resultType="map">
         SELECT
         TO_CHAR(SAVG_STRT_DT, 'YYYY-MM') AS sale_month,
@@ -268,25 +269,10 @@
     </select>
 
     <!-- 적금 상위 2개 상품 조회 -->
-    <select id="rankedSavingsAmountsTop2" resultType="map">
+    <select id="rankedSavingsTop2" parameterType="map" resultType="map">
         SELECT
         p.prod_nm AS product_name,
-        SUM(s.savg_tot_dpst_amt) AS total_deposit_amount
-        FROM
-        tb_prod_dsgn_savg s
-        JOIN
-        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
-        JOIN
-        tb_product p ON cpd.prod_sn = p.prod_sn
-        GROUP BY
-        p.prod_nm
-        ORDER BY
-        total_deposit_amount DESC
-        LIMIT 2;
-    </select>
-    <select id="rankedSavingsCountsTop2" parameterType="map" resultType="map">
-        SELECT
-        p.prod_nm AS product_name,
+        SUM(s.savg_tot_dpst_amt) AS total_deposit_amount,
         COUNT(s.savg_ds_sn) AS total_design_count
         FROM
         tb_prod_dsgn_savg s
@@ -299,7 +285,7 @@
         GROUP BY
         p.prod_nm
         ORDER BY
-        total_design_count DESC
+        total_design_count DESC, total_deposit_amount DESC
         LIMIT 2;
     </select>
 
@@ -320,25 +306,10 @@
     </select>
 
     <!-- 대출 상위 2개 상품 조회 -->
-    <select id="rankedLoansAmountsTop2" resultType="map">
+    <select id="rankedLoansTop2" parameterType="map" resultType="map">
         SELECT
         p.prod_nm AS product_name,
-        SUM(s.loan_amt) AS total_deposit_amount
-        FROM
-        tb_prod_dsgn_loan s
-        JOIN
-        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
-        JOIN
-        tb_product p ON cpd.prod_sn = p.prod_sn
-        GROUP BY
-        p.prod_nm
-        ORDER BY
-        total_deposit_amount DESC
-        LIMIT 2;
-    </select>
-    <select id="rankedLoansCountsTop2" parameterType="map" resultType="map">
-        SELECT
-        p.prod_nm AS product_name,
+        SUM(s.loan_amt) AS total_deposit_amount,
         COUNT(s.loan_ds_sn) AS total_design_count
         FROM
         tb_prod_dsgn_loan s
@@ -351,7 +322,7 @@
         GROUP BY
         p.prod_nm
         ORDER BY
-        total_design_count DESC
+        total_design_count DESC, total_deposit_amount DESC
         LIMIT 2;
     </select>
 
@@ -372,25 +343,10 @@
     </select>
 
     <!-- 예금 상위 2개 상품 조회 -->
-    <select id="rankedDepositAmountsTop2" resultType="map">
+    <select id="rankedDepositTop2" parameterType="map" resultType="map">
         SELECT
         p.prod_nm AS product_name,
-        SUM(s.dpst_amt) AS total_deposit_amount
-        FROM
-        tb_prod_dsgn_dpst s
-        JOIN
-        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
-        JOIN
-        tb_product p ON cpd.prod_sn = p.prod_sn
-        GROUP BY
-        p.prod_nm
-        ORDER BY
-        total_deposit_amount DESC
-        LIMIT 2;
-    </select>
-    <select id="rankedDepositCountsTop2" parameterType="map" resultType="map">
-        SELECT
-        p.prod_nm AS product_name,
+        SUM(s.dpst_amt) AS total_deposit_amount,
         COUNT(s.dpst_ds_sn) AS total_design_count
         FROM
         tb_prod_dsgn_dpst s
@@ -403,7 +359,7 @@
         GROUP BY
         p.prod_nm
         ORDER BY
-        total_design_count DESC
+        total_design_count DESC, total_deposit_amount DESC
         LIMIT 2;
     </select>
 
@@ -424,25 +380,10 @@
     </select>
 
     <!-- 목돈 상위 2개 상품 조회 -->
-    <select id="rankedLumpSumAmountsTop2" resultType="map">
+    <select id="rankedLumpSumTop2" parameterType="map" resultType="map">
         SELECT
         p.prod_nm AS product_name,
-        SUM(s.acml_tot_dpst_amt) AS total_deposit_amount
-        FROM
-        tb_prod_dsgn_acml s
-        JOIN
-        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
-        JOIN
-        tb_product p ON cpd.prod_sn = p.prod_sn
-        GROUP BY
-        p.prod_nm
-        ORDER BY
-        total_deposit_amount DESC
-        LIMIT 2;
-    </select>
-    <select id="rankedLumpSumCountsTop2" parameterType="map" resultType="map">
-        SELECT
-        p.prod_nm AS product_name,
+        SUM(s.acml_tot_dpst_amt) AS total_deposit_amount,
         COUNT(s.acml_ds_sn) AS total_design_count
         FROM
         tb_prod_dsgn_acml s
@@ -455,7 +396,7 @@
         GROUP BY
         p.prod_nm
         ORDER BY
-        total_design_count DESC
+        total_design_count DESC, total_deposit_amount DESC
         LIMIT 2;
     </select>
 

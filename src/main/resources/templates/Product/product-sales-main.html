@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+
+<meta charset="UTF-8">
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/css/product/common.css">
+  <link rel="stylesheet" href="/css/product/product-sales.css">
+  <link rel="stylesheet" href="/css/buttons/button.css">
+</head>
+<title>GS Bank</title>
+<!-- 전체 적용될 CSS -->
+<th:block layout:fragment="css"></th:block>
+<!-- 전체 적용될 스크립트 -->
+<th:block layout:fragment="script"></th:block>
+
+<!-- 우리가 작업할 공간 -->
+<body>
+<div layout:fragment="content" class="content">
+  <div class="sub_content">
+    <!-- 위치 -->
+    <div class="location">
+      <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+      <a th:href="@{/product/list}"> / 상품관리</a>
+      <p> / 매출조회 </p>
+    </div>
+    <!-- 상단 -->
+    <div class="top-content">
+      <h1 class="title">매출조회</h1>
+      <div class="condition-box">
+        <form id="search-form" action="/product/sales/search" method="GET">
+          <div class="menu-top">
+            <div class="condition">
+              <label>기간별</label>
+              <select name="year">
+                <option value="">연도 선택</option>
+                <option th:each="year : ${#numbers.sequence(2020, T(java.time.Year).now().getValue())}"
+                        th:value="${year}" th:text="${year}">
+                </option>
+              </select>
+            </div>
+            <div class="condition">
+              <select name="month">
+                <option value="">월 선택</option>
+                <option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}">
+                </option>
+              </select>
+            </div>
+            <div class="condition" id="condition-period">
+              <div style="display: flex; align-items: center;">
+                <input name="searchBgnYmd" type="date">
+                <span>~</span>
+                <input name="searchEndYmd" type="date">
+              </div>
+            </div>
+          </div>
+          <div class="menu-bottom">
+            <div class="condition">
+              <label>상품유형</label>
+              <select name="prodCd">
+                <option value="">적금/예금/대출</option>
+                <option value="1">적금</option>
+                <option value="2">예금</option>
+                <option value="3">대출</option>
+              </select>
+            </div>
+            <div class="condition">
+              <label>상품명</label>
+              <input name="prodNm" type="text" placeholder="상품명을 입력하세요">
+            </div>
+            <div class="condition">
+                <label>담당자</label>
+                <input type="text" id="staffName" name="staffName" readonly placeholder="직원 이름을 검색하세요">
+                <input type="hidden" id="userId" name="userId">
+            </div>
+            <div class="btn-wrap">
+              <button type="submit" class="btn" id="btn-search">
+                <div class="icon-container"><i class="icon bi bi-search"></i></div> 검색
+              </button>
+              <button type="button" class="btn" id="btn-search-all">
+                <div class="icon-container"><i class="icon bi bi-search"></i></div> 전체
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- 모달 창 -->
+      <div id="staffSearchModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <span id="modal-title">담당자명 검색</span>
+          <div class="input-container">
+            <input type="text" id="staffSearchInput" placeholder="직원 이름 입력">
+            <button id="staffSearchButton">검색</button>
+          </div>
+          <div id="staffSearchResults">
+            <!-- 검색 결과가 여기에 표시됩니다 -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 하단 매출 리스트 출력 -->
+    <div class="bottom-content">
+      <div class="bottom-content-top">
+<!--        <span th:if="${periodFilter['startDate'] != null and periodFilter['endDate'] != null}"-->
+<!--              th:text="|총 매출: ${periodFilter['startDate']} ~ ${periodFilter['endDate']}|">-->
+<!--        </span>-->
+<!--        <span th:if="${periodFilter['startDate'] == null and periodFilter['endDate'] == null and #strings.contains(periodFilter, '년')}"-->
+<!--              th:text="|총 매출: ${periodFilter}|">-->
+<!--        </span>-->
+<!--        <span th:if="${periodFilter['startDate'] == null and periodFilter['endDate'] == null and !#strings.contains(periodFilter, '년')}"-->
+<!--              th:text="|총 매출: ${periodFilter}년|">-->
+<!--        </span>-->
+        <div class="btn-wrap" id="btn-bottom-menu">
+          <button class="btn" id="btn-print">
+            <div class="icon-container"><i class="icon bi bi-printer"></i></div> 인쇄
+          </button>
+        </div>
+      </div>
+      <div class="sales-list">
+        <table class="table-sales" id="tb-total-sales">
+          <thead>
+          <tr>
+            <th></th>
+            <th>총설계건수</th>
+            <th>총설계금액</th>
+            <th>설계건수 TOP2</th>
+            <th>설계금액 TOP2</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- 각 상품 유형 데이터 반복 -->
+          <tr th:each="sale : ${salesData}">
+            <td th:text="${sale.prodTyCd}">상품유형</td>
+            <td th:text="${sale.totalCounts != null ? sale.totalCounts : 0}" class="total-count">총설계건수</td>
+            <td>
+              <span th:text="|${sale.formattedTotalAmounts != null ? sale.formattedTotalAmounts : '0'}원|"></span>
+              <input type="hidden" th:value="${sale.totalAmounts != null ? sale.totalAmounts : 0}" class="total-amount">
+            </td>
+            <td>
+              <span th:text="${sale.countsTop2 != null && sale.countsTop2.size() > 0 ? sale.countsTop2[0] : 'N/A'}"></span>
+              <span th:if="${sale.countsTop2 != null && sale.countsTop2.size() > 1}" th:text="|, ${sale.countsTop2[1]}|"></span>
+            </td>
+            <td>
+              <span th:text="${sale.amountsTop2 != null && sale.amountsTop2.size() > 0 ? sale.amountsTop2[0] : 'N/A'}"></span>
+              <span th:if="${sale.amountsTop2 != null && sale.amountsTop2.size() > 1}" th:text="|, ${sale.amountsTop2[1]}|"></span>
+            </td>
+          </tr>
+          <!-- 총합 계산 -->
+          <tr class="tr-total">
+            <td>총합</td>
+            <td id="total-count-sum">-</td>
+            <td id="total-amount-sum">-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script th:inline="javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        // 총합 계산
+        let totalCounts = 0;
+        let totalAmounts = 0;
+
+        // 각 행의 설계 건수와 설계 금액을 합산
+        document.querySelectorAll(".total-count").forEach(function (element) {
+          totalCounts += parseInt(element.textContent.trim(), 10) || 0;
+        });
+
+        document.querySelectorAll(".total-amount").forEach(function (element) {
+          totalAmounts += parseInt(element.value.trim(), 10) || 0;
+        });
+
+        // 결과를 테이블에 표시
+        document.getElementById("total-count-sum").textContent = totalCounts;
+        document.getElementById("total-amount-sum").textContent = new Intl.NumberFormat().format(totalAmounts) + "원";
+
+        // 검색 버튼 유효성 검사 추가
+        document.getElementById("btn-search").addEventListener("click", function (e) {
+            const form = document.getElementById("search-form");
+            const year = form.querySelector("select[name='year']").value;
+            const month = form.querySelector("select[name='month']").value;
+            const searchBgnYmd = form.querySelector("input[name='searchBgnYmd']").value;
+            const searchEndYmd = form.querySelector("input[name='searchEndYmd']").value;
+            const prodCd = form.querySelector("select[name='prodCd']").value;
+            const prodNm = form.querySelector("input[name='prodNm']").value;
+            const staffName = form.querySelector("input[name='staffName']").value;
+
+            // "월"이 선택되었지만 "연도"가 선택되지 않은 경우
+            if (month && !year) {
+                e.preventDefault(); // 폼 제출 막기
+                alert("월을 선택하려면 연도를 먼저 선택하세요.");
+                return;
+            }
+
+            // 조건이 하나라도 선택되었는지 확인
+            if (
+                !year &&
+                !month &&
+                !searchBgnYmd &&
+                !searchEndYmd &&
+                !prodCd &&
+                !prodNm &&
+                !staffName
+            ) {
+                e.preventDefault(); // 폼 제출 막기
+                alert("검색 조건을 하나 이상 선택하세요.");
+            }
+        });
+        /* 에러 메시지 처리 */
+            let errorMessage = /*[[${errorMessage}]]*/ '';
+            if (errorMessage) {
+                alert(errorMessage);
+            }
+      });
+      $(document).ready(function(){
+        // 전체 버튼 클릭
+        $("#btn-search-all").on("click", function(e){
+            window.location.href = "/product/sales";
+        });
+
+        // 조건 검색 버튼 클릭
+
+        // 직원 검색 모달 관련 -------------------------------------
+        // 모달 열기
+        $("#staffName").on("click", function () {
+            $("#staffSearchModal").fadeIn();
+        });
+
+        // 모달 닫기 버튼
+        $(".close").on("click", function () {
+            $("#staffSearchModal").fadeOut();
+        });
+
+        // 모달 외부 클릭 시 닫기
+        $(window).on("click", function (event) {
+            if ($(event.target).is("#staffSearchModal")) {
+                $("#staffSearchModal").fadeOut();
+            }
+        });
+
+        $("#staffSearchButton").on("click", function () {
+            const searchTerm = $("#staffSearchInput").val().trim();
+
+            if (!searchTerm) {
+                alert("검색어를 입력하세요.");
+                return;
+            }
+
+            // 서버로 Ajax 요청 보내기
+            $.ajax({
+                url: "/product/user/search", // API 엔드포인트
+                type: "GET",
+                data: { name: searchTerm }, // 요청 파라미터
+                success: function (response) {
+                    const resultsContainer = $("#staffSearchResults");
+                    resultsContainer.empty();
+
+                    if (response.length === 0) {
+                        resultsContainer.append("<p>검색 결과가 없습니다.</p>");
+                    } else {
+                        // 테이블 생성
+                        const table = $(`
+                            <table class="staff-table">
+                                <thead>
+                                    <tr>
+                                        <th>사원번호</th>
+                                        <th>사원이름</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        `);
+
+                        // 결과 추가
+                        response.forEach((item) => {
+                            const row = $(`
+                                <tr class="result-item" data-id="${item.id}">
+                                    <td>${item.id}</td>
+                                    <td>${item.name}</td>
+                                </tr>
+                            `);
+
+                            // 행 클릭 이벤트 추가
+                            row.on("click", function () {
+                                $("#staffName").val(item.name); // 입력 필드에 이름 설정
+                                $("#userId").val(item.id);
+                                $("#staffSearchModal").fadeOut(); // 모달 닫기
+                            });
+
+                            table.find("tbody").append(row);
+                        });
+
+                        resultsContainer.append(table);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("검색 실패: ", error);
+                    alert("검색에 실패했습니다. 다시 시도해주세요.");
+                },
+            });
+        });
+        // 직원 이름 검색 인풋 필드에서 엔터 키 입력 처리
+        $("#staffSearchInput").on("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // 기본 Enter 키 동작(폼 제출) 방지
+                $("#staffSearchButton").click(); // 검색 버튼 클릭 이벤트 트리거
+            }
+        });
+      });
+  </script>
+</div>
+</body>
+</html>

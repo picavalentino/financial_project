@@ -28,15 +28,8 @@ public interface ProductMapper {
     List<Map<String, Object>> thisMonthDepositSales(LocalDate startOfMonth, LocalDate endOfMonth);
     List<Map<String, Object>> thisMonthLumpSumSales(LocalDate startOfMonth, LocalDate endOfMonth);
 
-    List<Map<String, Object>> rankedSavingsCountsTop2(LocalDate startOfMonth, LocalDate endOfMonth);
-    List<Map<String, Object>> rankedSavingsAmountsTop2(LocalDate startOfMonth, LocalDate endOfMonth);
-
-    List<Map<String, Object>> rankedLoansCountsTop2(LocalDate startOfMonth, LocalDate endOfMonth);
-    List<Map<String, Object>> rankedLoansAmountsTop2(LocalDate startOfMonth, LocalDate endOfMonth);
-
-    List<Map<String, Object>> rankedDepositCountsTop2(LocalDate startOfMonth, LocalDate endOfMonth);
-    List<Map<String, Object>> rankedDepositAmountsTop2(LocalDate startOfMonth, LocalDate endOfMonth);
-
-    List<Map<String, Object>> rankedLumpSumCountsTop2(LocalDate startOfMonth, LocalDate endOfMonth);
-    List<Map<String, Object>> rankedLumpSumAmountsTop2(LocalDate startOfMonth, LocalDate endOfMonth);
+    List<Map<String, Object>> rankedSavingsTop2(LocalDate startOfMonth, LocalDate endOfMonth);
+    List<Map<String, Object>> rankedLoansTop2(LocalDate startOfMonth, LocalDate endOfMonth);
+    List<Map<String, Object>> rankedDepositTop2(LocalDate startOfMonth, LocalDate endOfMonth);
+    List<Map<String, Object>> rankedLumpSumTop2(LocalDate startOfMonth, LocalDate endOfMonth);
 }
