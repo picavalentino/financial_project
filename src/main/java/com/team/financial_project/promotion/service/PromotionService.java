@@ -4,10 +4,7 @@ import com.team.financial_project.promotion.calculator.AccumulatedFundCalculator
 import com.team.financial_project.promotion.calculator.DepositCalculator;
 import com.team.financial_project.promotion.calculator.LoanCalculator;
 import com.team.financial_project.promotion.calculator.SavingsCalculator;
-import com.team.financial_project.promotion.dto.CodeDto;
-import com.team.financial_project.promotion.dto.ProductInfoDto;
-import com.team.financial_project.promotion.dto.PromotionListDto;
-import com.team.financial_project.promotion.dto.UserInfoDto;
+import com.team.financial_project.promotion.dto.*;
 import com.team.financial_project.promotion.mapper.PromotionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -151,4 +148,16 @@ public class PromotionService {
         return mapper.getUserInfoList(custNm, custTelno);
     }
 
+    @Transactional
+    public void save(SavingsSaveDto savingsSaveDto) {
+        // Step 1: TB_CUSTPROD_DSGN에 데이터 삽입 (dsgnSn 값 자동 생성)
+        mapper.insertCustprodDsgn(savingsSaveDto);
+
+        // Step 2: 생성된 dsgnSn 값을 savingsSaveDto에 설정
+        Integer generatedDsgnSn = savingsSaveDto.getDsgnSn();
+        savingsSaveDto.setDsgnSn(generatedDsgnSn);
+
+        // Step 3: TB_PROD_DSGN_SAVG에 데이터 삽입
+        mapper.insertProdDsgnSavg(savingsSaveDto);
+    }
 }

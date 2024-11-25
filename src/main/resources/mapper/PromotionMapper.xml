@@ -288,4 +288,30 @@
         </if>
         ORDER BY p.PROD_CD ASC
     </select>
+
+    <!-- TB_CUSTPROD_DSGN에 데이터 삽입 -->
+    <insert id="insertCustprodDsgn" useGeneratedKeys="true" keyProperty="dsgnSn">
+        INSERT INTO TB_CUSTPROD_DSGN (
+        PROD_SN, CUST_ID, USER_ID, DSGN_CREATE_AT, DSGN_UPDATE_AT,
+        DSGN_DS_TY_CD, DSGN_PRG_STCD
+        ) VALUES (
+        #{prodSn}, #{custId}, #{userId}, #{dsgnCreateAt}, #{dsgnUpdateAt},
+        #{prodDsTyCd}, #{dsgnPrgStcd}
+        )
+    </insert>
+
+    <!-- TB_PROD_DSGN_SAVG에 데이터 삽입 -->
+    <insert id="insertProdDsgnSavg">
+        INSERT INTO TB_PROD_DSGN_SAVG (
+        DSGN_SN, SAVG_PAY_TY_CD, SAVG_GOAL_AMT,
+        SAVG_GOAL_PRD, SAVG_STRT_DT, SAVG_MTR_DT, SAVG_APLY_RATE,
+        SAVG_INT_TAX_TY_CD, SAVG_CIRCLE_AMT, SAVG_TOT_DPST_AMT, SAVG_TOT_DPST_INT,
+        SAVG_INT_TAX_AMT, SAVG_ATX_RCVE_AMT
+        ) VALUES (
+        #{dsgnSn}, #{prodPayTyCd}, #{savgCircleAmt},
+        #{savgGoalPrd}, #{savgStrtDt}, #{savgMtrDt}, #{savgAplyRate},
+        #{savgIntTaxTyCd}, #{savgCircleAmt}, #{savgTotDpstAmt}, #{savgTotDpstInt},
+        #{savgIntTaxAmt}, #{savgAtxRcveAmt}
+        )
+    </insert>
 </mapper>

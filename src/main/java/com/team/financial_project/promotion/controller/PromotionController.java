@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,7 +146,7 @@ public class PromotionController {
         System.out.println("Received DTO: " + savingsSaveDto);
 
         // 서비스 호출
-        /*promotionService.save(savingsSaveDto);*/
+        promotionService.save(savingsSaveDto);
 
         return ResponseEntity.ok("저장이 완료되었습니다.");
     }

@@ -1,9 +1,6 @@
 package com.team.financial_project.promotion.mapper;
 
-import com.team.financial_project.promotion.dto.CodeDto;
-import com.team.financial_project.promotion.dto.ProductInfoDto;
-import com.team.financial_project.promotion.dto.PromotionListDto;
-import com.team.financial_project.promotion.dto.UserInfoDto;
+import com.team.financial_project.promotion.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -60,4 +57,7 @@ public interface PromotionMapper {
             @Param("custNm") String custNm, @Param("custTelno") String custTelno);
 
 
+    void insertCustprodDsgn(SavingsSaveDto savingsSaveDto);
+
+    void insertProdDsgnSavg(SavingsSaveDto savingsSaveDto);
 }

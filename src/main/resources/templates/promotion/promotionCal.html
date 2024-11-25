@@ -191,6 +191,7 @@
                             <!-- 적용금리 -->
                             <div class="input-rate">
                                 <select id="selectSavgAplyRate" name="selectSavgAplyRate">
+                                    <option>금리선택</option>
                                     <option value="prodairmin">최소금리</option>
                                     <option value="prodairmax">최대금리</option>
                                 </select>
@@ -931,11 +932,11 @@
                 savgAtxRcveAmt: parseInt(document.getElementById('savgAtxRcveAmt').value.replace(/,/g, ''), 10), // 세후수령액
             };
 
-            // 데이터 확인 로그
-            console.log('Collected Data:', data);
+<!--            // 데이터 확인 로그-->
+<!--            console.log('Collected Data:', data);-->
 
             // 서버로 POST 요청 전송
-            fetch('/cal/savg/insert', {
+            fetch('/promotion/cal/savg/insert', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

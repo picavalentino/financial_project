@@ -128,6 +128,7 @@
                         <label for="savgCircleAmt">대출금액 (원)</label>
                         <label for="savgGoalPrd">대출기간 (개월)</label>
                         <label for="savgAplyRate">대출금리 (%)</label>
+                        <label for="repaymentMethod">상환방법</label>
                         <label for="dsgnCreateAt">설계일자</label>
                         <label for="dsgnUpdateAt">작성일자</label>
                     </div>
@@ -190,15 +191,23 @@
                             <!-- 적용금리 -->
                             <div class="input-rate">
                                 <select id="selectSavgAplyRate" name="selectSavgAplyRate">
+                                    <option>금리선택</option>
                                     <option value="prodairmin">최소금리</option>
                                     <option value="prodairmax">최대금리</option>
                                 </select>
                                 <input type="text" id="savgAplyRate" name="savgAplyRate" disabled>
                             </div>
 
-                            <!-- 이자과세 -->
+                            <!-- 상환방법 -->
                             <!-- 표시용 -->
-                            <input type="text" id="prodIntTaxTy" name="prodIntTaxTy" disabled>
+                            <div class="input-rate">
+                                <select id="repaymentMethod" name="repaymentMethod">
+                                    <option>선택</option>
+                                    <option value="equalPrincipal">원금균등상환</option>
+                                    <option value="equalPrincipalAndInterest">원리금균등상환</option>
+                                    <option value="lumpSum">원금만기일시상환</option>
+                                </select>
+                            </div>
                             <!-- 계산용 -->
                             <input type="hidden" id="prodIntTaxRate" name="prodIntTaxRate">
                             <!-- 저장용 -->
@@ -525,7 +534,7 @@
             // 상품 리스트 가져오기
             async function loadProductList(productCode = '', productName = '') {
                 try {
-                    const response = await fetch(`/promotion/cal/productList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
+                    const response = await fetch(`/promotion/cal/loanProductList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const productList = await response.json();
                     renderProductTable(productList);
@@ -595,13 +604,7 @@
                     rateInput.value = product.prodAirMin ? `${product.prodAirMin}` : '';
                 }
 
-                // 이자과세
-                const prodIntTaxTy = document.getElementById('prodIntTaxTy'); // 표시용
-                const prodIntTaxRate = document.getElementById('prodIntTaxRate'); // 계산용
-                const savgIntTaxTyCd = document.getElementById('savgIntTaxTyCd'); // 저장용
-                prodIntTaxTy.value = `${product.prodIntTaxTy} (${product.prodIntTaxRate}%)` || ''; // 예: 일반과세 (15.4%)
-                prodIntTaxRate.value = product.prodIntTaxRate || ''; // 예: 15.4
-                savgIntTaxTyCd.value = product.prodIntTaxTyCd || ''; // 예: 1
+
             }
 
             // 상품 모달 열기
@@ -798,20 +801,25 @@
             const savgCircleAmt = document.getElementById('savgCircleAmt').value.trim();
             const savgGoalPrd = document.getElementById('savgGoalPrd').value.trim();
             const savgAplyRate = document.getElementById('savgAplyRate').value.trim();
+            const repaymentMethod = document.getElementById('repaymentMethod').value;
 
             // 유효성 검사
             if (!savgCircleAmt || parseFloat(savgCircleAmt) <= 0) {
-                alert('불입금액을 입력하세요.');
+                alert('대출금액을 입력하세요.');
                 return;
             }
             if (!savgGoalPrd || parseInt(savgGoalPrd) <= 0) {
-                alert('목표기간을 입력하세요.');
+                alert('대출기간을 입력하세요.');
                 return;
             }
             if (!savgAplyRate || parseFloat(savgAplyRate) <= 0) {
                 alert('적용금리를 입력하세요.');
                 return;
             }
+            if (repaymentMethod === "선택") {
+                alert('상환 방법을 선택하세요.');
+                return;
+    }
 
             const requestData = {
                 savgCircleAmt: parseFloat(savgCircleAmt.replace(/,/g, '')),
@@ -821,8 +829,25 @@
                 savgStrtDt: document.getElementById('savgStrtDt').value,
             };
 
+            // 상환 방법에 따른 URL 결정
+            let url;
+            switch (repaymentMethod) {
+                case "equalPrincipal":
+                    url = '/promotion/cal/equalPrincipal';
+                    break;
+                case "equalPrincipalAndInterest":
+                    url = '/promotion/cal/equalPrincipalAndInterest';
+                    break;
+                case "lumpSum":
+                    url = '/promotion/cal/lumpSum';
+                    break;
+                default:
+                    alert('잘못된 상환 방법입니다.');
+                    return;
+            }
+
             // 서버 요청
-            fetch('/promotion/cal/savg/calculate', {
+            fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestData),

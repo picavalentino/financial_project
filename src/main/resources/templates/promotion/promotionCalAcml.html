@@ -191,6 +191,7 @@
                             <!-- 적용금리 -->
                             <div class="input-rate">
                                 <select id="selectSavgAplyRate" name="selectSavgAplyRate">
+                                    <option>금리선택</option>
                                     <option value="prodairmin">최소금리</option>
                                     <option value="prodairmax">최대금리</option>
                                 </select>
@@ -519,7 +520,7 @@
             // 상품 리스트 가져오기
             async function loadProductList(productCode = '', productName = '') {
                 try {
-                    const response = await fetch(`/promotion/cal/productList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
+                    const response = await fetch(`/promotion/cal/AcmlProductList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const productList = await response.json();
                     renderProductTable(productList);
