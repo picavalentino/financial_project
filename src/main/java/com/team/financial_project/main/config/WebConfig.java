@@ -1,4 +1,4 @@
-package com.team.financial_project.config;
+package com.team.financial_project.main.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
