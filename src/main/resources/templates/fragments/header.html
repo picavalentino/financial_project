@@ -12,17 +12,17 @@
                 </a>
             </div>
 
-            <div class="d-flex">
-                <!-- 북마크 -->
-                <div class="bookmark">
-                    <a href="#" class="d-flex align-items-center">고객 목록</a>
-                </div>
-            </div>
+<!--            <div class="d-flex">-->
+<!--                &lt;!&ndash; 북마크 &ndash;&gt;-->
+<!--                <div class="bookmark">-->
+<!--                    <a href="#" class="d-flex align-items-center">고객 목록</a>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <!-- 로그인 / 로그아웃 -->
             <div class="d-flex log">
-                <!--                <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">Login</a>-->
                 <a th:href="@{/mypage}" class="btn">MyPage</a>
+<!--                <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">Login</a>-->
                 <a th:href="@{/logout}" class="btn" sec:authorize="isAuthenticated()">Logout</a>
             </div>
 

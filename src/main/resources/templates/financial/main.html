@@ -31,20 +31,11 @@
                         <div class="card notice-card">
                             <div class="card-header d-flex justify-content-between align-items-center text-primary">
                                 공지사항
-                                <a href="#" class="text-decoration-none text-primary">&gt;</a>
+                                <a th:href="@{/board/list}" class="text-decoration-none text-primary">&gt;</a>
                             </div>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span>◎</span> 첫번째 공지사항입니다.
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span>◎</span> 두번째 공지사항입니다.
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span>◎</span> 세번째 공지사항입니다.
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span>◎</span> 네번째 공지사항입니다.
+                                <li class="list-group-item d-flex align-items-center" th:each="notice : ${noticeList}">
+                                    <a href="#" th:text="${'◎ '+notice.inqTitle}"> 첫번째 공지사항입니다.</a>
                                 </li>
                             </ul>
                         </div>
@@ -59,7 +50,8 @@
                             </div>
                             <ul class="list-group list-group-flush">
                                 <!-- 날짜 항목 -->
-                                <li class="list-group-item d-flex align-items-center date-item">
+                                <li class="list-group-item d-flex align-items-center date-item"
+                                    th:text="${#dates.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}">
                                     2024년 11월 18일 (목)
                                 </li>
                                 <!-- 할 일 항목 -->
@@ -87,24 +79,13 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" th:each="news : ${newsList}">
                                         <div class="news-item">
-                                            <a href="#">
-                                                <img src="/images/main/news1.webp" alt="News 1" class="news-img">
-                                                <p class="news-title">뉴스제목입니다! 이 상황을 어떻게 생각하십니까?</p>
+                                            <a th:href="${news.link}" class="news-title-link">
+                                                <img th:src="${news['img-link']}" alt="News 1" class="news-img">
+                                                <p class="news-title" th:text="${news.title}">뉴스제목입니다! 이 상황을 어떻게
+                                                    생각하십니까?</p>
                                             </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="news-item">
-                                            <img src="/images/main/news2.webp" alt="News 2" class="news-img">
-                                            <p class="news-title">뉴스제목입니다! 이 상황을 어떻게 생각하십니까?</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="news-item">
-                                            <img src="/images/main/news3.webp" alt="News 3" class="news-img">
-                                            <p class="news-title">뉴스제목입니다! 이 상황을 어떻게 생각하십니까?</p>
                                         </div>
                                     </div>
                                 </div>
@@ -122,31 +103,131 @@
                                         <div class="america rate-box">
                                             <img src="/images/main/미국국기.png" class="img-flag">
                                             <div class="rate-info">
-                                                <span class="excharge-num">1,407.30</span>
-                                                <span class="excharge-success">▲0.30</span>
-                                                <span class="excharge-success">+0.02%</span>
+                                                <!-- 오늘 환율: 영업 시간일 때 -->
+                                                <span class="excharge-num"
+                                                      th:if="${exchangeRates['USD']['deal_bas_r'] > 0}"
+                                                      th:text="${exchangeRates['USD']['deal_bas_r']}">1,407</span>
+
+                                                <!-- 오늘 환율: 영업 시간 아닐 때 -->
+                                                <span class="excharge-num"
+                                                      th:if="${exchangeRates['USD']['deal_bas_r'] == 0}">영업시간 전</span>
+
+                                                <!-- 변동값: 상승일 때 -->
+                                                <span class="excharge-success"
+                                                      th:if="${exchangeRates['USD']['change'] > 0}"
+                                                      th:text="'▲' + ${exchangeRates['USD']['change']}">▲0.30</span>
+
+                                                <!-- 변동값: 하락일 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['USD']['change'] < 0}"
+                                                      th:text="'▼' + ${exchangeRates['USD']['change'].abs()}">▼0.30</span>
+
+                                                <!-- 변동값: 영업시간 아닐 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['USD']['change'] == 0}"></span>
+
+                                                <!-- 변동률: 상승일 때 -->
+                                                <span class="excharge-success"
+                                                      th:if="${exchangeRates['USD']['change'] > 0}"
+                                                      th:text="'+' + ${exchangeRates['USD']['change_percentage']} + '%'">+0.02%</span>
+
+                                                <!-- 변동률: 하락일 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['USD']['change'] < 0}"
+                                                      th:text="${exchangeRates['USD']['change_percentage'].abs()} + '%'">0.02%</span>
+
+                                                <!-- 변동률: 영업 시간 아닐 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['USD']['change'] == 0}"></span>
                                             </div>
                                         </div>
                                         <div class="japan rate-box">
                                             <img src="/images/main/일본국기.png" class="img-flag">
                                             <div class="rate-info">
-                                                <span class="excharge-num">901.57</span>
-                                                <span class="excharge-danger">▼3.57</span>
-                                                <span class="excharge-danger">-0.39%</span>
+                                                <!-- 오늘 환율: 영업 시간일 때 -->
+                                                <span class="excharge-num"
+                                                      th:if="${exchangeRates['JPY(100)']['deal_bas_r'] > 0}"
+                                                      th:text="${exchangeRates['JPY(100)']['deal_bas_r']}">1,407</span>
+
+                                                <!-- 오늘 환율: 영업 시간 아닐 때 -->
+                                                <span class="excharge-num"
+                                                      th:if="${exchangeRates['JPY(100)']['deal_bas_r'] == 0}">영업시간 전</span>
+
+                                                <!-- 변동값: 상승일 때 -->
+                                                <span class="excharge-success"
+                                                      th:if="${exchangeRates['JPY(100)']['change'] > 0}"
+                                                      th:text="'▲' + ${exchangeRates['JPY(100)']['change']}">▲0.30</span>
+
+                                                <!-- 변동값: 하락일 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['JPY(100)']['change'] < 0}"
+                                                      th:text="'▼' + ${exchangeRates['JPY(100)']['change'].abs()}">▼0.30</span>
+
+                                                <!-- 변동값: 영업시간 아닐 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['JPY(100)']['change'] == 0}"></span>
+
+                                                <!-- 변동률: 상승일 때 -->
+                                                <span class="excharge-success"
+                                                      th:if="${exchangeRates['JPY(100)']['change'] > 0}"
+                                                      th:text="'+' + ${exchangeRates['JPY(100)']['change_percentage']} + '%'">+0.02%</span>
+
+                                                <!-- 변동률: 하락일 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['JPY(100)']['change'] < 0}"
+                                                      th:text="${exchangeRates['JPY(100)']['change_percentage'].abs()} + '%'">0.02%</span>
+
+                                                <!-- 변동률: 영업 시간 아닐 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['JPY(100)']['change'] == 0}"></span>
                                             </div>
                                         </div>
                                         <div class="euro rate-box">
                                             <img src="/images/main/유럽연합국기.png" class="img-flag">
                                             <div class="rate-info">
-                                                <span class="excharge-num">1,483.79</span>
-                                                <span class="excharge-danger">▼2.42</span>
-                                                <span class="excharge-danger">-0.16%</span>
+                                                <!-- 오늘 환율: 영업 시간일 때 -->
+                                                <span class="excharge-num"
+                                                      th:if="${exchangeRates['EUR']['deal_bas_r'] > 0}"
+                                                      th:text="${exchangeRates['EUR']['deal_bas_r']}">1,407</span>
+
+                                                <!-- 오늘 환율: 영업 시간 아닐 때 -->
+                                                <span class="excharge-num"
+                                                      th:if="${exchangeRates['EUR']['deal_bas_r'] == 0}">영업시간 전</span>
+
+                                                <!-- 변동값: 상승일 때 -->
+                                                <span class="excharge-success"
+                                                      th:if="${exchangeRates['EUR']['change'] > 0}"
+                                                      th:text="'▲' + ${exchangeRates['EUR']['change']}">▲0.30</span>
+
+                                                <!-- 변동값: 하락일 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['EUR']['change'] < 0}"
+                                                      th:text="'▼' + ${exchangeRates['EUR']['change'].abs()}">▼0.30</span>
+
+                                                <!-- 변동값: 영업시간 아닐 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['EUR']['change'] == 0}"></span>
+
+                                                <!-- 변동률: 상승일 때 -->
+                                                <span class="excharge-success"
+                                                      th:if="${exchangeRates['EUR']['change'] > 0}"
+                                                      th:text="'+' + ${exchangeRates['EUR']['change_percentage']} + '%'">+0.02%</span>
+
+                                                <!-- 변동률: 하락일 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['EUR']['change'] < 0}"
+                                                      th:text="${exchangeRates['EUR']['change_percentage'].abs()} + '%'">0.02%</span>
+
+                                                <!-- 변동률: 영업 시간 아닐 때 -->
+                                                <span class="excharge-danger"
+                                                      th:if="${exchangeRates['EUR']['change'] == 0}"></span>
                                             </div>
                                         </div>
                                         <div class="score-text">환율</div>
                                     </div>
                                     <div class="col-md-4 kospi">
-                                        <div class="stock-box"></div>
+                                        <div class="stock-box">
+                                        </div>
                                         <div class="score-text">코스피</div>
                                     </div>
                                     <div class="col-md-4 kosdaq">
@@ -172,6 +253,7 @@
                         <div>
                             <canvas id="genderChart" class="gender-chart"></canvas>
                             <div class="score-text">고객 성별 분포</div>
+                            <div class="score-text" th:text="${genderStatistics}">고객 성별 분포</div>
                         </div>
                         <div>
                             <canvas id="ageChart" class="age-chart"></canvas>
@@ -187,72 +269,179 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- 사용자 정의 스크립트 -->
     <script>
-        // 성별 분포 차트
-        const genderCtx = document.getElementById('genderChart').getContext('2d');
-        new Chart(genderCtx, {
-            type: 'pie',
-            data: {
-                labels: ['남성', '여성'],
-                datasets: [{
-                    label: '성별 분포',
-                    data: [60, 40],
-                    backgroundColor: ['#007bff', '#ff6384'],
-                    hoverOffset: 4
-                }]
-            }
-        });
+        $(document).ready(function () {
+            // AJAX를 사용하여 데이터 가져오기
+            $.ajax({
+                url: '/api/gender-statistics', // REST API 엔드포인트
+                method: 'GET',
+                success: function (response) {
+                    console.log('성공적으로 데이터를 가져왔습니다:', response);
+                    if (response.length > 0) {
+                        const data = response[0]; // 첫 번째 데이터 선택
+                        const totalCount = data.totalCount || 0;
+                        const maleCount = data.maleCount || 0;
+                        const femaleCount = data.femaleCount || 0;
 
-        // 연령 분포 차트
-        const ageCtx = document.getElementById('ageChart').getContext('2d');
-        new Chart(ageCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['10대', '20대', '30대', '40대', '50대 이상'],
-                datasets: [{
-                    label: '연령 분포',
-                    data: [10, 30, 25, 20, 15],
-                    backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff'],
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top', // 범례를 차트 상단에 표시
-                        align: 'center', // 범례를 가운데 정렬 (좌우로 일렬 정렬)
-                        labels: {
-                            padding: 15,    // 범례 항목 간 간격
-                            boxWidth: 20,   // 색상 박스 너비
-                            boxHeight: 10   // 색상 박스 높이
-                        }
-                    }
-                }
-            }
-        });
+                        // 백분율 계산
+                        const malePercentage = totalCount > 0 ? ((maleCount / totalCount) * 100).toFixed(1) : 0;
+                        const femalePercentage = totalCount > 0 ? ((femaleCount / totalCount) * 100).toFixed(1) : 0;
 
-        // 매출 분석 차트
-        const salesCtx = document.getElementById('salesChart').getContext('2d');
-        new Chart(salesCtx, {
-            type: 'bar',
-            data: {
-                labels: ['1월', '2월', '3월', '4월', '5월'],
-                datasets: [{
-                    label: '매출 (단위: 만원)',
-                    data: [120, 150, 180, 200, 250],
-                    backgroundColor: '#4bc0c0'
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                        // 로그 출력
+<!--                        console.log(`총 고객 수: ${totalCount}`);-->
+<!--                        console.log(`남성 비율: ${malePercentage}%`);-->
+<!--                        console.log(`여성 비율: ${femalePercentage}%`);-->
+
+                        // 성별 분포 차트 생성
+                        const genderCtx = $('#genderChart')[0].getContext('2d');
+                        new Chart(genderCtx, {
+                            type: 'pie',
+                            data: {
+                                labels: ['남성', '여성'],
+                                datasets: [{
+                                    label: '성별 분포',
+                                    data: [malePercentage, femalePercentage], // 데이터 동적 변경 가능
+                                    backgroundColor: ['#007bff', '#ff6384'],
+                                    hoverOffset: 4
+                                }]
+                            }
+                        });
+                    } else {
+                        console.warn('응답 데이터가 비어 있습니다.');
                     }
+                },
+                error: function (error) {
+                    console.error('데이터를 가져오는 중 오류 발생:', error);
                 }
+            });
+
+            $.ajax({
+                url: '/api/age-statistics', // REST API 엔드포인트
+                method: 'GET',
+                success: function (response) {
+                    console.log('성공적으로 데이터를 가져왔습니다:', response);
+                    if (response.length > 0) {
+                        const data = response[0]; // 첫 번째 데이터 선택
+                        const totalCount = data.totalCount || 0;
+                        const age10sUnder = data.age10sUnder || 0;
+                        const age20s = data.age20s || 0;
+                        const age30s = data.age30s || 0;
+                        const age40s = data.age40s || 0;
+                        const age50s = data.age50s || 0;
+                        const age60sUp = data.age60sUp || 0;
+
+                        // 백분율 계산
+                        const age10sUnderPercentage = totalCount > 0 ? ((age10sUnder / totalCount) * 100).toFixed(1) : 0;
+                        const age20sPercentage = totalCount > 0 ? ((age20s / totalCount) * 100).toFixed(1) : 0;
+                        const age30sPercentage = totalCount > 0 ? ((age30s / totalCount) * 100).toFixed(1) : 0;
+                        const age40sPercentage = totalCount > 0 ? ((age40s / totalCount) * 100).toFixed(1) : 0;
+                        const age50sPercentage = totalCount > 0 ? ((age50s / totalCount) * 100).toFixed(1) : 0;
+                        const age60sUpPercentage = totalCount > 0 ? ((age60sUp / totalCount) * 100).toFixed(1) : 0;
+
+                        // 로그 출력
+<!--                        console.log(`총 고객 수: ${totalCount}`);-->
+<!--                        console.log(`10대 비율: ${age10sUnderPercentage}%`);-->
+<!--                        console.log(`20대 비율: ${age20sPercentage}%`);-->
+<!--                        console.log(`30대 비율: ${age30sPercentage}%`);-->
+<!--                        console.log(`40대 비율: ${age40sPercentage}%`);-->
+<!--                        console.log(`50대 비율: ${age50sPercentage}%`);-->
+<!--                        console.log(`60대 비율: ${age60sUpPercentage}%`);-->
+
+                        // 연령 분포 차트 생성
+                        const ageCtx = $('#ageChart')[0].getContext('2d');
+                        new Chart(ageCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+                                datasets: [{
+                                    label: '연령 분포',
+                                    data: [age10sUnderPercentage, age20sPercentage, age30sPercentage, age40sPercentage, age50sPercentage,age60sUpPercentage], // 데이터 동적 변경 가능
+                                    backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#FF9D13', '#9966ff'],
+                                    hoverOffset: 4
+                                }]
+                            },
+                            options: {
+                                plugins: {
+                                    legend: {
+                                        display: true,
+                                        position: 'top', // 범례를 차트 상단에 표시
+                                        align: 'center', // 범례를 가운데 정렬 (좌우로 일렬 정렬)
+                                        labels: {
+                                            padding: 10,    // 범례 항목 간 간격
+                                            boxWidth: 20,   // 색상 박스 너비
+                                            boxHeight: 10   // 색상 박스 높이
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        console.warn('응답 데이터가 비어 있습니다.');
+                    }
+                },
+                error: function (error) {
+                    console.error('데이터를 가져오는 중 오류 발생:', error);
+                }
+            });
+
+
+            // 현재 월을 기준으로 라벨 동적 생성
+            const currentMonth = new Date().getMonth() + 1; // 현재 월 (0부터 시작하므로 +1 필요)
+            const labels = [];
+            for (let i = 0; i < 5; i++) {
+                const month = (currentMonth - i + 11) % 12 + 1; // 지난 달 계산 (0월 -> 12월 처리)
+                labels.unshift(`${month}월`); // 배열의 앞에 추가
             }
+            $.ajax({
+                url: '/api/sales-statistics', // REST API 엔드포인트
+                method: 'GET',
+                success: function (response) {
+                    console.log('성공적으로 데이터를 가져왔습니다:', response);
+                    if (response.length > 0) {
+                        const data = response[0]; // 첫 번째 데이터 선택
+                        const now = data.now || 0;
+                        const previousMonth1 = data.previousMonth1 || 0;
+                        const previousMonth2 = data.previousMonth2 || 0;
+                        const previousMonth3 = data.previousMonth3 || 0;
+                        const previousMonth4 = data.previousMonth4 || 0;
+
+                        // 로그 출력
+<!--                        console.log(`이번달: ${now}`);-->
+<!--                        console.log(`지난달: ${previousMonth1}`);-->
+<!--                        console.log(`지지난달: ${previousMonth2}`);-->
+<!--                        console.log(`지지지난달: ${previousMonth3}`);-->
+<!--                        console.log(`지지지지난달: ${previousMonth4}`);-->
+
+                        // 매출 분석 차트 생성
+                        const salesCtx = $('#salesChart')[0].getContext('2d');
+                        new Chart(salesCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: '매출 (단위: 건)',
+                                    data: [previousMonth1, previousMonth2, previousMonth3, previousMonth4, now], // 데이터 동적 변경 가능
+                                    backgroundColor: '#4bc0c0'
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        console.warn('응답 데이터가 비어 있습니다.');
+                    }
+                },
+                error: function (error) {
+                    console.error('데이터를 가져오는 중 오류 발생:', error);
+                }
+            });
+
         });
     </script>
-
 
 
 </div>

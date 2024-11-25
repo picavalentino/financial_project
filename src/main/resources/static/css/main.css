@@ -39,10 +39,23 @@
     margin: 5px 10px;
     background-color: #E5E7FF;
     border: none;
+    border-bottom: none; /* 헤더 하단 구분선 제거 */
     display: flex;
     align-items: center;
     gap: 10px;
     border-radius: 10px;
+}
+
+/*공지사항 링크 이동*/
+.notice-card .list-group-item a{
+    text-decoration: none;
+    color: #000000;
+    border-bottom: none; /* 헤더 하단 구분선 제거 */
+}
+
+/*호버*/
+.notice-card .list-group-item a:hover{
+    color: #ADB4FF;
 }
 
 /* 마지막 항목 밑에 마진 */
@@ -140,12 +153,25 @@
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
+    text-decoration: none;
 }
 
 /* 뉴스 항목 컨테이너 */
 .news-item {
     text-align: center;
     margin-top: 10px;
+    text-decoration: none;
+}
+
+/* 뉴스 링크 스타일 */
+a.news-title-link {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 텍스트 색상 상속 (파란색 링크 제거) */
+}
+
+a.news-title-link:hover {
+    color: #1a1a1a; /* 마우스를 올릴 때의 색상 (선택 사항) */
+    text-decoration: underline; /* 마우스를 올릴 때 밑줄 추가 (선택 사항) */
 }
 
 /* 뉴스 제목 스타일 */
@@ -155,6 +181,7 @@
     color: #232755;
     text-align: center;
     line-height: 1.5;
+    text-decoration: none;
 }
 
 /*주요 지수*/
