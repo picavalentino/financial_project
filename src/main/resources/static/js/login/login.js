@@ -12,4 +12,12 @@ $(document).ready(function(){
             input.attr('type', 'password');
         }
     })
+    // 로그인 실패시 알림창
+    var errorMessage = $("#hiddenErrorMessage").val();
+    if (errorMessage) {
+        alert(errorMessage);
+        $("#hiddenErrorMessage").val('');
+    }
+    // 아이디 찾기 모달창
+
 })

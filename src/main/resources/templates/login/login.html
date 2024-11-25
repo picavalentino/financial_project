@@ -17,6 +17,7 @@
     </div>
     <div class="right">
         <form class="login" th:action="@{/loginProc}" method="post">
+            <input type="hidden" id="hiddenErrorMessage" th:value="${errorMessage}">
             <div class="mb-5">
                 <label for="user_id" class="form-label">사원번호</label>
                 <div class="input-container">
@@ -47,11 +48,15 @@
             <div class="btns">
                 <input type="button" value="등록하기" class="btn-register" onclick="location.href='/register'">
                 <div>
-                    <input type="button" value="사번 찾기" class="btn-retrieve-id">
+                    <input type="button" value="사번 찾기" class="btn-retrieve-id" onclick="openIdModal()">
                     <input type="button" value="비밀번호 찾기" class="btn-retrieve-pw">
                 </div>
             </div>
         </form>
+
+        <!-- 모달창 -->
+        <div th:replace="id-modal :: id-modal"></div>
+        <div th:replace="pw-modal :: pw-modal"></div>
     </div>
 </div>
 </body>
