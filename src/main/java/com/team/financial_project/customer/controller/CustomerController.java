@@ -2,14 +2,15 @@ package com.team.financial_project.customer.controller;
 
 import com.team.financial_project.customer.service.CustomerService;
 import com.team.financial_project.dto.CustomerDTO;
+import com.team.financial_project.dto.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/customer")
@@ -35,11 +36,8 @@ public class CustomerController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
 
-
         return "customer/customerList";
     }
-
-
 
     /* ================================================================================================================= */
     @GetMapping("/list/message")
@@ -77,12 +75,27 @@ public class CustomerController {
     public String customerListPrint() {
         return "customer/customerListModal"; // 고객 목록 출력 페이지로 이동
     }
+    /* ================================================================================================================= */
+
+    @GetMapping("/list/insert")
+    public String showInsertForm(Model model) {
+        model.addAttribute("customer", new CustomerDTO());  // 빈 객체 전달
+        return "customer/list/insert";
+    }
 
     // 고객 등록 (POST 요청)
     @PostMapping("/list/insert")
-    public String customerInsert() {
-        return "customer/customerListModal"; // 고객 삽입 페이지로 이동
+    @ResponseBody
+    public ResponseEntity<?> insertCustomer(@RequestBody CustomerDTO customerDTO) {
+        try {
+            // 고객 등록 로직 수행
+            customerService.insertCustomer(customerDTO);
+            return ResponseEntity.ok().body(Map.of("success", true, "message", "고객이 성공적으로 등록되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "고객 등록에 실패했습니다: " + e.getMessage()));
+        }
     }
+    /* ================================================================================================================= */
 
     // 고객 정보 수정
     @PatchMapping("/detail/id")
@@ -96,9 +109,14 @@ public class CustomerController {
         return "customer/customerDetailPrint"; // 고객 상세 출력 페이지로 이동
     }
 
-    // 담당자 검색 페이지
-    @GetMapping("/detail/id/searchManager")
-    public String searchManager() {
-        return "customer/searchManager"; // 담당자 검색 페이지로 이동
+    /* ================================================================================================================= */
+
+      // 담당자 검색 API
+    @GetMapping("/detail/{custId}/searchManager")
+    public ResponseEntity<List<UserDTO>> searchManagers(@RequestParam String name) {
+        List<UserDTO> managers = managerService.getManagersByName(name);
+        return ResponseEntity.ok(managers);
     }
+
+    /* ================================================================================================================= */
 }

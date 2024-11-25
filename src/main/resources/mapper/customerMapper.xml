@@ -134,6 +134,21 @@
 
         WHERE cust.cust_id = #{custId};
     </select>
-
     <!-- ============================================================================================================= -->
+    <!-- 오늘 등록된 고객 수 조회 -->
+    <select id="countTodayCustomers" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_customer
+        WHERE DATE(cust_create_at) = CURRENT_DATE
+    </select>
+
+    <!-- 고객 등록 -->
+    <insert id="insertCustomer" parameterType="com.team.financial_project.dto.CustomerDTO">
+        INSERT INTO tb_customer
+        (cust_id, cust_nm, cust_rrn, cust_telno, cust_email, cust_occp_ty_cd, cust_addr,
+        cust_create_at, cust_update_at, cust_state_cd)
+        VALUES
+        (#{custId}, #{custNm}, #{custRrn}, #{custTelno}, #{custEmail}, #{custOccpTyCd}, #{custAddr},
+        #{custCreateAt}, #{custUpdateAt}, #{custStateCd})
+    </insert>
 </mapper>

@@ -55,14 +55,20 @@
                     <div class="staffContainer">
                         <div class="staffLeft">
                             <label>담당자
-                                <input class="searchManager" type="text" th:value="${customer.users.user_name}" disabled>
+                                <input class="searchManager" type="text" th:value="${customer.users != null && customer.users.user_name != null ? customer.users.user_name : '없음'}" disabled>
                                 <button class="search-btn" onclick="openSearchModal()">🔍</button>
                             </label>
-                            <label>담당자ID <input type="text" th:value="${customer.users.user_id}" disabled></label>
+                            <label>담당자ID
+                                <input type="text" th:value="${customer.users != null && customer.users.user_id != null ? customer.users.user_id : '없음'}" disabled>
+                            </label>
                         </div>
                         <div class="staffRight">
-                            <label>연락처 <input type="text" th:value="${customer.users.user_telno}" disabled></label>
-                            <label>담당자 부서 / 직급 <input type="text"th:value="${customer.users.dept_name} + ' / ' + ${customer.users.position_name}" disabled></label>
+                            <label>연락처
+                                <input type="text" th:value="${customer.users != null && customer.users.user_telno != null ? customer.users.user_telno : '없음'}" disabled>
+                            </label>
+                            <label>담당자 부서 / 직급
+                                <input type="text" th:value="${customer.users != null && customer.users.dept_name != null && customer.users.position_name != null ? customer.users.dept_name + ' / ' + customer.users.position_name : '없음'}" disabled>
+                            </label>
                         </div>
                     </div>
                 </div>

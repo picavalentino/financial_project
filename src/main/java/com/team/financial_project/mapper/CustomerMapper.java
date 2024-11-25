@@ -18,4 +18,9 @@ public interface CustomerMapper {
     // 고객 아이디 확인
     CustomerDTO getCustomerById(@Param("custId") String custId);
 
+    // 고객 등록
+    void insertCustomer(CustomerDTO customerDto);
+
+    // 오늘 등록된 고객 수 조회
+    int countTodayCustomers();
 }

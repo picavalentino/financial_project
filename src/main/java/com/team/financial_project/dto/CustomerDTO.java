@@ -41,8 +41,17 @@ public class CustomerDTO {
 
     // 주민등록번호에서 생년월일 추출하는 메소드
     public void extractBirthDateFromRrn() {
-        if (custRrn != null && custRrn.contains("-")) {
-            this.birthDate = custRrn.split("-")[0]; // 주민등록번호에서 '-' 앞의 생년월일 부분만 추출
+        if (custRrn != null && custRrn.matches("\\d{6}-\\d{7}")) {
+            String rrnPrefix = custRrn.split("-")[0]; // 예: 990101
+            char genderCode = custRrn.split("-")[1].charAt(0); // 성별 구분 코드 (1, 2, 3, 4)
+
+            if (genderCode == '1' || genderCode == '2') {
+                this.birthDate = "19" + rrnPrefix; // 1900년대 출생
+            } else if (genderCode == '3' || genderCode == '4') {
+                this.birthDate = "20" + rrnPrefix; // 2000년대 출생
+            } else {
+                this.birthDate = ""; // 유효하지 않은 경우 빈 문자열 설정
+            }
         } else {
             this.birthDate = ""; // 주민등록번호가 없거나 형식이 맞지 않는 경우 빈 문자열 설정
         }

@@ -52,7 +52,8 @@
                             <span class="icon">🔍</span> 검색
                         </button>
                     </div>
-                    <button class="register-button" onclick="openInsertModal()">
+                    <!-- 등록 버튼 -->
+                    <button type="button" class="insert-button">
                         <span class="icon">➕</span> 등록
                     </button>
                 </div>
@@ -86,9 +87,9 @@
                     <td th:text="${customer.birthDate}">19940926</td>
                     <td th:text="${customer.custTelno}">010-1111-1111</td>
                     <td th:text="${customer.custEmail}">aaa@naver.com</td>
-                    <td th:text="${customer.users.user_name}">김사원</td>
+                    <td th:text="${customer.users != null && customer.users.user_name != null ? customer.users.user_name : '없음'}">김사원</td>
                     <td th:text="${customer.custStateCd}"><span class="status active">상태</span></td>
-                    <td th:text="${customer.custCreateAt}">2024-11-18</td>
+                    <td th:text="${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')}">2024-11-18</td>
                 </tr>
                 </tbody>
             </table>
