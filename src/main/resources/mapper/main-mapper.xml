@@ -15,14 +15,14 @@
         LIMIT 4
     </select>
 
-    <select id="mainCustomerList" resultType="mainStatisticsGenderDTO">
+    <select id="mainCustomerList" resultType="com.team.financial_project.dto.mainStatisticsGenderDTO">
         SELECT
         COUNT(*) AS totalCount,
         SUM(CASE WHEN SUBSTRING(cust_rrn, 8, 1) IN ('1', '3') THEN 1 ELSE 0 END) AS maleCount,
         SUM(CASE WHEN SUBSTRING(cust_rrn, 8, 1) IN ('2', '4') THEN 1 ELSE 0 END) AS femaleCount
         FROM tb_customer
     </select>
-    <select id="getAgeStatistics" resultType="mainStatisticsAgeDTO">
+    <select id="getAgeStatistics" resultType="com.team.financial_project.dto.mainStatisticsAgeDTO">
         SELECT
             COUNT(*) AS totalCount,
             SUM(CASE WHEN age &lt;= 19 THEN 1 ELSE 0 END) AS age10sUnder,
@@ -42,7 +42,7 @@
             FROM tb_customer
         ) AS subquery;
     </select>
-    <select id="getSalesStatistics" resultType="mainStatisticsSalesDTO">
+    <select id="getSalesStatistics" resultType="com.team.financial_project.dto.mainStatisticsSalesDTO">
         SELECT
             COUNT(CASE
                 WHEN TO_CHAR(dsgn_create_at, 'YYYY-MM') = TO_CHAR(CURRENT_DATE, 'YYYY-MM') THEN 1
