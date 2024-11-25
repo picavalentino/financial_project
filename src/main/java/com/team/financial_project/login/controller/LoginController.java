@@ -28,6 +28,7 @@ public class LoginController {
     public String loginForm(){
         return "/login/login";
     }
+
     // 회원 등록 맵핑 ==============================================================================
     @GetMapping("register")
     public String registerForm(){

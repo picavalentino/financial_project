@@ -1,5 +1,6 @@
 package com.team.financial_project.main.config;
 
+import com.team.financial_project.main.security.CustomAuthFailureHandler;
 import com.team.financial_project.main.service.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,11 @@ public class SecurityConfig{
                 .requestMatchers("/login/**", "/register/**").permitAll()
                 .anyRequest().authenticated() // 그외 모든 요청은 인증된 사용자들만 접근 가능
         );
-        http.formLogin((auth)-> auth.loginPage("/login").loginProcessingUrl("/loginProc").usernameParameter("user_id").defaultSuccessUrl("/main").permitAll());
+        http.formLogin((auth)-> auth.loginPage("/login").loginProcessingUrl("/loginProc")
+                .usernameParameter("user_id").passwordParameter("user_pw")
+                .defaultSuccessUrl("/main", true)
+                .failureHandler(new CustomAuthFailureHandler())
+                .permitAll());
         http.logout((auth)-> auth.logoutUrl("/logout").logoutSuccessUrl("/login").permitAll());
         return http.build();
     }

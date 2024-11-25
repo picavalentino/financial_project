@@ -1,7 +1,7 @@
 package com.team.financial_project.main.service;
 
 import com.team.financial_project.dto.CodeDTO;
-import com.team.financial_project.dto.CustomUserDetails;
+import com.team.financial_project.main.security.CustomUserDetails;
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.CodeMapper;
 import com.team.financial_project.mapper.UserMapper;

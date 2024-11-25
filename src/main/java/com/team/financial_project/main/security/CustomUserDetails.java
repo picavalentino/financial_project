@@ -1,5 +1,6 @@
-package com.team.financial_project.dto;
+package com.team.financial_project.main.security;
 
+import com.team.financial_project.dto.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
