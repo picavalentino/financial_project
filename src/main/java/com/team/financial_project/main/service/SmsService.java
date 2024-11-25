@@ -1,4 +1,4 @@
-package com.team.financial_project.login.service;
+package com.team.financial_project.main.service;
 
 import com.team.financial_project.main.util.SmsVerificationUtil;
 import org.springframework.beans.factory.annotation.Value;
