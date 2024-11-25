@@ -146,7 +146,7 @@
                                 <!-- 상품코드 -->
                                 <input type="text" id="prodCd" name="prodCd" disabled>
                                 <!-- 상품명 -->
-                                <input type="text" id="prodNm" name="prodNm" readonly>
+                                <input type="text" id="prodNm" name="prodNm" value="대출디테일" readonly>
                                 <button><i class="bi bi-search" id="openProductModalButton"></i></button>
                             </div>
 
@@ -490,11 +490,27 @@
                         mainFormContainer.classList.add('horizontal');
                         customerContainer.classList.add('visible');
                     } else {
-                        // 간편설계 선택: 고객 컨테이너 숨기고 세로 배치로 복귀
-                        mainFormContainer.classList.remove('horizontal');
-                        customerContainer.classList.remove('visible');
+                       // 간편설계를 선택하더라도 "정상설계"로 강제 변경
+                       calculationTypeRadios.forEach(r => {
+                            if (r.value === 'detailed') {
+                                r.checked = true; // "정상설계"로 선택
+                            }
+                        });
+
+                       // 정상설계 상태 유지
+                       mainFormContainer.classList.add('horizontal');
+                       customerContainer.classList.add('visible');
                     }
                 });
+            });
+
+            // 초기 상태를 "정상설계"로 설정
+            calculationTypeRadios.forEach(radio => {
+                if (radio.value === 'detailed') {
+                    radio.checked = true;
+                    mainFormContainer.classList.add('horizontal');
+                    customerContainer.classList.add('visible');
+                }
             });
 
 

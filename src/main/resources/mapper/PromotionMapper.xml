@@ -273,7 +273,13 @@
             AND intTaxCode.CODE_NO = p.PROD_INT_TAX_TY_CD
         WHERE
             -- 적금 상품만 조회
-            p.PROD_TY_CD = '1'
+            p.prod_ty_cd IN (
+                SELECT
+                    code_no
+                FROM
+                    tb_code
+                WHERE
+                    prod_nm LIKE '%적금%')
         <if test="prodCd != null and prodCd != ''">
             AND p.PROD_CD LIKE '%' || #{prodCd} || '%'
         </if>

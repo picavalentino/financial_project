@@ -151,13 +151,13 @@ public class PromotionController {
 
 
     // 금융계산기 페이지 (상세)
-    @GetMapping("/cal/detail")
-    public String getDetail(@RequestParam("dsgnSn") String dsgnSn, Model model){
-//        PromotionListDto detail = promotionService.getDetailByDsgnSn(dsgnSn);
-//        model.addAttribute("detail", detail);
-
-        return "promotion/promotionDetail";
-    }
+//    @GetMapping("/cal/detail")
+//    public String getDetail(@RequestParam("dsgnSn") String dsgnSn, Model model){
+////        PromotionListDto detail = promotionService.getDetailByDsgnSn(dsgnSn);
+////        model.addAttribute("detail", detail);
+//
+//        return "promotion/promotionDetail";
+//    }
 
 
 

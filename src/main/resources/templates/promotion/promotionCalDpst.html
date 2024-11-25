@@ -32,9 +32,9 @@
 
         <!-- 설계 탭 -->
         <div class="tabs">
-            <button class="tab active" onclick="window.location.href='/promotion/cal'">적금 설계</button>
+            <button class="tab inactive" onclick="window.location.href='/promotion/cal'">적금 설계</button>
             <button class="tab inactive" onclick="window.location.href='/promotion/CalAcml'">목돈마련적금 설계</button>
-            <button class="tab inactive" onclick="window.location.href='/promotion/CalDpst'">예금 설계</button>
+            <button class="tab active" onclick="window.location.href='/promotion/CalDpst'">예금 설계</button>
             <button class="tab inactive" onclick="window.location.href='/promotion/CalLoan'">대출 설계</button>
         </div>
 
@@ -125,8 +125,8 @@
                         <label for="prodCd">상품선택</label>
                         <label for="prodPayTyCd">납입주기</label>
                         <label for="savgStrtDt">시작일자</label>
-                        <label for="savgCircleAmt">불입금액 (원)</label>
-                        <label for="savgGoalPrd">목표기간 (개월)</label>
+                        <label for="savgCircleAmt">예치금액 (원)</label>
+                        <label for="savgGoalPrd">예치기간 (개월)</label>
                         <label for="savgAplyRate">적용금리 (%)</label>
                         <label for="savgIntTaxTyCd">이자과세</label>
                         <label for="dsgnCreateAt">설계일자</label>
@@ -301,7 +301,7 @@
                 <div class="calculation-summary">
                     <!-- 계산 결과 간단히 보여주는 입력 필드 -->
                     <div class="result-row">
-                        <label>불입금액합계</label>
+                        <label>총예치금액</label>
                         <input type="text" id="savgTotDpstAmt" name="savgTotDpstAmt" readonly>
                     </div>
                     <div class="result-row">
@@ -346,11 +346,18 @@
                             <tbody>
                             <!-- 회차별 상세 정보 데이터 반복 -->
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>1</td>
+                                <td>100,000</td>
+                                <td>100,000</td>
+                                <td>167</td>
+                                <td>100,000</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>100,000</td>
+                                <td>200,000</td>
+                                <td>333</td>
+                                <td>100,000</td>
                             </tr>
                             <!-- ... -->
                             </tbody>

@@ -477,6 +477,13 @@
         // 인쇄 버튼 이벤트
         $(document).on('click', '.btn-print', printCheckedRows);
 
+        // 페이지 로드 시 오류 메시지를 alert로 표시
+        window.onload = function() {
+            const errorMessage = /*[[${errorMessage != null}]]*/ false ? '[[${errorMessage}]]' : null;
+            if (errorMessage) {
+                alert(errorMessage);
+            }
+        };
     </script>
 </div>
 </body>
