@@ -1,0 +1,120 @@
+/* 공통 스타일 */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+.container {
+  padding: 20px;
+}
+
+.breadcrumb {
+  background-color: #f8f9fa;
+}
+
+.breadcrumb-item a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+/* 직원 정보 관리 페이지 스타일 */
+h2 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-select,
+.form-control {
+  border-radius: 4px;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.table thead th {
+  font-weight: bold;
+  background-color: #e9ecef;
+  text-align: center;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+.pagination .page-link {
+  color: #007bff;
+}
+
+.pagination .page-link:hover {
+  color: #0056b3;
+}
+
+.mt-2 {
+  margin-top: 1rem;
+}
+
+.text-end {
+  text-align: end;
+}
+
+/* 버튼 스타일 */
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+/* 수정 버튼 스타일 */
+.btn-update {
+  background-color: #6c757d;
+  color: #fff;
+  border-radius: 4px;
+  border: none;
+  padding: 5px 10px;
+}
+
+.btn-update:hover {
+  background-color: #5a6268;
+  color: #fff;
+}
+
+/* 상태 아이콘 스타일 */
+.status-active {
+  color: green;
+  font-weight: bold;
+}
+
+.status-inactive {
+  color: red;
+  font-weight: bold;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .form-select,
+  .form-control {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .d-flex {
+    flex-direction: column;
+  }
+}
