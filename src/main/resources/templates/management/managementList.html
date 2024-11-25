@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>GS Bank</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+  <script th:src="@{/js/jQuery.js}"></script>
+</head>
+<body>
+<!-- header 넣기 -->
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+
+<div class="d-flex" style="height: 100vh;">
+  <!-- 사이드바 넣기 -->
+  <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>
+
+  <!-- content 영역 -->
+  <div class="content">
+    <!-- 실제 콘텐츠가 이 부분에 들어갑니다 -->
+    <div class="container mt-5">
+      <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a th:href="@{/management/list}"> / 직원조회</a>
+        <p style="display: inline;"> / 직원목록조회 </p>
+      </div>
+
+      <h2 class="mb-4">직원목록조회</h2>
+
+      <form th:action="@{/management/list}" method="get" id="searchForm" class="d-flex">
+        <select name="dept" class="form-select me-2" style="width: 150px;">
+          <option value="" selected>부서</option>
+          <th:block th:each="department : ${DepartmentList}">
+            <option th:value="${department.user_dept_cd}" th:text="${department.dept_name}" th:selected="${dept == department.user_dept_cd}"></option>
+          </th:block>
+        </select>
+
+        <select name="position" class="form-select me-2" style="width: 150px;">
+          <option value="" selected>직위</option>
+          <th:block th:each="JopPosition : ${JopPositionList}">
+            <option th:value="${JopPosition.user_jbps_ty_cd}" th:text="${JopPosition.position_name}" th:selected="${position == JopPosition.user_jbps_ty_cd}"></option>
+          </th:block>
+        </select>
+
+        <select name="searchField" class="form-select me-2" style="width: 150px;">
+          <option value="" selected>검색</option>
+          <option value="user_name" th:selected="${searchField == 'user_name'}">이름</option>
+          <option value="user_email" th:selected="${searchField == 'user_email'}">이메일</option>
+          <option value="user_telno" th:selected="${searchField == 'user_telno'}">전화번호</option>
+        </select>
+
+        <input type="text" name="searchValue" class="form-control me-2" style="width: 200px;" placeholder="검색어 입력" th:value="${searchValue}">
+        <button type="submit" class="btn btn-primary">검색</button>
+        <button type="button" class="btn btn-secondary" id="resetButton">초기화</button>
+      </form>
+
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">부서</th>
+          <th scope="col">직위</th>
+          <th scope="col">이름</th>
+          <th scope="col">이메일</th>
+          <th scope="col">전화번호</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="management : ${managementList}">
+          <td th:text="${management.dept_name}">부서</td>
+          <td th:text="${management.position_name}">직위</td>
+          <td th:text="${management.user_name}">이름</td>
+          <td th:text="${management.user_email}">이메일</td>
+          <td th:text="${management.user_telno}">전화번호</td>
+        </tr>
+        <tr th:if="${managementList == null or #lists.isEmpty(managementList)}">
+          <td colspan="5">데이터가 없습니다.</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li th:classappend="${currentPageNumber == 1} ? 'disabled' : ''" class="page-item">
+            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber - 1}, dept=${dept}, position=${position}, searchField=${searchField}, searchValue=${searchValue})}" aria-label="Previous">
+              &lt;
+            </a>
+          </li>
+          <li th:each="pageNumber : ${paginationBarNumbers}" th:classappend="${pageNumber == currentPageNumber} ? 'active' : ''" class="page-item">
+            <a class="page-link" th:href="@{/management/list(page=${pageNumber}, dept=${dept}, position=${position}, searchField=${searchField}, searchValue=${searchValue})}" th:text="${pageNumber}">1</a>
+          </li>
+          <li th:classappend="${currentPageNumber == totalPageNumber} ? 'disabled' : ''" class="page-item">
+            <a class="page-link" th:href="@{/management/list(page=${currentPageNumber + 1}, dept=${dept}, position=${position}, searchField=${searchField}, searchValue=${searchValue})}" aria-label="Next">
+              &gt;
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('resetButton').addEventListener('click', function() {
+    // 검색 폼의 모든 값을 초기화
+    document.getElementById('searchForm').reset();
+    // 폼을 다시 제출하여 초기 상태로 이동
+    window.location.href = '/management/list';
+  });
+
+  document.getElementById('searchForm').addEventListener('submit', function (e) {
+    const searchField = document.querySelector('select[name="searchField"]').value;
+    const searchValue = document.querySelector('input[name="searchValue"]').value;
+
+    if (!searchField && searchValue) {
+      // 검색어는 입력되었으나 카테고리가 선택되지 않은 경우 경고창 띄우기
+      e.preventDefault();
+      alert('검색 카테고리를 선택해주세요.');
+    }
+  });
+</script>
+</body>
+</html>
