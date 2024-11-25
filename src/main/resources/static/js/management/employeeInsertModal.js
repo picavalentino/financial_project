@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(".btn-insertEmployee").on("click", function () {
+    $("#btn-register").on("click", function () {
         // Bootstrap 5 Modal을 JavaScript로 열기
         var insertModal = new bootstrap.Modal(document.getElementById('InsertModal'));
         insertModal.show();

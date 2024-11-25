@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $(".btn-modify").on("click", function(){
+    $("#btn-modify").on("click", function(){
         // Bootstrap 5 Modal을 JavaScript로 열기
         var editModal = new bootstrap.Modal(document.getElementById('editModal'));
         editModal.show();

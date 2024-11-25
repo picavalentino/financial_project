@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-document.getElementById('resetButton').addEventListener('click', function() {
+document.getElementById('btn-reset').addEventListener('click', function() {
       // 검색 폼의 모든 값을 초기화
       document.getElementById('searchForm').reset();
       // 폼을 다시 제출하여 초기 상태로 이동
