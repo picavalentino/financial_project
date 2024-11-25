@@ -1,19 +1,14 @@
 package com.team.financial_project.promotion.controller;
 
-import com.team.financial_project.promotion.dto.CodeDto;
-import com.team.financial_project.promotion.dto.ProductInfoDto;
-import com.team.financial_project.promotion.dto.PromotionListDto;
-import com.team.financial_project.promotion.dto.UserInfoDto;
+import com.team.financial_project.promotion.calculator.SavingsCalculator;
+import com.team.financial_project.promotion.dto.*;
 import com.team.financial_project.promotion.mapper.PromotionMapper;
 import com.team.financial_project.promotion.service.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -114,16 +109,6 @@ public class PromotionController {
         return "promotion/promotionCal";
     }
 
-
-    // 금융계산기 페이지 (상세)
-    @GetMapping("/cal/detail")
-    public String getDetail(@RequestParam("dsgnSn") String dsgnSn, Model model){
-//        PromotionListDto detail = promotionService.getDetailByDsgnSn(dsgnSn);
-//        model.addAttribute("detail", detail);
-
-        return "promotion/promotionDetail";
-    }
-
     // 상품 리스트 조회
     @GetMapping("/cal/productList")
     @ResponseBody
@@ -137,10 +122,32 @@ public class PromotionController {
     @GetMapping("/cal/userInfoList")
     @ResponseBody
     public List<UserInfoDto> getUserInfoList(
-        @RequestParam(value = "custNm", required = false) String custNm,
-        @RequestParam(value = "custTelno", required = false) String custTelno) {
+            @RequestParam(value = "custNm", required = false) String custNm,
+            @RequestParam(value = "custTelno", required = false) String custTelno) {
         return promotionService.getUserInfoList(custNm, custTelno);
     }
+
+    // 금융계산기 간단 계산
+    @PostMapping("/cal/savg/calculate")
+    @ResponseBody
+    public ResponseEntity<SavingsCalDto> calculateSavings(@RequestBody SavingsCalDto requestDto) {
+
+        // 계산 서비스 호출
+        SavingsCalDto responseDto = SavingsCalculator.calculateSavings(requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+
+    // 금융계산기 페이지 (상세)
+    @GetMapping("/cal/detail")
+    public String getDetail(@RequestParam("dsgnSn") String dsgnSn, Model model){
+//        PromotionListDto detail = promotionService.getDetailByDsgnSn(dsgnSn);
+//        model.addAttribute("detail", detail);
+
+        return "promotion/promotionDetail";
+    }
+
+
 
 }
 
