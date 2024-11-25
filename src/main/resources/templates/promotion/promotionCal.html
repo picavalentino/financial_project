@@ -332,35 +332,37 @@
             <div class="right-section">
                 <div class="non-display">계산 테이블</div>
                 <div class="interest-details">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>회차</th>
-                            <th>회차불입금액</th>
-                            <th>누적불입금액</th>
-                            <th>회차이자</th>
-                            <th>회차원리금</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- 회차별 상세 정보 데이터 반복 -->
-                        <tr>
-                            <td>1</td>
-                            <td>100,000</td>
-                            <td>100,000</td>
-                            <td>167</td>
-                            <td>100,000</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>100,000</td>
-                            <td>200,000</td>
-                            <td>333</td>
-                            <td>100,000</td>
-                        </tr>
-                        <!-- ... -->
-                        </tbody>
-                    </table>
+                    <div class="right-section-table-container">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>회차</th>
+                                <th>회차불입금액</th>
+                                <th>누적불입금액</th>
+                                <th>회차이자</th>
+                                <th>회차원리금</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 회차별 상세 정보 데이터 반복 -->
+                            <tr>
+                                <td>1</td>
+                                <td>100,000</td>
+                                <td>100,000</td>
+                                <td>167</td>
+                                <td>100,000</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>100,000</td>
+                                <td>200,000</td>
+                                <td>333</td>
+                                <td>100,000</td>
+                            </tr>
+                            <!-- ... -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -514,60 +516,6 @@
             }
 
 
-            // 차트
-            const ctx = document.getElementById('resultChart').getContext('2d');
-
-            const data = {
-                labels: ['불입금액합계', '세전이자', '세전수령액', '이자과세금', '세후수령액'],
-                datasets: [{
-                    label: '계산 결과',
-                    data: [1800000, 28500, 1828500, 4389, 1824111], // 예시 데이터
-                    backgroundColor: [
-                        '#4CAF50', // 불입금액합계
-                        '#FF9800', // 세전이자
-                        '#03A9F4', // 세전수령액
-                        '#F44336', // 이자과세금
-                        '#9C27B0'  // 세후수령액
-                    ],
-                    borderWidth: 0 // 테두리 제거
-                }]
-            };
-
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // 부모 컨테이너 크기에 맞춤
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toLocaleString(); // 숫자에 천 단위 쉼표 추가
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false // 그래프 설명 숨기기
-                        },
-                        tooltip: {
-                            mode: 'index', // 마우스 호버 시 모든 데이터 표시
-                            intersect: false, // 마우스가 특정 기둥에 닿지 않아도 툴팁 표시
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${context.raw.toLocaleString()}원`;
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-            new Chart(ctx, config);
-
-
             // 상품 모달
             const productModal = document.getElementById("productModal");
             const productTableBody = document.getElementById("productList");
@@ -658,12 +606,19 @@
             }
 
             // 상품 모달 열기
-            openProductModalButton.addEventListener("click", async () => {
-                productModal.style.display = "flex";
-                // 모달 필드 초기화
-                document.getElementById('prodCdSearch').value = '';
-                document.getElementById('prodNmSearch').value = '';
-                await loadProductList(); // 전체 리스트 로드
+            openProductModalButton.addEventListener("click", () => {
+                // 모달 먼저 표시
+                requestAnimationFrame(() => {
+                    productModal.style.display = "flex";
+                });
+
+                // 데이터 로드는 비동기로 처리
+                setTimeout(async () => {
+                    // 모달 필드 초기화
+                    document.getElementById('prodCdSearch').value = '';
+                    document.getElementById('prodNmSearch').value = '';
+                    await loadProductList(); // 전체 리스트 로드
+                }, 0);
             });
 
             // 상품 모달 닫기
@@ -778,77 +733,150 @@
             });
 
 
+            initializeChart(); // 차트 초기화
+            console.log("Chart initialized:", resultChart); // 초기화 상태 확인
+
             // '이자 계산' 버튼 클릭 이벤트 추가
             document.querySelector('.btn-int-cal').addEventListener('click', handleInterestCalculation);
         });
 
-    // 이자 계산 핸들러 함수
-    function handleInterestCalculation() {
-        const savgCircleAmt = document.getElementById('savgCircleAmt').value.trim();
-        const savgGoalPrd = document.getElementById('savgGoalPrd').value.trim();
-        const savgAplyRate = document.getElementById('savgAplyRate').value.trim();
-
-        // 유효성 검사
-        if (!savgCircleAmt || parseFloat(savgCircleAmt) <= 0) {
-            alert('불입금액을 입력하세요.');
-            return;
-        }
-        if (!savgGoalPrd || parseInt(savgGoalPrd) <= 0) {
-            alert('목표기간을 입력하세요.');
-            return;
-        }
-        if (!savgAplyRate || parseFloat(savgAplyRate) <= 0) {
-            alert('적용금리를 입력하세요.');
-            return;
-        }
-
-        const requestData = {
-            savgCircleAmt: parseFloat(savgCircleAmt.replace(/,/g, '')),
-            savgGoalPrd: parseInt(savgGoalPrd),
-            savgAplyRate: parseFloat(savgAplyRate),
-            prodIntTaxRate: parseFloat(document.getElementById('prodIntTaxRate').value),
-            savgStrtDt: document.getElementById('savgStrtDt').value,
-        };
-
-        // 서버 요청
-        fetch('/promotion/cal/savg/calculate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestData),
-        })
-            .then((response) => {
-                if (!response.ok) throw new Error('서버 응답 오류');
-                return response.json();
-            })
-            .then(updateCalculationResults)
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('계산 중 오류가 발생했습니다.');
+        // 차트 초기화 함수
+        function initializeChart() {
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            resultChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['불입금액합계', '세전이자', '세전수령액', '이자과세금', '세후수령액'],
+                    datasets: [{
+                        label: '계산 결과',
+                        data: [0, 0, 0, 0, 0], // 초기 데이터
+                        backgroundColor: [
+                            '#4CAF50', // 불입금액합계
+                            '#FF9800', // 세전이자
+                            '#03A9F4', // 세전수령액
+                            '#F44336', // 이자과세금
+                            '#9C27B0'  // 세후수령액
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString(); // 천 단위 쉼표 추가
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw.toLocaleString()}원`;
+                                }
+                            }
+                        }
+                    }
+                }
             });
-    }
+        }
 
-    // 계산 결과 업데이트 함수
-    function updateCalculationResults(data) {
-        document.getElementById('savgTotDpstAmt').value = data.savgTotDpstAmt.toLocaleString();
-        document.getElementById('savgTotDpstInt').value = data.savgTotDpstInt.toLocaleString();
-        document.getElementById('savgTotRcveAmt').value = data.savgTotRcveAmt.toLocaleString();
-        document.getElementById('savgIntTaxAmt').value = data.savgIntTaxAmt.toLocaleString();
-        document.getElementById('savgAtxRcveAmt').value = data.savgAtxRcveAmt.toLocaleString();
+        // 이자 계산 핸들러 함수
+        function handleInterestCalculation() {
 
-        const detailTableBody = document.querySelector('.interest-details tbody');
-        detailTableBody.innerHTML = '';
-        data.detailList.forEach((detail) => {
-            const row = `
-                <tr>
-                    <td>${detail.installmentNo}</td>
-                    <td>${detail.installmentAmt.toLocaleString()}</td>
-                    <td>${detail.accumulatedAmt.toLocaleString()}</td>
-                    <td>${detail.installmentInt.toLocaleString()}</td>
-                    <td>${detail.installmentPrincipal.toLocaleString()}</td>
-                </tr>`;
-            detailTableBody.insertAdjacentHTML('beforeend', row);
-        });
-    }
+            if (!resultChart) {
+                console.error("resultChart가 초기화되지 않았습니다.");
+                return;
+            }
+
+            // 데이터 유효성 검사
+            const savgCircleAmt = document.getElementById('savgCircleAmt').value.trim();
+            const savgGoalPrd = document.getElementById('savgGoalPrd').value.trim();
+            const savgAplyRate = document.getElementById('savgAplyRate').value.trim();
+
+            // 유효성 검사
+            if (!savgCircleAmt || parseFloat(savgCircleAmt) <= 0) {
+                alert('불입금액을 입력하세요.');
+                return;
+            }
+            if (!savgGoalPrd || parseInt(savgGoalPrd) <= 0) {
+                alert('목표기간을 입력하세요.');
+                return;
+            }
+            if (!savgAplyRate || parseFloat(savgAplyRate) <= 0) {
+                alert('적용금리를 입력하세요.');
+                return;
+            }
+
+            const requestData = {
+                savgCircleAmt: parseFloat(savgCircleAmt.replace(/,/g, '')),
+                savgGoalPrd: parseInt(savgGoalPrd),
+                savgAplyRate: parseFloat(savgAplyRate),
+                prodIntTaxRate: parseFloat(document.getElementById('prodIntTaxRate').value),
+                savgStrtDt: document.getElementById('savgStrtDt').value,
+            };
+
+            // 서버 요청
+            fetch('/promotion/cal/savg/calculate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestData),
+            })
+                .then((response) => {
+                    if (!response.ok) throw new Error('서버 응답 오류');
+                    return response.json();
+                })
+                .then(updateCalculationResults) // 결과 업데이트
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('계산 중 오류가 발생했습니다.');
+                });
+        }
+
+        // 계산 결과 업데이트 함수
+        function updateCalculationResults(data) {
+            document.getElementById('savgTotDpstAmt').value = data.savgTotDpstAmt.toLocaleString();
+            document.getElementById('savgTotDpstInt').value = data.savgTotDpstInt.toLocaleString();
+            document.getElementById('savgTotRcveAmt').value = data.savgTotRcveAmt.toLocaleString();
+            document.getElementById('savgIntTaxAmt').value = data.savgIntTaxAmt.toLocaleString();
+            document.getElementById('savgAtxRcveAmt').value = data.savgAtxRcveAmt.toLocaleString();
+
+            // 차트 데이터 업데이트
+            if (resultChart && resultChart.data && resultChart.data.datasets) {
+                resultChart.data.datasets[0].data = [
+                    data.savgTotDpstAmt,
+                    data.savgTotDpstInt,
+                    data.savgTotRcveAmt,
+                    data.savgIntTaxAmt,
+                    data.savgAtxRcveAmt
+                ];
+                resultChart.update(); // 차트 새로고침
+                console.log("차트 업데이트 완료: ", resultChart.data.datasets[0].data);
+            } else {
+                console.error("resultChart가 초기화되지 않았습니다.");
+            }
+
+            // 상세 테이블 데이터 업데이트
+            const detailTableBody = document.querySelector('.interest-details tbody');
+            detailTableBody.innerHTML = '';
+            data.detailList.forEach((detail) => {
+                const row = `
+                    <tr>
+                        <td>${detail.installmentNo}</td>
+                        <td>${detail.installmentAmt.toLocaleString()}</td>
+                        <td>${detail.accumulatedAmt.toLocaleString()}</td>
+                        <td>${detail.installmentInt.toLocaleString()}</td>
+                        <td>${detail.installmentPrincipal.toLocaleString()}</td>
+                    </tr>`;
+                detailTableBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
     </script>
 </div>
 </body>

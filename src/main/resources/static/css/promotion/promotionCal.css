@@ -564,6 +564,13 @@ input[type="date"] {
     height: 43px; /* 좌측 섹션 탭 높이와 동일하게 설정 */
 }
 
+/* 테이블 길어지면 내부 스크롤 생성용 부모 태그 */
+.right-section-table-container {
+    max-height: 605px; /* 왼쪽 영역과 맞춘 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤바 추가 */
+    box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+}
+
 /* 계산 테이블 컨테이너 */
 .interest-details {
     background-color: #fff;
