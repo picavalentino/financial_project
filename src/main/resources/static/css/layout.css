@@ -109,8 +109,13 @@ body, input::placeholder {
     background-color: #010535;
     height: 80px;
 }
+/* 로고 영역 */
+.logo-container {
+    flex-shrink: 0; /* 로고 크기를 유지 */
+    margin-right: 15px; /* 로고와 북마크 사이 간격 */
+}
 
-#logo img {
+.logo {
     width: 138px;
     height: 41px;
 }
@@ -119,8 +124,51 @@ body, input::placeholder {
     color: #ffffff;
 }
 
-.bookmark{
-    background-color: #ffffff;
+/* 북마크 영역 */
+.bookmark-container {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* 북마크 간 간격 */
+}
+
+.bookmark-item {
+    display: flex; /* 플렉스 박스를 사용하여 자식 요소를 나란히 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    gap: 10px; /* 요소 간 간격 */
+    background-color: #232755; /* 북마크 배경 색상 */
+    border-radius: 8px; /* 모서리를 둥글게 */
+    padding: 10px 15px; /* 내부 여백 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+}
+
+.bookmark-item a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    gap: 10px; /* 아이콘과 텍스트 간 간격 */
+    font-size: 14px;
+}
+
+.bookmark-item .bookmark-icon {
+    height: 14px;
+}
+
+.bookmark-item .img-close {
+    width: 16px;
+    height: 16px;
+    cursor: pointer; /* 마우스를 올리면 클릭 가능 표시 */
+    opacity: 0.8; /* 약간 흐리게 표시 */
+    transition: opacity 0.2s ease; /* 호버 시 부드러운 전환 */
+}
+
+.bookmark-item .img-close:hover {
+    opacity: 1; /* 호버 시 명확하게 표시 */
+}
+
+.ml-auto {
+    margin-left: auto; /* 오른쪽으로 정렬 */
 }
 
 /* sidebar 영역 */
