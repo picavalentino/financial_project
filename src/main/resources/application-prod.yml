@@ -16,3 +16,16 @@ mybatis:
   type-aliases-package: classpath:/mybatis-config.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+aws:
+  s3:
+    bucket: codechef
+    access-key: ${ACCESS}
+    secret-key: ${SECRET}
+    region: ap-northeast-2
+
+aligo:
+  api:
+    key: ${SMS_KEY}
+    user_id: sun04520
+    sender: 010-8513-7828
