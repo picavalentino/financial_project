@@ -302,23 +302,23 @@
                     <!-- 계산 결과 간단히 보여주는 입력 필드 -->
                     <div class="result-row">
                         <label>불입금액합계</label>
-                        <input type="text" id="savgTotDpstAmt" name="savgTotDpstAmt" value="1,800,000" readonly>
+                        <input type="text" id="savgTotDpstAmt" name="savgTotDpstAmt" readonly>
                     </div>
                     <div class="result-row">
                         <label>세전이자</label>
-                        <input type="text" id="savgTotDpstInt" name="savgTotDpstInt" value="28,500" readonly>
+                        <input type="text" id="savgTotDpstInt" name="savgTotDpstInt" readonly>
                     </div>
                     <div class="result-row">
                         <label>세전수령액</label>
-                        <input type="text" id="savgTotRcveAmt" name="savgTotRcveAmt" value="1,828,500" readonly>
+                        <input type="text" id="savgTotRcveAmt" name="savgTotRcveAmt" readonly>
                     </div>
                     <div class="result-row">
                         <label>이자과세금</label>
-                        <input type="text" id="savgIntTaxAmt" name="savgIntTaxAmt" value="4,389" readonly>
+                        <input type="text" id="savgIntTaxAmt" name="savgIntTaxAmt" readonly>
                     </div>
                     <div class="result-row">
                         <label>세후수령액</label>
-                        <input type="text" id="savgAtxRcveAmt" name="savgAtxRcveAmt" value="1,824,111" readonly>
+                        <input type="text" id="savgAtxRcveAmt" name="savgAtxRcveAmt" readonly>
                     </div>
                 </div>
                 <div class="cal-tab calculation-chart-tab">계산 차트</div>
@@ -584,16 +584,16 @@
                 rateSelect.addEventListener('change', () => {
                     const selectedValue = rateSelect.value; // 선택된 값 (prodairmin 또는 prodairmax)
                     if (selectedValue === 'prodairmin') {
-                        rateInput.value = product.prodAirMin ? `${product.prodAirMin}%` : '';
+                        rateInput.value = product.prodAirMin ? `${product.prodAirMin}` : '';
                     } else if (selectedValue === 'prodairmax') {
-                        rateInput.value = product.prodAirMax ? `${product.prodAirMax}%` : '';
+                        rateInput.value = product.prodAirMax ? `${product.prodAirMax}` : '';
                     } else {
                         rateInput.value = ''; // 기본값 (선택되지 않은 경우)
                     }
                 });
                 // 초기값 설정 (최소금리로 시작)
                 if (rateSelect.value === 'prodairmin') {
-                    rateInput.value = product.prodAirMin ? `${product.prodAirMin}%` : '';
+                    rateInput.value = product.prodAirMin ? `${product.prodAirMin}` : '';
                 }
 
                 // 이자과세
@@ -877,6 +877,93 @@
                 detailTableBody.insertAdjacentHTML('beforeend', row);
             });
         }
+
+        document.querySelector('.btn-register').addEventListener('click', () => {
+
+            // 상품 선택 확인
+            const prodSn = document.getElementById('prodSn').value.trim();
+            if (!prodSn) {
+                alert('상품 조회 후 저장이 가능합니다.');
+                return;
+            }
+
+            // 현재 설계 유형 확인
+            const calculationType = document.querySelector('input[name="calculationType"]:checked').value;
+            if (calculationType !== 'detailed') {
+                alert('정상설계만 저장이 가능합니다.');
+                return;
+            }
+
+            // userId와 custId 값 확인
+            const userId = document.getElementById('userId').value.trim();
+            const custId = document.getElementById('custId').value.trim();
+            if (!userId || !custId) {
+                alert('고객 조회 후 저장이 가능합니다.');
+                return;
+            }
+
+            // 이자 계산 확인
+            const savgTotDpstInt = document.getElementById('savgTotDpstInt').value.trim();
+            if (!savgTotDpstInt || parseFloat(savgTotDpstInt) <= 0) {
+                alert('이자계산 후 저장이 가능합니다.');
+                return;
+            }
+
+            // 진행상태 확인
+            const dsgnPrgStcd = document.getElementById('dsgnPrgStcd').value.trim();
+            if (!dsgnPrgStcd) {
+                alert('진행상태 선택 후 저장이 가능합니다.');
+                return;
+            }
+
+            // 유효성 검사가 통과되면 데이터 수집 및 저장
+            const savingsSaveDto = {
+                prodSn: prodSn, // 상품번호
+                custId: custId, // 고객ID
+                userId: userId, // 담당자ID
+                dsgnCreateAt: document.getElementById('dsgnCreateAt').value, // 설계일자
+                dsgnUpdateAt: document.getElementById('dsgnUpdateAt').value, // 수정일자
+                prodDsTyCd: document.getElementById('prodDsTyCd').value, // 설계유형코드
+                dsgnPrgStcd: dsgnPrgStcd, // 진행상태코드
+                prodPayTyCd: document.getElementById('prodPayTyCd').value, // 납입주기코드
+                savgGoalPrd: parseInt(document.getElementById('savgGoalPrd').value, 10), // 목표기간
+                savgStrtDt: document.getElementById('savgStrtDt').value, // 시작일자
+                savgMtrDt: document.getElementById('savgMtrDt').value, // 만기일자
+                savgAplyRate: parseFloat(document.getElementById('savgAplyRate').value), // 적용금리
+                savgIntTaxTyCd: document.getElementById('savgIntTaxTyCd').value, // 이자과세유형코드
+                savgCircleAmt: parseInt(document.getElementById('savgCircleAmt').value.replace(/,/g, ''), 10), // 회차불입액
+                savgTotDpstAmt: parseInt(document.getElementById('savgTotDpstAmt').value.replace(/,/g, ''), 10), // 불입금합계
+                savgTotDpstInt: parseInt(savgTotDpstInt.replace(/,/g, ''), 10), // 세전이자
+                savgIntTaxAmt: parseInt(document.getElementById('savgIntTaxAmt').value.replace(/,/g, ''), 10), // 이자과세금액
+                savgAtxRcveAmt: parseInt(document.getElementById('savgAtxRcveAmt').value.replace(/,/g, ''), 10), // 세후수령액
+            };
+
+            // 데이터 확인 로그
+            console.log('Collected Data:', data);
+
+            // 서버로 POST 요청 전송
+            fetch('/cal/savg/insert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(savingsSaveDto), // DTO 형태로 JSON 변환
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('서버 응답 오류');
+                    }
+                    return response.text(); // 서버 응답 텍스트 처리
+                })
+                .then(result => {
+                    alert(result); // 성공 메시지 출력
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('저장 중 오류가 발생했습니다.');
+                });
+
+        });
     </script>
 </div>
 </body>

@@ -98,7 +98,7 @@ public class PromotionController {
         return "/promotion/promotionList"; // HTML 템플릿 반환
     }
 
-    // 금융계산기 페이지 (등록)
+    // 금융계산기 페이지
     @GetMapping("/cal")
     public String viewCalPage(
             @RequestParam(value = "codeCl", defaultValue = "430") String codeCl, // 필터 값 기본 430
@@ -127,7 +127,7 @@ public class PromotionController {
         return promotionService.getUserInfoList(custNm, custTelno);
     }
 
-    // 금융계산기 간단 계산
+    // 금융계산기 적금 - 간단 계산
     @PostMapping("/cal/savg/calculate")
     @ResponseBody
     public ResponseEntity<SavingsCalDto> calculateSavings(@RequestBody SavingsCalDto requestDto) {
@@ -135,6 +135,18 @@ public class PromotionController {
         // 계산 서비스 호출
         SavingsCalDto responseDto = SavingsCalculator.calculateSavings(requestDto);
         return ResponseEntity.ok(responseDto);
+    }
+
+    // 금융계산기 적금 - 저장
+    @PostMapping("/cal/savg/insert")
+    @ResponseBody
+    public ResponseEntity<String> saveSavings(@RequestBody SavingsSaveDto savingsSaveDto) {
+        System.out.println("Received DTO: " + savingsSaveDto);
+
+        // 서비스 호출
+        /*promotionService.save(savingsSaveDto);*/
+
+        return ResponseEntity.ok("저장이 완료되었습니다.");
     }
 
 
