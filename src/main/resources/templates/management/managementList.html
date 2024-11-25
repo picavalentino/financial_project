@@ -20,16 +20,15 @@
 
   <!-- content 영역 -->
   <div class="content">
+    <div class="location">
+      <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+      <a th:href="@{/management/list}"> / 직원조회</a>
+      <span> / 직원목록조회 </span>
+    </div>
+    <h1 class="title">직원목록조회</h1>
     <!-- 실제 콘텐츠가 이 부분에 들어갑니다 -->
     <div class="sub_content">
-      <div class="location">
-        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-        <a th:href="@{/management/list}"> / 직원조회</a>
-        <p style="display: inline;"> / 직원목록조회 </p>
-      </div>
-
       <div class="top">
-        <h1 class="title">직원목록조회</h1>
         <div class="condition-box">
           <form th:action="@{/management/list}" method="get" id="searchForm" class="d-flex">
             <div class="condition">
@@ -42,7 +41,7 @@
             </div>
 
             <div class="condition">
-              <select name="position" class="form-select me-2" style="width: 150px;">
+              <select name="position" class="form-select me-2">
                 <option value="" selected>직위</option>
                 <th:block th:each="JopPosition : ${JopPositionList}">
                   <option th:value="${JopPosition.user_jbps_ty_cd}" th:text="${JopPosition.position_name}" th:selected="${position == JopPosition.user_jbps_ty_cd}"></option>
@@ -51,7 +50,7 @@
             </div>
 
             <div class="condition">
-              <select name="searchField" class="form-select me-2" style="width: 150px;">
+              <select name="searchField" class="form-select me-2">
                 <option value="" selected>검색</option>
                 <option value="user_name" th:selected="${searchField == 'user_name'}">이름</option>
                 <option value="user_email" th:selected="${searchField == 'user_email'}">이메일</option>
@@ -60,12 +59,16 @@
             </div>
 
             <div class="condition">
-              <input type="text" name="searchValue" class="form-control me-2" style="width: 200px;" placeholder="검색어 입력" th:value="${searchValue}">
+              <input type="text" name="searchValue" class="form-control me-2" placeholder="검색어를 입력하세요." th:value="${searchValue}">
             </div>
 
             <div class="btn-wrap">
-              <button type="submit" class="btn btn-primary">검색</button>
-              <button type="button" class="btn btn-secondary" id="resetButton">초기화</button>
+              <button type="submit" class="btn" id="btn-search">
+                <div class="icon-container"><i class="icon bi bi-search"></i></div> 검색
+              </button>
+              <button type="button" class="btn" id="btn-reset">
+                <div class="icon-container"><i class="icon bi bi-search"></i></div> 초기화
+              </button>
             </div>
           </form>
         </div>
@@ -119,7 +122,7 @@
 </div>
 
 <script>
-  document.getElementById('resetButton').addEventListener('click', function() {
+  document.getElementById('btn-reset').addEventListener('click', function() {
     // 검색 폼의 모든 값을 초기화
     document.getElementById('searchForm').reset();
     // 폼을 다시 제출하여 초기 상태로 이동

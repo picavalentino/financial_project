@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin: 20px auto;
+    margin: 10px auto;
     width: 100%;
     max-width: 1440px;
     background-color: white;
@@ -33,24 +33,18 @@
     background-color: white;
 }
 
-/* 기본 콘텐츠 설정 */
-.content {
-    margin-top: 40px; /* 기존의 제목과 위치 경로와의 간격을 추가 */
-    padding: 0 15px;
-}
-
 /* 하위 콘텐츠 */
 .sub_content {
-    background-color: #f8f9fa; /* 페이지 배경과 대비되도록 연한 회색 사용 */
-    padding: 25px 20px;
     border-radius: 8px;
 }
 
 /* 페이지 위치 경로 설정 */
 .location {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     margin-bottom: 10px; /* 간격 축소 */
+    margin-top: 20px;
+    margin-left: 20px;
     font-size: 16px;
     font-weight: 500;
 }
@@ -58,6 +52,7 @@
 .location a {
     color: #333;
     text-decoration: none;
+    margin-right: 5px; /* 각 링크 간격 추가 */
 }
 
 .location a:hover {
@@ -71,9 +66,10 @@
 
 /* 제목 설정 */
 .title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #004085; /* 이미지와 비슷한 색상 */
+    font-size: 25px;
+    color: #black;
+    margin-left: 20px;
+    margin-top: 5px;
     margin-bottom: 10px; /* 간격 축소 */
 }
 
@@ -82,9 +78,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid #e9ecef;
-    padding-bottom: 15px;
-    margin-bottom: 30px;
 }
 
 /* 테이블 스타일 */
@@ -171,6 +164,88 @@
     cursor: not-allowed;
     background-color: #e9ecef;
     color: #6c757d;
+}
+
+.button-wrap {
+    display: flex; /* 버튼 그룹을 중앙 정렬하기 위해 Flexbox 사용 */
+    align-items: center;
+    margin: 15px; /* 상단 여백 */
+    gap: 10px;
+}
+/* 버튼 */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  width: 85px;
+  height: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  color: white;
+  padding: 0px;
+  padding-left: 5px;
+}
+/* 아이콘 컨테이너 */
+.icon-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 30px;
+    margin: 0px;
+    margin-left: -7px;
+    margin-right: 12px;
+}
+/* 아이콘 설정 */
+.btn i.icon {
+  font-size: 18px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: inline-block; /* 아이콘이 컨테이너에서 정렬되도록 설정 */
+  padding: 2px;
+}
+.icon{
+    margin: auto;
+}
+
+/* 버튼 개별 스타일 */
+/* 초기화 버튼 */
+#btn-reset {
+  background-color: #5a5a5a;
+  width: 90px;
+}
+
+#btn-reset .icon {
+  background-color: #4d4d4d;
+}
+
+#btn-reset:hover {
+  background-color: #4d4d4d;
+  transform: scale(1.05);
+}
+
+/* 검색 버튼 */
+#btn-search {
+    background-color: #1b1f44; /* 진한 파란색 */
+}
+
+#btn-search .icon {
+    background-color: #0f132e; /* 더 진한 파란색 */
+}
+
+#btn-search:hover {
+    background-color: #13183c;
+}
+
+/* 버튼 활성화 효과 */
+.btn:active {
+  box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
 }
 
 /* 반응형 스타일 */
