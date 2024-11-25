@@ -69,16 +69,14 @@ public class ProductSalesController {
             if (searchBgnYmd != null && !searchBgnYmd.isEmpty() && searchEndYmd != null && !searchEndYmd.isEmpty()) {
                 startOfMonth = LocalDate.parse(searchBgnYmd);
                 endOfMonth = LocalDate.parse(searchEndYmd);
-                Map<String, String> period = new HashMap<>();
-                period.put("startDate", searchBgnYmd);
-                period.put("endDate", searchEndYmd);
+                String period = searchBgnYmd + "~" + searchEndYmd;
                 model.addAttribute("periodFilter", period);
             }
             // 연도별 조회
             else if (year != null && (month == null || month.isEmpty())) {
                 startOfMonth = LocalDate.of(Integer.parseInt(year), 1, 1);
                 endOfMonth = LocalDate.of(Integer.parseInt(year), 12, 31);
-                model.addAttribute("periodFilter", year);
+                model.addAttribute("periodFilter", year+"년");
             }
             // 연도와 월별 조회
             else if (year != null && month != null && !month.isEmpty()) {
@@ -87,6 +85,7 @@ public class ProductSalesController {
                 endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
                 model.addAttribute("periodFilter", year+"년 "+month+"월");
             }
+            // 담당자 조회
 
             // 파라미터 유효성 검증
             if (startOfMonth == null || endOfMonth == null) {

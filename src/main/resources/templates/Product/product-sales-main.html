@@ -104,15 +104,7 @@
     <!-- 하단 매출 리스트 출력 -->
     <div class="bottom-content">
       <div class="bottom-content-top">
-<!--        <span th:if="${periodFilter['startDate'] != null and periodFilter['endDate'] != null}"-->
-<!--              th:text="|총 매출: ${periodFilter['startDate']} ~ ${periodFilter['endDate']}|">-->
-<!--        </span>-->
-<!--        <span th:if="${periodFilter['startDate'] == null and periodFilter['endDate'] == null and #strings.contains(periodFilter, '년')}"-->
-<!--              th:text="|총 매출: ${periodFilter}|">-->
-<!--        </span>-->
-<!--        <span th:if="${periodFilter['startDate'] == null and periodFilter['endDate'] == null and !#strings.contains(periodFilter, '년')}"-->
-<!--              th:text="|총 매출: ${periodFilter}년|">-->
-<!--        </span>-->
+        <span th:text="|총 매출: ${periodFilter}|"></span>
         <div class="btn-wrap" id="btn-bottom-menu">
           <button class="btn" id="btn-print">
             <div class="icon-container"><i class="icon bi bi-printer"></i></div> 인쇄
@@ -224,7 +216,70 @@
             window.location.href = "/product/sales";
         });
 
-        // 조건 검색 버튼 클릭
+        // 인쇄 버튼 클릭 이벤트
+        $("#btn-print").on("click", function () {
+            const salesTable = $("#tb-total-sales").clone(); // 매출 테이블 복사
+            const periodFilter = $("span[th\\:text='|총 매출: ${periodFilter}|']").text(); // 기간 정보 가져오기
+
+            if (!salesTable || salesTable.find("tbody tr").length === 0) {
+                alert("출력할 데이터가 없습니다.");
+                return;
+            }
+
+            // 새 창 생성
+            const printWindow = window.open("", "_blank");
+            printWindow.document.write(`
+                <title>매출 조회 결과</title>
+                <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+                <style>
+                    /* Pretendard 폰트와 스타일 적용 */
+                    body {
+                        font-family: 'Pretendard', sans-serif;
+                        margin: 20px;
+                        background-color: #ffffff;
+                        color: #333;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 20px 0;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    }
+                    th, td {
+                        border: 1px solid #dee2e6;
+                        padding: 10px;
+                        text-align: center;
+                        font-size: 12px;
+                    }
+                    th {
+                        background-color: #f1f3f5;
+                        color: #495057;
+                        font-weight: bold;
+                    }
+                    tbody tr:nth-child(even) {
+                        background-color: #f8f9fa;
+                    }
+                    tbody tr:hover {
+                        background-color: #e9ecef;
+                    }
+                    .footer {
+                        text-align: center;
+                        font-size: 12px;
+                        margin-top: 20px;
+                        color: #666;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">${periodFilter}</div>
+                ${salesTable.prop("outerHTML")} <!-- 테이블 HTML 출력 -->
+                <div class="footer">GS Bank - 매출 조회 결과</div>
+            </body>
+            </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        });
 
         // 직원 검색 모달 관련 -------------------------------------
         // 모달 열기

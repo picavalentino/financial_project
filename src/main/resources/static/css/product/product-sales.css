@@ -52,8 +52,9 @@
 #condition-period {
     display: flex;
     flex-direction: row;
-    flex: 3;
-    max-width: 600px;
+    flex: 2;
+    max-width: 900px;
+    width: 100%;
 }
 
 #condition-period label {
@@ -83,6 +84,13 @@
     display: flex;
     align-items: center; /* 수직 가운데 정렬 */
     justify-content: space-between;
+}
+.menu-bottom .condition {
+    display: flex;
+    flex-direction: column;
+    flex: 1.5; /* 기존보다 더 넓게 확장 */
+    max-width: 350px; /* 각 필드의 최대 넓이 조정 */
+    margin-right: 20px;
 }
 /* 테이블 공통 */
 .table-sales {

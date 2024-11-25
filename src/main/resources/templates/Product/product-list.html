@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/css/product/product-list.css">
   <link rel="stylesheet" href="/css/buttons/button.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/product/product-list.js?v=1" defer></script>
 </head>
 <title>GS Bank</title>
 <!-- 전체 적용될 CSS -->
@@ -77,10 +78,10 @@
               <input name="searchEndYmd" type="date">
           </div>
           <div class="btn-wrap">
-            <button type="submit" class="btn" id="btn-search">
+            <button type="submit" class="btn" id="btn-search" onclick="filterResults()">
               <div class="icon-container"><i class="icon bi bi-search"></i></div> 검색
             </button>
-            <button type="button" class="btn" id="btn-search-all">
+            <button type="button" class="btn" id="btn-search-all" onclick="resetFilters()">
               <div class="icon-container"><i class="icon bi bi-search"></i></div> 전체
             </button>
           </div>
@@ -103,21 +104,20 @@
       </div>
       <table class="table-product">
         <thead>
-          <tr>
-            <th><input type="checkbox" id="checkAll"></th>
-            <th onclick="sortTable('prodCd')" class="sortable">상품코드</th>
-            <th onclick="sortable('prodNm')" class="sortable">상품명</th>
-            <th onclick="sortable('prodInstlAmtMin')" class="sortable">최소가입액</th>
-            <th onclick="sortable('prodInstlAmtMax')" class="sortable">최대가입액</th>
-            <th onclick="sortable('prodPayTyCd')" class="sortable">납입주기</th>
-            <th onclick="sortable('prodAirMin')" class="sortable">최소적용이율</th>
-            <th onclick="sortable('prodAirMax')" class="sortable">최대적용이율</th>
-            <th onclick="sortable('prodIntTaxTyCd')" class="sortable">이자과세</th>
-            <th onclick="sortable('prodNtslBgnYmd')" class="sortable">판매기간</th>
-          </tr>
+        <tr>
+          <th><input type="checkbox" id="checkAll"></th>
+          <th class="sortTable" onclick="sortTable('prodCd')">상품코드</th>
+          <th class="sortTable" onclick="sortTable('prodNm')">상품명</th>
+          <th class="sortTable" onclick="sortTable('prodInstlAmtMin')">최소가입액</th>
+          <th class="sortTable" onclick="sortTable('prodInstlAmtMax')">최대가입액</th>
+          <th class="sortTable" onclick="sortTable('prodPayTyCd')">납입주기</th>
+          <th class="sortTable" onclick="sortTable('prodAirMin')">최소적용이율</th>
+          <th class="sortTable" onclick="sortTable('prodAirMax')">최대적용이율</th>
+          <th class="sortTable" onclick="sortTable('prodIntTaxTyCd')">이자과세</th>
+          <th class="sortTable" onclick="sortTable('prodNtslBgnYmd')">판매기간</th>
+        </tr>
         </thead>
-        <tbody>
-        <tbody>
+        <tbody id="result-table-body">
           <tr th:each="product : ${list}" th:onclick="'window.location.href=\'/product/detail/' + ${product.prodSn} + '\';'" style="cursor: pointer;">
             <td><input type="checkbox" class="row-checkbox"></td>
             <td>[[${product.prodCd}]]</td>
@@ -154,80 +154,7 @@
       </div>
       </div>
     </div>
-  </div>
-  <script th:inline="javascript">
-    $(document).ready(function(){
-          // 테이블 컬럼 정렬
-          let currentSortColumn = null; // 현재 정렬 기준
-          let sortDirection = 'asc';   // 기본 정렬 방향 (오름차순)
-
-          // 테이블 정렬
-          function sortTable(column) {
-              // 정렬 기준이 변경되었는지 확인
-              if (currentSortColumn === column) {
-                  // 동일 기준일 경우 방향 전환 (오름차순 ↔ 내림차순)
-                  sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-              } else {
-                  // 새로운 기준으로 정렬 초기화 (오름차순 시작)
-                  currentSortColumn = column;
-                  sortDirection = 'asc';
-              }
-              // 정렬 기준 및 방향을 적용하여 데이터 재조회
-              filterResults(1); // 첫 페이지부터 시작
-          }
-
-          // 전체 선택 체크박스 클릭 이벤트
-          $("#checkAll").on("click", function () {
-            const isChecked = $(this).is(":checked");
-            $(".row-checkbox").prop("checked", isChecked);
-          });
-
-          // 개별 체크박스 클릭 이벤트로 전체 체크박스 상태 업데이트
-          $(".table-product").on("change", ".row-checkbox", function () {
-            const total = $(".row-checkbox").length;
-            const checked = $(".row-checkbox:checked").length;
-            $("#checkAll").prop("checked", total === checked);
-          });
-
-          // 조건 검색 버튼 클릭 시 조건 확인
-          $("#searchForm").on("submit", function (e) {
-            e.preventDefault(); // 기본 폼 제출 방지
-
-            // 모든 입력 필드의 값 확인
-            const prodTyCd = $("#prodTyCd").val();
-            const prodCurrStcd = $("#prodCurrStcd").val();
-            const prodPayTyCd = $("#prodPayTyCd").val();
-            const prodNm = $("#prodNm").val();
-
-            // 하나라도 값이 있으면 폼 제출
-            if (prodTyCd || prodCurrStcd || prodPayTyCd || prodNm) {
-              this.submit();
-            } else {
-              alert("최소한 하나의 조건을 입력하거나 선택하세요.");
-            }
-          });
-
-          // 신규 등록 버튼 클릭
-          $("#btn-register").on("click", function (e) {
-            window.location.href = "/product/insert";
-          });
-
-          // 전체 버튼 클릭
-          $("#btn-search-all").on("click", function(e){
-            window.location.href = "/product/list";
-          });
-
-          $(".pagination button, .pagination span").on("click", function (e) {
-              e.preventDefault(); // 기본 동작 방지
-              const url = $(this).data("url");
-              console.log("Navigating to URL:", url);
-              if (url) {
-                  window.location.href = url;
-              }
-          });
-        });
-  </script>
-
+</div>
 </div>
 </body>
 </html>

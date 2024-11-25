@@ -32,4 +32,6 @@ public interface ProductMapper {
     List<Map<String, Object>> rankedLoansTop2(LocalDate startOfMonth, LocalDate endOfMonth);
     List<Map<String, Object>> rankedDepositTop2(LocalDate startOfMonth, LocalDate endOfMonth);
     List<Map<String, Object>> rankedLumpSumTop2(LocalDate startOfMonth, LocalDate endOfMonth);
+
+    List<ProductDTO> getProductsSorted(String sortColumn, String sortDirection);
 }

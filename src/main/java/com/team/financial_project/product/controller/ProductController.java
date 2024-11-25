@@ -14,10 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //@RestController
@@ -34,71 +31,58 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public String viewProductList(@RequestParam(defaultValue = "1") int page, Model model, HttpServletRequest request) {
-        int pageSize = 8;
-
-        List<ProductDTO> fullList = productService.findAll().stream()
-                .filter(product -> Objects.equals(product.getProdCurrStcd(), "1"))
-                .collect(Collectors.toList());
-
-        addPaginationToModel(fullList, page, pageSize, model);
-
-        // requestURI에 페이지 URL을 포함
-        String requestURI = request.getRequestURI();
-        model.addAttribute("requestURI", requestURI);
-        model.addAttribute("productSize", fullList.size());
-        return "/product/product-list";
-    }
-
-    @GetMapping("/search")
-    public String searchProducts(
-            @RequestParam(required = false) String prodTyCd,
-            @RequestParam(required = false) String prodCurrStcd,
-            @RequestParam(required = false) String prodPayTyCd,
-            @RequestParam(required = false) String prodNm,
+    public Object viewProductList(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "8") int size, // 페이지당 데이터 개수
+            @RequestParam(required = false) String prodTyCd, // 상품 유형
+            @RequestParam(required = false) String prodCurrStcd, // 상품 현재 상태
+            @RequestParam(required = false) String prodPayTyCd, // 납입주기
+            @RequestParam(required = false) String prodNm, // 상품명
             @RequestParam(required = false) String dateType, // 날짜 조건 (판매시작일/종료일)
             @RequestParam(required = false) String searchBgnYmd, // 시작 날짜
             @RequestParam(required = false) String searchEndYmd, // 종료 날짜
-            @RequestParam(defaultValue = "1") int page,
-            Model model,
-            HttpServletRequest request) {
+            @RequestParam(value = "sortColumn", required = false) String sortColumn, // 정렬 기준 컬럼
+            @RequestParam(value = "sortDirection", required = false) String sortDirection, // 정렬 방향
+            @RequestParam(value = "ajax", required = false, defaultValue = "false") boolean ajax, // AJAX 여부
+            Model model, HttpServletRequest request) {
 
         System.out.println("### search conditions: prodTyCd=" + prodTyCd + ", prodCurrStcd=" + prodCurrStcd +
                 ", prodPayTyCd=" + prodPayTyCd + ", prodNm=" + prodNm + ", dateType=" + dateType +
                 ", searchBgnYmd=" + searchBgnYmd + ", searchEndYmd=" + searchEndYmd);
 
-        int pageSize = 8;
-
         // 조건 설정
         Map<String, Object> searchParams = new HashMap<>();
+        boolean hasSearchParams = false;
 
         // 상품 유형 조건
         if (prodTyCd != null && !prodTyCd.trim().isEmpty()) {
             searchParams.put("prodTyCd", prodTyCd.trim());
+            hasSearchParams = true;
         }
-
         // 판매 상태 조건
         if (prodCurrStcd != null && !prodCurrStcd.trim().isEmpty() && !"all".equals(prodCurrStcd)) {
             searchParams.put("prodCurrStcd", prodCurrStcd.trim());
+            hasSearchParams = true;
         }
-
         // 납입 주기 조건
         if (prodPayTyCd != null && !prodPayTyCd.trim().isEmpty()) {
             searchParams.put("prodPayTyCd", prodPayTyCd.trim());
+            hasSearchParams = true;
         }
-
         // 상품명 조건
         if (prodNm != null && !prodNm.trim().isEmpty()) {
             searchParams.put("prodNm", prodNm.trim());
+            hasSearchParams = true;
         }
-
         if (dateType != null && searchBgnYmd != null && searchEndYmd != null) {
             switch (dateType) {
                 case "prodNtslBgnYmd":
                     searchParams.put("prodNtslBgnYmdRange", new String[]{searchBgnYmd.trim(), searchEndYmd.trim()});
+                    hasSearchParams = true;
                     break;
                 case "prodNtslEndYmd":
                     searchParams.put("prodNtslEndYmdRange", new String[]{searchBgnYmd.trim(), searchEndYmd.trim()});
+                    hasSearchParams = true;
                     break;
                 default:
                     System.out.println("Invalid dateType: " + dateType);
@@ -107,109 +91,82 @@ public class ProductController {
         }
 
         // 검색 결과 가져오기
-        List<ProductDTO> fullList = productService.searchProducts(searchParams);
+        List<ProductDTO> fullList;
+        if (hasSearchParams) {
+            // 조건 검색
+            fullList = productService.searchProducts(searchParams);
+        } else {
+            // 전체 결과 조회
+            fullList = productService.findAll().stream()
+                    .filter(product -> Objects.equals(product.getProdCurrStcd(), "1"))
+                    .collect(Collectors.toList());
+        }
 
-        // 페이지네이션 처리
-        addPaginationToModel(fullList, page, pageSize, model);
-
-        // 요청 URI 추가
-        model.addAttribute("requestURI", request.getRequestURI());
+        // requestURI에 페이지 URL을 포함
+        String requestURI = request.getRequestURI();
+        model.addAttribute("requestURI", requestURI);
         model.addAttribute("productSize", fullList.size());
 
-        // 검색 조건 유지
-        model.addAttribute("prodTyCd", prodTyCd);
-        model.addAttribute("prodCurrStcd", prodCurrStcd);
-        model.addAttribute("prodPayTyCd", prodPayTyCd);
-        model.addAttribute("prodNm", prodNm);
-        model.addAttribute("dateType", dateType);
-        model.addAttribute("searchBgnYmd", searchBgnYmd);
-        model.addAttribute("searchEndYmd", searchEndYmd);
+        // 정렬
+        if (sortColumn != null && sortDirection != null) {
+            Comparator<ProductDTO> comparator = null;
 
-        return "/product/product-list";
-    }
+            switch (sortColumn) {
+                case "prodNm": // 상품명 기준 정렬 (String)
+                    comparator = Comparator.comparing(ProductDTO::getProdNm);
+                    break;
+                case "prodCd": // 상품코드 기준 정렬 (String)
+                    comparator = Comparator.comparing(ProductDTO::getProdCd);
+                    break;
+                case "prodInstlAmtMin": // 최소 가입 금액 기준 정렬 (String -> Double 변환)
+                    comparator = Comparator.comparing(p -> Double.parseDouble(String.valueOf(p.getProdInstlAmtMin())));
+                    break;
+                case "prodInstlAmtMax": // 최대 가입 금액 기준 정렬 (String -> Double 변환)
+                    comparator = Comparator.comparing(p -> Double.parseDouble(String.valueOf(p.getProdInstlAmtMax())));
+                    break;
+                case "prodAirMin": // 최소 이율 (소수점 포함) 기준 정렬
+                    comparator = Comparator.comparing(p -> Double.parseDouble(String.valueOf(p.getProdAirMin())));
+                    break;
+                case "prodAirMax": // 최대 이율 (소수점 포함) 기준 정렬
+                    comparator = Comparator.comparing(p -> Double.parseDouble(String.valueOf(p.getProdAirMax())));
+                    break;
+                default:
+                    // 기본 정렬: 상품명
+                    comparator = Comparator.comparing(ProductDTO::getProdNm);
+                    break;
+            }
 
-    // 공통 페이지네이션 처리 메서드
-    private void addPaginationToModel(List<ProductDTO> fullList, int page, int pageSize, Model model) {
+            // 내림차순 정렬
+            if (comparator != null && "desc".equals(sortDirection)) {
+                comparator = comparator.reversed();
+            }
+
+            if (comparator != null) {
+                fullList.sort(comparator);
+            }
+        }
+
         int totalItems = fullList.size();
-        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-
-        // 현재 페이지의 데이터 추출
-        int startIndex = (page - 1) * pageSize;
-        int endIndex = Math.min(startIndex + pageSize, totalItems);
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+        int startIndex = (page - 1) * size;
+        int endIndex = Math.min(startIndex + size, totalItems);
         List<ProductDTO> paginatedList = fullList.subList(startIndex, endIndex);
 
-        // 모델에 데이터 추가
+        if (ajax) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("list", paginatedList);
+            response.put("totalPages", totalPages);
+            response.put("currentPage", page);
+            return ResponseEntity.ok(response); // JSON 데이터 반환
+        }
+
         model.addAttribute("list", paginatedList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        return "/product/product-list"; // HTML 템플릿 반환
     }
 
-    @GetMapping("/list/sort")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>>  getSortedProductList(
-            @RequestParam(defaultValue = "1") int page, // 현재 페이지
-            @RequestParam(defaultValue = "prodNm") String sortColumn, // 기본 정렬 컬럼
-            @RequestParam(defaultValue = "asc") String sortOrder // 기본 정렬 순서
-    ) {
-        List<ProductDTO> fullList = productService.findAll();
-        int pageSize = 8;
-        // 정렬 처리
-        if ("prodTyCd".equals(sortColumn)) {
-            if ("desc".equals(sortOrder)) {
-                fullList.sort((a, b) -> b.getProdTyCd().compareTo(a.getProdTyCd()));
-            } else {
-                fullList.sort((a, b) -> a.getProdTyCd().compareTo(b.getProdTyCd()));
-            }
-        } else if ("prodNm".equals(sortColumn)) {
-            if ("desc".equals(sortOrder)) {
-                fullList.sort((a, b) -> b.getProdNm().compareTo(a.getProdNm()));
-            } else {
-                fullList.sort((a, b) -> a.getProdNm().compareTo(b.getProdNm()));
-            }
-        } else if ("prodInstlAmtMin".equals(sortColumn)) {
-            if ("desc".equals(sortOrder)) {
-                fullList.sort((a, b) -> b.getProdInstlAmtMin().compareTo(a.getProdInstlAmtMin()));
-            } else {
-                fullList.sort((a, b) -> a.getProdInstlAmtMin().compareTo(b.getProdInstlAmtMin()));
-            }
-        } else if ("prodInstlAmtMax".equals(sortColumn)) {
-            if ("desc".equals(sortOrder)) {
-                fullList.sort((a, b) -> b.getProdInstlAmtMax().compareTo(a.getProdInstlAmtMax()));
-            } else {
-                fullList.sort((a, b) -> a.getProdInstlAmtMax().compareTo(b.getProdInstlAmtMax()));
-            }
-        } else if ("prodAirMin".equals(sortColumn)) {
-            if ("desc".equals(sortOrder)) {
-                fullList.sort((a, b) -> b.getProdAirMin().compareTo(a.getProdAirMin()));
-            } else {
-                fullList.sort((a, b) -> a.getProdAirMin().compareTo(b.getProdAirMin()));
-            }
-        } else if ("prodAirMax".equals(sortColumn)) {
-            if ("desc".equals(sortOrder)) {
-                fullList.sort((a, b) -> b.getProdAirMax().compareTo(a.getProdAirMax()));
-            } else {
-                fullList.sort((a, b) -> a.getProdAirMax().compareTo(b.getProdAirMax()));
-            }
-        }
-        // 페이지네이션 처리
-        int totalItems = fullList.size();
-        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-        int startIndex = (page - 1) * pageSize;
-        int endIndex = Math.min(startIndex + pageSize, totalItems);
-        List<ProductDTO> paginatedList = fullList.subList(startIndex, endIndex);
-
-        // JSON 응답 생성
-        Map<String, Object> response = new HashMap<>();
-        response.put("list", paginatedList);
-        response.put("currentPage", page);
-        response.put("totalPages", totalPages);
-
-        return ResponseEntity.ok(response);
-    }
-
-
-
-    // 상품 상세보기
+    // 상품 상세보기 ---------------------------------------
     @GetMapping("/detail/{prodSn}")
     public String viewProductDetail(@PathVariable("prodSn") Long prodSn, Model model) {
         ProductDTO dto = productService.findById(prodSn);
@@ -225,7 +182,7 @@ public class ProductController {
         return "/product/product-detail";
     }
 
-    //신규 상품 등록
+    //신규 상품 등록 ----------------------------------------------
     @GetMapping("/insert")
     public String productInsertView(Model model) {
         // 신규 productDTO 보내기
@@ -233,7 +190,7 @@ public class ProductController {
         return "/product/product-insert";
     }
 
-    // 직원 이름 검색 API
+    // 직원 이름 검색 API -----------------------------------------
     @GetMapping("/user/search")
     @ResponseBody
     public ResponseEntity<List<Map<String, Object>>> searchUserByName(@RequestParam String name) {
@@ -251,7 +208,7 @@ public class ProductController {
         return "redirect:/product/list";
     }
 
-    // 상품 수정
+    // 상품 수정 -------------------------------------------------------
     @PostMapping("/detail/{prodSn}/update")
     public String productUpdate(ProductDTO dto, RedirectAttributes redirectAttributes) {
         log.info("### update product: "+dto);
@@ -261,7 +218,7 @@ public class ProductController {
         return url;
     }
 
-    // 상품 삭제
+    // 상품 삭제 --------------------------------------------------
     @PostMapping("/detail/{prodSn}/delete")
     public String productDelete(@PathVariable("prodSn")BigDecimal prodSn, RedirectAttributes redirectAttributes) {
         productService.deleteProduct(prodSn);

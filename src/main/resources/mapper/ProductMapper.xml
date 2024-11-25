@@ -106,7 +106,7 @@
         LEFT JOIN tb_prod_hist h ON h.prod_sn = p.prod_sn
         WHERE p.prod_sn = #{prodSn}
     </select>
-
+    <!-- 조건 검색 -->
     <select id="searchProducts" parameterType="map" resultType="com.team.financial_project.dto.ProductDTO">
         SELECT
         p.prod_sn,
@@ -154,6 +154,14 @@
         <if test="prodNtslEndYmdRange != null">
             AND p.prod_ntsl_end_ymd BETWEEN #{prodNtslEndYmdRange[0]} AND #{prodNtslEndYmdRange[1]}
         </if>
+    </select>
+
+    <!-- 컬럼명으로 정렬 -->
+    <select id="getProductsSorted" resultType="com.team.financial_project.dto.ProductDTO">
+        SELECT *
+        FROM tb_product
+        ORDER BY
+        ${sortColumn} ${sortDirection}
     </select>
 
     <!-- 상품 등록 -->

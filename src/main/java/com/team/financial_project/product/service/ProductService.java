@@ -93,4 +93,15 @@ public class ProductService {
     public List<ProductDTO> searchProducts(Map<String, Object> searchParams) {
         return productMapper.searchProducts(searchParams);
     }
+
+    public List<ProductDTO> getSortedProducts(String sortColumn, String sortDirection) {
+        if (sortColumn == null || sortColumn.isEmpty()) {
+            sortColumn = "prodCd"; // 기본 정렬 기준
+        }
+        if (!sortDirection.equals("asc") && !sortDirection.equals("desc")) {
+            sortDirection = "asc"; // 기본 정렬 방향
+        }
+        return productMapper.getProductsSorted(sortColumn, sortDirection);
+    }
+
 }
