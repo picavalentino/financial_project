@@ -118,6 +118,104 @@ public class LoanCalculator {
 
         return loanCalDto;
     }
+
+
+    public static LoanCalDto calculateEqualPrincipal(LoanCalDto loanCalDto) {
+
+        // 입력값 가져오기
+        BigDecimal loanAmount = loanCalDto.getSavgCircleAmt(); // 대출금액
+        int loanPeriodMonths = loanCalDto.getSavgGoalPrd(); // 대출 기간 (개월)
+        BigDecimal annualInterestRate = loanCalDto.getSavgAplyRate(); // 연이율
+
+        // 월 원금 계산
+        BigDecimal monthlyPrincipal = loanAmount.divide(BigDecimal.valueOf(loanPeriodMonths), 2, RoundingMode.HALF_UP);
+
+        // 초기 변수 설정
+        List<LoanDetailsDto> paymentSchedule = new ArrayList<>();
+        BigDecimal totalInterest = BigDecimal.ZERO; // 총 이자
+        BigDecimal remainingBalance = loanAmount; // 잔액
+        LocalDate currentDate = loanCalDto.getSavgStrtDt(); // 시작일자
+
+        for (int i = 1; i <= loanPeriodMonths; i++) {
+            LocalDate dueDate = currentDate.plusMonths(i - 1);
+
+            // 월 이자 계산
+            BigDecimal monthlyInterestRate = annualInterestRate.divide(BigDecimal.valueOf(100 * 12), 12, RoundingMode.HALF_UP);
+            BigDecimal monthlyInterest = remainingBalance.multiply(monthlyInterestRate).setScale(2, RoundingMode.HALF_UP);
+
+            // 총 이자 누적
+            totalInterest = totalInterest.add(monthlyInterest);
+
+            // 월 납입금액 계산
+            BigDecimal totalMonthlyPayment = monthlyPrincipal.add(monthlyInterest);
+
+            // 잔액 감소
+            remainingBalance = remainingBalance.subtract(monthlyPrincipal).setScale(2, RoundingMode.HALF_UP);
+
+            // 회차별 상세 데이터 추가
+            LoanDetailsDto detail = new LoanDetailsDto();
+            detail.setInstallment(i);
+            detail.setMonthlyInterest(monthlyInterest.doubleValue());
+            detail.setPrincipal(monthlyPrincipal.doubleValue());
+            detail.setTotalPayment(totalMonthlyPayment.doubleValue());
+            paymentSchedule.add(detail);
+        }
+
+        // 총 납입 금액 계산
+        BigDecimal totalRepayment = loanAmount.add(totalInterest).setScale(2, RoundingMode.HALF_UP);
+
+        // 결과 DTO 설정
+        loanCalDto.setSavgTotDpstAmt(loanAmount); // 대출액
+        loanCalDto.setSavgTotDpstInt(totalInterest); // 총 이자
+        loanCalDto.setSavgAtxRcveAmt(totalRepayment); // 총 납입 금액
+        loanCalDto.setDetailList(paymentSchedule); // 상세 리스트
+
+        return loanCalDto;
+    }
+
+    public static LoanCalDto calculateBalloonPayment(LoanCalDto loanCalDto) {
+        // 입력값 가져오기
+        BigDecimal loanAmount = loanCalDto.getSavgCircleAmt(); // 대출금액
+        int loanPeriodMonths = loanCalDto.getSavgGoalPrd();    // 대출기간 (개월)
+        BigDecimal annualInterestRate = loanCalDto.getSavgAplyRate(); // 연이율
+        LocalDate startDate = loanCalDto.getSavgStrtDt();      // 시작일자
+
+        // 월 이자율 계산
+        BigDecimal dailyInterestRate = annualInterestRate.divide(BigDecimal.valueOf(100 * 365), 12, RoundingMode.HALF_UP);
+
+        BigDecimal totalInterest = BigDecimal.ZERO; // 총 이자
+        List<LoanDetailsDto> paymentSchedule = new ArrayList<>();
+        BigDecimal monthlyInterest;
+
+        for (int i = 1; i <= loanPeriodMonths; i++) {
+            LocalDate dueDate = startDate.plusMonths(i - 1); // 회차별 날짜 계산
+            int daysInMonth = dueDate.lengthOfMonth(); // 해당 월의 일수 계산
+            monthlyInterest = loanAmount.multiply(dailyInterestRate).multiply(BigDecimal.valueOf(daysInMonth)).setScale(2, RoundingMode.HALF_UP);
+
+            totalInterest = totalInterest.add(monthlyInterest); // 총 이자 누적
+
+            // 상세 데이터 추가
+            LoanDetailsDto detail = new LoanDetailsDto();
+            detail.setInstallment(i);
+            detail.setMonthlyInterest(monthlyInterest.doubleValue());
+            detail.setPrincipal(i == loanPeriodMonths ? loanAmount.doubleValue() : 0); // 마지막 회차에만 원금 납부
+            detail.setTotalPayment(i == loanPeriodMonths
+                    ? loanAmount.add(monthlyInterest).doubleValue()
+                    : monthlyInterest.doubleValue());
+            paymentSchedule.add(detail);
+        }
+
+        // 만기 시 총 상환 금액 계산
+        BigDecimal totalRepayment = loanAmount.add(totalInterest);
+
+        // 결과 DTO에 값 설정
+        loanCalDto.setSavgTotDpstAmt(loanAmount); // 대출액
+        loanCalDto.setSavgTotDpstInt(totalInterest); // 총 이자
+        loanCalDto.setSavgAtxRcveAmt(totalRepayment); // 총 상환 금액
+        loanCalDto.setDetailList(paymentSchedule); // 회차별 상세 정보
+
+        return loanCalDto;
+    }
 }
 
 

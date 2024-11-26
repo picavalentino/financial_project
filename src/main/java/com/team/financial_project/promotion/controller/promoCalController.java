@@ -135,6 +135,21 @@ public class promoCalController {
         LoanCalDto responseDto = LoanCalculator.calculateEqualPrincipalAndInterest(loanCalDto);
         return ResponseEntity.ok(responseDto);
     }
+    // 원금균등상환 계산
+    @PostMapping("/cal/equalPrincipal")
+    public ResponseEntity<LoanCalDto> calculateEqualPrincipal(@RequestBody LoanCalDto loanCalDto) {
+        LoanCalDto responseDto = LoanCalculator.calculateEqualPrincipal(loanCalDto);
+        return ResponseEntity.ok(responseDto);
+    }
+    // 원금만기일시상환
+    @PostMapping("/cal/lumpSum")
+    public ResponseEntity<LoanCalDto> calculateBalloonPayment(@RequestBody LoanCalDto requestDto) {
+        // 계산 서비스 호출
+        LoanCalDto responseDto = LoanCalculator.calculateBalloonPayment(requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+
 
     // 예금 계산 컨트롤러
     @PostMapping("/cal/dpstCalculate")
