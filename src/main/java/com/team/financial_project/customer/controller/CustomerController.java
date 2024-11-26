@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,7 @@ public class CustomerController {
         // 검색 조건 기본값 설정
         searchType = (searchType == null) ? "" : searchType;
         keyword = (keyword == null) ? "" : keyword;
+
 
         // 검색 조건과 키워드에 따라 페이징 처리된 고객 목록 조회
         List<CustomerDTO> customers = !searchType.isEmpty() && !keyword.isEmpty()

@@ -91,16 +91,48 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectAllCheckbox = document.getElementById('selectAll');
     const customerCheckboxes = document.querySelectorAll('.customer-checkbox');
 
+    let selectedCustomers = new Set(JSON.parse(localStorage.getItem('selectedCustomers') || '[]'));
+
+    // 전체 선택/해제
     selectAllCheckbox.addEventListener('change', function () {
+        const isChecked = selectAllCheckbox.checked;
+
         customerCheckboxes.forEach(checkbox => {
-            checkbox.checked = selectAllCheckbox.checked;
+            checkbox.checked = isChecked;
+            if (isChecked) {
+                selectedCustomers.add(checkbox.value);
+            } else {
+                selectedCustomers.delete(checkbox.value);
+            }
+        });
+
+        localStorage.setItem('selectedCustomers', JSON.stringify([...selectedCustomers]));
+    });
+
+    // 개별 체크박스 선택/해제
+    customerCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                selectedCustomers.add(this.value);
+            } else {
+                selectedCustomers.delete(this.value);
+            }
+
+            selectAllCheckbox.checked = Array.from(customerCheckboxes).every(cb => cb.checked);
+
+            localStorage.setItem('selectedCustomers', JSON.stringify([...selectedCustomers]));
         });
     });
 
-    customerCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            selectAllCheckbox.checked = Array.from(customerCheckboxes).every(cb => cb.checked);
+    // 페이지 로드 시 상태 복원
+    window.addEventListener('load', function () {
+        const savedSelectedCustomers = JSON.parse(localStorage.getItem('selectedCustomers') || '[]');
+
+        customerCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedSelectedCustomers.includes(checkbox.value);
         });
+
+        selectAllCheckbox.checked = Array.from(customerCheckboxes).every(cb => cb.checked);
     });
 });
 
