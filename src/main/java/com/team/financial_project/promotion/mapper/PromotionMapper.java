@@ -56,7 +56,7 @@ public interface PromotionMapper {
     List<UserInfoDto> getUserInfoList(
             @Param("custNm") String custNm, @Param("custTelno") String custTelno);
 
-
+    // 적금설계 저장
     void insertCustprodDsgn(SavingsSaveDto savingsSaveDto);
 
     void insertProdDsgnSavg(SavingsSaveDto savingsSaveDto);

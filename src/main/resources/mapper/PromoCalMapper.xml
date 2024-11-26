@@ -133,4 +133,29 @@
         </if>
         ORDER BY p.PROD_CD ASC
     </select>
+
+    <insert id="insertCustprodDsgn" useGeneratedKeys="true" keyProperty="dsgnSn">
+        INSERT INTO TB_CUSTPROD_DSGN (
+        PROD_SN, CUST_ID, USER_ID, DSGN_CREATE_AT, DSGN_UPDATE_AT,
+        DSGN_DS_TY_CD, DSGN_PRG_STCD
+        ) VALUES (
+        #{prodSn}, #{custId}, #{userId}, #{dsgnCreateAt}, #{dsgnUpdateAt},
+        #{prodDsTyCd}, #{dsgnPrgStcd}
+        )
+    </insert>
+
+    <insert id="insertProdDsgnacml">
+        INSERT INTO TB_PROD_DSGN_ACML (
+        DSGN_SN, ACML_PAY_TY_CD, ACML_GOAL_AMT,
+        ACML_GOAL_PRD, ACML_STRT_DT, ACML_MTR_DT, ACML_APLY_RATE,
+        ACML_INT_TAX_TY_CD, ACML_CIRCLE_AMT, ACML_TOT_DPST_AMT, ACML_TOT_DPST_INT,
+        ACML_INT_TAX_AMT, ACML_ATX_RCVE_AMT
+        ) VALUES (
+        #{dsgnSn}, #{prodPayTyCd}, #{savgCircleAmt},
+        #{savgGoalPrd}, #{savgStrtDt}, #{savgMtrDt}, #{savgAplyRate},
+        #{savgIntTaxTyCd}, #{savgCircleAmt}, #{savgTotDpstAmt}, #{savgTotDpstInt},
+        #{savgIntTaxAmt}, #{savgAtxRcveAmt}
+        )
+    </insert>
+
 </mapper>

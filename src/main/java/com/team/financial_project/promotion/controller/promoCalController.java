@@ -2,10 +2,7 @@ package com.team.financial_project.promotion.controller;
 
 import com.team.financial_project.promotion.calculator.DepositCalculator;
 import com.team.financial_project.promotion.calculator.SavingsCalculator;
-import com.team.financial_project.promotion.dto.DepositCalDto;
-import com.team.financial_project.promotion.dto.LoanCalDto;
-import com.team.financial_project.promotion.dto.ProductInfoDto;
-import com.team.financial_project.promotion.dto.SavingsCalDto;
+import com.team.financial_project.promotion.dto.*;
 import com.team.financial_project.promotion.service.PromoCalService;
 import com.team.financial_project.promotion.service.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +19,56 @@ public class promoCalController {
     @Autowired
     PromoCalService promoCalService;
 
-    // tab 화면전환 컨트롤러
-    @GetMapping("/CalDpst")
-    public String calculateFormDpst() {
-        return "/promotion/promotionCalDpst";
-    }
+    @Autowired
+    PromotionService promotionService;
 
+    // tab 화면전환 컨트롤러
+//    @GetMapping("/CalDpst")
+//    public String calculateFormDpst() {
+//        return "/promotion/promotionCalDpst";
+//    }
+//
+//    @GetMapping("/CalAcml")
+//    public String calculateFormAcml() {
+//        return "/promotion/promotionCalAcml";
+//    }
+//
+//    @GetMapping("/CalLoan")
+//    public String calculateFormLoan() {
+//        return "/promotion/promotionCalLoan";
+//    }
+
+    // tab 화면전환 컨트롤러
+    // 목돈 적금 페이지
     @GetMapping("/CalAcml")
-    public String calculateFormAcml() {
+    public String viewCalAcmlPage(
+            @RequestParam(value = "codeCl", defaultValue = "430") String codeCl, // 필터 값 기본 430
+            Model model) {
+        // 페이지에 출력하기 위한 진행상태 조회
+        List<CodeDto> progressStatusList = promotionService.getCodeListByCl(codeCl);
+        model.addAttribute("progressStatusList", progressStatusList);
         return "/promotion/promotionCalAcml";
     }
 
+    // 예금 페이지
+    @GetMapping("/CalDpst")
+    public String viewCalDpstPage(
+            @RequestParam(value = "codeCl", defaultValue = "430") String codeCl, // 필터 값 기본 430
+            Model model) {
+        // 페이지에 출력하기 위한 진행상태 조회
+        List<CodeDto> progressStatusList = promotionService.getCodeListByCl(codeCl);
+        model.addAttribute("progressStatusList", progressStatusList);
+        return "/promotion/promotionCalDpst";
+    }
+
+    // 대출 페이지
     @GetMapping("/CalLoan")
-    public String calculateFormLoan() {
+    public String viewCalLoanPage(
+            @RequestParam(value = "codeCl", defaultValue = "430") String codeCl, // 필터 값 기본 430
+            Model model) {
+        // 페이지에 출력하기 위한 진행상태 조회
+        List<CodeDto> progressStatusList = promotionService.getCodeListByCl(codeCl);
+        model.addAttribute("progressStatusList", progressStatusList);
         return "/promotion/promotionCalLoan";
     }
 
@@ -101,13 +135,25 @@ public class promoCalController {
 //    }
 
     // 예금 계산 컨트롤러
-    @PostMapping("/cal/dpstCalculate")
-    @ResponseBody
-    public ResponseEntity<DepositCalDto> calculateSavings(@RequestBody DepositCalDto requestDto) {
+//    @PostMapping("/cal/dpstCalculate")
+//    @ResponseBody
+//    public ResponseEntity<DepositCalDto> calculateSavings(@RequestBody DepositCalDto requestDto) {
+//
+//        // 계산 서비스 호출
+//        DepositCalDto responseDto = DepositCalculator.calculateDeposit(requestDto);
+//        return ResponseEntity.ok(responseDto);
+//    }
 
-        // 계산 서비스 호출
-        DepositCalDto responseDto = DepositCalculator.calculateDeposit(requestDto);
-        return ResponseEntity.ok(responseDto);
+    // 목돈적금 저장 컨트롤러
+    @PostMapping("/cal/acml/insert")
+    @ResponseBody
+    public ResponseEntity<String> saveSavings(@RequestBody SavingsSaveDto savingsSaveDto) {
+        System.out.println("Received DTO: " + savingsSaveDto);
+
+        // 서비스 호출
+        promoCalService.save(savingsSaveDto);
+
+        return ResponseEntity.ok("저장이 완료되었습니다.");
     }
 
 }
