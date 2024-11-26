@@ -185,4 +185,16 @@ public class promoCalController {
         return ResponseEntity.ok("저장이 완료되었습니다.");
     }
 
+    // 대출 저장 컨트롤러
+    @PostMapping("/cal/loan/insert")
+    @ResponseBody
+    public ResponseEntity<String> saveLoan(@RequestBody SavingsSaveDto savingsSaveDto) {
+        System.out.println("Received DTO: " + savingsSaveDto);
+
+        // 서비스 호출
+        promoCalService.saveLoan(savingsSaveDto);
+
+        return ResponseEntity.ok("저장이 완료되었습니다.");
+    }
+
 }

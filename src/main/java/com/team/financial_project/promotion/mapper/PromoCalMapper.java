@@ -29,4 +29,9 @@ public interface PromoCalMapper {
     void insertDpstCustprodDsgn(SavingsSaveDto savingsSaveDto);
 
     void insertProdDsgnDpst(SavingsSaveDto savingsSaveDto);
+
+    // 대출 설계 저
+    void insertLoanCustprodDsgn(SavingsSaveDto savingsSaveDto);
+
+    void insertProdDsgnLoan(SavingsSaveDto savingsSaveDto);
 }

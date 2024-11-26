@@ -23,6 +23,7 @@ public class SavingsSaveDto {
     private String dsgnPrgStcd;
 
     // TB_PROD_DSGN_SAVG 관련 필드
+    private Integer repaymentMethodCode;
     private String prodPayTyCd;
     private Integer savgGoalPrd;
     private LocalDate savgStrtDt;

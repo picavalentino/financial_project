@@ -179,5 +179,25 @@
         #{savgIntTaxAmt}, #{savgAtxRcveAmt}
         )
     </insert>
+    <insert id="insertLoanCustprodDsgn" useGeneratedKeys="true" keyProperty="dsgnSn">
+        INSERT INTO TB_CUSTPROD_DSGN (
+        PROD_SN, CUST_ID, USER_ID, DSGN_CREATE_AT, DSGN_UPDATE_AT,
+        DSGN_DS_TY_CD, DSGN_PRG_STCD
+        ) VALUES (
+        #{prodSn}, #{custId}, #{userId}, #{dsgnCreateAt}, #{dsgnUpdateAt},
+        #{prodDsTyCd}, #{dsgnPrgStcd}
+        )
+    </insert>
+    <insert id="insertProdDsgnLoan">
+        INSERT INTO TB_PROD_DSGN_LOAN (
+        DSGN_SN, LOAN_RPTY_CD, LOAN_AMT,
+        LOAN_REPY_PRD, LOAN_STRT_DT, LOAN_MTR_DT, LOAN_RATE,
+        LOAN_TOT_INT_AMT, LOAN_TOT_PAY_AMT
+        ) VALUES (
+        #{dsgnSn}, #{repaymentMethodCode}, #{savgCircleAmt},
+        #{savgGoalPrd}, #{savgStrtDt}, #{savgMtrDt}, #{savgAplyRate},
+        #{savgTotDpstInt}, #{savgAtxRcveAmt}
+        )
+    </insert>
 
 </mapper>
