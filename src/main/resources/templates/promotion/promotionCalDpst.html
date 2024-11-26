@@ -738,12 +738,12 @@
             resultChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['불입금액합계', '세전이자', '세전수령액', '이자과세금', '세후수령액'],
+                    labels: ['총예치금액', '세전이자', '세전수령액', '이자과세금', '세후수령액'],
                     datasets: [{
                         label: '계산 결과',
                         data: [0, 0, 0, 0, 0], // 초기 데이터
                         backgroundColor: [
-                            '#4CAF50', // 불입금액합계
+                            '#4CAF50', // 총예치금액
                             '#FF9800', // 세전이자
                             '#03A9F4', // 세전수령액
                             '#F44336', // 이자과세금
@@ -842,11 +842,11 @@
             // 차트 데이터 업데이트
             if (resultChart && resultChart.data && resultChart.data.datasets) {
                 resultChart.data.datasets[0].data = [
-                    data.savgTotDpstAmt,
-                    data.savgTotDpstInt,
-                    data.savgTotRcveAmt,
-                    data.savgIntTaxAmt,
-                    data.savgAtxRcveAmt
+                    data.totalDepositAmt,
+                    data.totalInterest,
+                    data.totalPreTax,
+                    data.taxAmount,
+                    data.totalAfterTax
                 ];
                 resultChart.update(); // 차트 새로고침
                 console.log("차트 업데이트 완료: ", resultChart.data.datasets[0].data);
