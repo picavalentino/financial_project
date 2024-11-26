@@ -93,7 +93,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let selectedCustomers = new Set(JSON.parse(localStorage.getItem('selectedCustomers') || '[]'));
 
-    // 전체 선택/해제
+    // 상태를 로컬스토리지와 DOM에 동기화
+    function syncState() {
+        // 각 체크박스의 상태를 로드된 selectedCustomers에 따라 설정
+        customerCheckboxes.forEach(checkbox => {
+            checkbox.checked = selectedCustomers.has(checkbox.value);
+        });
+
+        // 전체 선택 체크박스 상태 업데이트
+        selectAllCheckbox.checked = Array.from(customerCheckboxes).every(cb => cb.checked);
+    }
+
+    // 선택 상태를 서버로 전송
+    function sendSelectedCustomersToServer() {
+        fetch('/customer/update-selected', {
+            method: 'POST', // POST로 변경
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                selectedCustomers: Array.from(selectedCustomers), // 배열로 변환
+            }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('서버 응답 오류');
+            }
+            return response.json();
+        })
+        .then(data => console.log('서버로 선택된 고객 업데이트 완료:', data))
+        .catch(error => console.error('업데이트 실패:', error));
+    }
+
+    // 전체 선택/해제 이벤트
     selectAllCheckbox.addEventListener('change', function () {
         const isChecked = selectAllCheckbox.checked;
 
@@ -107,9 +139,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         localStorage.setItem('selectedCustomers', JSON.stringify([...selectedCustomers]));
+        sendSelectedCustomersToServer();
     });
 
-    // 개별 체크박스 선택/해제
+    // 개별 체크박스 선택/해제 이벤트
     customerCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
             if (this.checked) {
@@ -118,22 +151,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 selectedCustomers.delete(this.value);
             }
 
-            selectAllCheckbox.checked = Array.from(customerCheckboxes).every(cb => cb.checked);
-
             localStorage.setItem('selectedCustomers', JSON.stringify([...selectedCustomers]));
+            syncState(); // 전체 선택 상태 업데이트
+            sendSelectedCustomersToServer();
         });
     });
 
     // 페이지 로드 시 상태 복원
-    window.addEventListener('load', function () {
-        const savedSelectedCustomers = JSON.parse(localStorage.getItem('selectedCustomers') || '[]');
-
-        customerCheckboxes.forEach(checkbox => {
-            checkbox.checked = savedSelectedCustomers.includes(checkbox.value);
-        });
-
-        selectAllCheckbox.checked = Array.from(customerCheckboxes).every(cb => cb.checked);
-    });
+    syncState();
 });
 
 /* ========================================================================= */

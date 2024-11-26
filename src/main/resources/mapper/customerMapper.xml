@@ -220,7 +220,33 @@
         code_no AS custOccpTyCd, -- 부서 코드 (코드 번호)
         code_nm AS custOccpTyCd_name -- 부서명
         FROM tb_code
-        WHERE code_cl LIKE '301' -- 200번대의 코드 클러스터 필터링 (200번대가 부서 코드임)
+        WHERE code_cl LIKE '301' -- 301번대의 코드 클러스터 필터링 (301번대가 고객 코드임)
         ORDER BY code_no ASC -- 코드 번호 순으로 정렬
     </select>
+    <!-- ============================================================================================================= -->
+    <!-- 선택된 고객 상태 업데이트 -->
+    <update id="updateCustomerStatus">
+        UPDATE tb_customer
+        SET status = #{status}
+        WHERE cust_id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 선택되지 않은 고객 상태 초기화 -->
+    <update id="resetCustomerStatusExcept">
+        UPDATE tb_customer
+        SET status = #{status}
+        WHERE cust_id NOT IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 모든 고객 상태 초기화 (선택된 고객이 없는 경우) -->
+    <update id="resetAllCustomerStatus">
+        UPDATE tb_customer
+        SET status = #{status}
+    </update>
 </mapper>

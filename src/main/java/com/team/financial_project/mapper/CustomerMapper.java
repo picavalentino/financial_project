@@ -21,7 +21,13 @@ public interface CustomerMapper {
     // 검색 조건에 따른 총 고객 수 계산
     int getCustomerCount(@Param("searchType") String searchType,
                          @Param("keyword") String keyword);
+    // ==============================================================================================================
+    // 고객 선택 조회
+    void resetAllCustomerStatus(String unselected);
 
+    void updateCustomerStatus(List<String> selectedCustomers, String selected);
+
+    void resetCustomerStatusExcept(List<String> selectedCustomers, String unselected);
     // ==============================================================================================================
 
     // 고객 아이디 확인
@@ -38,5 +44,4 @@ public interface CustomerMapper {
 
     // 고객 직업 코드
     List<CustomerDTO> getCustOccpTyCdList();
-
 }

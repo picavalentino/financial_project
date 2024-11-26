@@ -7,6 +7,7 @@ import com.team.financial_project.mapper.UserMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -59,6 +60,20 @@ public class CustomerService {
         return customerMapper.getCustomerCount(searchType, keyword);
     }
 
+    @Transactional
+    public void updateSelectedCustomers(List<String> selectedCustomers) {
+        if (selectedCustomers == null || selectedCustomers.isEmpty()) {
+            // 선택된 고객이 없을 경우 모든 상태 초기화
+            customerMapper.resetAllCustomerStatus("UNSELECTED");
+        } else {
+            // 선택된 고객들의 상태를 SELECTED로 업데이트
+            customerMapper.updateCustomerStatus(selectedCustomers, "SELECTED");
+
+            // 선택되지 않은 고객들의 상태를 UNSELECTED로 초기화
+            customerMapper.resetCustomerStatusExcept(selectedCustomers, "UNSELECTED");
+        }
+    }
+
     // ======================================================================================================
     // 고객 상세 페이지로 이동
     public CustomerDTO getCustomerById(String custId) {
@@ -108,6 +123,7 @@ public class CustomerService {
     public List<CustomerDTO> getCustOccpTyCdList() {
         return customerMapper.getCustOccpTyCdList();
     }
+
 
 }
 
