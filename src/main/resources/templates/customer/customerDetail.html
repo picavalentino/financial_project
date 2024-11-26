@@ -40,7 +40,7 @@
                             <label>연락처 <input type="text" th:value="${customer.custTelno}" name="custTelno"></label>
                             <label>이메일 <input type="text" th:value="${customer.custEmail}" name="custEmail"></label>
                             <label>직업
-                                <select id="custOccpTyCd" name="custOccpTyCd" th:field="*{custOccpTyCd}">
+                                <select id="custOccpTyCd" name="custOccpTyCd" th:field="*{custOccpTyCd}" th:selected="${customer.custOccpTyCd}">
                                     <option th:value="${custOccpTyCd}" th:text="${customer.custOccpTyCd}">직업</option>
                                     <option value="100">관리자(사무직)</option>
                                     <option value="101">전문가 및 관련 종사자</option>
@@ -107,7 +107,8 @@
                         <h2>최근 상담 내역</h2>
                         <button class="consult-btn">상담일지</button>
                     </div>
-                    <textarea disabled>작성일자: 2024-11-18
+                    <textarea disabled>
+                        작성일자: 2024-11-18
                       .   ____          _            __ _ _
                      /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
                     ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
@@ -119,7 +120,7 @@
 
                 <div class="revision">
                     <h2>수정 내역</h2>
-                    <textarea disabled></textarea>
+                    <textarea id="revisionHistory" disabled></textarea>
                 </div>
             </section>
         </section>

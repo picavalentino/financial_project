@@ -5,6 +5,12 @@ function closeAllModals() {
         modal.style.display = "none";
     });
 }
+// ========================================================================
+// 수정내역 기록
+window.onload = function() {
+    const textarea = document.getElementById("revisionHistory");
+    textarea.value = custCreate; // textarea에 고객 생성일 값을 설정
+};
 
 // =========================================================================
 // 담당자 검색 모달 열기
@@ -29,11 +35,6 @@ function closeModal(modalId) {
         console.error(`모달 ID ${modalId}를 찾을 수 없습니다.`);
     }
 }
-
-/*document.getElementById("openSearchModalBtn").addEventListener("click", (event) => {
-    event.preventDefault(); // 기본 동작 방지
-    openSearchModal();
-});*/
 
 // 담당자 검색 기능 (AJAX로 서버에서 데이터 가져오기)
 function searchManager() {
@@ -133,6 +134,9 @@ document.addEventListener("DOMContentLoaded", function() {
             custOccpTyCd = custOccpTyCdElement?.getAttribute('th:selected');
         }
         var formData = new FormData(form);
+
+        // 수정한 사용자 ID 가져오기
+        var userId = document.querySelector('input[name="user_id"]').value;
 
         // 폼 데이터를 JSON으로 변환
         var updatedCustomerData = {

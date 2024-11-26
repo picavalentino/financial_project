@@ -66,6 +66,7 @@ public class CustomerController {
     public String getCustomerDetail(@PathVariable("custId") String custId, Model model) {
         // 고객 상세 정보 가져오기
         CustomerDTO customer = customerService.getCustomerById(custId);
+
         model.addAttribute("customer", customer);
         return "customer/customerDetail"; // 고객 상세 정보 페이지로 이동
     }
