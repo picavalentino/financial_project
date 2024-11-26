@@ -30,7 +30,7 @@
     <div class="top-content">
       <h1 class="title">매출조회</h1>
       <div class="condition-box">
-        <form id="search-form" action="/product/sales/search" method="GET">
+        <form id="search-form" action="/product/sales" method="GET">
           <div class="menu-top">
             <div class="condition">
               <label>기간별</label>
@@ -59,11 +59,12 @@
           <div class="menu-bottom">
             <div class="condition">
               <label>상품유형</label>
-              <select name="prodCd">
-                <option value="">적금/예금/대출</option>
+              <select name="dsgnDsTy">
+                <option value="">적금/목돈/예금/대출</option>
                 <option value="1">적금</option>
-                <option value="2">예금</option>
-                <option value="3">대출</option>
+                <option value="2">목돈</option>
+                <option value="3">예금</option>
+                <option value="4">대출</option>
               </select>
             </div>
             <div class="condition">
@@ -125,7 +126,7 @@
           <tbody>
           <!-- 각 상품 유형 데이터 반복 -->
           <tr th:each="sale : ${salesData}">
-            <td th:text="${sale.prodTyCd}">상품유형</td>
+            <td th:text="${sale.dsgnDsTy}">상품유형</td>
             <td th:text="${sale.totalCounts != null ? sale.totalCounts : 0}" class="total-count">총설계건수</td>
             <td>
               <span th:text="|${sale.formattedTotalAmounts != null ? sale.formattedTotalAmounts : '0'}원|"></span>
@@ -179,7 +180,7 @@
             const month = form.querySelector("select[name='month']").value;
             const searchBgnYmd = form.querySelector("input[name='searchBgnYmd']").value;
             const searchEndYmd = form.querySelector("input[name='searchEndYmd']").value;
-            const prodCd = form.querySelector("select[name='prodCd']").value;
+            const dsgnDsTy = form.querySelector("select[name='dsgnDsTy']").value;
             const prodNm = form.querySelector("input[name='prodNm']").value;
             const staffName = form.querySelector("input[name='staffName']").value;
 
@@ -189,14 +190,22 @@
                 alert("월을 선택하려면 연도를 먼저 선택하세요.");
                 return;
             }
-
+            // 검색 조건이 입력되었으나 기간 정보가 없는 경우 (연도 또는 연도+월이 없는 경우)
+            if (
+                (dsgnDsTy || prodNm || staffName) &&
+                (!year && (!searchBgnYmd || !searchEndYmd))
+            ) {
+                e.preventDefault(); // 폼 제출 막기
+                alert("검색 조건을 입력할 경우, 연도 또는 날짜 조건을 함께 선택하세요.");
+                return;
+            }
             // 조건이 하나라도 선택되었는지 확인
             if (
                 !year &&
                 !month &&
                 !searchBgnYmd &&
                 !searchEndYmd &&
-                !prodCd &&
+                !dsgnDsTy &&
                 !prodNm &&
                 !staffName
             ) {

@@ -38,18 +38,18 @@ public class ProductSalesService {
 
         // 상품 유형별 데이터를 순회하면서 처리
         for (Map.Entry<String, List<Map<String, Object>>> entry : salesDataMap.entrySet()) {
-            String prodType = entry.getKey();
+            String dsgnDsTy = entry.getKey();
             List<Map<String, Object>> rankedTop2 = entry.getValue();
 
             TotalSalesDTO dto = new TotalSalesDTO();
-            dto.setProdTyCd(prodType);
+            dto.setDsgnDsTy(dsgnDsTy);
 
             // 매출 데이터 처리
-            List<Map<String, Object>> salesData = switch (prodType) {
-                case "예금" -> productMapper.thisMonthDepositSales(startOfMonth, endOfMonth);
-                case "적금" -> productMapper.thisMonthSavingsSales(startOfMonth, endOfMonth);
-                case "목돈" -> productMapper.thisMonthLumpSumSales(startOfMonth, endOfMonth);
-                case "대출" -> productMapper.thisMonthLoanSales(startOfMonth, endOfMonth);
+            List<Map<String, Object>> salesData = switch (dsgnDsTy) {
+                case "예금" -> productMapper.findDepositSales(startOfMonth, endOfMonth);
+                case "적금" -> productMapper.findSavingsSales(startOfMonth, endOfMonth);
+                case "목돈" -> productMapper.findLumpSumSales(startOfMonth, endOfMonth);
+                case "대출" -> productMapper.findLoanSales(startOfMonth, endOfMonth);
                 default -> List.of();
             };
 
@@ -77,4 +77,60 @@ public class ProductSalesService {
 
         return totalSalesList;
     }
+
+    public List<TotalSalesDTO> findSalesByConditions(
+            LocalDate startOfMonth, LocalDate endOfMonth, String userId, String dsgnDsTy, String prodNm
+    ) {
+        List<TotalSalesDTO> totalSalesList = new ArrayList<>();
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+
+        // 기본 매출 데이터 매퍼 호출
+        List<Map<String, Object>> salesData = productMapper.findSalesData(startOfMonth, endOfMonth, userId, dsgnDsTy, prodNm);
+
+        // 상품 유형별 매출 조회 (예금, 적금, 목돈, 대출 순서)
+        Map<String, List<Map<String, Object>>> salesDataMap = Map.of(
+                "예금", productMapper.rankedDepositTop2ByConditions(startOfMonth, endOfMonth, userId, prodNm),
+                "적금", productMapper.rankedSavingsTop2ByConditions(startOfMonth, endOfMonth, userId, prodNm),
+                "목돈", productMapper.rankedLumpSumTop2ByConditions(startOfMonth, endOfMonth, userId, prodNm),
+                "대출", productMapper.rankedLoansTop2ByConditions(startOfMonth, endOfMonth, userId, prodNm)
+        );
+
+        // 상품 유형별 데이터를 순회하면서 처리
+        for (Map.Entry<String, List<Map<String, Object>>> entry : salesDataMap.entrySet()) {
+            String category = entry.getKey(); // 예금, 적금 등
+            List<Map<String, Object>> rankedTop2 = entry.getValue();
+
+            TotalSalesDTO dto = new TotalSalesDTO();
+            dto.setDsgnDsTy(category);
+
+            // 해당 유형에 맞는 매출 데이터 처리
+            List<Map<String, Object>> filteredData = salesData.stream()
+                    .filter(data -> data.get("dsgn_ds_ty").equals(category))
+                    .toList();
+
+            if (!filteredData.isEmpty()) {
+                Map<String, Object> data = filteredData.get(0);
+                dto.setTotalCounts(Long.valueOf(String.valueOf(data.get("total_design_count"))));
+                dto.setTotalAmounts(Long.valueOf(String.valueOf(data.get("total_sales_amount"))));
+                dto.setFormattedTotalAmounts(decimalFormat.format(dto.getTotalAmounts()));
+            }
+
+            // 상위 2개 데이터 처리
+            List<String> countsTopList = rankedTop2.stream()
+                    .map(row -> row.get("product_name") + " (" + row.get("total_design_count") + ")")
+                    .toList();
+
+            List<String> amountsTopList = rankedTop2.stream()
+                    .map(row -> row.get("product_name") + " (" + decimalFormat.format(row.get("total_deposit_amount")) + ")")
+                    .toList();
+
+            dto.setCountsTop2(countsTopList);
+            dto.setAmountsTop2(amountsTopList);
+
+            totalSalesList.add(dto);
+        }
+
+        return totalSalesList;
+    }
+
 }

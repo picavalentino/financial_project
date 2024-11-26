@@ -260,8 +260,7 @@
 
     <!-- 매출 조회; 디폴트: 이번달 매출 조회 -->
     <!-- 적금 매출 조회 -->
-    <!-- 적금 매출 조회 -->
-    <select id="thisMonthSavingsSales" parameterType="map" resultType="map">
+    <select id="findSavingsSales" parameterType="map" resultType="map">
         SELECT
         TO_CHAR(SAVG_STRT_DT, 'YYYY-MM') AS sale_month,
         COUNT(SAVG_DS_SN) AS total_design_count,
@@ -298,7 +297,7 @@
     </select>
 
     <!-- 대출 매출 조회 -->
-    <select id="thisMonthLoanSales" parameterType="map" resultType="map">
+    <select id="findLoanSales" parameterType="map" resultType="map">
         SELECT
         TO_CHAR(LOAN_STRT_DT, 'YYYY-MM') AS sale_month,
         COUNT(LOAN_DS_SN) AS total_design_count,
@@ -335,7 +334,7 @@
     </select>
 
     <!-- 예금 매출 조회 -->
-    <select id="thisMonthDepositSales" parameterType="map" resultType="map">
+    <select id="findDepositSales" parameterType="map" resultType="map">
         SELECT
         TO_CHAR(DPST_STRT_DT, 'YYYY-MM') AS sale_month,
         COUNT(DPST_DS_SN) AS total_design_count,
@@ -372,7 +371,7 @@
     </select>
 
     <!-- 목돈 매출 조회 -->
-    <select id="thisMonthLumpSumSales" parameterType="map" resultType="map">
+    <select id="findLumpSumSales" parameterType="map" resultType="map">
         SELECT
         TO_CHAR(ACML_STRT_DT, 'YYYY-MM') AS sale_month,
         COUNT(ACML_DS_SN) AS total_design_count,
@@ -389,6 +388,129 @@
 
     <!-- 목돈 상위 2개 상품 조회 -->
     <select id="rankedLumpSumTop2" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.acml_tot_dpst_amt) AS total_deposit_amount,
+        COUNT(s.acml_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_acml s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.acml_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 매출 조회 - 조건 검색-->
+    <select id="findSalesData" parameterType="map" resultType="map">
+        SELECT
+        CASE
+        WHEN s.dsgn_ds_ty_cd = '1' THEN '적금'
+        WHEN s.dsgn_ds_ty_cd = '2' THEN '목돈'
+        WHEN s.dsgn_ds_ty_cd = '3' THEN '예금'
+        WHEN s.dsgn_ds_ty_cd = '4' THEN '대출'
+        END AS dsgn_ds_ty,
+        COUNT(s.dsgn_sn) AS total_design_count,
+        SUM(
+        CASE
+        WHEN s.dsgn_ds_ty_cd = '1' THEN savg.savg_tot_dpst_amt
+        WHEN s.dsgn_ds_ty_cd = '2' THEN acml.acml_tot_dpst_amt
+        WHEN s.dsgn_ds_ty_cd = '3' THEN d.dpst_amt
+        WHEN s.dsgn_ds_ty_cd = '4' THEN loan.loan_amt
+        END
+        ) AS total_sales_amount
+        FROM tb_custprod_dsgn s
+        LEFT JOIN tb_prod_dsgn_savg savg ON s.dsgn_sn = savg.dsgn_sn AND s.dsgn_ds_ty_cd = '1'
+        LEFT JOIN tb_prod_dsgn_acml acml ON s.dsgn_sn = acml.dsgn_sn AND s.dsgn_ds_ty_cd = '2'
+        LEFT JOIN tb_prod_dsgn_dpst d ON s.dsgn_sn = d.dsgn_sn AND s.dsgn_ds_ty_cd = '3'
+        LEFT JOIN tb_prod_dsgn_loan loan ON s.dsgn_sn = loan.dsgn_sn AND s.dsgn_ds_ty_cd = '4'
+        LEFT JOIN tb_product p ON s.prod_sn = p.prod_sn
+        WHERE
+        s.dsgn_create_at BETWEEN #{startOfMonth} AND #{endOfMonth}
+        <if test="userId != null and userId != ''">
+            AND s.user_id = #{userId}
+        </if>
+        <if test="dsgnDsTy != null and dsgnDsTy != ''">
+            AND s.dsgn_ds_ty_cd = #{dsgnDsTy}
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND p.prod_nm LIKE CONCAT('%', #{prodNm}, '%')
+        </if>
+        GROUP BY s.dsgn_ds_ty_cd
+        ORDER BY total_sales_amount DESC;
+    </select>
+
+    <!-- 적금 -->
+    <select id="rankedSavingsTop2ByConditions" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.savg_tot_dpst_amt) AS total_deposit_amount,
+        COUNT(s.savg_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_savg s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.savg_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 대출 -->
+    <select id="rankedLoansTop2ByConditions" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.loan_amt) AS total_deposit_amount,
+        COUNT(s.loan_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_loan s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.loan_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 예금 -->
+    <select id="rankedDepositTop2ByConditions" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.dpst_amt) AS total_deposit_amount,
+        COUNT(s.dpst_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_dpst s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.dpst_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 목돈 -->
+    <select id="rankedLumpSumTop2ByConditions" parameterType="map" resultType="map">
         SELECT
         p.prod_nm AS product_name,
         SUM(s.acml_tot_dpst_amt) AS total_deposit_amount,

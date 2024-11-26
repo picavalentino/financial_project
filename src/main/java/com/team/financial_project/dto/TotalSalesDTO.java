@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TotalSalesDTO {
-    private String prodTyCd;
+    private String dsgnDsTy;
     private Long totalCounts;
     private Long totalAmounts;
     private List<String> countsTop2;
