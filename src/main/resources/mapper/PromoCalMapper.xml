@@ -157,5 +157,27 @@
         #{savgIntTaxAmt}, #{savgAtxRcveAmt}
         )
     </insert>
+    <insert id="insertDpstCustprodDsgn" useGeneratedKeys="true" keyProperty="dsgnSn">
+        INSERT INTO TB_CUSTPROD_DSGN (
+        PROD_SN, CUST_ID, USER_ID, DSGN_CREATE_AT, DSGN_UPDATE_AT,
+        DSGN_DS_TY_CD, DSGN_PRG_STCD
+        ) VALUES (
+        #{prodSn}, #{custId}, #{userId}, #{dsgnCreateAt}, #{dsgnUpdateAt},
+        #{prodDsTyCd}, #{dsgnPrgStcd}
+        )
+    </insert>
+    <insert id="insertProdDsgnDpst">
+        INSERT INTO TB_PROD_DSGN_DPST (
+        DSGN_SN, DPST_PAY_TY_CD, DPST_AMT,
+        DPST_PRD, DPST_STRT_DT, DPST_MTR_DT, DPST_APLY_RATE,
+        DPST_INT_TAX_TY_CD, DPST_TOT_AMT, DPST_TOT_INT,
+        DPST_INT_TAX_AMT, DPST_ATX_RCVE_AMT
+        ) VALUES (
+        #{dsgnSn}, #{prodPayTyCd}, #{savgCircleAmt},
+        #{savgGoalPrd}, #{savgStrtDt}, #{savgMtrDt}, #{savgAplyRate},
+        #{savgIntTaxTyCd}, #{savgTotDpstAmt}, #{savgTotDpstInt},
+        #{savgIntTaxAmt}, #{savgAtxRcveAmt}
+        )
+    </insert>
 
 </mapper>

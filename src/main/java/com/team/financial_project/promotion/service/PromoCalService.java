@@ -42,4 +42,16 @@ public class PromoCalService {
         // Step 3: TB_PROD_DSGN_ACML에 데이터 삽입
         promoCalMapper.insertProdDsgnacml(savingsSaveDto);
     }
+
+    public void saveDpst(SavingsSaveDto savingsSaveDto) {
+        // Step 1: TB_CUSTPROD_DSGN에 데이터 삽입 (dsgnSn 값 자동 생성)
+        promoCalMapper.insertDpstCustprodDsgn(savingsSaveDto);
+
+        // Step 2: 생성된 dsgnSn 값을 savingsSaveDto에 설정
+        Integer generatedDsgnSn = savingsSaveDto.getDsgnSn();
+        savingsSaveDto.setDsgnSn(generatedDsgnSn);
+
+        // Step 3: TB_PROD_DSGN_APST에 데이터 삽입
+        promoCalMapper.insertProdDsgnDpst(savingsSaveDto);
+    }
 }

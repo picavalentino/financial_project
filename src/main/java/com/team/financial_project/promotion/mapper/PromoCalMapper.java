@@ -20,8 +20,13 @@ public interface PromoCalMapper {
     // 대출 상품 찾기
     List<ProductInfoDto> getLoanProductList();
 
-    // 목돈 적금 설계 저
+    // 목돈 적금 설계 저장
     void insertCustprodDsgn(SavingsSaveDto savingsSaveDto);
 
     void insertProdDsgnacml(SavingsSaveDto savingsSaveDto);
+
+    // 예금 설계 저장
+    void insertDpstCustprodDsgn(SavingsSaveDto savingsSaveDto);
+
+    void insertProdDsgnDpst(SavingsSaveDto savingsSaveDto);
 }

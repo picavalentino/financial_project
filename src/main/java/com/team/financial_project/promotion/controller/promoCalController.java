@@ -156,4 +156,16 @@ public class promoCalController {
         return ResponseEntity.ok("저장이 완료되었습니다.");
     }
 
+    // 예금 저장 컨트롤러
+    @PostMapping("/cal/dpst/insert")
+    @ResponseBody
+    public ResponseEntity<String> saveDpst(@RequestBody SavingsSaveDto savingsSaveDto) {
+        System.out.println("Received DTO: " + savingsSaveDto);
+
+        // 서비스 호출
+        promoCalService.saveDpst(savingsSaveDto);
+
+        return ResponseEntity.ok("저장이 완료되었습니다.");
+    }
+
 }
