@@ -61,16 +61,6 @@ public class CustomerController {
         return "customer/customerList"; // 뷰 이름
     }
 
-    @PostMapping("/update-selected")
-    public ResponseEntity<String> updateSelectedCustomers(@RequestBody List<String> selectedCustomers) {
-        try {
-            customerService.updateSelectedCustomers(selectedCustomers);
-            return ResponseEntity.ok("Selected customers updated successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to update selected customers.");
-        }
-    }
-
 
     // 고객 목록 출력 페이지
     @GetMapping("/list/print")

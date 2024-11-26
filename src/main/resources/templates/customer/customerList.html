@@ -65,7 +65,10 @@
                 <thead>
                 <tr>
                     <th>
-                        <input type="checkbox" id="selectAll" onclick="selectAllCustomers()">
+                        <input type="checkbox"
+                               name="selectAllCustomers"
+                               value="selectAllCustomers"
+                               onclick="selectAll(this)">
                     </th>
                     <th>고객ID</th>
                     <th>고객명</th>
@@ -81,9 +84,11 @@
                 <tbody>
                 <tr th:each="customer : ${customers}">
                     <td>
-                        <input type="checkbox" name="selectedCustomers" class="customer-checkbox"
+                        <input type="checkbox"
+                               name="selectedCustomers"
+                               class="customer-checkbox"
                                th:value="${customer.custId}"
-                               th:checked="${customer.custId}">
+                               onclick="checkSelected">
                     </td>
                     <td th:text="${customer.custId}">001</td>
                     <td>

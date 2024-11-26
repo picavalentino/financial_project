@@ -87,79 +87,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
 /* ========================================================================= */
 /* 체크 박스 */
-document.addEventListener('DOMContentLoaded', function () {
-    const selectAllCheckbox = document.getElementById('selectAll');
-    const customerCheckboxes = document.querySelectorAll('.customer-checkbox');
+function checkSelected() {
+  // 전체 체크박스와 선택된 체크박스를 가져옴
+  const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
+  const checkedCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]:checked');
+  const masterCheckbox = document.querySelector('input[name="selectAllCustomers"]');
 
-    let selectedCustomers = new Set(JSON.parse(localStorage.getItem('selectedCustomers') || '[]'));
+  // 모든 체크박스가 선택되었는지 확인
+  masterCheckbox.checked = allCheckboxes.length === checkedCheckboxes.length;
+}
 
-    // 상태를 로컬스토리지와 DOM에 동기화
-    function syncState() {
-        // 각 체크박스의 상태를 로드된 selectedCustomers에 따라 설정
-        customerCheckboxes.forEach(checkbox => {
-            checkbox.checked = selectedCustomers.has(checkbox.value);
-        });
+function selectAll(selectAll) {
+  // 전체 체크박스의 상태를 기반으로 모든 개별 체크박스 설정
+  const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
 
-        // 전체 선택 체크박스 상태 업데이트
-        selectAllCheckbox.checked = Array.from(customerCheckboxes).every(cb => cb.checked);
-    }
-
-    // 선택 상태를 서버로 전송
-    function sendSelectedCustomersToServer() {
-        fetch('/customer/update-selected', {
-            method: 'POST', // POST로 변경
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                selectedCustomers: Array.from(selectedCustomers), // 배열로 변환
-            }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('서버 응답 오류');
-            }
-            return response.json();
-        })
-        .then(data => console.log('서버로 선택된 고객 업데이트 완료:', data))
-        .catch(error => console.error('업데이트 실패:', error));
-    }
-
-    // 전체 선택/해제 이벤트
-    selectAllCheckbox.addEventListener('change', function () {
-        const isChecked = selectAllCheckbox.checked;
-
-        customerCheckboxes.forEach(checkbox => {
-            checkbox.checked = isChecked;
-            if (isChecked) {
-                selectedCustomers.add(checkbox.value);
-            } else {
-                selectedCustomers.delete(checkbox.value);
-            }
-        });
-
-        localStorage.setItem('selectedCustomers', JSON.stringify([...selectedCustomers]));
-        sendSelectedCustomersToServer();
-    });
-
-    // 개별 체크박스 선택/해제 이벤트
-    customerCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            if (this.checked) {
-                selectedCustomers.add(this.value);
-            } else {
-                selectedCustomers.delete(this.value);
-            }
-
-            localStorage.setItem('selectedCustomers', JSON.stringify([...selectedCustomers]));
-            syncState(); // 전체 선택 상태 업데이트
-            sendSelectedCustomersToServer();
-        });
-    });
-
-    // 페이지 로드 시 상태 복원
-    syncState();
-});
+  allCheckboxes.forEach((checkbox) => {
+    checkbox.checked = selectAll.checked;
+  });
+}
 
 /* ========================================================================= */
 /* 인쇄 */

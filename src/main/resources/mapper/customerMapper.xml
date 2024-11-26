@@ -224,29 +224,4 @@
         ORDER BY code_no ASC -- 코드 번호 순으로 정렬
     </select>
     <!-- ============================================================================================================= -->
-    <!-- 선택된 고객 상태 업데이트 -->
-    <update id="updateCustomerStatus">
-        UPDATE tb_customer
-        SET status = #{status}
-        WHERE cust_id IN
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </update>
-
-    <!-- 선택되지 않은 고객 상태 초기화 -->
-    <update id="resetCustomerStatusExcept">
-        UPDATE tb_customer
-        SET status = #{status}
-        WHERE cust_id NOT IN
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </update>
-
-    <!-- 모든 고객 상태 초기화 (선택된 고객이 없는 경우) -->
-    <update id="resetAllCustomerStatus">
-        UPDATE tb_customer
-        SET status = #{status}
-    </update>
 </mapper>

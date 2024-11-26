@@ -23,11 +23,7 @@ public interface CustomerMapper {
                          @Param("keyword") String keyword);
     // ==============================================================================================================
     // 고객 선택 조회
-    void resetAllCustomerStatus(String unselected);
 
-    void updateCustomerStatus(List<String> selectedCustomers, String selected);
-
-    void resetCustomerStatusExcept(List<String> selectedCustomers, String unselected);
     // ==============================================================================================================
 
     // 고객 아이디 확인
