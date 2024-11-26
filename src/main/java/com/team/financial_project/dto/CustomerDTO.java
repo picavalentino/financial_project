@@ -24,7 +24,6 @@ public class CustomerDTO {
     private String birthDate; // 생년월일 필드 추가
 
     private UserDTO users; // 유저 필드 추가
-    private boolean selected; // 선택 상태 필드 추가
 
 
     // 주민등록번호에서 생년월일 추출하는 메소드

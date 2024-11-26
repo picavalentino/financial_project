@@ -11,10 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/customer")
@@ -22,25 +20,10 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final ManagementService managementService;
-    private final Set<Long> selectedIds = new HashSet<>(); // 선택 상태 관리
 
     public CustomerController(CustomerService customerService, ManagementService managementService) {
         this.customerService = customerService;
         this.managementService = managementService;
-    }
-
-    @PostMapping("/sync-selected")
-    public ResponseEntity<Void> syncSelected(@RequestBody List<Long> ids) {
-        // 클라이언트로부터 받은 선택된 고객 ID를 저장
-        selectedIds.clear();
-        selectedIds.addAll(ids);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/get-selected")
-    public ResponseEntity<Set<Long>> getSelected() {
-        // 현재 선택된 고객 ID를 반환
-        return ResponseEntity.ok(selectedIds);
     }
 
     @GetMapping("/list")
@@ -52,24 +35,13 @@ public class CustomerController {
         int totalCustomers = customerService.getTotalCustomerCount();
         int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
 
-        // 선택된 상태 반영
-        for (CustomerDTO customer : customers) {
-            if (selectedIds.contains(customer.getCustId())) {
-                customer.setSelected(true); // CustomerDTO에 `selected` 필드 추가 필요
-            } else {
-                customer.setSelected(false);
-            }
-        }
-
         // 모델에 데이터 추가
         model.addAttribute("customers", customers);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("selectedIds", selectedIds);
 
         return "customer/customerList";
     }
-
 
     // 고객 목록 출력 페이지
     @GetMapping("/list/print")
@@ -93,6 +65,7 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("고객 정보를 가져오는 중 오류가 발생했습니다.");
         }
     }
+
 
     /* ================================================================================================================= */
     // 고객 등록 (페이지)
@@ -125,7 +98,7 @@ public class CustomerController {
         // 고객 직업정보 셀렉트 박스
         List<CustomerDTO> custOccpTyCdList = customerService.getCustOccpTyCdList();
 
-        model.addAttribute("custOccpTyCdList", custOccpTyCdList);
+        model.addAttribute("custOccpTyCdList",custOccpTyCdList);
         model.addAttribute("customer", customer);
         return "customer/customerDetail"; // 고객 상세 정보 페이지로 이동
     }

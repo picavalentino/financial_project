@@ -62,9 +62,7 @@
             <table class="listTable">
                 <thead>
                 <tr>
-                    <th>
-                        <input type="checkbox" id="select-all" th:checked="${selectedIds.size() == totalCustomers}">
-                    </th>
+                    <th><input type="checkbox" id="selectAll"></th>
                     <th>고객ID</th>
                     <th>고객명</th>
                     <th>생년월일</th>
@@ -80,8 +78,7 @@
                 <tr th:each="customer : ${customers}">
                     <td>
                         <input type="checkbox" name="selectedCustomers" class="customer-checkbox"
-                               th:value="${customer.custId}" data-id="${customer.custId}"
-                               th:checked="${customer.selected}">
+                               th:value="${customer.custId}">
                     </td>
                     <td th:text="${customer.custId}">001</td>
                     <td>
