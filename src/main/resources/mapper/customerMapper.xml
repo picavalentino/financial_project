@@ -27,7 +27,7 @@
     </resultMap>
     <!-- ================================================================================================================== -->
     <select id="searchCustomers" resultMap="CustomerUserMap">
-        SELECT
+        SELECT DISTINCT
         cust.cust_id AS custId,
         cust.cust_nm AS custNm,
         cust.cust_rrn AS custRrn,
@@ -63,12 +63,12 @@
                 </when>
             </choose>
         </if>
-        ORDER BY cust.cust_create_at
+        ORDER BY cust.cust_create_at DESC, cust.cust_id ASC
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
     <!-- ================================================================================================================== -->
     <select id="getCustomersWithPagination" resultMap="CustomerUserMap">
-        SELECT
+        SELECT DISTINCT
         cust.cust_id AS custId,
         cust.cust_nm AS custNm,
         cust.cust_rrn AS custRrn,
@@ -87,7 +87,7 @@
         LEFT JOIN tb_user AS usr
         ON usr.user_id = cust.user_id
 
-        ORDER BY cust.cust_create_at
+        ORDER BY cust.cust_create_at DESC, cust.cust_id ASC
         LIMIT #{limit}
         OFFSET #{offset};
     </select>

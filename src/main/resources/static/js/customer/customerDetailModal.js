@@ -134,18 +134,17 @@ function loadFromLocalStorage() {
         customerRevisions = JSON.parse(savedData);
     }
 }
-
-// 변경 버튼 클릭 이벤트 등록
 document.addEventListener("DOMContentLoaded", function () {
-    // 페이지 로드 시 수정 내역 로드
+    // 수정 내역 로드
     loadFromLocalStorage();
 
     // 고객 ID 가져오기
     const custId = document.getElementById("custId").value;
 
-    // 해당 고객의 수정 내역 복원
+    // 고객별 수정 내역 복원
     updateTextarea(custId);
 
+    // 변경 버튼 클릭 이벤트 등록
     document.querySelector(".edit-btn").addEventListener("click", function (event) {
         event.preventDefault();
 
@@ -157,7 +156,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = document.querySelector('input[name="custEmail"]').value;
         const addr = document.querySelector('input[name="custAddr"]').value;
         const custOccpTyCdElement = document.querySelector('select[name="custOccpTyCd"]');
-        const custOccpTyCd = custOccpTyCdElement?.value || '미정';
+        let custOccpTyCd = custOccpTyCdElement?.value;
+
+        // custOccpTyCd 값이 비어 있거나 null인 경우, 기본값 설정
+        if (!custOccpTyCd) {
+            custOccpTyCd = custOccpTyCdElement?.getAttribute('th:selected') || '미정';
+        }
 
         // 수정 내역 추가
         const currentTimestamp = getCurrentTimestamp();
@@ -172,6 +176,42 @@ document.addEventListener("DOMContentLoaded", function () {
         // textarea와 localStorage 업데이트
         updateTextarea(custId);
         saveToLocalStorage();
+
+        // 폼 데이터 구성
+        const updatedCustomerData = {
+            custId: custId, // 수정할 고객 ID
+            custTelno: telno,
+            custEmail: email,
+            custOccpTyCd: custOccpTyCd,
+            custAddr: addr,
+            users: { // users 객체로 user_id 포함
+                user_id: userId
+            }
+        };
+
+        // 서버로 PUT 요청 전송
+        fetch(`/customer/update`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedCustomerData)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('고객 정보가 성공적으로 수정되었습니다.');
+                // 수정 완료 후 상세 페이지로 이동
+                window.location.href = `/customer/detail/${custId}`;
+            } else {
+                return response.text().then((errorMessage) => {
+                    throw new Error(errorMessage);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('수정 요청 중 오류 발생:', error);
+            alert('담당자를 입력해주세요');
+        });
     });
 });
 
