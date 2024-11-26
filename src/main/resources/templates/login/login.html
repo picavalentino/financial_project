@@ -59,8 +59,9 @@
         </form>
 
         <!-- 모달창 -->
-        <div th:replace="login/retrieve-id :: retrieve-id" id="id-modal" class="id-modal"></div>
-        <div th:replace="login/retrieve-pw :: retrieve-pw" id="pw-modal" class="pw-modal"></div>
+        <div th:replace="~{login/retrieve-id :: retrieve-id}" id="id-modal" class="modal"></div>
+        <div th:replace="~{login/retrieve-pw :: retrieve-pw}" id="pw-modal" class="modal"></div>
+        <div th:replace="~{login/change-pw :: change-pw}" id="change-pw-modal" class="modal"></div>
     </div>
 </div>
 </body>

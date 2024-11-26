@@ -36,8 +36,12 @@ public class LoginController {
     // 인증 번호 전송
     @GetMapping("send-auth-code")
     @ResponseBody
-    public boolean sendAuthCode(@RequestParam("telno") String userTelno){
-        return smsService.sendVerificationCode(userTelno);
+    public String sendAuthCode(@RequestParam("telno") String userTelno){
+        if(smsService.canSendVerification(userTelno)){
+            return smsService.sendVerificationCode(userTelno);
+        }else {
+            return "인증횟수 초과";
+        }
     }
 
     // 인증 번호 확인

@@ -9,12 +9,12 @@
         </button>
     </div>
     <div class="mb-4 input-box">
-        <label for="user_id">사원번호</label>
-        <input type="number" name="user_id" id="user_id" class="id-input" placeholder="사원번호를 입력해주세요." autocomplete="off">
+        <label for="pw-user_id">사원번호</label>
+        <input type="number" name="pw-user_id" id="pw-user_id" class="pw-user_id" placeholder="사원번호를 입력해주세요." autocomplete="off">
     </div>
     <div class="mb-4 input-box">
         <label for="pw-user_telno">휴대전화</label>
-        <div class="pw-user_telno">
+        <div class="user_telno">
             <select id="pw-phone1">
                 <option value="010">010</option>
                 <option value="011">011</option>
@@ -28,14 +28,24 @@
             <input type="hidden" name="user_telno" id="pw-user_telno">
         </div>
     </div>
-    <div class="code-input-box" id="code-input-box-pw">
-        <label for="code-input" class="code-label">인증번호</label>
-        <input type="text"  class="code-input" name="code-input" id="code-input" placeholder="6자리">
-        <input type="button" value="인증하기" class="btn-certify" id="btn-certify-pw">
-        <input type="button" value="재전송" class="btn-resend" id="btn-resend-pw">
+    <div id="pw-code-container" class="code-container mb-4">
+        <label for="pw-input-code" class="code-label">인증번호<span id="pw-msg-not-match">인증번호가 일치하지 않습니다.</span></label>
+        <div class="code-input-box" id="pw-code-input-box">
+            <div class="input-and-timer">
+                <input type="text"  class="code-input" name="input-code" id="pw-input-code" placeholder="6자리 숫자" autocomplete="off">
+                <div class="timer" id="pw-timer"></div>
+            </div>
+            <input type="button" value="인증하기" class="btn-certify" id="pw-btn-certify" disabled>
+            <button type="button" class="btn-resend" id="pw-btn-resend">
+                <img src="/images/common/icon-resend.png" alt="재전송.icon" class="icon-resend">
+            </button>
+        </div>
     </div>
-    <input type="button" value="인증번호 전송" class="btn-send mt-3" id="btn-send-pw" disabled>
-    <input type="button" value="사번찾기" class="btn-retrieve mt-3" id="btn-retrieve-pw" disabled>
+    <input type="button" value="인증번호 전송" class="btn-send mt-3" id="pw-btn-send" disabled>
+    <div class="pw-btns" id="pw-btns">
+        <input type="button" value="초기화" class="btn-reset mt-3" id="btn-reset" >
+        <input type="button" value="변경" class="btn-change mt-3" id="btn-change" >
+    </div>
 </div>
 </body>
 </html>

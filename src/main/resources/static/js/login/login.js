@@ -59,11 +59,4 @@ $(document).ready(function(){
     $(".btn-retrieve-pw").on("click", function(){
         $("#pw-modal").css("display", "flex");
     })
-    // 모달창 닫기
-    $("#btn-id-cross").on("click", function(){
-        $("#id-modal").css("display", "none");
-    })
-    $("#btn-pw-cross").on("click", function(){
-        $("#pw-modal").css("display", "none");
-    })
 })

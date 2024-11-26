@@ -127,8 +127,7 @@ body {
     font-size: small;
 }
 /* 모달창 */
-.id-modal,
-.pw-modal{
+.modal{
     display: none;
     position: absolute;
     justify-content: center;

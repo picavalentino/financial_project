@@ -1,131 +1,23 @@
-/* .title {
+.pw-btns{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    gap: 5px;
 }
-
-.title .text {
-    font-weight: bold;
-    font-size: 25px;
-}
-
-.title img {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.input-box label {
-    display: block;
-    color: #4a4a4a;
-    margin-bottom: 5px;
-}
-
-.input-box input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid rgb(103, 103, 103);
-    font-size: small;
-}
-
-.user_telno{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.user_telno input,
-.user_telno select{
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid rgb(103, 103, 103);
-    font-size: small;
-    width: 100%;
-}
-.user_telno select{
-    color: #696969;
-}
-
-.code-label{
-    display: flex;
-    color: #4a4a4a;
-    width: 100%;
-    max-width: 70px;
-    text-align: center;
-    align-items: center;
-}
-.code-input-box{
-    display: none;
-    justify-content: space-between;
-    gap: 10px;
-}
-.code-input{
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid rgb(103, 103, 103);
-    font-size: small;
-}
-
-.btn-certify{
-    background-color: #a17777;
-    color: #ffffff;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    padding: 0 10px;
-}
-.btn-certify:disabled{
-    background-color: rgb(140 140 140);
-    cursor: default;
-}
-.btn-certify:enabled:hover{
-    background-color: #8d5050;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
-}
-.btn-resend{
-    background-color: #71A4AD;
-    color: #ffffff;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    padding: 0 10px;
-}
-.btn-resend:disabled{
-    background-color: rgb(140 140 140);
-    cursor: default;
-}
-.btn-resend:enabled:hover{
-    background-color: #8d5050;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
-}
-
-.btn-send,
-.btn-retrieve{
+.pw-btns input{
     font-size: large;
     padding: 10px 0px;
-    background-color: #567d84;
+    background-color: #71A4AD;
     border-radius: 25px;
     border: none;
-    width: 100%;
+    width: 50%;
     color: #ffffff;
     font-weight: bold;
     margin-bottom: 10px;
 }
-.btn-send:disabled,
-.btn-retrieve:disabled{
+.pw-btns input:disabled{
     background-color: rgb(140 140 140);
     cursor: not-allowed;
 }
-.btn-send:enabled:hover,
-.btn-retrieve:enabled:hover{
+.pw-btns input:enabled:hover{
     background-color: #567d84;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
-*/

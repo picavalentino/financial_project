@@ -10,9 +10,9 @@
     font-size: 25px;
 }
 
-.title img {
-    width: 20px;
-    height: 20px;
+.title i {
+    width: 25px;
+    height: 25px;
     cursor: pointer;
 }
 

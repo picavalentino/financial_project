@@ -8,7 +8,7 @@ $(document).ready(function(){
         const seconds = timeLeft % 60; // 남은 초 계산
 
         // 화면에 표시
-        $('#timer').text(
+        $("#timer").text(
             `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
         );
 
@@ -86,7 +86,12 @@ $(document).ready(function(){
                                 $("#code-container").css("display", "block");
                                 $("#btn-send").css("display", "none");
                                 $("#btn-retrieve").css("display", "block");
-                                alert("인증번호가 발송되었습니다.");
+                                alert(response);
+                                if(response==="인증횟수 초과"){
+                                    // 타이머 멈추기
+                                    clearInterval(timerInterval);
+                                    alert("인증횟수가 초과되었습니다. 24시간 뒤 시도해주세요.");
+                                }
                                 // 타이머 초기화
                                 clearInterval(timerInterval); // 이전 타이머 중지 (중복 방지)
                                 timeLeft = 2 * 60; // 시간을 초기화

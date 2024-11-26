@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="retrieve-id" class="id-modal" id="id-modal">
+<div th:fragment="retrieve-id" class="modal" id="id-modal">
     <div class="title input-box">
         <div class="text">사번 찾기</div>
         <button type="button" class="btn btn-link p-0 ms-2" id="btn-id-cross">
@@ -33,7 +33,7 @@
         <div class="code-input-box" id="code-input-box">
             <div class="input-and-timer">
                 <input type="text"  class="code-input" name="input-code" id="input-code" placeholder="6자리 숫자" autocomplete="off">
-                <div class="timer" id="timer">03:00</div>
+                <div class="timer" id="timer"></div>
             </div>
             <input type="button" value="인증하기" class="btn-certify" id="btn-certify" disabled>
             <button type="button" class="btn-resend" id="btn-resend">
@@ -42,7 +42,7 @@
         </div>
     </div>
     <input type="button" value="인증번호 전송" class="btn-send mt-3" id="btn-send" disabled>
-    <input type="button" value="사번찾기" class="btn-retrieve mt-3" id="btn-retrieve" disabled>
+    <input type="button" value="사원번호 찾기" class="btn-retrieve mt-3" id="btn-retrieve" disabled>
 </div>
 </body>
 </html>
