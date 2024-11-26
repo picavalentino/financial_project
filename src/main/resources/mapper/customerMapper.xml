@@ -167,4 +167,14 @@
         user_id = #{users.user_id}
         WHERE cust_id = #{custId}
     </update>
+
+    <!--셀렉트 박스에서 쓸 직업 가져오는 구문-->
+    <select id="getCustOccpTyCdList" resultType="com.team.financial_project.dto.CustomerDTO">
+        SELECT
+        code_no AS custOccpTyCd, -- 부서 코드 (코드 번호)
+        code_nm AS custOccpTyCd_name -- 부서명
+        FROM tb_code
+        WHERE code_cl LIKE '301' -- 200번대의 코드 클러스터 필터링 (200번대가 부서 코드임)
+        ORDER BY code_no ASC -- 코드 번호 순으로 정렬
+    </select>
 </mapper>

@@ -90,7 +90,7 @@ public class CustomerService {
     }
 
     public List<CustomerDTO> getCustOccpTyCdList() {
-        customerMapper.getCustOccpTyCdList();
+        return customerMapper.getCustOccpTyCdList();
     }
 }
 

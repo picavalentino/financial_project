@@ -26,4 +26,7 @@ public interface CustomerMapper {
 
     // 고객 정보 수정
     void updateCustomer(CustomerDTO customerDTO);
+
+    // 고객 직업 코드
+    List<CustomerDTO> getCustOccpTyCdList();
 }
