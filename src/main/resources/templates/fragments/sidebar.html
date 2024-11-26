@@ -6,8 +6,8 @@
         <div class="container">
             <!-- 사용자 프로필 -->
             <div class="profile text-center mb-4">
-                <img src="/images/common/profile.png" alt="User Profile" class="img-fluid">
-                <h4>000 님</h4>
+                <img src="/images/common/profile.png" alt="User Profile" class="img-fluid" id="userProfileImage">
+                <h4 id="userProfileName">000 님</h4>
             </div>
 
             <!-- 사이드바 메뉴 -->
@@ -190,8 +190,45 @@
         </div>
     </div>
     <script>
+        // 사용자 프로필 정보 로드
+        function loadUserProfileInfo() {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch('/user/info', {
+                method: 'GET',
+                headers: {
+                    [csrfHeader]: csrfToken, // CSRF 토큰 추가
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    console.error('Failed to fetch user info');
+                    return null;
+                }
+            })
+            .then(data => {
+                if (data) {
+                    // 프로필 이미지 업데이트
+                    const profileImage = document.getElementById('userProfileImage');
+                    profileImage.src = data.user_imgpath || '/images/common/default-profile.png';
+
+                    // 이름과 직위 업데이트
+                    const profileName = document.getElementById('userProfileName');
+                    profileName.textContent = `${data.user_name} ${data.code_nm} 님`;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user profile info:', error);
+            });
+        }
+
         // 북마크 상태를 서버에서 가져와 적용
         function loadBookmarks() {
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
             fetch('/bookmark/list', {
                 method: 'GET',
             })
@@ -212,11 +249,14 @@
         document.querySelectorAll('.bookmark-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 const menuId = this.getAttribute('data-menu-id');
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
                 fetch('/bookmark/add', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
+                        [csrfHeader]: csrfToken,
                     },
                     body: `menuId=${menuId}`
                 })
@@ -232,7 +272,11 @@
             });
         });
 
-        // 페이지 로드 시 북마크 상태 로드
-        document.addEventListener('DOMContentLoaded', loadBookmarks);
+        // DOMContentLoaded 이벤트로 모든 기능 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserProfileInfo(); // 사용자 프로필 정보 로드
+            loadBookmarks(); // 북마크 상태 로드
+            setupBookmarkButtons(); // 북마크 버튼 클릭 이벤트 설정
+        });
     </script>
 </div>
