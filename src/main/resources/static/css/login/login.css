@@ -42,6 +42,8 @@ body {
     justify-content: center;
     align-items: center;
     background-color: #ecececa3;
+    position: relative;
+    z-index: 1;
 }
 
 .login{
@@ -124,19 +126,19 @@ body {
 .btn-retrieve-pw{
     font-size: small;
 }
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .login-container {
-        flex-direction: column;
-        width: 90%;
-    }
-
-    .left-logo {
-        padding: 20px;
-    }
-
-    .right-login {
-        padding: 20px;
-    }
+/* 모달창 */
+.id-modal,
+.pw-modal{
+    display: none;
+    position: absolute;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 999;
+    background-color: white;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    width: 70%;
+    height: auto;
+    padding: 30px 40px;
+    border-radius: 10px;
 }

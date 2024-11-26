@@ -298,4 +298,13 @@
         user_imgpath = #{user_imgpath}
         WHERE user_id = #{user_id}
     </update>
+    <!-- 사번 찾기 유저 존재 여부 -->
+    <select id="hasExist" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
+        SELECT * FROM tb_user WHERE user_telno= #{telno} AND user_name= #{name}
+    </select>
+    <!--  사번 찾기  -->
+    <select id="findUserIdByUserTelno" resultType="java.lang.String" parameterType="string">
+        SELECT user_id FROM tb_user WHERE user_telno= #{telno}
+    </select>
+
 </mapper>

@@ -191,7 +191,8 @@ $(document).ready(function(){
         let phone2 = $("#phone2").val();
         let phone3 = $("#phone3").val();
         let phone = phone1 +"-"+ phone2 +"-"+ phone3;
-        if(phone.length>11 && phone.length<14){
+        let phoneRegex = /^01[0-9]-\d{3,4}-\d{4}$/;
+        if(phoneRegex.test(phone)){
             $("#btn-certify").prop("disabled", false).val("인증");
         }else{
             $("#btn-certify").prop("disabled", true).val("인증");

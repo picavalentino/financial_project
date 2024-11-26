@@ -1,74 +1,71 @@
 package com.team.financial_project.main.service;
 
-import com.team.financial_project.main.util.SmsVerificationUtil;
+import jakarta.annotation.PostConstruct;
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class SmsService {
-    @Value("${aligo.api.key}")
+    @Value("${coolsms.api.key}")
     private String apiKey;
 
-    @Value("${aligo.api.user_id}")
-    private String userId;
+    @Value("${coolsms.api.secret}")
+    private String apiSecret;
 
-    @Value("${aligo.api.sender}")
-    private String senderPhoneNumber;
+    @Value("${coolsms.sender}")
+    private String sender;
 
-    private final long CODE_EXPIRATION_TIME = 300; // 5분
-
+    private DefaultMessageService messageService;
     private final RedisTemplate<String, String> redisTemplate;
 
     public SmsService(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    @PostConstruct
+    private void initializeMessageService() {
+        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
+    }
+    // 6자리 랜덤 인증번호 생성 메서드
+    private String generateVerificationCode() {
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000); // 100000 ~ 999999 범위의 숫자 생성
+        return String.valueOf(code);
     }
 
-    // 인증 코드 저장 (Redis)
-    public void storeVerificationCode(String phoneNumber, String code) {
-        redisTemplate.opsForValue().set(phoneNumber, code, CODE_EXPIRATION_TIME, TimeUnit.SECONDS);
-    }
-
-    // 인증 코드 검증
-    public boolean verifyCode(String phoneNumber, String inputCode) {
-        String storedCode = redisTemplate.opsForValue().get(phoneNumber);
-        return storedCode != null && storedCode.equals(inputCode);
-    }
-
-    // SMS 전송 로직 (알리고 API 사용)
-    public String sendVerificationCode(String phoneNumber) {
-        String verificationCode = SmsVerificationUtil.generateVerificationCode();
-        storeVerificationCode(phoneNumber, verificationCode);  // 인증 코드 저장
-
-        String apiUrl = "https://apis.aligo.in/send/";
-
-        Map<String, String> params = new HashMap<>();
-        params.put("key", apiKey);
-        params.put("user_id", userId);
-        params.put("sender", senderPhoneNumber);
-        params.put("receiver", phoneNumber);
-        params.put("msg", "Your verification code is: " + verificationCode);
+    // SMS 전송 로직
+    public boolean sendVerificationCode(String recipientPhoneNumber) {
+        Message message = new Message();
+        message.setFrom(sender);
+        message.setTo(recipientPhoneNumber);
+        String verificationCode = generateVerificationCode();
+        message.setText("인증번호 : [ " + verificationCode + " ]");
 
         try {
-            RestTemplate restTemplate = restTemplate();
-            String response = restTemplate.postForObject(apiUrl, params, String.class);
-            return response;
+            SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
+            System.out.println("SMS 발송 성공: " + response);
+
+            // 인증번호를 Redis에 저장 (유효기간 5분)
+            redisTemplate.opsForValue().set(recipientPhoneNumber, verificationCode, 2, TimeUnit.MINUTES);
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return "Failed to send SMS";
+            System.err.println("SMS 발송 실패: " + e.getMessage());
+            return false;
         }
     }
 
+    // 인증번호 일치 여부 확인 메서드
+    public boolean verifyCode(String recipientPhoneNumber, String inputCode) {
+        String savedCode = redisTemplate.opsForValue().get(recipientPhoneNumber);
+        return savedCode != null && savedCode.equals(inputCode);
+    }
 }

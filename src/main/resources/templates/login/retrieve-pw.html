@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="retrieve-pw" class="pw-modal" id="pw-modal">
+    <div class="title input-box">
+        <div class="text">비밀번호 찾기</div>
+        <button type="button" class="btn btn-link p-0 ms-2" id="btn-pw-cross">
+            <i class="bi bi-x-circle text-secondary"></i>
+        </button>
+    </div>
+    <div class="mb-4 input-box">
+        <label for="user_id">사원번호</label>
+        <input type="number" name="user_id" id="user_id" class="id-input" placeholder="사원번호를 입력해주세요." autocomplete="off">
+    </div>
+    <div class="mb-4 input-box">
+        <label for="pw-user_telno">휴대전화</label>
+        <div class="pw-user_telno">
+            <select id="pw-phone1">
+                <option value="010">010</option>
+                <option value="011">011</option>
+                <option value="016">016</option>
+                <option value="017">017</option>
+                <option value="018">018</option>
+                <option value="019">019</option>
+            </select><span>-</span>
+            <input type="number" id="pw-phone2" class="phone2" placeholder="0000" autocomplete="off"><span>-</span>
+            <input type="number" id="pw-phone3" class="phone3" placeholder="0000" autocomplete="off">
+            <input type="hidden" name="user_telno" id="pw-user_telno">
+        </div>
+    </div>
+    <div class="code-input-box" id="code-input-box-pw">
+        <label for="code-input" class="code-label">인증번호</label>
+        <input type="text"  class="code-input" name="code-input" id="code-input" placeholder="6자리">
+        <input type="button" value="인증하기" class="btn-certify" id="btn-certify-pw">
+        <input type="button" value="재전송" class="btn-resend" id="btn-resend-pw">
+    </div>
+    <input type="button" value="인증번호 전송" class="btn-send mt-3" id="btn-send-pw" disabled>
+    <input type="button" value="사번찾기" class="btn-retrieve mt-3" id="btn-retrieve-pw" disabled>
+</div>
+</body>
+</html>

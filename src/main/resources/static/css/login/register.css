@@ -65,7 +65,7 @@ body {
 
 .title .text {
     font-weight: bold;
-    font-size: 30px
+    font-size: 25px;
 }
 
 .title img {
@@ -128,7 +128,6 @@ body {
 }
 .user_telno input{
     text-align: center;
-    width: 80px;
     padding: 10px;
     border-radius: 8px;
     border: 1px solid rgb(103, 103, 103);
@@ -136,16 +135,13 @@ body {
 }
 .user_telno select{
     text-align: center;
-    width: 80px;
     padding: 10px 0;
     border-radius: 8px;
     border: 1px solid rgb(103, 103, 103);
     font-size: small;
     color: #696969;
 }
-.user_telno span{
-    font-size: larger;
-}
+
 /* 모든 브라우저에서 스핀 버튼 제거 */
 input[type="number"] {
     -moz-appearance: textfield; /* Firefox */
@@ -265,13 +261,13 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* 드롭다운 */
 .dropdown {
-    display: none; /* JavaScript에서 조건에 따라 표시 */
-    position: absolute; /* 부모 요소 기준 위치 설정 */
-    max-height: 200px; /* 드롭다운 최대 높이 설정 (스크롤을 위한 제한) */
-    overflow-y: auto; /* 최대 높이를 넘길 경우 스크롤 */
-    border: 1px solid #ccc; /* 테두리 추가 */
-    background-color: white; /* 배경색 흰색 */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+    display: none;
+    position: absolute;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
 }
 

@@ -5,12 +5,10 @@ $(document).ready(function(){
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
     }
-
     // 쿠키 삭제 함수
     function deleteCookie(name) {
         document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
     }
-
     // 쿠키 가져오기 함수
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -24,7 +22,6 @@ $(document).ready(function(){
         $("#user_id").val(savedUserId);
         $("#remember_checkbox").prop("checked", true);
     }
-
     // 로그인 폼 제출 시 쿠키 저장 처리
     $("#loginForm").on("submit", function () {
         if ($("#remember_checkbox").is(":checked")) {
@@ -33,6 +30,7 @@ $(document).ready(function(){
             deleteCookie("savedUserId");
         }
     });
+
     // 비밀번호 텍스트로 보이게
     $("#btn-eye").on("click", function(){
         const input = $('#user_pw');
@@ -54,5 +52,18 @@ $(document).ready(function(){
     }
 
     // 아이디 찾기 모달창
-
+    $(".btn-retrieve-id").on("click", function(){
+        $("#id-modal").css("display", "flex");
+    })
+    // 비밀번호 찾기 모달창
+    $(".btn-retrieve-pw").on("click", function(){
+        $("#pw-modal").css("display", "flex");
+    })
+    // 모달창 닫기
+    $("#btn-id-cross").on("click", function(){
+        $("#id-modal").css("display", "none");
+    })
+    $("#btn-pw-cross").on("click", function(){
+        $("#pw-modal").css("display", "none");
+    })
 })
