@@ -1,5 +1,6 @@
 package com.team.financial_project.mypage.service;
 
+import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mypage.dto.MypageDTO;
 import com.team.financial_project.mypage.mapper.MypageMapper;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,9 @@ public class MypageService {
 
 
 
-    public void updateUserInfo(MypageDTO mypageDTO) {
-        if (mypageDTO == null || mypageDTO.getUserId() == null) {
-            throw new IllegalArgumentException("잘못된 데이터입니다.");
-        }
-        // 유저 정보 업데이트
-        mypageMapper.updateMypage(mypageDTO);
+    public boolean updateUserInfo(MypageDTO mypageDTO) {
+        int rowsAffected = mypageMapper.updateUser(mypageDTO);
+        return rowsAffected > 0; // 업데이트 성공 여부
     }
 
 

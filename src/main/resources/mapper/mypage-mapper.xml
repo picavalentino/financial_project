@@ -43,15 +43,19 @@
         d.dsgn_ds_ty_cd AS dsgnDsTyCd,
         d.dsgn_ds_ty_cd_code_cl AS dsgnDsTyCdCodeCl,
         d.dsgn_prg_stcd AS dsgnPrgStcd,
-        d.dsgn_prg_stcd_code_cl AS dsgnPrgStcdCodeCl
+        d.dsgn_prg_stcd_code_cl AS dsgnPrgStcdCodeCl,
+        c.code_nm AS dsgnDsTyCdName -- tb_code의 code_nm 추가
         FROM tb_custprod_dsgn d
         LEFT JOIN tb_customer cust
         ON cust.user_id = d.user_id
+        LEFT JOIN tb_code c -- 테이블 이름을 tb_code로 변경
+        ON c.code_cl = d.dsgn_ds_ty_cd_code_cl -- 조인 조건
+        AND c.code_no = d.dsgn_ds_ty_cd
         WHERE d.user_id = #{userId}
         ORDER BY cust.cust_id DESC
-
     </select>
-    <update id="updateMypage" parameterType="com.team.financial_project.mypage.dto.MypageDTO">
+
+    <update id="updateUser" parameterType="com.team.financial_project.mypage.dto.MypageDTO">
         UPDATE users
         SET
         u.user_name = #{userName},
@@ -68,5 +72,6 @@
         tb_code c2 ON u.user_jbps_ty_cd_code_cl = c2.code_cl AND c2.code_no = u.user_jbps_ty_cd
         WHERE u.user_id = #{userId};
     </update>
+
 
 </mapper>

@@ -1,10 +1,11 @@
 package com.team.financial_project.mypage.controller;
 
-import com.team.financial_project.login.dto.UserDTO;
+import com.team.financial_project.dto.UserDTO;
+import com.team.financial_project.login.service.RegisterService;
+import com.team.financial_project.main.service.S3Service;
 import com.team.financial_project.mypage.dto.MypageDTO;
 import com.team.financial_project.mypage.mapper.MypageMapper;
 import com.team.financial_project.mypage.service.MypageService;
-import com.team.financial_project.mypage.service.S3Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 
 @Controller
@@ -21,14 +21,16 @@ public class MypageController{
     private final MypageService mypageService;
     private final MypageMapper mypageMapper;
     private final S3Service s3Service;
+    private final RegisterService registerService;
 
-    public MypageController(MypageService mypageService,MypageMapper mypageMapper, S3Service s3Service) {
+    public MypageController(MypageService mypageService,MypageMapper mypageMapper, S3Service s3Service, RegisterService registerService) {
         this.mypageMapper = mypageMapper;
         this.s3Service = s3Service;
         this.mypageService = mypageService;
+        this.registerService = registerService;
     }
 
-    @GetMapping("mypage/{userId}")
+    @GetMapping("/mypage/{userId}")
     public String getMypage(@PathVariable String userId, Model model) {
         MypageDTO mypageDTO = mypageService.getMypageByUserId(userId);
         System.out.println("DTO 데이터: " + mypageDTO.getUserImgpath()); // user_imgpath 값 확인
@@ -50,26 +52,26 @@ public class MypageController{
         return "mypage/mypage"; // Thymeleaf 파일
     }
 
-    @PostMapping(value = "/mypage/update", consumes = "multipart/form-data")
-    public ResponseEntity<String> updateMypage(@ModelAttribute MypageDTO mypageDTO,
-                                               @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
-        try {
-            // 프로필 이미지 처리
-            if (profileImage != null && !profileImage.isEmpty()) {
-//                String s3Url = S3Service.uploadFile(profileImage); // S3에 파일 업로드
-//                mypageDTO.setUserImgpath(s3Url); // S3 URL을 DTO에 설정
-            }
 
-            // 서비스 호출로 데이터 업데이트
-            mypageService.updateUserInfo(mypageDTO);
-            String s3Url = s3Service.uploadFile(profileImage); // S3에 업로드하고 URL 반환
-            mypageDTO.setUserImgpath(s3Url); // DTO에 S3 URL 설정
-            mypageMapper.updateMypage(mypageDTO); // 데이터베이스에 저장
-            return ResponseEntity.ok("수정 완료");
+    @PatchMapping("/mypage/update")
+    @ResponseBody
+    public ResponseEntity<?> updateUser(@RequestBody MypageDTO mypageDTO) {
+        try {
+            System.out.println("수정 요청 데이터: " + mypageDTO); // 디버깅용
+
+            // 필요한 필드만 업데이트 처리
+            boolean isUpdated = mypageService.updateUserInfo(mypageDTO);
+            if (isUpdated) {
+                return ResponseEntity.ok("수정 완료");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패");
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
         }
     }
+
 
 
 

@@ -43,9 +43,9 @@
                         </p>
                         <div class="phone">
                             <p>휴대전화 <br>
-                                <input type="text" id="phone_input1" name="phonePart1" th:value="${#strings.substring(mypageDTO.userTelno, 0, 3)}" disabled> -
-                                <input type="text" id="phone_input2" name="phonePart2" th:value="${#strings.substring(mypageDTO.userTelno, 4, 8)}" disabled> -
-                                <input type="text" id="phone_input3" name="phonePart3" th:value="${#strings.substring(mypageDTO.userTelno, 9)}" disabled>
+                                <input class="phone" type="text" id="phone_input1" name="phonePart1" th:value="${#strings.substring(mypageDTO.userTelno, 0, 3)}" disabled> -
+                                <input class="phone" type="text" id="phone_input2" name="phonePart2" th:value="${#strings.substring(mypageDTO.userTelno, 4, 8)}" disabled> -
+                                <input class="phone" type="text" id="phone_input3" name="phonePart3" th:value="${#strings.substring(mypageDTO.userTelno, 9)}" disabled>
                                 <button>인증</button>
                             </p>
                             <h5 id="msg">인증이 완료되었습니다</h5>
@@ -80,7 +80,7 @@
                     <tbody>
                     <tr th:each="customer : ${mypageDTO.custProds}">
                         <td th:text="${customer.custNm}"></td>
-                        <td th:text="${customer.dsgnDsTyCdCodeCl}"></td>
+                        <td th:text="${customer.dsgnDsTyCdName}"></td>
                         <td th:text="${customer.custEmail}"></td>
                     </tr>
                     <tr th:if="${mypageDTO.custProds.size()} == 0">
@@ -108,7 +108,7 @@
                     <tr th:each="inquiry : ${mypageDTO.inquiries}">
                         <td th:text="${inquiry.inqTitle}"></td>
                         <td th:text="${mypageDTO.userId}"></td>
-                        <td th:text="${inquiry.inqCreateAt}"></td>
+                        <td th:text="${#strings.substring(inquiry.inqCreateAt.toString(), 0, 10)}"></td>
                     </tr>
                     <tr th:if="${mypageDTO.inquiries.size()} == 0">
                         <td colspan="3">작성글이 없습니다.</td>
@@ -119,6 +119,26 @@
         </div>
     </div>
 
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>비밀번호 변경하기</h2>
+            <form id="passwordChangeForm">
+                <label for="newPassword">변경 비밀번호</label>
+                <div class="password-wrapper">
+                    <input type="password" id="newPassword" placeholder="비밀번호를 입력해주세요.">
+                    <button type="button" id="eyeIcon" class="eye-button">
+                        <img id="eye-open" th:src="@{/images/common/icon-eye.png}" alt="눈 이미지" style="display: block;">
+                        <img id="eye-close" th:src="@{/images/common/icon-hide.png}" alt="숨김 이미지" style="display: none;">
+                    </button>
+
+                </div>
+                <label for="confirmPassword">비밀번호 확인</label>
+                <input type="password" id="confirmPassword" placeholder="비밀번호를 입력해주세요.">
+                <button class="modal-button" type="button" id="changePasswordBtn">변경</button>
+            </form>
+        </div>
+    </div>
 
 <script th:inline="javascript">
     $(document).ready(function () {
@@ -126,47 +146,109 @@
     const apiUrl = `/mypage/${userId}`; // API 엔드포인트
     const $editButton = $("#editButton"); // "수정하기" 버튼
     const $adminButton = $("#adminButton"); // "등록하기" 버튼
-    const $inputs = $("input[type='text']"); // 모든 텍스트 입력 필드
+
     const $email = $("input[type='email']"); // 이메일 입력 필드
     const $form = $("#updateForm"); // 폼 객체
+
+
+     const $eyeIcon = $("#eyeIcon"); // 눈 버튼
+    const $newPassword = $("#newPassword"); // 입력 필드
+    const $eyeOpen = $("#eye-open"); // 눈 열림 아이콘
+    const $eyeClose = $("#eye-close"); // 눈 닫힘 아이콘
+
+    // 눈 버튼 클릭 이벤트
+    $eyeIcon.on("click", function () {
+        const currentType = $newPassword.attr("type"); // 현재 입력 필드 타입
+
+        if (currentType === "password") {
+            $newPassword.attr("type", "text"); // 입력값 보이기
+            $eyeOpen.hide(); // 열림 아이콘 숨기기
+            $eyeClose.show(); // 닫힘 아이콘 보이기
+        } else {
+            $newPassword.attr("type", "password"); // 입력값 숨기기
+            $eyeOpen.show(); // 열림 아이콘 보이기
+            $eyeClose.hide(); // 닫힘 아이콘 숨기기
+        }
+    });
 
     // "수정하기" 버튼 클릭 시
     $editButton.on("click", function () {
         console.log("수정하기 버튼 클릭됨");
-        $inputs.prop("disabled", false); // 텍스트 입력 필드 활성화
+        $(".phone").prop("disabled", false);
+        $("#user_name").prop("disabled", false);
         $email.prop("disabled", false); // 이메일 필드 활성화
     });
 
     // "등록하기" 버튼 클릭 시
     $adminButton.on("click", function () {
         console.log("등록하기 버튼 클릭됨");
-        $inputs.prop("disabled", false); // 비활성화 해제 (폼에 데이터 포함)
+         $(".phone").prop("disabled", true);
+        $("#user_name").prop("disabled", true); // 비활성화 해제 (폼에 데이터 포함)
         $email.prop("disabled", false);
         $form.submit(); // 폼 제출
     });
 
     // 폼 제출 시 AJAX 처리
-    $form.on("submit", function (event) {
-        event.preventDefault(); // 기본 제출 동작 방지
-        console.log("폼 제출 시작");
+   $("#updateForm").on("submit", function (event) {
+    event.preventDefault();
 
-        const formData = new FormData(this); // FormData 객체 생성
-        $.ajax({
-            type: "POST",
-            url: $form.attr("action"), // 폼의 action 속성 사용
-            data: formData,
-            processData: false, // FormData는 자동으로 처리되지 않도록 설정
-            contentType: false, // FormData의 기본 Content-Type 설정 방지
-            success: function (response) {
-                alert("수정이 완료되었습니다!");
-                $inputs.prop("disabled", true); // 다시 비활성화
-                $email.prop("disabled", true);
-            },
-            error: function (error) {
-                console.error("수정 실패:", error);
-                alert("수정에 실패했습니다.");
-            },
-        });
+    const data = {
+        userId: $("#user_id").val(),
+        userName: $("#user_name").val(),
+        userEmail: $("#user_email").val(),
+        userTelno: $("#phone_input1").val() + "-" + $("#phone_input2").val() + "-" + $("#phone_input3").val(),
+        userImgpath: $("#file").val()
+    };
+
+    $.ajax({
+        type: "PATCH",
+        url: "/mypage/update",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            alert("수정이 완료되었습니다!");
+        },
+        error: function (error) {
+            console.error("수정 실패:", error);
+            alert("수정에 실패했습니다.");
+        }
+    });
+});
+
+
+         const $modal = $("#passwordModal"); // 모달창
+    const $openBtn = $("#pw_edit"); // 열기 버튼
+    const $closeBtn = $(".close"); // 닫기 버튼
+    const $changePasswordBtn = $("#changePasswordBtn"); // 비밀번호 변경 버튼
+
+    // 모달 열기
+    $openBtn.on("click", function () {
+        $modal.fadeIn(); // 모달창을 페이드인
+    });
+
+    // 모달 닫기
+    $closeBtn.on("click", function () {
+        $modal.fadeOut(); // 모달창을 페이드아웃
+    });
+
+    // 모달 외부 클릭 시 닫기
+    $(window).on("click", function (e) {
+        if ($(e.target).is($modal)) {
+            $modal.fadeOut();
+        }
+    });
+
+    // 비밀번호 변경 처리
+    $changePasswordBtn.on("click", function () {
+        const newPassword = $("#newPassword").val();
+        const confirmPassword = $("#confirmPassword").val();
+
+        if (newPassword === confirmPassword && newPassword !== "") {
+            alert("비밀번호가 변경되었습니다.");
+            $modal.fadeOut(); // 비밀번호 변경 성공 시 모달 닫기
+        } else {
+            alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+        }
     });
 
     // 데이터를 가져와 페이지에 렌더링

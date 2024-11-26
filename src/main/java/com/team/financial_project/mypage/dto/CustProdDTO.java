@@ -10,4 +10,5 @@ public class CustProdDTO {
     private String dsgnDsTyCdCodeCl;
     private String dsgnPrgStcd;
     private String dsgnPrgStcdCodeCl;
+    private String dsgnDsTyCdName;
 }
