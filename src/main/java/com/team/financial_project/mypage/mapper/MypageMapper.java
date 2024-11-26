@@ -14,4 +14,6 @@ public interface MypageMapper {
     MypageDTO selectUserInfo(String userId);           // 유저 정보
     List<InquireDTO> selectInquiriesByUserId(String userId); // 상담 리스트
     List<CustProdDTO> selectCustProdsByUserId(String userId); // 가입 상품 리스트
+
+    void updateMypage(MypageDTO mypageDTO);
 }

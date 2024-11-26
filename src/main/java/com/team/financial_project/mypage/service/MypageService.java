@@ -14,10 +14,29 @@ public class MypageService {
     }
 
     public MypageDTO getMypageByUserId(String userId) {
-        MypageDTO mypageDTO = mypageMapper.selectUserInfo(userId); // 유저 정보 가져오기
-        mypageDTO.setInquiries(mypageMapper.selectInquiriesByUserId(userId)); // 상담 리스트
-        mypageDTO.setCustProds(mypageMapper.selectCustProdsByUserId(userId)); // 가입 상품 리스트
+        // 기본 사용자 정보 조회
+        MypageDTO mypageDTO = mypageMapper.selectUserInfo(userId);
+
+        if (mypageDTO != null) {
+            // 고객 정보 리스트 추가
+            mypageDTO.setCustProds(mypageMapper.selectCustProdsByUserId(userId));
+
+            // 작성글 리스트 추가
+            mypageDTO.setInquiries(mypageMapper.selectInquiriesByUserId(userId));
+        }
+
         return mypageDTO;
     }
+
+
+
+    public void updateUserInfo(MypageDTO mypageDTO) {
+        if (mypageDTO == null || mypageDTO.getUserId() == null) {
+            throw new IllegalArgumentException("잘못된 데이터입니다.");
+        }
+        // 유저 정보 업데이트
+        mypageMapper.updateMypage(mypageDTO);
+    }
+
 
 }
