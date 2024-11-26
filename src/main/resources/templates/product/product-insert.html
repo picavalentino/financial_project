@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+
+<meta charset="UTF-8">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/product/bootstrap.css">
+    <link rel="stylesheet" href="/css/product/common.css">
+    <link rel="stylesheet" href="/css/product/product-insert.css">
+    <link rel="stylesheet" href="/css/buttons/button.css">
+</head>
+
+<title>GS Bank</title>
+<!-- 전체 적용될 CSS -->
+<th:block layout:fragment="css"></th:block>
+<!-- 전체 적용될 스크립트 -->
+<th:block layout:fragment="script"></th:block>
+
+<!-- 우리가 작업할 공간 -->
+<body>
+<div layout:fragment="content" class="content">
+        <div class="sub_content">
+            <div class="location">
+                <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+                <a th:href="@{/product/list}"> / 상품관리</a>
+                <p> / 신규상품등록</p>
+            </div>
+            <div class="produce">
+                <h1 class="title">신규상품등록</h1>
+                <div class="box_wrap">
+                    <form th:action="@{/product/insert/}" method="post" class="product-info" id="product-form">
+                        <table class="table-product-form">
+                            <tbody>
+                            <tr>
+                                <th><label>상품명</label></th>
+                                <td><input name="prodNm" type="text" placeholder="상품명을 입력하세요"></td>
+                            </tr>
+                            <tr>
+                                <th><label>상품유형</label></th>
+                                <td>
+                                    <select name="prodTyCd">
+                                        <option value="">적금/예금/대출</option>
+                                        <option value="1">적금</option>
+                                        <option value="2">예금</option>
+                                        <option value="3">대출</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>가입대상</label></th>
+                                <td>
+                                    <select name="prodSbstgTyCd">
+                                        <option value="1">일반개인</option>
+                                        <option value="2">청년생활지원</option>
+                                        <option value="3">장애자우선지원</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>가입금액</label></th>
+                                <td>
+                                    <div class="inp_wrap">
+                                        <input id="prodInstlAmtMin" name="prodInstlAmtMin" type="text" placeholder="최소" oninput="formatNumber(this)">
+                                        <span>~</span>
+                                        <input id="prodInstlAmtMax" name="prodInstlAmtMax" type="text" placeholder="최대" oninput="formatNumber(this)">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>납입주기</label></th>
+                                <td>
+                                    <select name="prodPayTyCd">
+                                        <option value="1">월납</option>
+                                        <option value="3">3개월납</option>
+                                        <option value="6">6개월납</option>
+                                        <option value="8">년납</option>
+                                        <option value="9">일시납</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>적용이율</label></th>
+                                <td>
+                                    <div class="inp_wrap">
+                                        <input name="prodAirMin" type="text" placeholder="최소">
+                                        <span>~</span>
+                                        <input name="prodAirMax" type="text" placeholder="최대">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>적용기간</label></th>
+                                <td>
+                                    <div class="inp_wrap">
+                                        <input name="prodAirBgnYmd" type="date" required>
+                                        <span>~</span>
+                                        <input name="prodAirEndYmd" type="date" required>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>이자과세구분</label></th>
+                                <td>
+                                    <select name="prodIntTaxTyCd">
+                                        <option value="1">일반과세</option>
+                                        <option value="2">세금우대</option>
+                                        <option value="3">비과세</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>판매상태</label></th>
+                                <td>
+                                    <select name="prodCurrStcd">
+                                        <option value="0">판매대기</option>
+                                        <option value="1">판매중</option>
+                                        <option value="2">판매중지</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>판매기간</label></th>
+                                <td>
+                                    <div class="inp_wrap">
+                                        <input name="prodNtslBgnYmd" type="date" required>
+                                        <span>~</span>
+                                        <input name="prodNtslEndYmd" type="date" required>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>담당직원</th>
+                                <td>
+                                    <div class="staff-search-container">
+                                        <input type="text" id="staffName" name="staffName" readonly placeholder="직원 이름을 검색하세요">
+                                        <input type="hidden" id="userId" name="userId">
+                                        <button id="btn-search-icon" type="button">
+                                            <i class="bi bi-search" ></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                    <div class="button-wrap">
+                        <button class="btn" id="btn-register">
+                            <div class="icon-container"><i class="icon bi bi-plus-circle-fill"></i></div> 등록
+                        </button>
+                        <button class="btn" id="btn-reset">
+                            <div class="icon-container"><i class="icon bi bi-arrow-left-circle-fill"></i></div> 초기화
+                        </button>
+                        <button class="btn" id="btn-list">
+                            <div class="icon-container"><i class="icon bi bi-list"></i></div> 목록
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- 모달 창 -->
+            <div id="staffSearchModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <span id="modal-title">담당자명 검색</span>
+                    <div class="input-container">
+                        <input type="text" id="staffSearchInput" placeholder="직원 이름 입력">
+                        <button id="staffSearchButton">검색</button>
+                    </div>
+                    <div id="staffSearchResults">
+                        <!-- 검색 결과가 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</body>
+</html>

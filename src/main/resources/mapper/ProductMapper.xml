@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.financial_project.mapper.ProductMapper">
+    <resultMap id="ProductResultMap" type="com.team.financial_project.dto.ProductDTO">
+        <!-- ProductDTO 기본 필드 -->
+        <id property="prodSn" column="prod_sn" />
+        <result property="prodNm" column="prod_nm" />
+        <result property="prodInstlAmtMin" column="prod_instl_amt_min" />
+        <result property="prodInstlAmtMax" column="prod_instl_amt_max" />
+        <result property="prodCreateAt" column="prod_create_at" />
+        <result property="prodUpdateAt" column="prod_update_at" />
+        <result property="userId" column="user_id" />
+        <result property="prodCd" column="prod_cd" />
+        <result property="prodTyCd" column="prod_ty_cd" />
+        <result property="prodSbstgTyCd" column="prod_sbstg_ty_cd" />
+        <result property="prodPayTyCd" column="prod_pay_ty_cd" />
+        <result property="prodAirMin" column="prod_air_min" />
+        <result property="prodAirMax" column="prod_air_max" />
+        <result property="prodAirBgnYmd" column="prod_air_bgn_ymd" />
+        <result property="prodAirEndYmd" column="prod_air_end_ymd" />
+        <result property="prodIntTaxTyCd" column="prod_int_tax_ty_cd" />
+        <result property="prodCurrStcd" column="prod_curr_stcd" />
+        <result property="prodNtslBgnYmd" column="prod_ntsl_bgn_ymd" />
+        <result property="prodNtslEndYmd" column="prod_ntsl_end_ymd" />
+
+        <!-- prodHist 리스트 매핑 -->
+        <collection property="histList" ofType="com.team.financial_project.dto.ProdHistDTO">
+            <id property="histId" column="hist_id" />
+            <result property="userId" column="user_id" />
+            <result property="prodSn" column="prod_sn" />
+            <result property="prodAirMin" column="hist_prod_air_min" />
+            <result property="prodAirMax" column="hist_prod_air_max" />
+            <result property="prodAirBgnYmd" column="hist_prod_air_bgn_ymd" />
+            <result property="prodAirEndYmd" column="hist_prod_air_end_ymd" />
+            <result property="histCreateAt" column="hist_create_at" />
+            <result property="histCurrStcd" column="hist_curr_stcd" />
+        </collection>
+    </resultMap>
+
+    <select id="findAll" resultMap="ProductResultMap" resultType="com.team.financial_project.dto.ProductDTO">
+        SELECT
+        p.prod_sn,
+        p.prod_nm,
+        p.prod_instl_amt_min,
+        p.prod_instl_amt_max,
+        p.prod_create_at,
+        p.prod_update_at,
+        p.user_id,
+        p.prod_cd,
+        c1.code_nm AS prod_ty_cd,
+        c2.code_nm AS prod_sbstg_ty_cd,
+        c3.code_nm AS prod_pay_ty_cd,
+        c4.code_nm AS prod_int_tax_ty_cd,
+        p.prod_air_min,
+        p.prod_air_max,
+        p.prod_air_bgn_ymd,
+        p.prod_air_end_ymd,
+        p.prod_curr_stcd,
+        p.prod_ntsl_bgn_ymd,
+        p.prod_ntsl_end_ymd
+        FROM tb_product p
+        LEFT JOIN tb_code c1 ON c1.code_cl = p.prod_ty_cd_code_cl AND c1.code_no = p.prod_ty_cd
+        LEFT JOIN tb_code c2 ON c2.code_cl = p.prod_sbstg_ty_cd_code_cl AND c2.code_no = p.prod_sbstg_ty_cd
+        LEFT JOIN tb_code c3 ON c3.code_cl = p.prod_pay_ty_cd_code_cl AND c3.code_no = p.prod_pay_ty_cd
+        LEFT JOIN tb_code c4 ON c4.code_cl = p.prod_int_tax_ty_cd_code_cl AND c4.code_no = p.prod_int_tax_ty_cd
+        ORDER BY p.prod_create_at DESC;
+    </select>
+
+    <select id="findById" parameterType="Long" resultMap="ProductResultMap">
+        SELECT
+        p.prod_sn,
+        p.prod_nm,
+        p.prod_instl_amt_min,
+        p.prod_instl_amt_max,
+        p.prod_create_at,
+        p.prod_update_at,
+        p.user_id,
+        p.prod_cd,
+        c1.code_nm AS prod_ty_cd,
+        c2.code_nm AS prod_sbstg_ty_cd,
+        c3.code_nm AS prod_pay_ty_cd,
+        c4.code_nm AS prod_int_tax_ty_cd,
+        p.prod_air_min,
+        p.prod_air_max,
+        p.prod_air_bgn_ymd,
+        p.prod_air_end_ymd,
+        c5.code_nm AS prod_curr_stcd,
+        p.prod_ntsl_bgn_ymd,
+        p.prod_ntsl_end_ymd,
+        h.hist_id,
+        h.user_id,
+        h.prod_sn,
+        h.hist_prod_air_min,
+        h.hist_prod_air_max,
+        h.hist_prod_air_bgn_ymd,
+        h.hist_prod_air_end_ymd,
+        h.hist_create_at,
+        h.hist_curr_stcd
+        FROM tb_product p
+        LEFT JOIN tb_code c1 ON c1.code_cl = p.prod_ty_cd_code_cl AND c1.code_no = p.prod_ty_cd
+        LEFT JOIN tb_code c2 ON c2.code_cl = p.prod_sbstg_ty_cd_code_cl AND c2.code_no = p.prod_sbstg_ty_cd
+        LEFT JOIN tb_code c3 ON c3.code_cl = p.prod_pay_ty_cd_code_cl AND c3.code_no = p.prod_pay_ty_cd
+        LEFT JOIN tb_code c4 ON c4.code_cl = p.prod_int_tax_ty_cd_code_cl AND c4.code_no = p.prod_int_tax_ty_cd
+        LEFT JOIN tb_code c5 ON c5.code_cl = p.prod_curr_stcd_code_cl AND c5.code_no = p.prod_curr_stcd
+        LEFT JOIN tb_prod_hist h ON h.prod_sn = p.prod_sn
+        WHERE p.prod_sn = #{prodSn}
+    </select>
+
+    <!-- ### 조건 검색 제대로 못불러옴 ### -->
+    <!-- 조건 검색 -->
+    <select id="searchProducts" parameterType="map" resultType="com.team.financial_project.dto.ProductDTO">
+        SELECT
+        p.prod_sn,
+        p.prod_nm,
+        p.prod_instl_amt_min,
+        p.prod_instl_amt_max,
+        p.prod_create_at,
+        p.prod_update_at,
+        p.user_id,
+        p.prod_cd,
+        c1.code_nm AS prod_ty_cd,
+        c2.code_nm AS prod_sbstg_ty_cd,
+        c3.code_nm AS prod_pay_ty_cd,
+        c4.code_nm AS prod_int_tax_ty_cd,
+        p.prod_air_min,
+        p.prod_air_max,
+        p.prod_air_bgn_ymd,
+        p.prod_air_end_ymd,
+        c5.code_nm AS prod_curr_stcd,
+        p.prod_ntsl_bgn_ymd,
+        p.prod_ntsl_end_ymd,
+        h.hist_id,
+        h.user_id,
+        h.prod_sn,
+        h.hist_prod_air_min,
+        h.hist_prod_air_max,
+        h.hist_prod_air_bgn_ymd,
+        h.hist_prod_air_end_ymd,
+        h.hist_create_at,
+        h.hist_curr_stcd
+        FROM tb_product p
+        LEFT JOIN tb_code c1 ON c1.code_cl = p.prod_ty_cd_code_cl AND c1.code_no = p.prod_ty_cd
+        LEFT JOIN tb_code c2 ON c2.code_cl = p.prod_sbstg_ty_cd_code_cl AND c2.code_no = p.prod_sbstg_ty_cd
+        LEFT JOIN tb_code c3 ON c3.code_cl = p.prod_pay_ty_cd_code_cl AND c3.code_no = p.prod_pay_ty_cd
+        LEFT JOIN tb_code c4 ON c4.code_cl = p.prod_int_tax_ty_cd_code_cl AND c4.code_no = p.prod_int_tax_ty_cd
+        LEFT JOIN tb_code c5 ON c5.code_cl = p.prod_curr_stcd_code_cl AND c5.code_no = p.prod_curr_stcd
+        LEFT JOIN tb_prod_hist h ON h.prod_sn = p.prod_sn
+        WHERE 1=1
+        <if test="prodTyCd != null and prodTyCd.trim() != ''">
+            AND p.prod_ty_cd = #{prodTyCd}
+        </if>
+        <if test="prodCurrStcd != null and prodCurrStcd.trim() != ''">
+            AND p.prod_curr_stcd = #{prodCurrStcd}
+        </if>
+        <if test="prodPayTyCd != null and prodPayTyCd.trim() != ''">
+            AND p.prod_pay_ty_cd = #{prodPayTyCd}
+        </if>
+        <if test="prodNm != null and prodNm.trim() != ''">
+            AND p.prod_nm LIKE CONCAT('%', #{prodNm}, '%')
+        </if>
+        <if test="prodNtslBgnYmdRange != null">
+            AND p.prod_ntsl_bgn_ymd BETWEEN #{prodNtslBgnYmdRange[0]} AND #{prodNtslBgnYmdRange[1]}
+        </if>
+        <if test="prodNtslEndYmdRange != null">
+            AND p.prod_ntsl_end_ymd BETWEEN #{prodNtslEndYmdRange[0]} AND #{prodNtslEndYmdRange[1]}
+        </if>
+    </select>
+
+    <!-- 컬럼명으로 정렬 -->
+    <select id="getProductsSorted" resultType="com.team.financial_project.dto.ProductDTO">
+        SELECT *
+        FROM tb_product
+        ORDER BY
+        ${sortColumn} ${sortDirection}
+    </select>
+
+    <!-- 상품 등록 -->
+    <insert id="insertProduct" parameterType="com.team.financial_project.dto.ProductDTO">
+        INSERT INTO tb_product (
+        prod_nm,             -- 상품명
+        prod_instl_amt_min,  -- 최소 가입금액
+        prod_instl_amt_max,  -- 최대 가입금액
+        prod_create_at,      -- 생성일
+        user_id,             -- 담당자 ID
+        prod_cd,             -- 상품 코드
+        prod_ty_cd,          -- 상품 유형 코드
+        prod_sbstg_ty_cd,    -- 가입 대상 코드
+        prod_pay_ty_cd,      -- 납입 주기 코드
+        prod_air_min,        -- 최소 적용이율
+        prod_air_max,        -- 최대 적용이율
+        prod_air_bgn_ymd,    -- 적용 시작일
+        prod_air_end_ymd,    -- 적용 종료일
+        prod_int_tax_ty_cd,  -- 이자 과세 구분 코드
+        prod_curr_stcd,      -- 현재 상태 코드
+        prod_ntsl_bgn_ymd,   -- 판매 시작일
+        prod_ntsl_end_ymd    -- 판매 종료일
+        )
+        VALUES (
+        #{prodNm},
+        #{prodInstlAmtMin},
+        #{prodInstlAmtMax},
+        NOW(),              -- 생성일 현재 시각
+        #{userId},
+        #{prodCd},
+        #{prodTyCd},
+        #{prodSbstgTyCd},
+        #{prodPayTyCd},
+        #{prodAirMin},
+        #{prodAirMax},
+        #{prodAirBgnYmd},
+        #{prodAirEndYmd},
+        #{prodIntTaxTyCd},
+        #{prodCurrStcd},
+        #{prodNtslBgnYmd},
+        #{prodNtslEndYmd}
+        )
+    </insert>
+
+    <!-- 상품 개수 구하기 -->
+    <select id="findCdSizeByName" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_product
+        WHERE prod_cd LIKE CONCAT(#{keyword}, '%')
+    </select>
+
+    <!-- ### 수정 정보 제대로 저장 안됨 ### -->
+    <!-- 상품 정보 수정 -->
+    <update id="updateProduct" parameterType="com.team.financial_project.dto.ProductDTO">
+        <!-- 기존 데이터를 tb_prod_hist 테이블에 추가 -->
+        INSERT INTO tb_prod_hist (
+        hist_id,
+        prod_sn,
+        hist_prod_air_min,
+        hist_prod_air_max,
+        hist_prod_air_bgn_ymd,
+        hist_prod_air_end_ymd,
+        hist_create_at
+        )
+        SELECT
+        nextval('tb_prod_hist_hist_id_seq'),
+        prod_sn,
+        prod_air_min,
+        prod_air_max,
+        prod_air_bgn_ymd,
+        prod_air_end_ymd,
+        now()
+        FROM tb_product
+        WHERE prod_sn = #{prodSn};
+
+        <!-- tb_product 테이블에 데이터 업데이트 -->
+        UPDATE tb_product
+        SET
+        prod_air_min = CASE WHEN #{prodAirMin,jdbcType=NUMERIC} IS NOT NULL THEN CAST(#{prodAirMin,jdbcType=NUMERIC} AS NUMERIC(5, 2)) ELSE prod_air_min END,
+        prod_air_max = CASE WHEN #{prodAirMax,jdbcType=NUMERIC} IS NOT NULL THEN CAST(#{prodAirMax,jdbcType=NUMERIC} AS NUMERIC(5, 2)) ELSE prod_air_max END,
+        prod_air_bgn_ymd = CASE WHEN #{prodAirBgnYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodAirBgnYmd,jdbcType=VARCHAR} ELSE prod_air_bgn_ymd END,
+        prod_air_end_ymd = CASE WHEN #{prodAirEndYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodAirEndYmd,jdbcType=VARCHAR} ELSE prod_air_end_ymd END,
+        prod_ntsl_bgn_ymd = CASE WHEN #{prodNtslBgnYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodNtslBgnYmd,jdbcType=VARCHAR} ELSE prod_ntsl_bgn_ymd END,
+        prod_ntsl_end_ymd = CASE WHEN #{prodNtslEndYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodNtslEndYmd,jdbcType=VARCHAR} ELSE prod_ntsl_end_ymd END,
+        prod_update_at = now()
+        WHERE prod_sn = #{prodSn};
+    </update>
+
+    <!-- 상품 삭제 : 상품상태코드 변경 -->
+    <update id="deleteProduct" parameterType="java.math.BigDecimal">
+        UPDATE tb_product
+        SET prod_curr_stcd = 2,
+            prod_ntsl_end_ymd = CURRENT_DATE, -- 오늘 날짜를 yyyy-MM-dd 형식으로 설정
+            prod_update_at = now() -- 현재 시각으로 업데이트
+        WHERE prod_sn = #{prodSn}
+    </update>
+
+    <!-- 매출 조회; 디폴트: 이번달 매출 조회 -->
+    <!-- 적금 매출 조회 -->
+    <select id="findSavingsSales" parameterType="map" resultType="map">
+        SELECT
+        TO_CHAR(SAVG_STRT_DT, 'YYYY-MM') AS sale_month,
+        COUNT(SAVG_DS_SN) AS total_design_count,
+        SUM(SAVG_TOT_DPST_AMT) AS total_sales_amount
+        FROM
+        TB_PROD_DSGN_SAVG
+        WHERE
+        SAVG_STRT_DT BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        TO_CHAR(SAVG_STRT_DT, 'YYYY-MM')
+        ORDER BY
+        sale_month;
+    </select>
+
+    <!-- 적금 상위 2개 상품 조회 -->
+    <select id="rankedSavingsTop2" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.savg_tot_dpst_amt) AS total_deposit_amount,
+        COUNT(s.savg_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_savg s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.savg_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 대출 매출 조회 -->
+    <select id="findLoanSales" parameterType="map" resultType="map">
+        SELECT
+        TO_CHAR(LOAN_STRT_DT, 'YYYY-MM') AS sale_month,
+        COUNT(LOAN_DS_SN) AS total_design_count,
+        SUM(LOAN_AMT) AS total_sales_amount
+        FROM
+        TB_PROD_DSGN_LOAN
+        WHERE
+        LOAN_STRT_DT BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        TO_CHAR(LOAN_STRT_DT, 'YYYY-MM')
+        ORDER BY
+        sale_month;
+    </select>
+
+    <!-- 대출 상위 2개 상품 조회 -->
+    <select id="rankedLoansTop2" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.loan_amt) AS total_deposit_amount,
+        COUNT(s.loan_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_loan s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.loan_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 예금 매출 조회 -->
+    <select id="findDepositSales" parameterType="map" resultType="map">
+        SELECT
+        TO_CHAR(DPST_STRT_DT, 'YYYY-MM') AS sale_month,
+        COUNT(DPST_DS_SN) AS total_design_count,
+        SUM(DPST_AMT) AS total_sales_amount
+        FROM
+        TB_PROD_DSGN_DPST
+        WHERE
+        DPST_STRT_DT BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        TO_CHAR(DPST_STRT_DT, 'YYYY-MM')
+        ORDER BY
+        sale_month;
+    </select>
+
+    <!-- 예금 상위 2개 상품 조회 -->
+    <select id="rankedDepositTop2" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.dpst_amt) AS total_deposit_amount,
+        COUNT(s.dpst_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_dpst s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.dpst_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 목돈 매출 조회 -->
+    <select id="findLumpSumSales" parameterType="map" resultType="map">
+        SELECT
+        TO_CHAR(ACML_STRT_DT, 'YYYY-MM') AS sale_month,
+        COUNT(ACML_DS_SN) AS total_design_count,
+        SUM(ACML_TOT_DPST_AMT) AS total_sales_amount
+        FROM
+        TB_PROD_DSGN_ACML
+        WHERE
+        ACML_STRT_DT BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        TO_CHAR(ACML_STRT_DT, 'YYYY-MM')
+        ORDER BY
+        sale_month;
+    </select>
+
+    <!-- 목돈 상위 2개 상품 조회 -->
+    <select id="rankedLumpSumTop2" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.acml_tot_dpst_amt) AS total_deposit_amount,
+        COUNT(s.acml_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_acml s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.acml_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 매출 조회 - 조건 검색-->
+    <select id="findSalesData" parameterType="map" resultType="map">
+        SELECT
+        CASE
+        WHEN s.dsgn_ds_ty_cd = '1' THEN '적금'
+        WHEN s.dsgn_ds_ty_cd = '2' THEN '목돈'
+        WHEN s.dsgn_ds_ty_cd = '3' THEN '예금'
+        WHEN s.dsgn_ds_ty_cd = '4' THEN '대출'
+        END AS dsgn_ds_ty,
+        COUNT(s.dsgn_sn) AS total_design_count,
+        SUM(
+        CASE
+        WHEN s.dsgn_ds_ty_cd = '1' THEN savg.savg_tot_dpst_amt
+        WHEN s.dsgn_ds_ty_cd = '2' THEN acml.acml_tot_dpst_amt
+        WHEN s.dsgn_ds_ty_cd = '3' THEN d.dpst_amt
+        WHEN s.dsgn_ds_ty_cd = '4' THEN loan.loan_amt
+        END
+        ) AS total_sales_amount
+        FROM tb_custprod_dsgn s
+        LEFT JOIN tb_prod_dsgn_savg savg ON s.dsgn_sn = savg.dsgn_sn AND s.dsgn_ds_ty_cd = '1'
+        LEFT JOIN tb_prod_dsgn_acml acml ON s.dsgn_sn = acml.dsgn_sn AND s.dsgn_ds_ty_cd = '2'
+        LEFT JOIN tb_prod_dsgn_dpst d ON s.dsgn_sn = d.dsgn_sn AND s.dsgn_ds_ty_cd = '3'
+        LEFT JOIN tb_prod_dsgn_loan loan ON s.dsgn_sn = loan.dsgn_sn AND s.dsgn_ds_ty_cd = '4'
+        LEFT JOIN tb_product p ON s.prod_sn = p.prod_sn
+        WHERE
+        s.dsgn_create_at BETWEEN #{startOfMonth} AND #{endOfMonth}
+        <if test="userId != null and userId != ''">
+            AND s.user_id = #{userId}
+        </if>
+        <if test="dsgnDsTy != null and dsgnDsTy != ''">
+            AND s.dsgn_ds_ty_cd = #{dsgnDsTy}
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND p.prod_nm LIKE CONCAT('%', #{prodNm}, '%')
+        </if>
+        GROUP BY s.dsgn_ds_ty_cd
+        ORDER BY total_sales_amount DESC;
+    </select>
+
+    <!-- 적금 -->
+    <select id="rankedSavingsTop2ByConditions" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.savg_tot_dpst_amt) AS total_deposit_amount,
+        COUNT(s.savg_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_savg s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.savg_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 대출 -->
+    <select id="rankedLoansTop2ByConditions" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.loan_amt) AS total_deposit_amount,
+        COUNT(s.loan_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_loan s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.loan_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 예금 -->
+    <select id="rankedDepositTop2ByConditions" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.dpst_amt) AS total_deposit_amount,
+        COUNT(s.dpst_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_dpst s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.dpst_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+    <!-- 목돈 -->
+    <select id="rankedLumpSumTop2ByConditions" parameterType="map" resultType="map">
+        SELECT
+        p.prod_nm AS product_name,
+        SUM(s.acml_tot_dpst_amt) AS total_deposit_amount,
+        COUNT(s.acml_ds_sn) AS total_design_count
+        FROM
+        tb_prod_dsgn_acml s
+        JOIN
+        tb_custprod_dsgn cpd ON s.dsgn_sn = cpd.dsgn_sn
+        JOIN
+        tb_product p ON cpd.prod_sn = p.prod_sn
+        WHERE
+        s.acml_strt_dt BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY
+        p.prod_nm
+        ORDER BY
+        total_design_count DESC, total_deposit_amount DESC
+        LIMIT 2;
+    </select>
+
+</mapper>

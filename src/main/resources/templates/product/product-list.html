@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+
+<meta charset="UTF-8">
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/css/product/common.css">
+  <link rel="stylesheet" href="/css/product/product-list.css">
+  <link rel="stylesheet" href="/css/buttons/button.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/product/product-list.js?v=1" defer></script>
+</head>
+<title>GS Bank</title>
+<!-- 전체 적용될 CSS -->
+<th:block layout:fragment="css"></th:block>
+<!-- 전체 적용될 스크립트 -->
+<th:block layout:fragment="script"></th:block>
+
+<!-- 우리가 작업할 공간 -->
+<body>
+<div layout:fragment="content" class="content">
+  <div class="sub_content">
+    <div class="location">
+      <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+      <a th:href="@{/product/list}"> / 상품관리</a>
+      <p> / 상품목록조회</p>
+    </div>
+    <div class="top">
+      <h1 class="title">상품목록조회</h1>
+      <div class="condition-box">
+        <form id="searchForm" action="/product/search" method="GET">
+        <div class="menu-top">
+          <div class="condition">
+            <label>상품유형</label>
+            <select name="prodTyCd" id="prodTyCd">
+              <option value="">적금/예금/대출</option>
+              <option value="1">적금</option>
+              <option value="2">예금</option>
+              <option value="3">대출</option>
+            </select>
+          </div>
+          <div class="condition">
+            <label>판매상태</label>
+            <select name="prodCurrStcd" id="prodCurrStcd">
+              <option value="1">판매</option>
+              <option value="0">준비</option>
+              <option value="2">판매종료</option>
+              <option value="all">전체</option>
+            </select>
+          </div>
+          <div class="condition">
+            <label>납입주기</label>
+            <select name="prodPayTyCd" id="prodPayTyCd">
+              <option value="">1/3/6개월/연/일시</option>
+              <option value="1">월납</option>
+              <option value="3">3개월납</option>
+              <option value="6">6개월납</option>
+              <option value="8">연납</option>
+              <option value="9">일시납</option>
+            </select>
+          </div>
+          <div class="condition">
+            <label>상품명</label>
+            <input name="prodNm" id="prodNm" type="text" placeholder="상품명을 입력하세요">
+          </div>
+        </div>
+        <div class="menu-bottom">
+          <div class="condition" id="condition-period">
+              <select name="dateType" id="dateType">
+                <option value="">판매시작일/판매종료일</option>
+                <option id="prodNtslBgnYmd" value="prodNtslBgnYmd">판매시작일</option>
+                <option id="prodNtslEndYmd" value="prodNtslEndYmd">판매종료일</option>
+              </select>
+              <input name="searchBgnYmd" type="date">
+              <span>~</span>
+              <input name="searchEndYmd" type="date">
+          </div>
+          <div class="btn-wrap">
+            <button type="submit" class="btn" id="btn-search" onclick="filterResults()">
+              <div class="icon-container"><i class="icon bi bi-search"></i></div> 검색
+            </button>
+            <button type="button" class="btn" id="btn-search-all" onclick="resetFilters()">
+              <div class="icon-container"><i class="icon bi bi-search"></i></div> 전체
+            </button>
+          </div>
+        </div>
+        </form>
+      </div>
+
+    </div>
+    <div class="bottom">
+      <div class="bottom-menu">
+        <div class="product-size"> 총 : <span th:text="${productSize}"></span>개</div>
+        <div class="btn-wrap" id="btn-bottom-menu">
+          <button class="btn" id="btn-register">
+            <div class="icon-container"><i class="icon bi bi-plus-circle-fill"></i></div> 등록
+          </button>
+          <button class="btn" id="btn-print">
+            <div class="icon-container"><i class="icon bi bi-printer"></i></div> 인쇄
+          </button>
+        </div>
+      </div>
+      <table class="table-product">
+        <thead>
+        <tr>
+          <th><input type="checkbox" id="checkAll"></th>
+          <th class="sortTable" onclick="sortTable('prodCd')">상품코드</th>
+          <th class="sortTable" onclick="sortTable('prodNm')">상품명</th>
+          <th class="sortTable" onclick="sortTable('prodInstlAmtMin')">최소가입액</th>
+          <th class="sortTable" onclick="sortTable('prodInstlAmtMax')">최대가입액</th>
+          <th class="sortTable" onclick="sortTable('prodPayTyCd')">납입주기</th>
+          <th class="sortTable" onclick="sortTable('prodAirMin')">최소적용이율</th>
+          <th class="sortTable" onclick="sortTable('prodAirMax')">최대적용이율</th>
+          <th class="sortTable" onclick="sortTable('prodIntTaxTyCd')">이자과세</th>
+          <th class="sortTable" onclick="sortTable('prodNtslBgnYmd')">판매기간</th>
+        </tr>
+        </thead>
+        <tbody id="result-table-body">
+          <tr th:each="product : ${list}" th:onclick="'window.location.href=\'/product/detail/' + ${product.prodSn} + '\';'" style="cursor: pointer;">
+            <td><input type="checkbox" class="row-checkbox"></td>
+            <td>[[${product.prodCd}]]</td>
+            <td>[[${product.prodNm}]]</td>
+            <td th:text="|${#numbers.formatInteger(product.prodInstlAmtMin, 0, 'COMMA')}원|"></td>
+            <td th:text="|${#numbers.formatInteger(product.prodInstlAmtMax, 0, 'COMMA')}원|"></td>
+            <td>[[${product.prodPayTyCd}]]</td>
+            <td>[[${product.prodAirMin}]]</td>
+            <td>[[${product.prodAirMax}]]</td>
+            <td>[[${product.prodIntTaxTyCd}]]</td>
+            <td>[[${product.prodNtslBgnYmd}]] ~ [[${product.prodNtslEndYmd}]]</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination-container">
+        <div class="pagination">
+          <!-- 이전 버튼 -->
+          <button class="pagination-prev pagination-button" th:if="${currentPage > 1}"
+                  th:data-url="@{${requestURI}(page=${currentPage - 1}, prodTyCd=${prodTyCd ?: ''}, prodCurrStcd=${prodCurrStcd ?: ''}, prodPayTyCd=${prodPayTyCd ?: ''}, prodNm=${prodNm ?: ''})}">
+            &lt;</button>
+          <button class="pagination-prev pagination-button" th:if="${currentPage == 1}" disabled>&lt;</button>
+          <!-- 페이지 번호 -->
+          <a th:each="page : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${page == currentPage} ? 'pagination-active' : ''"
+                th:href="@{${requestURI}(page=${page}, prodTyCd=${prodTyCd ?: ''}, prodCurrStcd=${prodCurrStcd ?: ''}, prodPayTyCd=${prodPayTyCd ?: ''}, prodNm=${prodNm ?: ''})}"
+                th:text="${page}" class="pagination-number"></a>
+          <!-- 다음 버튼 -->
+          <button class="pagination-next pagination-button" th:if="${currentPage < totalPages}"
+                  data-url="@{${requestURI}(page=${currentPage + 1}, prodTyCd=${prodTyCd}, prodCurrStcd=${prodCurrStcd}, prodPayTyCd=${prodPayTyCd}, prodNm=${prodNm})}">
+            &gt;</button>
+          <button class="pagination-next pagination-button" th:if="${currentPage == totalPages}" disabled>&gt;</button>
+        </div>
+        <span class="pagination-info" th:text="'Page ' + ${currentPage} + ' of ' + ${totalPages}"></span>
+      </div>
+      </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

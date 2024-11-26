@@ -1,0 +1,249 @@
+/* 공통 조건 박스 */
+.condition-box, .bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 1440px;
+/*    background-color: #F4F4F6;*/
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+/*
+.bottom{
+    background-color: white;
+}
+*/
+
+/* 검색 폼 */
+#search-form {
+    width: 100%;
+}
+
+.menu-top, .menu-bottom {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* 개별 조건 필드 */
+.condition {
+    display: flex;
+    flex-direction: column; /* 라벨과 입력 필드 수직 배치 */
+    max-width: 300px; /* 최소 크기 */
+    flex: 1; /* 각 필드가 동일한 비율로 확장 */
+    margin-right: 20px;
+}
+.condition label{
+    font-size: 15px;
+    color: #495057;
+    margin-bottom: 5px;
+}
+.condition input, .condition select {
+    padding: 10px; /* 동일한 패딩 적용 */
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    height: 38px; /* 높이를 명시적으로 지정 */
+    width: 100%;
+    box-sizing: border-box; /* 테두리와 패딩 포함 */
+    text-align: center;
+    background-color: white;
+/*    background-color: #F4F4F6;*/
+}
+
+.condition-dates {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.condition input, .condition select,
+.condition-period input, .condition-period select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    outline: none;
+    flex: 1;
+}
+
+.condition-period input[type="date"] {
+    width: 150px;
+}
+
+.condition span {
+    font-size: 14px;
+    color: #495057;
+    align-self: center;
+}
+/* 기간 조건 */
+#condition-period {
+    display: flex;
+    flex-direction: row;
+    flex: 3;
+    max-width: 954px;
+}
+
+#condition-period select {
+    margin-right: 20px;
+}
+
+#condition-period input,
+#condition-period span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+#condition-period input {
+    width: calc(50% - 10px); /* 두 인풋 필드를 반반으로 나눔 */
+}
+
+/* 버튼 스타일 */
+.btn-wrap {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-left: auto;
+}
+
+#btn-bottom-menu {
+    display: flex;
+    gap: 10px;
+}
+
+/* 하단 메뉴 */
+.bottom-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.product-size {
+    font-weight: bold;
+    color: #333;
+}
+
+/* 테이블 스타일 */
+.table-product {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+}
+
+.table-product th, .table-product td {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    font-size: 14px;
+}
+
+.table-product th {
+    background-color: #f1f3f5;
+    color: #495057;
+    font-weight: bold;
+}
+
+.table-product tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table-product tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.table-product input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+/* 컬럼 정렬 */
+.sortable {
+  cursor: pointer;
+  position: relative;
+}
+
+.sortable::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+  transform: translateY(-50%);
+}
+
+.sortable.sorted-asc::after {
+  border-bottom-color: #495057;
+}
+
+.sortable.sorted-desc::after {
+  border-top-color: #495057;
+}
+
+/* 페이지네이션 */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 10px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+/* 페이지 버튼 및 링크 */
+.pagination-button, .pagination-number {
+    color: #333;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+/* 현재 페이지 */
+.pagination-active {
+    background-color: #010535;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* 버튼 및 링크 호버 효과 */
+.pagination-button:hover, .pagination-number:hover {
+    background-color: #ced4da;
+}
+
+/* 이전/다음 버튼 */
+.pagination-prev, .pagination-next {
+    font-size: 16px;
+    padding: 6px 8px;
+    background-color: white;
+}
+
+/* 페이지 정보 */
+.pagination-info {
+    margin-left: auto;
+    font-size: 14px;
+    color: #666;
+    position: absolute;
+    right: 20px;
+}
