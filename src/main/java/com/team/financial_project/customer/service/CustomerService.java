@@ -88,5 +88,9 @@ public class CustomerService {
         System.out.println("수정 요청된 고객 정보: " + customerDTO);
         customerMapper.updateCustomer(customerDTO);
     }
+
+    public List<CustomerDTO> getCustOccpTyCdList() {
+        customerMapper.getCustOccpTyCdList();
+    }
 }
 

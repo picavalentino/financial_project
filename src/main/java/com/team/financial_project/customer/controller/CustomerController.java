@@ -67,6 +67,10 @@ public class CustomerController {
         // 고객 상세 정보 가져오기
         CustomerDTO customer = customerService.getCustomerById(custId);
 
+        // 고객 직업정보 셀렉트 박스
+        List<CustomerDTO> custOccpTyCdList = customerService.getCustOccpTyCdList();
+
+        model.addAttribute("custOccpTyCdList",custOccpTyCdList);
         model.addAttribute("customer", customer);
         return "customer/customerDetail"; // 고객 상세 정보 페이지로 이동
     }

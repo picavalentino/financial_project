@@ -39,6 +39,8 @@
                             <label>주민번호 <input type="text" th:value="${customer.custRrn}" disabled></label>
                             <label>연락처 <input type="text" th:value="${customer.custTelno}" name="custTelno"></label>
                             <label>이메일 <input type="text" th:value="${customer.custEmail}" name="custEmail"></label>
+
+
                             <label>직업
                                 <select id="custOccpTyCd" name="custOccpTyCd" th:field="*{custOccpTyCd}" th:selected="${customer.custOccpTyCd}">
                                     <option th:value="${custOccpTyCd}" th:text="${customer.custOccpTyCd}">직업</option>
