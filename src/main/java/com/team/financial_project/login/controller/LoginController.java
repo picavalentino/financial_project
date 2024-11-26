@@ -1,7 +1,7 @@
 package com.team.financial_project.login.controller;
 
 import com.team.financial_project.login.service.LoginService;
-import com.team.financial_project.login.service.SmsService;
+import com.team.financial_project.main.service.SmsService;
 import com.team.financial_project.main.util.SmsVerificationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class LoginController {
 
     @GetMapping("")
     public String loginForm(){
-        return "/login/login";
+        return "login/login";
     }
     // 아이디 찾기 ================================================================================
     @GetMapping("retrieve-id")
