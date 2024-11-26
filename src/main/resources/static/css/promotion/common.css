@@ -41,4 +41,56 @@ a {
     padding-left: 20px;
     color: #303249;
 }
+/* 인쇄관련 CSS */
+@media print {
+/* 모든 요소를 기본적으로 숨김 */
+    body * {
+        visibility: hidden;
+        overflow: visible !important; /* 스크롤 제거 */
+    }
+
+    /* 인쇄하려는 영역만 보이도록 설정 */
+    .print-area,
+    .print-area * {
+        visibility: visible;
+    }
+
+    /* 인쇄하려는 영역을 페이지 전체로 확장 */
+    .print-area {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    /* 모달창, 헤더, 사이드바 등 숨김 */
+    .modal, .page-breadcrumb, .tabs, .control-container {
+        display: none !important;
+    }
+    /* 차트 캔버스 크기 조정 */
+    #resultChart {
+        width: 300px !important; /* 원하는 너비 */
+        height: 200px !important; /* 원하는 높이 */
+    }
+
+    /* 차트 컨테이너 크기 조정 */
+    .chart-container {
+        width: 100% !important; /* 차트 컨테이너를 페이지 너비에 맞춤 */
+        text-align: center; /* 차트를 가운데 정렬 */
+        height: auto !important; /* 차트 컨테이너가 페이지에 맞게 조정되도록 설정 */
+    }
+
+    /* 표와 차트가 겹치지 않도록 여백 추가 */
+    .interest-details {
+        margin-top: 20px;
+    }
+
+    .main-content {
+        overflow: visible !important; /* 메인 콘텐츠 영역 스크롤 제거 */
+    }
+
+    .calculation-container {
+        overflow: visible !important; /* 계산 결과가 잘리지 않도록 */
+    }
+}
 

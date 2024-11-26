@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<div layout:fragment="content" class="content">
+<div layout:fragment="content" class="content print-area">
     <div class="main-content">
         <!-- 페이지 위치 & 제목 -->
         <section class="page-location">
@@ -282,10 +282,10 @@
                 <button class="btn btn-register">
                     <i class="icon bi bi-plus-circle-fill"></i> 저장
                 </button>
-                <button class="btn btn-print">
+                <button class="btn btn-mail">
                     <i class="icon bi bi-printer"></i> 발송
                 </button>
-                <button class="btn btn-mail">
+                <button class="btn btn-print">
                     <i class="icon bi bi-envelope"></i> 인쇄
                 </button>
                 <button class="btn btn-list" onclick="location.href='/promotion/list'">
@@ -366,6 +366,9 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
+        document.querySelector('.btn-print').addEventListener('click', function () {
+                    window.print();
+                });
 
         document.addEventListener('DOMContentLoaded', function () {
 
