@@ -1,6 +1,7 @@
 package com.team.financial_project.promotion.controller;
 
 import com.team.financial_project.promotion.calculator.DepositCalculator;
+import com.team.financial_project.promotion.calculator.LoanCalculator;
 import com.team.financial_project.promotion.calculator.SavingsCalculator;
 import com.team.financial_project.promotion.dto.*;
 import com.team.financial_project.promotion.service.PromoCalService;
@@ -125,14 +126,15 @@ public class promoCalController {
         return promoCalService.getLoanProductList(prodCd, prodNm);
     }
 
-//    // 대출 계산 컨트롤러
-//    @PostMapping("/cal/equalPrincipal")
-//    public ResponseEntity<LoanCalDto> loanEqualPrincipal(@RequestBody LoanCalDto requestDto) {
-//
-//        // 계산 서비스 호출
-//        LoanCalDto responseDto = SavingsCalculator.calculateSavings(requestDto);
-//        return ResponseEntity.ok(responseDto);
-//    }
+    // 대출 계산 컨트롤러
+    // 원리금균등상환 계산
+    @PostMapping("/cal/equalPrincipalAndInterest")
+    public ResponseEntity<LoanCalDto> loanEqualPrincipal(@RequestBody LoanCalDto loanCalDto) {
+
+        // 계산 서비스 호출
+        LoanCalDto responseDto = LoanCalculator.calculateEqualPrincipalAndInterest(loanCalDto);
+        return ResponseEntity.ok(responseDto);
+    }
 
     // 예금 계산 컨트롤러
     @PostMapping("/cal/dpstCalculate")

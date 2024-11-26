@@ -15,19 +15,16 @@ import java.util.List;
 @NoArgsConstructor
 public class LoanCalDto {
     // 입력 필드
-    private BigDecimal savgCircleAmt; // 불입금액
-    private Integer savgGoalPrd;      // 목표기간
+    private BigDecimal savgCircleAmt; // 대출금액
+    private Integer savgGoalPrd;      // 대출기간
     private BigDecimal savgAplyRate; // 적용금리
-    private BigDecimal prodIntTaxRate; // 이자과세율
     private LocalDate savgStrtDt;    // 시작일자
 
     // 결과 필드
-    private BigDecimal savgTotDpstAmt; // 불입금액합계
-    private BigDecimal savgTotDpstInt; // 세전이자
-    private BigDecimal savgTotRcveAmt; // 세전수령액
-    private BigDecimal savgIntTaxAmt;  // 이자과세금
-    private BigDecimal savgAtxRcveAmt; // 세후수령액
+    private BigDecimal savgTotDpstAmt; // 대출액
+    private BigDecimal savgTotDpstInt; // 총이자
+    private BigDecimal savgAtxRcveAmt; // 총납입금액
 
     // 상세 데이터 리스트
-    private List<SavingsDetailDto> detailList; // 회차별 상세 정보
+    private List<LoanDetailsDto> detailList; // 회차별 상세 정보
 }

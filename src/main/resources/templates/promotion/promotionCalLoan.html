@@ -309,23 +309,15 @@
                 <div class="calculation-summary">
                     <!-- 계산 결과 간단히 보여주는 입력 필드 -->
                     <div class="result-row">
-                        <label>불입금액합계</label>
+                        <label>대출액</label>
                         <input type="text" id="savgTotDpstAmt" name="savgTotDpstAmt" readonly>
                     </div>
                     <div class="result-row">
-                        <label>세전이자</label>
+                        <label>총이자</label>
                         <input type="text" id="savgTotDpstInt" name="savgTotDpstInt" readonly>
                     </div>
                     <div class="result-row">
-                        <label>세전수령액</label>
-                        <input type="text" id="savgTotRcveAmt" name="savgTotRcveAmt" readonly>
-                    </div>
-                    <div class="result-row">
-                        <label>이자과세금</label>
-                        <input type="text" id="savgIntTaxAmt" name="savgIntTaxAmt" readonly>
-                    </div>
-                    <div class="result-row">
-                        <label>세후수령액</label>
+                        <label>총납입금액</label>
                         <input type="text" id="savgAtxRcveAmt" name="savgAtxRcveAmt" readonly>
                     </div>
                 </div>
@@ -345,27 +337,18 @@
                             <thead>
                             <tr>
                                 <th>회차</th>
-                                <th>회차불입금액</th>
-                                <th>누적불입금액</th>
-                                <th>회차이자</th>
-                                <th>회차원리금</th>
+                                <th>월이자</th>
+                                <th>원금</th>
+                                <th>총납입금액</th>
                             </tr>
                             </thead>
                             <tbody>
                             <!-- 회차별 상세 정보 데이터 반복 -->
                             <tr>
-                                <td>1</td>
-                                <td>100,000</td>
-                                <td>100,000</td>
-                                <td>167</td>
-                                <td>100,000</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>100,000</td>
-                                <td>200,000</td>
-                                <td>333</td>
-                                <td>100,000</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <!-- ... -->
                             </tbody>
@@ -751,16 +734,14 @@
             resultChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['불입금액합계', '세전이자', '세전수령액', '이자과세금', '세후수령액'],
+                    labels: ['대출액', '총이자', '총납입금액'],
                     datasets: [{
                         label: '계산 결과',
-                        data: [0, 0, 0, 0, 0], // 초기 데이터
+                        data: [0, 0, 0], // 초기 데이터
                         backgroundColor: [
-                            '#4CAF50', // 불입금액합계
-                            '#FF9800', // 세전이자
-                            '#03A9F4', // 세전수령액
-                            '#F44336', // 이자과세금
-                            '#9C27B0'  // 세후수령액
+                            '#4CAF50', // 대출액
+                            '#FF9800', // 총이자
+                            '#03A9F4', // 총납입금액
                         ],
                         borderWidth: 0
                     }]
@@ -870,8 +851,6 @@
         function updateCalculationResults(data) {
             document.getElementById('savgTotDpstAmt').value = data.savgTotDpstAmt.toLocaleString();
             document.getElementById('savgTotDpstInt').value = data.savgTotDpstInt.toLocaleString();
-            document.getElementById('savgTotRcveAmt').value = data.savgTotRcveAmt.toLocaleString();
-            document.getElementById('savgIntTaxAmt').value = data.savgIntTaxAmt.toLocaleString();
             document.getElementById('savgAtxRcveAmt').value = data.savgAtxRcveAmt.toLocaleString();
 
             // 차트 데이터 업데이트
@@ -879,8 +858,6 @@
                 resultChart.data.datasets[0].data = [
                     data.savgTotDpstAmt,
                     data.savgTotDpstInt,
-                    data.savgTotRcveAmt,
-                    data.savgIntTaxAmt,
                     data.savgAtxRcveAmt
                 ];
                 resultChart.update(); // 차트 새로고침
@@ -895,11 +872,10 @@
             data.detailList.forEach((detail) => {
                 const row = `
                     <tr>
-                        <td>${detail.installmentNo}</td>
-                        <td>${detail.installmentAmt.toLocaleString()}</td>
-                        <td>${detail.accumulatedAmt.toLocaleString()}</td>
-                        <td>${detail.installmentInt.toLocaleString()}</td>
-                        <td>${detail.installmentPrincipal.toLocaleString()}</td>
+                        <td>${detail.installment}</td>
+                        <td>${detail.monthlyInterest.toLocaleString()}</td>
+                        <td>${detail.principal.toLocaleString()}</td>
+                        <td>${detail.totalPayment.toLocaleString()}</td>
                     </tr>`;
                 detailTableBody.insertAdjacentHTML('beforeend', row);
             });
