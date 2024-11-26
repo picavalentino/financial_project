@@ -135,14 +135,14 @@ public class promoCalController {
 //    }
 
     // 예금 계산 컨트롤러
-//    @PostMapping("/cal/dpstCalculate")
-//    @ResponseBody
-//    public ResponseEntity<DepositCalDto> calculateSavings(@RequestBody DepositCalDto requestDto) {
-//
-//        // 계산 서비스 호출
-//        DepositCalDto responseDto = DepositCalculator.calculateDeposit(requestDto);
-//        return ResponseEntity.ok(responseDto);
-//    }
+    @PostMapping("/cal/dpstCalculate")
+    @ResponseBody
+    public ResponseEntity<DepositCalDto> calculateSavings(@RequestBody DepositCalDto requestDto) {
+
+        // 계산 서비스 호출
+        DepositCalDto responseDto = DepositCalculator.calculateDeposit(requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
 
     // 목돈적금 저장 컨트롤러
     @PostMapping("/cal/acml/insert")

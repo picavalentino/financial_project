@@ -337,28 +337,19 @@
                         <table>
                             <thead>
                             <tr>
-                                <th>회차</th>
-                                <th>회차불입금액</th>
-                                <th>누적불입금액</th>
-                                <th>회차이자</th>
-                                <th>회차원리금</th>
+                                <th>예치금액</th>
+                                <th>이자</th>
+                                <th>세금</th>
+                                <th>총금액</th>
                             </tr>
                             </thead>
                             <tbody>
                             <!-- 회차별 상세 정보 데이터 반복 -->
                             <tr>
-                                <td>1</td>
-                                <td>100,000</td>
-                                <td>100,000</td>
-                                <td>167</td>
-                                <td>100,000</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>100,000</td>
-                                <td>200,000</td>
-                                <td>333</td>
-                                <td>100,000</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <!-- ... -->
                             </tbody>
@@ -800,7 +791,7 @@
             const savgCircleAmt = document.getElementById('savgCircleAmt').value.trim();
             const savgGoalPrd = document.getElementById('savgGoalPrd').value.trim();
             const savgAplyRate = document.getElementById('savgAplyRate').value.trim();
-
+            console.log(savgAplyRate);
             // 유효성 검사
             if (!savgCircleAmt || parseFloat(savgCircleAmt) <= 0) {
                 alert('불입금액을 입력하세요.');
@@ -816,11 +807,11 @@
             }
 
             const requestData = {
-                savgCircleAmt: parseFloat(savgCircleAmt.replace(/,/g, '')),
-                savgGoalPrd: parseInt(savgGoalPrd),
-                savgAplyRate: parseFloat(savgAplyRate),
-                prodIntTaxRate: parseFloat(document.getElementById('prodIntTaxRate').value),
-                savgStrtDt: document.getElementById('savgStrtDt').value,
+                depositAmt: parseFloat(savgCircleAmt.replace(/,/g, '')),
+                goalPeriod: parseInt(savgGoalPrd),
+                aplyRate: parseFloat(savgAplyRate),
+                taxRate: parseFloat(document.getElementById('prodIntTaxRate').value),
+                startDate: document.getElementById('savgStrtDt').value,
             };
 
             // 서버 요청
@@ -842,11 +833,11 @@
 
         // 계산 결과 업데이트 함수
         function updateCalculationResults(data) {
-            document.getElementById('savgTotDpstAmt').value = data.savgTotDpstAmt.toLocaleString();
-            document.getElementById('savgTotDpstInt').value = data.savgTotDpstInt.toLocaleString();
-            document.getElementById('savgTotRcveAmt').value = data.savgTotRcveAmt.toLocaleString();
-            document.getElementById('savgIntTaxAmt').value = data.savgIntTaxAmt.toLocaleString();
-            document.getElementById('savgAtxRcveAmt').value = data.savgAtxRcveAmt.toLocaleString();
+            document.getElementById('savgTotDpstAmt').value = data.totalDepositAmt.toLocaleString();
+            document.getElementById('savgTotDpstInt').value = data.totalInterest.toLocaleString();
+            document.getElementById('savgTotRcveAmt').value = data.totalPreTax.toLocaleString();
+            document.getElementById('savgIntTaxAmt').value = data.taxAmount.toLocaleString();
+            document.getElementById('savgAtxRcveAmt').value = data.totalAfterTax.toLocaleString();
 
             // 차트 데이터 업데이트
             if (resultChart && resultChart.data && resultChart.data.datasets) {
@@ -866,18 +857,34 @@
             // 상세 테이블 데이터 업데이트
             const detailTableBody = document.querySelector('.interest-details tbody');
             detailTableBody.innerHTML = '';
-            data.detailList.forEach((detail) => {
+            // data.detail이 배열인지 확인
+            if (Array.isArray(data.detail)) {
+            // 배열 처리
+            data.detail.forEach((detail) => {
                 const row = `
                     <tr>
-                        <td>${detail.installmentNo}</td>
-                        <td>${detail.installmentAmt.toLocaleString()}</td>
-                        <td>${detail.accumulatedAmt.toLocaleString()}</td>
-                        <td>${detail.installmentInt.toLocaleString()}</td>
-                        <td>${detail.installmentPrincipal.toLocaleString()}</td>
+                        <td>${detail.principal.toLocaleString()}</td>
+                        <td>${detail.interest.toLocaleString()}</td>
+                        <td>${detail.taxAmount.toLocaleString()}</td>
+                        <td>${detail.afterTaxAmount.toLocaleString()}</td>
                     </tr>`;
                 detailTableBody.insertAdjacentHTML('beforeend', row);
             });
-        }
+             } else if (typeof data.detail === 'object') {
+            // 단일 객체 처리
+            const detail = data.detail;
+            const row = `
+                <tr>
+                    <td>${detail.principal.toLocaleString()}</td>
+                    <td>${detail.interest.toLocaleString()}</td>
+                    <td>${detail.taxAmount.toLocaleString()}</td>
+                    <td>${detail.afterTaxAmount.toLocaleString()}</td>
+                </tr>`;
+            detailTableBody.insertAdjacentHTML('beforeend', row);
+            } else {
+                console.error('data.detail의 타입이 예상과 다릅니다:', data.detail);
+            }
+            }
 
         document.querySelector('.btn-register').addEventListener('click', () => {
 
