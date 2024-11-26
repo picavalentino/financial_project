@@ -6,8 +6,8 @@
         <div class="container">
             <!-- 사용자 프로필 -->
             <div class="profile text-center mb-4">
-                <img src="/images/common/profile.png" alt="User Profile" class="img-fluid" style="width: 96px; height: 128px;">
-                <h4>000 님</h4>
+                <img src="/images/common/profile.png" alt="User Profile" class="img-fluid" id="userProfileImage">
+                <h4 id="userProfileName">000 님</h4>
             </div>
 
             <!-- 사이드바 메뉴 -->
@@ -21,8 +21,10 @@
                         <div class="collapse" id="customerManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">고객 목록</a>
-                                    <a href="#" class="ml-auto"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/customer/list}">고객 목록</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="5">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -37,16 +39,22 @@
                         <div class="collapse" id="productManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">상품 목록 조회</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/product/list}">상품 목록 조회</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="6">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">신규 상품 등록</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/product/insert}">신규 상품 등록</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="7">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">매출 조회</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/product/sales}">매출 조회</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="8">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -61,12 +69,16 @@
                         <div class="collapse" id="eventManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">개인 일정 관리</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/schedule/personal}">개인 일정 관리</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="9">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">고객 이벤트 관리</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/schedule/customer}">고객 이벤트 관리</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="10">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -81,32 +93,16 @@
                         <div class="collapse" id="promotionManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">상품 설계 조회</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/promotion/list}">상품 설계 조회</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="11">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">금융 계산기</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <div class="dropdown">
-                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton5" data-bs-toggle="collapse" data-bs-target="#boardManagement" aria-expanded="false" aria-controls="boardManagement">
-                            <img src="/images/common/게시판.png" class="img-menuicon">
-                            게시판
-                        </button>
-                        <div class="collapse" id="boardManagement">
-                            <ul class="list-unstyled">
-                                <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">게시글 목록</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
-                                </li>
-                                <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">게시글 등록</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/promotion/cal}">금융 계산기</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="12">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -121,8 +117,46 @@
                         <div class="collapse" id="employeeManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">직원 목록 조회</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/management/list}">직원 목록</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="13">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <a href="@{/management/insert}">직원 등록</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="14">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <a href="@{/management/employees}">직원 정보 관리</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="15">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton5" data-bs-toggle="collapse" data-bs-target="#boardManagement" aria-expanded="false" aria-controls="boardManagement">
+                            <img src="/images/common/게시판.png" class="img-menuicon">
+                            게시판
+                        </button>
+                        <div class="collapse" id="boardManagement">
+                            <ul class="list-unstyled">
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <a href="@{/board/list}">게시글 목록</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="16">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <a href="@{/board/insert}">게시글 등록</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="17">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -137,20 +171,16 @@
                         <div class="collapse" id="systemManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">권한 관리</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/system/board}">게시판 관리</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="18">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">게시판 관리</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
-                                </li>
-                                <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">공지사항 등록</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
-                                </li>
-                                <li class="d-flex justify-content-between align-items-center">
-                                    <a href="#">답변하기</a>
-                                    <a href="#"><img src="/images/common/pin_no.png" class="img-pin"></a>
+                                    <a href="@{/system/auth}">권한 관리</a>
+                                    <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="19">
+                                        <img src="/images/common/pin_no.png" class="img-pin">
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -159,4 +189,94 @@
             </ul>
         </div>
     </div>
+    <script>
+        // 사용자 프로필 정보 로드
+        function loadUserProfileInfo() {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch('/user/info', {
+                method: 'GET',
+                headers: {
+                    [csrfHeader]: csrfToken, // CSRF 토큰 추가
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    console.error('Failed to fetch user info');
+                    return null;
+                }
+            })
+            .then(data => {
+                if (data) {
+                    // 프로필 이미지 업데이트
+                    const profileImage = document.getElementById('userProfileImage');
+                    profileImage.src = data.user_imgpath || '/images/common/default-profile.png';
+
+                    // 이름과 직위 업데이트
+                    const profileName = document.getElementById('userProfileName');
+                    profileName.textContent = `${data.user_name} ${data.code_nm} 님`;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user profile info:', error);
+            });
+        }
+
+        // 북마크 상태를 서버에서 가져와 적용
+        function loadBookmarks() {
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+            fetch('/bookmark/list', {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(bookmarkedMenuIds => {
+                // 북마크된 menu_id 목록을 순회하며 UI 업데이트
+                document.querySelectorAll('.bookmark-btn').forEach(btn => {
+                    const menuId = btn.getAttribute('data-menu-id');
+                    if (bookmarkedMenuIds.includes(Number(menuId))) {
+                        // 북마크된 상태의 이미지로 변경
+                        btn.querySelector('img').src = '/images/common/pin_ok.png';
+                    }
+                });
+            });
+        }
+
+        // 북마크 버튼 클릭 이벤트
+        document.querySelectorAll('.bookmark-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const menuId = this.getAttribute('data-menu-id');
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+                fetch('/bookmark/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        [csrfHeader]: csrfToken,
+                    },
+                    body: `menuId=${menuId}`
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('북마크에 추가되었습니다!');
+                        this.querySelector('img').src = '/images/common/pin_ok.png';
+                        window.location.reload();
+                    } else {
+                        response.text().then(msg => alert(msg));
+                    }
+                });
+            });
+        });
+
+        // DOMContentLoaded 이벤트로 모든 기능 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserProfileInfo(); // 사용자 프로필 정보 로드
+            loadBookmarks(); // 북마크 상태 로드
+            setupBookmarkButtons(); // 북마크 버튼 클릭 이벤트 설정
+        });
+    </script>
 </div>
