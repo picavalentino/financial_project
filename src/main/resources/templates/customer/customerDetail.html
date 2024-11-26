@@ -39,22 +39,14 @@
                             <label>주민번호 <input type="text" th:value="${customer.custRrn}" disabled></label>
                             <label>연락처 <input type="text" th:value="${customer.custTelno}" name="custTelno"></label>
                             <label>이메일 <input type="text" th:value="${customer.custEmail}" name="custEmail"></label>
-
-
                             <label>직업
-                                <select id="custOccpTyCd" name="custOccpTyCd" th:field="*{custOccpTyCd}" th:selected="${customer.custOccpTyCd}">
-                                    <option th:value="${custOccpTyCd}" th:text="${customer.custOccpTyCd}">직업</option>
-                                    <option value="100">관리자(사무직)</option>
-                                    <option value="101">전문가 및 관련 종사자</option>
-                                    <option value="102">사무 종사자</option>
-                                    <option value="103">서비스 종사자</option>
-                                    <option value="104">판매 종사자</option>
-                                    <option value="105">농림어업 숙련 종사자</option>
-                                    <option value="106">기능원 및 관련 기능 종사자</option>
-                                    <option value="107">장치/기계 조작 및 조립 종사자</option>
-                                    <option value="108">단순노무 종사자</option>
-                                    <option value="109">군인</option>
-                                    <option value="110">주부, 학생 및 기타 비경제활동인구</option>
+                                <select name="custOccpTyCd" class="custOccpTyCd">
+                                    <option th:text="${customer.custOccpTyCd_name}" disabled>직업 선택</option>
+                                    <th:block th:each="custOccpTyCd : ${custOccpTyCdList}">
+                                        <option th:value="${custOccpTyCd.custOccpTyCd}"
+                                                th:text="${custOccpTyCd.custOccpTyCd_name}"
+                                                th:selected="${customer.custOccpTyCd != null && customer.custOccpTyCd.equals(custOccpTyCd.custOccpTyCd)}"></option>
+                                    </th:block>
                                 </select>
                             </label>
                         </div>
@@ -63,6 +55,7 @@
                                 <input type="text" class="wide-input" th:value="${customer.custAddr}" name="custAddr">
                             </label>
                             <label>활동 상태 <input type="text" th:value="${customer.custStateCd}" disabled></label>
+                            <label>가입 일자 <input type="text" th:value="${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')}" disabled></label>
                         </div>
                     </div>
                     <!-- ===================================================================================== -->
@@ -121,12 +114,11 @@
                 </div>
 
                 <div class="revision">
-                    <h2>수정 내역</h2>
+                    <h2>최근 수정내역</h2>
                     <textarea id="revisionHistory" disabled></textarea>
                 </div>
             </section>
         </section>
-
     </div>
     <!-- ===================================================================================== -->
     <div class="buttons">

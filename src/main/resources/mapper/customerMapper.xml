@@ -104,7 +104,8 @@
         cust.cust_rrn AS custRrn,
         cust.cust_telno AS custTelno,
         cust.cust_email AS custEmail,
-        code.code_nm AS custOccpTyCd, -- 직업 코드 이름 매핑
+        code.code_no AS custOccpTyCd, -- 직업 코드 매핑
+        code.code_nm AS custOccpTyCd_name,
         cust.cust_addr AS custAddr,
         cust.cust_create_at AS custCreateAt,
         cust.cust_update_at AS custUpdateAt,

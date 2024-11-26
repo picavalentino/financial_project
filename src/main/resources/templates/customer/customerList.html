@@ -62,7 +62,9 @@
             <table class="listTable">
                 <thead>
                 <tr>
-                    <th><input type="checkbox" id="selectAll"></th>
+                    <th>
+                        <input type="checkbox" id="select-all" th:checked="${selectedIds.size() == totalCustomers}">
+                    </th>
                     <th>고객ID</th>
                     <th>고객명</th>
                     <th>생년월일</th>
@@ -78,7 +80,8 @@
                 <tr th:each="customer : ${customers}">
                     <td>
                         <input type="checkbox" name="selectedCustomers" class="customer-checkbox"
-                               th:value="${customer.custId}">
+                               th:value="${customer.custId}" data-id="${customer.custId}"
+                               th:checked="${customer.selected}">
                     </td>
                     <td th:text="${customer.custId}">001</td>
                     <td>
@@ -87,7 +90,9 @@
                     <td th:text="${customer.birthDate}">19940926</td>
                     <td th:text="${customer.custTelno}">010-1111-1111</td>
                     <td th:text="${customer.custEmail}">aaa@naver.com</td>
-                    <td th:text="${customer.users != null && customer.users.user_name != null ? customer.users.user_name : '없음'}">김사원</td>
+                    <td th:text="${customer.users != null && customer.users.user_name != null ? customer.users.user_name : '없음'}">
+                        김사원
+                    </td>
                     <td th:text="${customer.custStateCd}"><span class="status active">상태</span></td>
                     <td th:text="${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')}">2024-11-18</td>
                 </tr>

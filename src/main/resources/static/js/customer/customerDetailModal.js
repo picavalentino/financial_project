@@ -7,11 +7,6 @@ function closeAllModals() {
 }
 // ========================================================================
 // 수정내역 기록
-window.onload = function() {
-    const textarea = document.getElementById("revisionHistory");
-    textarea.value = custCreate; // textarea에 고객 생성일 값을 설정
-};
-
 // =========================================================================
 // 담당자 검색 모달 열기
 function openSearchModal() {
@@ -23,7 +18,6 @@ function openSearchModal() {
         console.error("모달 요소를 찾을 수 없습니다.");
     }
 }
-
 
 // 모달 닫기
 function closeModal(modalId) {
@@ -106,77 +100,78 @@ function selectManager(manager) {
 
 // ===================================================================================================
 // 변경 버튼
-document.addEventListener("click", function(event) {
-    if (event.target.classList.contains("edit-btn")) {
-        event.preventDefault();
-        updateCustomerInfo();
+// 수정 내역을 저장할 객체
+let customerRevisions = {};
+
+// 현재 시간 형식 함수 (yyyy-MM-dd HH:mm)
+function getCurrentTimestamp() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const date = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${date} ${hours}:${minutes}`;
+}
+
+// textarea를 업데이트하는 함수
+function updateTextarea(custId) {
+    const revisionHistory = document.getElementById('revisionHistory');
+    const revisions = customerRevisions[custId] || [];
+    revisionHistory.value = revisions.join('\n');
+}
+
+// 수정 내역을 저장하는 함수
+function saveToLocalStorage() {
+    localStorage.setItem('customerRevisions', JSON.stringify(customerRevisions));
+}
+
+// 수정 내역을 로드하는 함수
+function loadFromLocalStorage() {
+    const savedData = localStorage.getItem('customerRevisions');
+    if (savedData) {
+        customerRevisions = JSON.parse(savedData);
     }
-});
+}
 
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector(".edit-btn").addEventListener("click", function() {
-        // 폼 데이터를 가져오기
-        var custId = document.getElementById("custId").value; // hidden input에서 가져옴
+// 변경 버튼 클릭 이벤트 등록
+document.addEventListener("DOMContentLoaded", function () {
+    // 페이지 로드 시 수정 내역 로드
+    loadFromLocalStorage();
 
-        var form = document.getElementById("customerUpdateForm");
+    // 고객 ID 가져오기
+    const custId = document.getElementById("custId").value;
 
-        if (!form) {
-            console.error("customer 폼이 존재하지 않습니다.");
-            return;
-        }
+    // 해당 고객의 수정 내역 복원
+    updateTextarea(custId);
+
+    document.querySelector(".edit-btn").addEventListener("click", function (event) {
+        event.preventDefault();
+
+        // 수정한 사용자 정보 가져오기
+        const userId = document.querySelector('input[name="user_id"]').value;
 
         // 필드 값 가져오기
+        const telno = document.querySelector('input[name="custTelno"]').value;
+        const email = document.querySelector('input[name="custEmail"]').value;
+        const addr = document.querySelector('input[name="custAddr"]').value;
         const custOccpTyCdElement = document.querySelector('select[name="custOccpTyCd"]');
-        let custOccpTyCd = custOccpTyCdElement?.value;
+        const custOccpTyCd = custOccpTyCdElement?.value || '미정';
 
-        // custOccpTyCd 값이 비어 있거나 null인 경우, 기본값 설정
-        if (!custOccpTyCd) {
-            custOccpTyCd = custOccpTyCdElement?.getAttribute('th:selected');
+        // 수정 내역 추가
+        const currentTimestamp = getCurrentTimestamp();
+        const newEntry = `수정일자 : ${currentTimestamp} / 담당자ID: ${userId}`;
+
+        // 고객별 수정 내역 관리
+        if (!customerRevisions[custId]) {
+            customerRevisions[custId] = [];
         }
-        var formData = new FormData(form);
+        customerRevisions[custId].unshift(newEntry); // 가장 최근 내역을 상단에 추가
 
-        // 수정한 사용자 ID 가져오기
-        var userId = document.querySelector('input[name="user_id"]').value;
-
-        // 폼 데이터를 JSON으로 변환
-        var updatedCustomerData = {
-            custId: custId, // 수정할 고객 ID
-            custTelno: document.querySelector('input[name="custTelno"]').value,
-            custEmail: document.querySelector('input[name="custEmail"]').value,
-            custOccpTyCd: custOccpTyCd,
-            custAddr: document.querySelector('input[name="custAddr"]').value,
-            users: { // users 객체로 user_id 포함
-                   user_id: document.querySelector('input[name="user_id"]').value
-               }
-        };
-
-        formData.forEach((value, key) => {
-            updatedCustomerData[key] = value;
-        });
-
-        // 서버로 PUT 요청 전송
-        fetch(`/customer/update`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedCustomerData)
-           })
-        .then(response => {
-            if (response.ok) {
-                alert('고객 정보가 성공적으로 수정되었습니다.');
-                // 수정 완료 다시 정보페이지
-                window.location.href = `/customer/detail/${custId}`;
-            } else {
-                return response.text().then((errorMessage) => {
-                    throw new Error(errorMessage);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('수정 요청 중 오류 발생:', error);
-            alert('담당자를 입력해주세요');
-        });
+        // textarea와 localStorage 업데이트
+        updateTextarea(custId);
+        saveToLocalStorage();
     });
 });
 

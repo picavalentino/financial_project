@@ -16,6 +16,7 @@ public class CustomerDTO {
     private String custTelno; // 고객 전화번호
     private String custEmail; // 고객 이메일
     private String custOccpTyCd; // 고객 직업 코드
+    private String custOccpTyCd_name; // 고객 직업 분류명
     private String custAddr; // 고객 주소
     private LocalDateTime custCreateAt; // 고객 생성일시
     private LocalDateTime custUpdateAt; // 고객 수정일시
@@ -23,6 +24,7 @@ public class CustomerDTO {
     private String birthDate; // 생년월일 필드 추가
 
     private UserDTO users; // 유저 필드 추가
+    private boolean selected; // 선택 상태 필드 추가
 
 
     // 주민등록번호에서 생년월일 추출하는 메소드
