@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<div layout:fragment="content" class="content">
+<div layout:fragment="content" class="content print-area">
     <div class="main-content">
         <!-- 페이지 위치 & 제목 -->
         <section class="page-location">
@@ -32,10 +32,10 @@
 
         <!-- 설계 탭 -->
         <div class="tabs">
-            <button class="tab active" onclick="window.location.href='/promotion/cal'">적금 설계</button>
+            <button class="tab inactive" onclick="window.location.href='/promotion/cal'">적금 설계</button>
             <button class="tab inactive" onclick="window.location.href='/promotion/CalAcml'">목돈마련적금 설계</button>
             <button class="tab inactive" onclick="window.location.href='/promotion/CalDpst'">예금 설계</button>
-            <button class="tab inactive" onclick="window.location.href='/promotion/CalLoan'">대출 설계</button>
+            <button class="tab active" onclick="window.location.href='/promotion/CalLoan'">대출 설계</button>
         </div>
 
         <div class="main-form-container">
@@ -125,10 +125,10 @@
                         <label for="prodCd">상품선택</label>
                         <label for="prodPayTyCd">납입주기</label>
                         <label for="savgStrtDt">시작일자</label>
-                        <label for="savgCircleAmt">불입금액 (원)</label>
-                        <label for="savgGoalPrd">목표기간 (개월)</label>
-                        <label for="savgAplyRate">적용금리 (%)</label>
-                        <label for="savgIntTaxTyCd">이자과세</label>
+                        <label for="savgCircleAmt">대출금액 (원)</label>
+                        <label for="savgGoalPrd">대출기간 (개월)</label>
+                        <label for="savgAplyRate">대출금리 (%)</label>
+                        <label for="repaymentMethod">상환방법</label>
                         <label for="dsgnCreateAt">설계일자</label>
                         <label for="dsgnUpdateAt">작성일자</label>
                     </div>
@@ -146,7 +146,7 @@
                                 <!-- 상품코드 -->
                                 <input type="text" id="prodCd" name="prodCd" disabled>
                                 <!-- 상품명 -->
-                                <input type="text" id="prodNm" name="prodNm" value="대출디테일" readonly>
+                                <input type="text" id="prodNm" name="prodNm" readonly>
                                 <button><i class="bi bi-search" id="openProductModalButton"></i></button>
                             </div>
 
@@ -170,9 +170,9 @@
                             <div class="button-row">
                                 <input type="text" id="savgCircleAmt" name="savgCircleAmt" value="0">
                                 <div class="button-group">
-                                    <button class="button-plus button-plus-amt">+ 10만원</button>
-                                    <button class="button-plus button-plus-amt">+ 50만원</button>
                                     <button class="button-plus button-plus-amt">+ 100만원</button>
+                                    <button class="button-plus button-plus-amt">+ 500만원</button>
+                                    <button class="button-plus button-plus-amt">+ 1000만원</button>
                                     <button class="button-reset button-reset-amt">정정</button>
                                 </div>
                             </div>
@@ -191,15 +191,23 @@
                             <!-- 적용금리 -->
                             <div class="input-rate">
                                 <select id="selectSavgAplyRate" name="selectSavgAplyRate">
+                                    <option>금리선택</option>
                                     <option value="prodairmin">최소금리</option>
                                     <option value="prodairmax">최대금리</option>
                                 </select>
                                 <input type="text" id="savgAplyRate" name="savgAplyRate" disabled>
                             </div>
 
-                            <!-- 이자과세 -->
+                            <!-- 상환방법 -->
                             <!-- 표시용 -->
-                            <input type="text" id="prodIntTaxTy" name="prodIntTaxTy" disabled>
+                            <div class="input-rate">
+                                <select id="repaymentMethod" name="repaymentMethod">
+                                    <option>선택</option>
+                                    <option value="equalPrincipal">원금균등상환</option>
+                                    <option value="equalPrincipalAndInterest">원리금균등상환</option>
+                                    <option value="lumpSum">원금만기일시상환</option>
+                                </select>
+                            </div>
                             <!-- 계산용 -->
                             <input type="hidden" id="prodIntTaxRate" name="prodIntTaxRate">
                             <!-- 저장용 -->
@@ -281,10 +289,10 @@
                 <button class="btn btn-register">
                     <i class="icon bi bi-plus-circle-fill"></i> 저장
                 </button>
-                <button class="btn btn-print">
+                <button class="btn btn-mail">
                     <i class="icon bi bi-printer"></i> 발송
                 </button>
-                <button class="btn btn-mail">
+                <button class="btn btn-print">
                     <i class="icon bi bi-envelope"></i> 인쇄
                 </button>
                 <button class="btn btn-list" onclick="location.href='/promotion/list'">
@@ -301,23 +309,15 @@
                 <div class="calculation-summary">
                     <!-- 계산 결과 간단히 보여주는 입력 필드 -->
                     <div class="result-row">
-                        <label>불입금액합계</label>
+                        <label>대출액</label>
                         <input type="text" id="savgTotDpstAmt" name="savgTotDpstAmt" readonly>
                     </div>
                     <div class="result-row">
-                        <label>세전이자</label>
+                        <label>총이자</label>
                         <input type="text" id="savgTotDpstInt" name="savgTotDpstInt" readonly>
                     </div>
                     <div class="result-row">
-                        <label>세전수령액</label>
-                        <input type="text" id="savgTotRcveAmt" name="savgTotRcveAmt" readonly>
-                    </div>
-                    <div class="result-row">
-                        <label>이자과세금</label>
-                        <input type="text" id="savgIntTaxAmt" name="savgIntTaxAmt" readonly>
-                    </div>
-                    <div class="result-row">
-                        <label>세후수령액</label>
+                        <label>총납입금액</label>
                         <input type="text" id="savgAtxRcveAmt" name="savgAtxRcveAmt" readonly>
                     </div>
                 </div>
@@ -337,16 +337,14 @@
                             <thead>
                             <tr>
                                 <th>회차</th>
-                                <th>회차불입금액</th>
-                                <th>누적불입금액</th>
-                                <th>회차이자</th>
-                                <th>회차원리금</th>
+                                <th>월이자</th>
+                                <th>원금</th>
+                                <th>총납입금액</th>
                             </tr>
                             </thead>
                             <tbody>
                             <!-- 회차별 상세 정보 데이터 반복 -->
                             <tr>
-                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -365,6 +363,9 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
+        document.querySelector('.btn-print').addEventListener('click', function () {
+                    window.print();
+                });
 
         document.addEventListener('DOMContentLoaded', function () {
 
@@ -535,7 +536,7 @@
             // 상품 리스트 가져오기
             async function loadProductList(productCode = '', productName = '') {
                 try {
-                    const response = await fetch(`/promotion/cal/productList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
+                    const response = await fetch(`/promotion/cal/loanProductList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const productList = await response.json();
                     renderProductTable(productList);
@@ -605,13 +606,7 @@
                     rateInput.value = product.prodAirMin ? `${product.prodAirMin}` : '';
                 }
 
-                // 이자과세
-                const prodIntTaxTy = document.getElementById('prodIntTaxTy'); // 표시용
-                const prodIntTaxRate = document.getElementById('prodIntTaxRate'); // 계산용
-                const savgIntTaxTyCd = document.getElementById('savgIntTaxTyCd'); // 저장용
-                prodIntTaxTy.value = `${product.prodIntTaxTy} (${product.prodIntTaxRate}%)` || ''; // 예: 일반과세 (15.4%)
-                prodIntTaxRate.value = product.prodIntTaxRate || ''; // 예: 15.4
-                savgIntTaxTyCd.value = product.prodIntTaxTyCd || ''; // 예: 1
+
             }
 
             // 상품 모달 열기
@@ -755,16 +750,14 @@
             resultChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['불입금액합계', '세전이자', '세전수령액', '이자과세금', '세후수령액'],
+                    labels: ['대출액', '총이자', '총납입금액'],
                     datasets: [{
                         label: '계산 결과',
-                        data: [0, 0, 0, 0, 0], // 초기 데이터
+                        data: [0, 0, 0], // 초기 데이터
                         backgroundColor: [
-                            '#4CAF50', // 불입금액합계
-                            '#FF9800', // 세전이자
-                            '#03A9F4', // 세전수령액
-                            '#F44336', // 이자과세금
-                            '#9C27B0'  // 세후수령액
+                            '#4CAF50', // 대출액
+                            '#FF9800', // 총이자
+                            '#03A9F4', // 총납입금액
                         ],
                         borderWidth: 0
                     }]
@@ -808,20 +801,25 @@
             const savgCircleAmt = document.getElementById('savgCircleAmt').value.trim();
             const savgGoalPrd = document.getElementById('savgGoalPrd').value.trim();
             const savgAplyRate = document.getElementById('savgAplyRate').value.trim();
+            const repaymentMethod = document.getElementById('repaymentMethod').value;
 
             // 유효성 검사
             if (!savgCircleAmt || parseFloat(savgCircleAmt) <= 0) {
-                alert('불입금액을 입력하세요.');
+                alert('대출금액을 입력하세요.');
                 return;
             }
             if (!savgGoalPrd || parseInt(savgGoalPrd) <= 0) {
-                alert('목표기간을 입력하세요.');
+                alert('대출기간을 입력하세요.');
                 return;
             }
             if (!savgAplyRate || parseFloat(savgAplyRate) <= 0) {
                 alert('적용금리를 입력하세요.');
                 return;
             }
+            if (repaymentMethod === "선택") {
+                alert('상환 방법을 선택하세요.');
+                return;
+    }
 
             const requestData = {
                 savgCircleAmt: parseFloat(savgCircleAmt.replace(/,/g, '')),
@@ -831,8 +829,25 @@
                 savgStrtDt: document.getElementById('savgStrtDt').value,
             };
 
+            // 상환 방법에 따른 URL 결정
+            let url;
+            switch (repaymentMethod) {
+                case "equalPrincipal":
+                    url = '/promotion/cal/equalPrincipal';
+                    break;
+                case "equalPrincipalAndInterest":
+                    url = '/promotion/cal/equalPrincipalAndInterest';
+                    break;
+                case "lumpSum":
+                    url = '/promotion/cal/lumpSum';
+                    break;
+                default:
+                    alert('잘못된 상환 방법입니다.');
+                    return;
+            }
+
             // 서버 요청
-            fetch('/promotion/cal/savg/calculate', {
+            fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestData),
@@ -852,8 +867,6 @@
         function updateCalculationResults(data) {
             document.getElementById('savgTotDpstAmt').value = data.savgTotDpstAmt.toLocaleString();
             document.getElementById('savgTotDpstInt').value = data.savgTotDpstInt.toLocaleString();
-            document.getElementById('savgTotRcveAmt').value = data.savgTotRcveAmt.toLocaleString();
-            document.getElementById('savgIntTaxAmt').value = data.savgIntTaxAmt.toLocaleString();
             document.getElementById('savgAtxRcveAmt').value = data.savgAtxRcveAmt.toLocaleString();
 
             // 차트 데이터 업데이트
@@ -861,8 +874,6 @@
                 resultChart.data.datasets[0].data = [
                     data.savgTotDpstAmt,
                     data.savgTotDpstInt,
-                    data.savgTotRcveAmt,
-                    data.savgIntTaxAmt,
                     data.savgAtxRcveAmt
                 ];
                 resultChart.update(); // 차트 새로고침
@@ -877,11 +888,10 @@
             data.detailList.forEach((detail) => {
                 const row = `
                     <tr>
-                        <td>${detail.installmentNo}</td>
-                        <td>${detail.installmentAmt.toLocaleString()}</td>
-                        <td>${detail.accumulatedAmt.toLocaleString()}</td>
-                        <td>${detail.installmentInt.toLocaleString()}</td>
-                        <td>${detail.installmentPrincipal.toLocaleString()}</td>
+                        <td>${detail.installment}</td>
+                        <td>${detail.monthlyInterest.toLocaleString()}</td>
+                        <td>${detail.principal.toLocaleString()}</td>
+                        <td>${detail.totalPayment.toLocaleString()}</td>
                     </tr>`;
                 detailTableBody.insertAdjacentHTML('beforeend', row);
             });
@@ -926,6 +936,22 @@
             }
 
             // 유효성 검사가 통과되면 데이터 수집 및 저장
+            const repaymentMethodSelect = document.getElementById('repaymentMethod'); // 셀렉트 박스
+            const repaymentMethodValue = repaymentMethodSelect.value; // 선택된 값
+
+            // 셀렉트 값에 따라 추가 데이터 매핑
+            let repaymentMethodCode;
+            if (repaymentMethodValue === 'equalPrincipal') {
+                repaymentMethodCode = 3;
+            } else if (repaymentMethodValue === 'equalPrincipalAndInterest') {
+                repaymentMethodCode = 1;
+            } else if (repaymentMethodValue === 'lumpSum') {
+                repaymentMethodCode = 2;
+            } else {
+                alert('상환 방법을 선택하세요.');
+                return; // 유효하지 않은 경우 함수 종료
+            }
+
             const savingsSaveDto = {
                 prodSn: prodSn, // 상품번호
                 custId: custId, // 고객ID
@@ -943,15 +969,15 @@
                 savgCircleAmt: parseInt(document.getElementById('savgCircleAmt').value.replace(/,/g, ''), 10), // 회차불입액
                 savgTotDpstAmt: parseInt(document.getElementById('savgTotDpstAmt').value.replace(/,/g, ''), 10), // 불입금합계
                 savgTotDpstInt: parseInt(savgTotDpstInt.replace(/,/g, ''), 10), // 세전이자
-                savgIntTaxAmt: parseInt(document.getElementById('savgIntTaxAmt').value.replace(/,/g, ''), 10), // 이자과세금액
                 savgAtxRcveAmt: parseInt(document.getElementById('savgAtxRcveAmt').value.replace(/,/g, ''), 10), // 세후수령액
+                repaymentMethodCode: repaymentMethodCode // 대출상환방법 코드
             };
 
-            // 데이터 확인 로그
-            console.log('Collected Data:', data);
+<!--            // 데이터 확인 로그-->
+<!--            console.log('Collected Data:', data);-->
 
             // 서버로 POST 요청 전송
-            fetch('/cal/savg/insert', {
+            fetch('/promotion/cal/loan/insert', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

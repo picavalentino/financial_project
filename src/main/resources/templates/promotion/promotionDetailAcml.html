@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<div layout:fragment="content" class="content">
+<div layout:fragment="content" class="content print-area">
     <div class="main-content">
         <!-- 페이지 위치 & 제목 -->
         <section class="page-location">
@@ -32,8 +32,8 @@
 
         <!-- 설계 탭 -->
         <div class="tabs">
-            <button class="tab active" onclick="window.location.href='/promotion/cal'">적금 설계</button>
-            <button class="tab inactive" onclick="window.location.href='/promotion/CalAcml'">목돈마련적금 설계</button>
+            <button class="tab inactive" onclick="window.location.href='/promotion/cal'">적금 설계</button>
+            <button class="tab active" onclick="window.location.href='/promotion/CalAcml'">목돈마련적금 설계</button>
             <button class="tab inactive" onclick="window.location.href='/promotion/CalDpst'">예금 설계</button>
             <button class="tab inactive" onclick="window.location.href='/promotion/CalLoan'">대출 설계</button>
         </div>
@@ -146,7 +146,7 @@
                                 <!-- 상품코드 -->
                                 <input type="text" id="prodCd" name="prodCd" disabled>
                                 <!-- 상품명 -->
-                                <input type="text" id="prodNm" name="prodNm" readonly value="목돈디테일">
+                                <input type="text" id="prodNm" name="prodNm" readonly>
                                 <button><i class="bi bi-search" id="openProductModalButton"></i></button>
                             </div>
 
@@ -170,9 +170,9 @@
                             <div class="button-row">
                                 <input type="text" id="savgCircleAmt" name="savgCircleAmt" value="0">
                                 <div class="button-group">
-                                    <button class="button-plus button-plus-amt">+ 10만원</button>
-                                    <button class="button-plus button-plus-amt">+ 50만원</button>
                                     <button class="button-plus button-plus-amt">+ 100만원</button>
+                                    <button class="button-plus button-plus-amt">+ 500만원</button>
+                                    <button class="button-plus button-plus-amt">+ 1000만원</button>
                                     <button class="button-reset button-reset-amt">정정</button>
                                 </div>
                             </div>
@@ -181,9 +181,9 @@
                             <div class="button-row">
                                 <input type="text" id="savgGoalPrd" name="savgGoalPrd" value="0">
                                 <div class="button-group">
-                                    <button class="button-plus button-plus-prd">+ 3개월</button>
                                     <button class="button-plus button-plus-prd">+ 6개월</button>
                                     <button class="button-plus button-plus-prd">+ 12개월</button>
+                                    <button class="button-plus button-plus-prd">+ 36개월</button>
                                     <button class="button-reset button-reset-prd">정정</button>
                                 </div>
                             </div>
@@ -191,6 +191,7 @@
                             <!-- 적용금리 -->
                             <div class="input-rate">
                                 <select id="selectSavgAplyRate" name="selectSavgAplyRate">
+                                    <option>금리선택</option>
                                     <option value="prodairmin">최소금리</option>
                                     <option value="prodairmax">최대금리</option>
                                 </select>
@@ -281,10 +282,10 @@
                 <button class="btn btn-register">
                     <i class="icon bi bi-plus-circle-fill"></i> 저장
                 </button>
-                <button class="btn btn-print">
+                <button class="btn btn-mail">
                     <i class="icon bi bi-printer"></i> 발송
                 </button>
-                <button class="btn btn-mail">
+                <button class="btn btn-print">
                     <i class="icon bi bi-envelope"></i> 인쇄
                 </button>
                 <button class="btn btn-list" onclick="location.href='/promotion/list'">
@@ -365,6 +366,9 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
+        document.querySelector('.btn-print').addEventListener('click', function () {
+                    window.print();
+                });
 
         document.addEventListener('DOMContentLoaded', function () {
 
@@ -535,7 +539,7 @@
             // 상품 리스트 가져오기
             async function loadProductList(productCode = '', productName = '') {
                 try {
-                    const response = await fetch(`/promotion/cal/productList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
+                    const response = await fetch(`/promotion/cal/AcmlProductList?prodCd=${encodeURIComponent(productCode)}&prodNm=${encodeURIComponent(productName)}`);
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const productList = await response.json();
                     renderProductTable(productList);
@@ -947,11 +951,11 @@
                 savgAtxRcveAmt: parseInt(document.getElementById('savgAtxRcveAmt').value.replace(/,/g, ''), 10), // 세후수령액
             };
 
-            // 데이터 확인 로그
-            console.log('Collected Data:', data);
+<!--            // 데이터 확인 로그-->
+<!--            console.log('Collected Data:', data);-->
 
             // 서버로 POST 요청 전송
-            fetch('/cal/savg/insert', {
+            fetch('/promotion/cal/acml/insert', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
