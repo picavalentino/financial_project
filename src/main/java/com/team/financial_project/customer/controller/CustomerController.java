@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -27,21 +26,39 @@ public class CustomerController {
     }
 
     @GetMapping("/list")
-    public String getCustomerList(@RequestParam(name = "page", defaultValue = "1") int page,
-                                  @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
-                                  Model model) {
-        // 고객 목록 조회 및 총 고객 수 조회
-        List<CustomerDTO> customers = customerService.getCustomersWithPagination(page, pageSize);
-        int totalCustomers = customerService.getTotalCustomerCount();
+    public String getCustomerList(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(name = "searchType", required = false) String searchType,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            Model model) {
+
+        // 검색 조건 기본값 설정
+        searchType = (searchType == null) ? "" : searchType;
+        keyword = (keyword == null) ? "" : keyword;
+
+        // 검색 조건과 키워드에 따라 페이징 처리된 고객 목록 조회
+        List<CustomerDTO> customers = !searchType.isEmpty() && !keyword.isEmpty()
+                ? customerService.searchCustomersWithPagination(page, pageSize, searchType, keyword)
+                : customerService.getCustomersWithPagination(page, pageSize);
+
+        // 검색 조건에 따른 총 고객 수 계산
+        int totalCustomers = !searchType.isEmpty() && !keyword.isEmpty()
+                ? customerService.getTotalCustomerCount(searchType, keyword)
+                : customerService.getTotalCustomerCount(null, null);
         int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
 
         // 모델에 데이터 추가
         model.addAttribute("customers", customers);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("keyword", keyword);
 
-        return "customer/customerList";
+        return "customer/customerList"; // 뷰 이름
     }
+
 
     // 고객 목록 출력 페이지
     @GetMapping("/list/print")
@@ -65,7 +82,6 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("고객 정보를 가져오는 중 오류가 발생했습니다.");
         }
     }
-
 
     /* ================================================================================================================= */
     // 고객 등록 (페이지)

@@ -87,6 +87,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
 /* ========================================================================= */
 /* 체크 박스 */
+document.addEventListener('DOMContentLoaded', function () {
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const customerCheckboxes = document.querySelectorAll('.customer-checkbox');
+
+    selectAllCheckbox.addEventListener('change', function () {
+        customerCheckboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+    });
+
+    customerCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            selectAllCheckbox.checked = Array.from(customerCheckboxes).every(cb => cb.checked);
+        });
+    });
+});
 
 /* ========================================================================= */
 /* 인쇄 */
@@ -104,7 +120,8 @@ function printTable() {
     // 원래 페이지로 복구
     document.body.innerHTML = originalContents;
 }
-
 /* =========================================================================== */
+
+
 
 

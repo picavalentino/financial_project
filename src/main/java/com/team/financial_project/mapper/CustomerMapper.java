@@ -9,11 +9,20 @@ import java.util.List;
 @Mapper
 public interface CustomerMapper {
 
-    // 고객 목록 조회 [ 페이징 처리 ]
+    // 검색 조건이 있는 고객 목록 조회
+    List<CustomerDTO> searchCustomers(@Param("pageSize") int pageSize,
+                                      @Param("offset") int offset,
+                                      @Param("searchType") String searchType,
+                                      @Param("keyword") String keyword);
+
+    // 검색 조건 없는 페이징 처리된 고객 목록 조회
     List<CustomerDTO> getCustomersWithPagination(@Param("limit") int limit, @Param("offset") int offset);
 
-    // 총 고객 수 조회
-    int getTotalCustomerCount();
+    // 검색 조건에 따른 총 고객 수 계산
+    int getCustomerCount(@Param("searchType") String searchType,
+                         @Param("keyword") String keyword);
+
+    // ==============================================================================================================
 
     // 고객 아이디 확인
     CustomerDTO getCustomerById(@Param("custId") String custId);
@@ -29,4 +38,5 @@ public interface CustomerMapper {
 
     // 고객 직업 코드
     List<CustomerDTO> getCustOccpTyCdList();
+
 }
