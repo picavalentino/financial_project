@@ -301,9 +301,90 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =======================================================================================================================
-//메세지 발송 페이지로 이동
-// 모달 열기 및 선택된 데이터 출력
-function openMessageModal() {
+document.addEventListener("DOMContentLoaded", function() {
+    // 기본 메시지 정의
+    const defaultMessage = `[Web 발신]
+안녕하십니까 GS-BANK입니다.
+고객님 평안한 하루 보내고 계십니까
+저는 퇴근 좀 시켜주세요
+제발...
+감사합니다.`;
+
+    // 이벤트 리스너 추가
+    document.querySelector('.message-button').addEventListener('click', function() {
+        openMessageModal(defaultMessage);
+    });
+    document.getElementById('birthday-button').addEventListener('click', showBirthdayCustomers);
+    document.getElementById('general-button').addEventListener('click', function() {
+        showSelectedCustomers();
+        resetMessageBox(defaultMessage);
+    });
+
+    // 페이지 로드 시 기본 메시지 박스 초기화
+    resetMessageBox(defaultMessage);
+});
+
+// 생일인 고객들만 태그로 표시하고 생일 메시지를 준비하는 함수 (생일 버튼 클릭 시)
+function showBirthdayCustomers() {
+    const tagBody = document.getElementById('tagContainer');
+    const allCustomerData = JSON.parse(localStorage.getItem('allCustomerData')) || {};
+    const today = new Date();
+    const monthDay = `${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+
+    // 생일 고객 필터링
+    const birthdayCustomers = Object.values(allCustomerData).filter(customer => {
+        if (customer.birthDate && customer.birthDate.length >= 8) {
+            const customerMonthDay = customer.birthDate.slice(4, 8); // MMDD 부분 추출
+            return customerMonthDay === monthDay;
+        }
+        return false;
+    });
+
+    // 태그 컨테이너 초기화 및 데이터 추가
+    tagBody.innerHTML = '';
+    if (birthdayCustomers.length === 0) {
+        tagBody.innerHTML = '<p id="noCustomerMessage">오늘 생일인 고객이 없습니다.</p>';
+    } else {
+        birthdayCustomers.forEach((customer) => {
+            const newRow = document.createElement('div');
+            newRow.className = 'tag-btn';
+            newRow.innerHTML = `
+                ${customer.custNm} (${customer.custTelno})
+                <span class="close-tag" onclick="removeTag(event)">X</span>
+            `;
+            tagBody.appendChild(newRow);
+        });
+    }
+
+    // 생일 메시지 준비 및 텍스트박스에 설정
+    const messageBox = document.querySelector('.message-box textarea');
+    if (messageBox) {
+        messageBox.value = `[Web 발신]
+안녕하세요, ${today.getFullYear()}년 생일을 맞이하신 고객님!
+GS-BANK에서 생일을 진심으로 축하드립니다.
+건강과 행복이 가득한 한 해 되시기를 기원합니다.
+감사합니다.
+        `;
+    }
+}
+
+// 일반 버튼 클릭 시 선택된 고객 복원 및 메시지 상태 복원 함수
+function showSelectedCustomers() {
+    openMessageModal();
+
+    // 메시지 박스를 기본 메시지로 리셋하는 것은 resetMessageBox()에서 진행됨
+}
+
+// 메시지 박스 초기화 함수
+function resetMessageBox(message) {
+    const messageBox = document.querySelector('.message-box textarea');
+    if (messageBox) {
+        messageBox.value = message;
+    }
+}
+
+// 모달 열기 및 선택된 데이터 출력 (기존 코드 유지)
+function openMessageModal(defaultMessage) {
     // LocalStorage에서 선택된 고객 데이터 불러오기
     const tagBody = document.getElementById('tagContainer');
     const savedState = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
@@ -336,11 +417,14 @@ function openMessageModal() {
         });
     }
 
+    // 메시지 박스를 기본 메시지로 초기화
+    resetMessageBox(defaultMessage);
+
     // 모달 열기
-    document.getElementById('MessageModal').style.display = 'flex';
+    document.getElementById('messageModal').style.display = 'flex';
 }
 
-// 태그 제거 함수
+// 태그 제거 함수 (기존 코드 유지)
 function removeTag(event) {
     event.stopPropagation(); // 클릭 이벤트 전파 방지
     const tagButton = event.target.closest('.tag-btn'); // 부모 태그 버튼 찾기
@@ -352,7 +436,7 @@ function removeTag(event) {
         if (tagContainer.querySelectorAll('.tag-btn').length === 0) {
             const noCustomerMessage = document.createElement('p');
             noCustomerMessage.id = 'noCustomerMessage';
-            noCustomerMessage.textContent = '선택된 데이터가 없습니다. 고객을 선택하세요.';
+            noCustomerMessage.textContent = '선택된 고객이 없습니다.';
             tagContainer.appendChild(noCustomerMessage);
         }
     }
