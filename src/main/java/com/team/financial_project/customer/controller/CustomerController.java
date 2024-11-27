@@ -61,13 +61,6 @@ public class CustomerController {
         return "customer/customerList"; // 뷰 이름
     }
 
-
-    // 고객 목록 출력 페이지
-    @GetMapping("/list/print")
-    public String customerListPrint() {
-        return "customer/customerListModal"; // 고객 목록 출력 페이지로 이동
-    }
-
     /* ================================================================================================================= */
     // 고객 메세지 발송 페이지
     @GetMapping("/list/message")

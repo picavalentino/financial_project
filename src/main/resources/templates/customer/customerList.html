@@ -32,7 +32,7 @@
                 <!-- 왼쪽 버튼 그룹 -->
                 <div class="left-actions">
                     <button class="btn-print" onclick="openPrintModal()"><span class="icon">🖨️</span> 인쇄</button>
-                    <button type="button" class="message-button">
+                    <button type="button" class="message-button" onclick="openMessageModal()">
                         <span class="icon">✉️</span> 메시지 발송
                     </button>
                 </div>
@@ -82,7 +82,16 @@
                 </thead>
                 <!--       ======================================================================================================         -->
                 <tbody>
-                <tr th:each="customer : ${customers}">
+                <tr th:each="customer : ${customers}"
+                    th:attr="data-id=${customer.custId},
+                             data-custid=${customer.custId},
+                             data-custnm=${customer.custNm},
+                             data-birthdate=${customer.birthDate},
+                             data-custtelno=${customer.custTelno},
+                             data-custemail=${customer.custEmail},
+                             data-custcreateat=${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')},
+                             data-custstatecd=${customer.custStateCd},
+                             data-usersname=${customer.users != null && customer.users.user_name != null ? customer.users.user_name : '없음'}">
                     <td>
                         <input type="checkbox"
                                name="selectedCustomers"
@@ -90,7 +99,7 @@
                                th:value="${customer.custId}"
                                onclick="checkSelected()">
                     </td>
-                    <td th:text="${customer.custId}">001</td>
+                    <td th:text="${customer.custId}"></td>
                     <td>
                         <a th:href="@{'/customer/detail/' + ${customer.custId}}" th:text="${customer.custNm}">이름</a>
                     </td>

@@ -213,8 +213,16 @@
     background-color: #f3f8f9;
     padding: 20px;
     border-radius: 10px;
-    width: 800px;
+    width: 1000px;
     position: relative;
+}
+
+/* 테이블 스크롤 컨테이너 */
+.table-scroll-container {
+  max-height: 300px; /* 스크롤 활성화를 위한 고정 높이 */
+  overflow-y: auto; /* 수직 스크롤 활성화 */
+  overflow-x: auto; /* 수평 스크롤 활성화 */
+  margin-top: 10px;
 }
 
 /* 테이블 스타일 */
@@ -226,15 +234,18 @@
     margin-bottom: 20px;
 }
 
-
 .print-table th,
 .print-table td {
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #ddd;
+
 }
 
 .print-table th {
+    position: sticky; /* 테이블 헤더 고정 */
+    top: 0; /* 헤더 고정 위치 */
+
     background-color: #f8f9fa;
     font-weight: bold;
     color: #555;

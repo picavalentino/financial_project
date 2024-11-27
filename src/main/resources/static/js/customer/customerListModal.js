@@ -1,26 +1,6 @@
-// 모든 모달을 닫는 함수
-function closeAllModals() {
-    const modals = document.querySelectorAll(".modal-overlay");
-    modals.forEach(modal => {
-        modal.style.display = "none";
-    });
-}
-
-// 특정 모달 열기 함수
-function openPrintModal() {
-    closeAllModals();  // 다른 모달 닫기
-    document.getElementById("printModal").style.display = "flex";
-}
-
-function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    modal.style.display = "flex"; // 모달을 중앙에 배치
-}
-
-
-// 특정 모달 닫기 함수
+/* 모달 닫기 */
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = "none";
+  document.getElementById(modalId).style.display = 'none';
 }
 
 /* ========================================================================= */
@@ -33,6 +13,11 @@ $(document).ready(function () {
         openModal('insertModal');
     });
 });
+
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = "flex"; // 모달을 중앙에 배치
+}
 
 document.addEventListener("DOMContentLoaded", function() {
     var submitButton = document.getElementById("submitCustomer");
@@ -87,61 +72,103 @@ document.addEventListener("DOMContentLoaded", function() {
 
 /* ========================================================================= */
 /* 체크 박스 */
+/* checkSelected 함수 전역 범위에 정의 */
+window.checkSelected = function () {
+  const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
+  const checkedCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]:checked');
+  const masterCheckbox = document.querySelector('input[name="selectAllCustomers"]');
+
+  // 현재 페이지의 모든 체크박스 상태 확인
+  const currentPageAllSelected = allCheckboxes.length > 0 && allCheckboxes.length === checkedCheckboxes.length;
+
+  // 모든 페이지의 체크박스 상태를 가져오기
+  const savedState = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
+  const allSavedSelected = Object.values(savedState).every((isChecked) => isChecked);
+
+  // "전체 선택" 체크박스는 모든 페이지의 상태에 따라 활성화
+  masterCheckbox.checked = currentPageAllSelected && allSavedSelected;
+
+  // 상태 저장
+  saveSelectedCustomers();
+};
+
+/* 전체선택 체크박스 동작 */
+window.selectAll = function (masterCheckbox) {
+  const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
+  const isChecked = masterCheckbox.checked;
+
+  // 현재 페이지의 모든 체크박스 상태를 마스터 체크박스 상태에 동기화
+  allCheckboxes.forEach((checkbox) => {
+    checkbox.checked = isChecked;
+  });
+
+  // 모든 페이지의 체크박스 상태를 동기화
+  selectAllAcrossPages(isChecked);
+};
+
+/* DOM 로드 시 초기화 */
 document.addEventListener('DOMContentLoaded', () => {
   const masterCheckbox = document.querySelector('input[name="selectAllCustomers"]');
   const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
 
-  // 초기화: 로컬스토리지에서 저장된 상태 복원
+  if (!masterCheckbox || allCheckboxes.length === 0) {
+    console.warn('Master checkbox or individual checkboxes not found.');
+    return;
+  }
+
+  // 상태 복원
   restoreCheckboxState();
 
-  // 이벤트 등록
+  // 마스터 체크박스 클릭 이벤트 등록
   masterCheckbox.addEventListener('click', () => {
-    selectAllAcrossPages(masterCheckbox.checked);
-    saveCheckboxState();
+    selectAll(masterCheckbox);
   });
 
+  // 개별 체크박스 클릭 이벤트 등록
   allCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('click', () => {
-      updateMasterCheckboxState();
-      saveCheckboxState();
+      checkSelected();
     });
   });
 });
 
-/* 전체 선택 체크박스 상태를 모든 페이지 기준으로 업데이트 */
+/* 모든 페이지 기준으로 "전체 선택" 상태를 업데이트 */
 function updateMasterCheckboxState() {
   const savedState = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
   const masterCheckbox = document.querySelector('input[name="selectAllCustomers"]');
+  const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
 
-  // 모든 페이지에서 선택된 상태 확인
-  const allSelected = Object.values(savedState).every((isChecked) => isChecked);
+  // 현재 페이지의 모든 체크박스가 선택되었는지 확인
+  const currentPageAllSelected = allCheckboxes.length > 0 && Array.from(allCheckboxes).every((checkbox) => checkbox.checked);
 
-  // 전체 선택 체크박스 상태 업데이트
-  masterCheckbox.checked = allSelected;
+  // 모든 페이지의 체크박스 상태 확인
+  const allSavedSelected = Object.values(savedState).every((isChecked) => isChecked);
+
+  // "전체 선택" 체크박스는 모든 페이지 기준으로 활성화
+  masterCheckbox.checked = currentPageAllSelected && allSavedSelected;
 }
 
-/* 마스터 체크박스가 모든 페이지의 체크박스를 선택/해제 */
+/* 모든 페이지의 체크박스 상태를 선택/해제 */
 function selectAllAcrossPages(isChecked) {
   const savedState = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
 
-  // 모든 체크박스를 선택/해제
+  // 모든 체크박스 상태를 선택/해제
   Object.keys(savedState).forEach((key) => {
     savedState[key] = isChecked;
   });
 
-  // 현재 페이지의 체크박스 상태 동기화
+  // 현재 페이지 체크박스 상태 업데이트
   const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
   allCheckboxes.forEach((checkbox) => {
-    checkbox.checked = isChecked;
     savedState[checkbox.value] = isChecked;
   });
 
-  // 업데이트된 상태 저장
+  // 저장
   localStorage.setItem('selectedCustomersState', JSON.stringify(savedState));
 }
 
-/* 체크박스 상태를 로컬스토리지에 저장 */
-function saveCheckboxState() {
+// 체크박스 상태를 LocalStorage에 저장
+function saveSelectedCustomers() {
   const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
   const state = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
 
@@ -155,18 +182,40 @@ function saveCheckboxState() {
 /* 로컬스토리지에서 체크박스 상태 복원 */
 function restoreCheckboxState() {
   const savedState = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
-
   const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
+
+  // 현재 페이지의 체크박스 상태 복원
   allCheckboxes.forEach((checkbox) => {
     if (savedState[checkbox.value] !== undefined) {
       checkbox.checked = savedState[checkbox.value];
     }
   });
 
-  // 전체 체크박스 상태 동기화
+  // 마스터 체크박스 상태 동기화
   updateMasterCheckboxState();
 }
 
+// 페이지 로드 시 현재 페이지 데이터를 LocalStorage에 추가
+function saveAllCustomerData() {
+  const allCustomerRows = document.querySelectorAll('tr[data-id]');
+  const existingData = JSON.parse(localStorage.getItem('allCustomerData')) || {};
+
+  allCustomerRows.forEach((row) => {
+    const custId = row.dataset.custid;
+    existingData[custId] = {
+      custId: row.dataset.custid,
+      custNm: row.dataset.custnm,
+      birthDate: row.dataset.birthdate,
+      custTelno: row.dataset.custtelno,
+      custEmail: row.dataset.custemail,
+      custCreateAt: row.dataset.custcreateat,
+      custStateCd: row.dataset.custstatecd,
+      usersName: row.dataset.usersname || '없음',
+    };
+  });
+
+  localStorage.setItem('allCustomerData', JSON.stringify(existingData));
+}
 
 /* ========================================================================= */
 /* 인쇄 */
@@ -185,7 +234,129 @@ function printTable() {
     document.body.innerHTML = originalContents;
 }
 /* =========================================================================== */
+// 인쇄페이지로 이동
 
+// 모달 열기 및 선택된 데이터 출력
+function openPrintModal() {
+  const printTableBody = document.getElementById('print-table-body');
+  const savedState = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
+  const allCustomerData = JSON.parse(localStorage.getItem('allCustomerData')) || {};
+  const selectedData = [];
+
+  // LocalStorage에서 선택된 데이터만 가져오기
+  Object.keys(savedState)
+    .filter((key) => savedState[key]) // 체크된 상태만 필터링
+    .forEach((custId) => {
+      const customer = allCustomerData[custId];
+      if (customer) {
+         selectedData.push(customer); // 데이터가 있는 경우에만 추가
+       }
+    });
+
+  // 테이블 초기화 및 데이터 추가
+  printTableBody.innerHTML = '';
+  if (selectedData.length === 0) {
+    printTableBody.innerHTML = '<tr><td colspan="8">선택된 데이터가 없습니다.</td></tr>';
+  } else {
+    selectedData.forEach((customer) => {
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td>${customer.custId}</td>
+        <td>${customer.custNm}</td>
+        <td>${customer.birthDate}</td>
+        <td>${customer.custTelno}</td>
+        <td>${customer.custEmail}</td>
+        <td>${customer.usersName}</td>
+        <td>${customer.custStateCd}</td>
+        <td>${customer.custCreateAt}</td>
+      `;
+      printTableBody.appendChild(newRow);
+    });
+  }
+
+  // 모달 열기
+  document.getElementById('printModal').style.display = 'flex';
+}
+
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', () => {
+  saveAllCustomerData(); // 현재 페이지 데이터를 LocalStorage에 저장
+  restoreCheckboxState(); // 체크박스 상태 복원
+
+  const checkboxes = document.querySelectorAll('input[name="selectedCustomers"]');
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', saveSelectedCustomers); // 체크박스 변경 시 상태 저장
+  });
+});
+
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', () => {
+  saveAllCustomerData(); // 현재 페이지 데이터를 LocalStorage에 저장
+  restoreCheckboxState(); // 체크박스 상태 복원
+
+  const checkboxes = document.querySelectorAll('input[name="selectedCustomers"]');
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', saveSelectedCustomers); // 체크박스 변경 시 상태 저장
+  });
+});
+
+// =======================================================================================================================
+//메세지 발송 페이지로 이동
+// 모달 열기 및 선택된 데이터 출력
+function openMessageModal() {
+    // LocalStorage에서 선택된 고객 데이터 불러오기
+    const tagBody = document.getElementById('tagContainer');
+    const savedState = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
+    const allCustomerData = JSON.parse(localStorage.getItem('allCustomerData')) || {};
+    const selectedData = [];
+
+    // LocalStorage에서 선택된 데이터만 필터링
+    Object.keys(savedState)
+        .filter((key) => savedState[key]) // 체크된 상태만 필터링
+        .forEach((custId) => {
+            const customer = allCustomerData[custId];
+            if (customer) {
+                selectedData.push(customer); // 데이터가 있는 경우에만 추가
+            }
+        });
+
+    // 태그 컨테이너 초기화 및 데이터 추가
+    tagBody.innerHTML = '';
+    if (selectedData.length === 0) {
+        tagBody.innerHTML = '<p id="noCustomerMessage">선택된 데이터가 없습니다. 고객을 선택하세요.</p>';
+    } else {
+        selectedData.forEach((customer) => {
+            const newRow = document.createElement('div');
+            newRow.className = 'tag-btn';
+            newRow.innerHTML = `
+                ${customer.custNm} (${customer.custTelno})
+                <span class="close-tag" onclick="removeTag(event)">X</span>
+            `;
+            tagBody.appendChild(newRow);
+        });
+    }
+
+    // 모달 열기
+    document.getElementById('MessageModal').style.display = 'flex';
+}
+
+// 태그 제거 함수
+function removeTag(event) {
+    event.stopPropagation(); // 클릭 이벤트 전파 방지
+    const tagButton = event.target.closest('.tag-btn'); // 부모 태그 버튼 찾기
+    if (tagButton) {
+        tagButton.remove(); // 태그 버튼 삭제
+
+        // 선택된 고객이 없으면 안내 메시지 표시
+        const tagContainer = document.getElementById('tagContainer');
+        if (tagContainer.querySelectorAll('.tag-btn').length === 0) {
+            const noCustomerMessage = document.createElement('p');
+            noCustomerMessage.id = 'noCustomerMessage';
+            noCustomerMessage.textContent = '선택된 데이터가 없습니다. 고객을 선택하세요.';
+            tagContainer.appendChild(noCustomerMessage);
+        }
+    }
+}
 
 
 
