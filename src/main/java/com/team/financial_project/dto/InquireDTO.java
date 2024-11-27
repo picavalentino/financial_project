@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InquireDTO {
-    private BigDecimal inqId;
+    private Integer inqId;
     private String userId;
     private String inqTitle;
     private String inqCategory;
@@ -27,4 +27,5 @@ public class InquireDTO {
     private String inqStatus;
     private LocalDateTime inqCreateAt;
     private LocalDateTime inqUpdateAt;
+    private Integer inqCheck;
 }

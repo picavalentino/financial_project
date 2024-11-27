@@ -2,27 +2,28 @@ package com.team.financial_project.inquire.controller;
 
 import com.team.financial_project.dto.InquireDTO;
 import com.team.financial_project.inquire.service.InquireService;
+import com.team.financial_project.main.service.PaginationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Controller
 @RequestMapping("/inquire")
 public class InquireController {
     private final InquireService inquireService;
+    private final PaginationService paginationService;
 
-    public InquireController(InquireService inquireService) {
+    public InquireController(InquireService inquireService, PaginationService paginationService) {
         this.inquireService = inquireService;
+        this.paginationService = paginationService;
     }
 
     //로그인
@@ -33,25 +34,54 @@ public class InquireController {
 
     //게시글 전체 목록
     @GetMapping("/list")
-    public String viewInquireList() {
-        return "/inquire/inquire-list";
+    public String viewInquireList(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+        return searchInquires(null, null, null, null, page, model);
     }
 
     //게시글 조건 검색
     @GetMapping("/search")
-    public String searchInquires(){
+    public String searchInquires(
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keywordType", required = false) String keywordType,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "inqCreateAt", required = false) String createAt,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            Model model
+    ) {
+        int pageSize = 10;
+        int totalInquires = inquireService.countSearchInquires(category, keywordType, keyword, createAt);
+
+        // `totalPages` 계산
+        int totalPages = (int) Math.ceil((double) totalInquires / pageSize);
+        if (totalPages == 0) {
+            totalPages = 1; // 최소 1페이지로 설정
+        }
+
+        // 데이터 추가
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("inquiries", inquireService.searchInquires(category, keywordType, keyword, createAt, page, pageSize));
+
         return "/inquire/inquire-list";
     }
 
-    //게시글 상세보기
-    @GetMapping("/detail/{inqId}")
-    public String viewInquireDetail() {
-        return "/inquire/inquire-detail";
-    }
 
     //게시글 상세보기
-    @GetMapping("/detail")
-    public String viewInquireDetailtest() {
+    @GetMapping("/detail/{inqId}")
+    public String viewInquireDetail(@PathVariable Long inqId, Model model) {
+        // inqId로 게시글 DTO 조회
+        InquireDTO inquireDTO = inquireService.getInquireById(inqId);
+        //카테고리 이름 바꾸기
+        if(inquireDTO.getInqCategory().equals("1")){
+            inquireDTO.setInqCategory("공지사항");
+        }else if(inquireDTO.getInqCategory().equals("2")){
+            inquireDTO.setInqCategory("시스템 관련 문의");
+        }else if(inquireDTO.getInqCategory().equals("3")){
+            inquireDTO.setInqCategory("기타 건의사항");
+        }
+
+        // 조회한 DTO를 Model에 추가
+        model.addAttribute("inquire", inquireDTO);
         return "/inquire/inquire-detail";
     }
 

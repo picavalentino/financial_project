@@ -15,4 +15,76 @@
         #{inqAttachFile5}, CURRENT_TIMESTAMP, '1', '0', '0'
         )
     </insert>
+
+    <select id="searchInquires" resultType="inquireDTO">
+        SELECT
+        inq_id AS inqId,
+        user_id AS userId,
+        inq_title AS inqTitle,
+        inq_category AS inqCategory,
+        inq_anonym AS inqAnonym,
+        inq_content AS inqContent,
+        inq_pwd AS inqPwd,
+        inq_reply AS inqReply,
+        inq_attach_file_1 AS inqAttachFile1,
+        inq_attach_file_2 AS inqAttachFile2,
+        inq_attach_file_3 AS inqAttachFile3,
+        inq_attach_file_4 AS inqAttachFile4,
+        inq_attach_file_5 AS inqAttachFile5,
+        inq_status AS inqStatus,
+        inq_create_at AS inqCreateAt,
+        inq_update_at AS inqUpdateAt,
+        inq_check AS inqCheck
+        FROM t_inquire
+        WHERE 1=1
+        <if test="category != null and category != ''">
+            AND inq_category = #{category}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND ${keywordType} LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="createAt != null and createAt != ''">
+            AND DATE(inq_create_at) = #{createAt}
+        </if>
+        ORDER BY inq_create_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+
+    <select id="countSearchInquires" resultType="int">
+        SELECT COUNT(*) FROM t_inquire
+        WHERE 1=1
+        <if test="category != null and category != ''">
+            AND inq_category = #{category}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND ${keywordType} LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="createAt != null and createAt != ''">
+            AND DATE(inq_create_at) = #{createAt}
+        </if>
+    </select>
+    <select id="getInquireById" resultType="inquireDTO">
+        SELECT
+        inq_id AS inqId,
+        user_id AS userId,
+        inq_title AS inqTitle,
+        inq_category AS inqCategory,
+        inq_anonym AS inqAnonym,
+        inq_content AS inqContent,
+        inq_pwd AS inqPwd,
+        inq_reply AS inqReply,
+        inq_attach_file_1 AS inqAttachFile1,
+        inq_attach_file_2 AS inqAttachFile2,
+        inq_attach_file_3 AS inqAttachFile3,
+        inq_attach_file_4 AS inqAttachFile4,
+        inq_attach_file_5 AS inqAttachFile5,
+        inq_status AS inqStatus,
+        inq_create_at AS inqCreateAt,
+        inq_update_at AS inqUpdateAt,
+        inq_check AS inqCheck
+        FROM t_inquire
+        WHERE inq_id = #{inqId}
+    </select>
+
 </mapper>
