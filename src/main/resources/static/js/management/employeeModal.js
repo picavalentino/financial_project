@@ -30,3 +30,11 @@ $(document).ready(function(){
     });
 });
 
+//// 모든 readonly 요소에 대해 선택 방지
+document.querySelectorAll('input[readonly]').forEach(input => {
+    input.addEventListener('focus', (e) => e.target.blur()); // 포커스 제거
+    input.addEventListener('mousedown', (e) => e.preventDefault()); // 클릭 방지
+    input.addEventListener('selectstart', (e) => e.preventDefault()); // 텍스트 선택 방지
+});
+
+

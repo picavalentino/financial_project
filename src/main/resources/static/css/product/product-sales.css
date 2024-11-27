@@ -1,0 +1,270 @@
+.condition-box, .bottom-content{
+    margin: 20px auto;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    padding-left: 40px;
+    padding-right: 40px;
+    width: 100%;
+    max-width: 1440px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+/* 검색 폼 스타일 */
+#search-form{
+    width: 100%;
+}
+.menu-top, .menu-bottom{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.menu-top {
+    margin-bottom: 10px;
+    margin-right: 20px;
+}
+/* 개별 조건 필드 */
+.condition {
+    display: flex;
+    flex-direction: column; /* 라벨과 입력 필드 수직 배치 */
+    max-width: 300px; /* 최소 크기 */
+    flex: 1; /* 각 필드가 동일한 비율로 확장 */
+    margin-right: 20px;
+}
+.condition label{
+    margin-bottom: 5px;
+}
+.condition input, .condition select {
+    padding: 10px; /* 동일한 패딩 적용 */
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    height: 38px; /* 높이를 명시적으로 지정 */
+    width: 100%;
+    box-sizing: border-box; /* 테두리와 패딩 포함 */
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* 기간 조건 */
+#condition-period {
+    display: flex;
+    flex-direction: row;
+    flex: 2;
+    max-width: 900px;
+    width: 100%;
+}
+
+#condition-period label {
+    margin-bottom: 5px;
+}
+
+#condition-period input,
+#condition-period span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#condition-period input {
+    width: calc(50% - 10px); /* 두 인풋 필드를 반반으로 나눔 */
+}
+
+/* 버튼 그룹 */
+.btn-wrap {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center;
+    gap: 20px;
+    flex: 2; /* 버튼도 동일 비율로 배치 */
+}
+/* 하단 컨텐츠 -------------------------------- */
+.bottom-menu {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: space-between;
+}
+.menu-bottom .condition {
+    display: flex;
+    flex-direction: column;
+    flex: 1.5; /* 기존보다 더 넓게 확장 */
+    max-width: 350px; /* 각 필드의 최대 넓이 조정 */
+    margin-right: 20px;
+}
+/* 테이블 공통 */
+.table-sales {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background-color: #ffffff;
+}
+
+.table-sales th,
+.table-sales td {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  font-size: 14px;
+}
+
+.table-sales th {
+  background-color: #f1f3f5;
+  color: #495057;
+  font-weight: bold;
+}
+
+.table-sales tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.table-sales tbody tr:hover {
+  background-color: #e9ecef;
+}
+/* 매출조회 메인 페이지 테이블 */
+#tb-total-sales{
+
+}
+.bottom-content-top{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.bottom-content-top span{
+    font-size: 20px;
+}
+/* 매출조회 조건 검색 페이지 테이블 */
+
+
+/* 모달창 */
+/* 직원 검색 */
+.staff-search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 입력 필드와 버튼 간의 간격 */
+}
+
+.staff-search-container button {
+    padding: 5px 10px;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background-color: white;
+}
+
+.staff-search-container button i {
+    font-size: 14px;
+}
+
+.staff-search-container button:hover {
+    /*background-color: white;*/
+}
+
+/* Staff Table */
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.staff-table th,
+.staff-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.staff-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.result-item:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    display: flex; /* 플렉스 박스 적용 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    align-items: center; /* 가로 가운데 정렬 */
+    justify-content: center; /* 세로 가운데 정렬 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+#modal-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+#staffSearchInput {
+    width: 80%;
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-align: center;
+}
+
+#staffSearchButton {
+    width: 20%;
+    border: none;
+    border-radius: 5px;
+    padding: 6px;
+    background-color: #1b1f44;
+    color: white;
+}
+
+#staffSearchResults {
+    width: 95%;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+}
