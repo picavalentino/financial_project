@@ -59,4 +59,12 @@ public interface UserMapper {
 
     // employee InsertModal에서 직원등록하기
     void insertEmployee(UserDTO userDTO);
+
+    UserDTO findById(String id);
+
+    List<UserDTO> findUsersByKeyword(String keyword);
+
+    UserDTO certifyByUserTelno(String telno);
+
+    void updateUserFromReg(UserDTO user);
 }

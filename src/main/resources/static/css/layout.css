@@ -17,13 +17,105 @@ body, input::placeholder {
     user-select: none;
 }
 
+.d-flex {
+    display: flex;
+    align-items: stretch; /* 자식 요소를 동일 높이로 맞춤 */
+}
+
+.side-content{
+    height: auto;
+}
+
+/*토글 테스트*/
+/* 토글 버튼 스타일 */
+.navbar-toggler {
+    position: absolute;
+    top: 25px;
+    right: 10px;
+    background-color: transparent; /* 배경색 제거 */
+    border: 1px solid #ddd;
+    z-index: 1060; /* 다른 요소 위에 표시 */
+    border-radius: 3px;
+}
+
+.navbar-toggler-icon {
+    width: 24px; /* 아이콘 크기 */
+    height: 24px; /* 아이콘 크기 */
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; /* 반복 제거 */
+    background-size: contain; /* 아이콘 크기 조정 */
+}
+
+/* 위에서 내려오는 애니메이션 */
+.collapse-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    z-index: 1050;
+    transition: height 0.3s ease-out;
+    background-color: #010535;
+}
+
+.collapse-top.show {
+    height: auto;
+    background-color: #010535;
+}
+
+/* 토글 드랍 스타일 */
+.sidebar-toggle {
+    background-color: #010535;
+    padding: 1rem;
+    border: none;
+}
+
+.sidebar-toggle .btn {
+    font-size: 14px;
+    color: #E5E7FF;
+    border: none;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+.sidebar-toggle .btn:hover {
+    background-color: #E5E7FF;
+    color: #212529;
+}
+
+.sidebar-toggle .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 11px;
+    border-radius: 5px;
+}
+
+.sidebar-toggle .nav-link:hover {
+    background-color: #e9ecef;
+    color: #212529;
+}
+
+.sidebar-toggle .collapse {
+    margin-left: 25px;
+}
+
+
 /* header 영역 */
 .navbar {
     background-color: #010535;
-    height: 87px;
+    height: 80px;
+}
+/* 로고 영역 */
+.logo-container {
+    flex-shrink: 0; /* 로고 크기를 유지 */
+    margin-right: 15px; /* 로고와 북마크 사이 간격 */
 }
 
-#logo img {
+.logo {
     width: 138px;
     height: 41px;
 }
@@ -32,9 +124,56 @@ body, input::placeholder {
     color: #ffffff;
 }
 
+/* 북마크 영역 */
+.bookmark-container {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* 북마크 간 간격 */
+}
+
+.bookmark-item {
+    display: flex; /* 플렉스 박스를 사용하여 자식 요소를 나란히 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    gap: 10px; /* 요소 간 간격 */
+    background-color: #232755; /* 북마크 배경 색상 */
+    border-radius: 8px; /* 모서리를 둥글게 */
+    padding: 10px 15px; /* 내부 여백 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+}
+
+.bookmark-item a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    gap: 10px; /* 아이콘과 텍스트 간 간격 */
+    font-size: 14px;
+}
+
+.bookmark-item .bookmark-icon {
+    height: 14px;
+}
+
+.bookmark-item .img-close {
+    width: 16px;
+    height: 16px;
+    cursor: pointer; /* 마우스를 올리면 클릭 가능 표시 */
+    opacity: 0.8; /* 약간 흐리게 표시 */
+    transition: opacity 0.2s ease; /* 호버 시 부드러운 전환 */
+}
+
+.bookmark-item .img-close:hover {
+    opacity: 1; /* 호버 시 명확하게 표시 */
+}
+
+.ml-auto {
+    margin-left: auto; /* 오른쪽으로 정렬 */
+}
+
 /* sidebar 영역 */
 .sidebar {
-    height: 100vh;
+    height: auto; /* 높이를 콘텐츠 크기에 따라 자동 조절 */
     width: 250px;
     position: relative;
     top: 0;
@@ -54,9 +193,10 @@ body, input::placeholder {
 }
 
 .sidebar .profile img {
-    width: 96px;
-    height: 128px;
-    border-radius: 5%;
+    width: 112px;
+    height: 149px;
+    border-radius: 15%;
+    border: 1.5px solid #000000;
 }
 
 .sidebar .profile h4 {
@@ -126,34 +266,33 @@ body, input::placeholder {
 }
 
 /* 반응형 사이드바 */
+/* 작은 화면에서는 사이드바 숨기기 */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 150px;
-    }
-
-    .sidebar .profile img {
-        width: 72px;
-        height: 96px;
-    }
-
-    .sidebar .profile h4 {
-        font-size: 14px;
-    }
-}
-
-/* 모바일 화면에서 사이드바 숨기기 */
-@media (max-width: 576px) {
     .sidebar {
         display: none;
     }
 
-    .sidebar.show {
+    .collapse #sidebarMenu {
         display: block;
     }
+
+    .log{
+        margin-right: 50px;
+    }
+
+    .bookmark-container {
+        display: none !important;
+    }
 }
+
 
 /* content 영역 */
 .content {
     width: 100%; /* 남은 공간을 차지 */
+    min-height: 100vh; /* 콘텐츠 높이가 화면 높이보다 작으면 화면을 채움 */
+    height: auto;
+    padding: 20px; /* 기본 여백 */
     background-color: #EFEFF1;
+    overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 허용 */
+    box-sizing: border-box;
 }

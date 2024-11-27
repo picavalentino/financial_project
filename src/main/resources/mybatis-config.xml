@@ -2,5 +2,12 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-
+    <typeAliases>
+        <typeAlias type="com.team.financial_project.dto.UserDTO" alias="userDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.MainInquireDTO" alias="mainInquireDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.MainStatisticsGenderDTO" alias="mainStatisticsGenderDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.MainStatisticsAgeDTO" alias="mainStatisticsAgeDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.MainStatisticsSalesDTO" alias="mainStatisticsSalesDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.InquireDTO" alias="inquireDTO"></typeAlias>
+    </typeAliases>
 </configuration>
