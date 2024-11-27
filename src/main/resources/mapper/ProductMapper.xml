@@ -110,24 +110,24 @@
             p.prod_curr_stcd
         FROM tb_product p
         WHERE 1=1
-        <if test="prodTyCd != null and prodTyCd != ''">
-            AND p.prod_ty_cd = #{prodTyCd}
+        <if test="searchParams.prodTyCd != null and searchParams.prodTyCd != ''">
+            AND p.prod_ty_cd = #{searchParams.prodTyCd}
         </if>
-        <if test="prodCurrStcd != null and prodCurrStcd != '' and prodCurrStcd != 'all'">
-            AND p.prod_curr_stcd = #{prodCurrStcd}
+        <if test="searchParams.prodCurrStcd != null and searchParams.prodCurrStcd != ''">
+            AND p.prod_curr_stcd = #{searchParams.prodCurrStcd}
         </if>
-        <if test="prodPayTyCd != null and prodPayTyCd != ''">
-            AND p.prod_pay_ty_cd = #{prodPayTyCd}
+        <if test="searchParams.prodPayTyCd != null and searchParams.prodPayTyCd != ''">
+            AND p.prod_pay_ty_cd = #{searchParams.prodPayTyCd}
         </if>
-        <if test="prodNm != null and prodNm != ''">
-            <bind name="prodNmPattern" value="'%' + prodNm + '%'" />
+        <if test="searchParams.prodNm != null and searchParams.prodNm != ''">
+            <bind name="prodNmPattern" value="'%' + searchParams.prodNm + '%'"/>
             AND p.prod_nm LIKE #{prodNmPattern}
         </if>
-        <if test="prodNtslBgnYmdRange != null">
-            AND p.prod_ntsl_bgn_ymd BETWEEN #{prodNtslBgnYmdRange[0]} AND #{prodNtslBgnYmdRange[1]}
+        <if test="searchParams.prodNtslBgnYmdRange != null">
+            AND p.prod_ntsl_bgn_ymd BETWEEN #{searchParams.prodNtslBgnYmdRange[0]} AND #{searchParams.prodNtslBgnYmdRange[1]}
         </if>
-        <if test="prodNtslEndYmdRange != null">
-            AND p.prod_ntsl_end_ymd BETWEEN #{prodNtslEndYmdRange[0]} AND #{prodNtslEndYmdRange[1]}
+        <if test="searchParams.prodNtslEndYmdRange != null">
+            AND p.prod_ntsl_end_ymd BETWEEN #{searchParams.prodNtslEndYmdRange[0]} AND #{searchParams.prodNtslEndYmdRange[1]}
         </if>
     </select>
 
