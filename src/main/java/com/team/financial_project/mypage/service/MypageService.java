@@ -4,8 +4,10 @@ import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mypage.dto.MypageDTO;
 import com.team.financial_project.mypage.mapper.MypageMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class MypageService {
 
     private final MypageMapper mypageMapper;

@@ -53,24 +53,44 @@ public class MypageController{
     }
 
 
-    @PatchMapping("/mypage/update")
+    @PostMapping("/mypage/update")
     @ResponseBody
-    public ResponseEntity<?> updateUser(@RequestBody MypageDTO mypageDTO) {
+    public String updateUser(@RequestBody MypageDTO mypageDTO) {
         try {
-            System.out.println("수정 요청 데이터: " + mypageDTO); // 디버깅용
+            // 디버깅용으로 받은 데이터 출력
+            System.out.println("Received Data: " + mypageDTO);
 
             // 필요한 필드만 업데이트 처리
             boolean isUpdated = mypageService.updateUserInfo(mypageDTO);
             if (isUpdated) {
-                return ResponseEntity.ok("수정 완료");
+                return "수정 완료";
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패");
+                return "수정 실패";
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+            return "서버 오류 발생";
         }
     }
+
+//    @PostMapping("/mypage/change-password")
+//    @ResponseBody
+//    public  changePassword(@RequestBody MypageDTO mypageDTO) {
+//        try {
+//            System.out.println("수정 요청 데이터: " + mypageDTO); // 디버깅용
+//
+//            // 필요한 필드만 업데이트 처리
+//            boolean isUpdated = mypageService.updateUserInfo(mypageDTO);
+//            if (isUpdated) {
+//                return ResponseEntity.ok("수정 완료");
+//            } else {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+//        }
+//    }
 
 
 
