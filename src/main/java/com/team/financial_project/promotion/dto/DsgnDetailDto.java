@@ -3,6 +3,7 @@ package com.team.financial_project.promotion.dto;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Getter
@@ -30,6 +31,12 @@ public class DsgnDetailDto {
     private String savgTaxRate; // 과세기준
     private String payTerm; // 납입주기
     private BigDecimal newSavgTaxRate; // 과세기준 타입변환
+
+    // 포맷된 금액 반환
+    public String getFormattedSavgGoalAmt() {
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        return decimalFormat.format(savgGoalAmt);
+    }
 
     public BigDecimal getNewSavgTaxRate() {
         return new BigDecimal(this.savgTaxRate); // 변환된 데이터 반환

@@ -223,6 +223,7 @@
             C.CUST_EMAIL AS custEmail,        -- 이메일
             C.CUST_TELNO AS custTelno,        -- 전화번호
             CD.CODE_NM AS custOccp,           -- 직업명
+        .
             C.CUST_ADDR AS custAddr,          -- 주소
             TO_CHAR(C.CUST_CREATE_AT, 'YYYY-MM-DD') AS custCreateAt, -- 작성일자
             U.USER_ID AS userId,              -- 담당자 ID

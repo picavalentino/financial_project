@@ -59,7 +59,9 @@
                             <input type="text" id="custNm" th:value="${savgInfo.custNm}" disabled>
                             <button class="btn-icon" id="openCustomerModalButton"><i class="bi bi-search"></i></button>
                         </div>
-                        <input type="text" id="custBirth" th:value="${savgInfo.custRrn}" disabled>
+                        <input type="text" id="custBirth" th:value="${savgInfo.custRrn.substring(0, 2) <= '22'
+                        ? '20' + savgInfo.custRrn.substring(0, 2) + '-' + savgInfo.custRrn.substring(2, 4) + '-' + savgInfo.custRrn.substring(4, 6)
+                        : '19' + savgInfo.custRrn.substring(0, 2) + '-' + savgInfo.custRrn.substring(2, 4) + '-' + savgInfo.custRrn.substring(4, 6)}" disabled>
                         <input type="text" id="custEmail" th:value="${savgInfo.custEmail}" disabled>
                         <input type="text" id="custTelno" th:value="${savgInfo.custTelno}" disabled>
                         <input type="text" id="custOccp" th:value="${savgInfo.codeNm}" disabled>
@@ -162,7 +164,7 @@
 
                             <!-- 불입금액 -->
                             <div class="button-row">
-                                <input type="text" id="savgCircleAmt" name="savgCircleAmt" th:value="${savgInfo.savgGoalAmt}">
+                                <input type="text" id="savgCircleAmt" name="savgCircleAmt" th:value="${savgInfo.formattedSavgGoalAmt}">
                                 <div class="button-group">
                                     <button class="button-plus button-plus-amt">+ 10만원</button>
                                     <button class="button-plus button-plus-amt">+ 50만원</button>
