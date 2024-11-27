@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -67,4 +68,7 @@ public interface UserMapper {
     UserDTO certifyByUserTelno(String telno);
 
     void updateUserFromReg(UserDTO user);
+
+    // 상품등록페이지: 담당자 검색
+    List<Map<String, Object>> findByNameContaining(@Param("name") String name);
 }
