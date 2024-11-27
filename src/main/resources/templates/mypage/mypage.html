@@ -69,7 +69,7 @@
             <div class="mycustomer">
                 <div id="mycustomer_title">
                     <p>나의 고객 정보:</p>
-                    <button type="button">더보기</button>
+                    <a href="@{/customer/list}" ><button type="button" id="customerMoreBtn">더보기</button></a>
                 </div>
 
                 <table id="mycustomer_table">
@@ -96,7 +96,7 @@
             <div class="myboard">
                 <div id="myboard_title">
                     <p>내 작성글:</p>
-                    <button type="button">더보기</button>
+                    <a href="@{/board/list}"><button type="button" id="inquireMoreBtn">더보기</button></a>
                 </div>
 
                 <table id="myboard_table">
@@ -172,6 +172,7 @@
             $eyeClose.hide(); // 닫힘 아이콘 숨기기
         }
     });
+
 
       // CSRF 토큰 및 헤더 가져오기
     const csrfTokenMeta = document.querySelector("meta[name='_csrf']");
