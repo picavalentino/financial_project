@@ -43,7 +43,6 @@ body {
     align-items: center;
     background-color: #ecececa3;
     position: relative;
-    z-index: 1;
 }
 
 .login{
@@ -140,4 +139,6 @@ body {
     height: auto;
     padding: 30px 40px;
     border-radius: 10px;
+    top: auto;
+    left: auto;
 }

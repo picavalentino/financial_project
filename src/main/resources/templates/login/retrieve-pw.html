@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="retrieve-pw" class="pw-modal" id="pw-modal">
+<div th:fragment="retrieve-pw" class="modal" id="pw-modal">
+    <link rel="stylesheet" th:href="@{/css/login/retrieve-pw.css}">
     <div class="title input-box">
         <div class="text">비밀번호 찾기</div>
         <button type="button" class="btn btn-link p-0 ms-2" id="btn-pw-cross">
@@ -46,6 +47,8 @@
         <input type="button" value="초기화" class="btn-reset mt-3" id="btn-reset" >
         <input type="button" value="변경" class="btn-change mt-3" id="btn-change" >
     </div>
+
+    <script th:src="@{/js/login/retrieve-pw.js}"></script>
 </div>
 </body>
 </html>
