@@ -19,18 +19,23 @@
     max-width: 300px;
     flex: 1; /* 각 필드가 동일한 비율로 확장 */
     margin-right: 20px;
+    margin-left: auto;
 }
 
 .condition input, .condition select {
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    height: 38px;
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
-    background-color: white;
+     padding: 0 10px; /* 좌우 padding만 설정 */
+     font-size: 14px;
+     border: 1px solid #ced4da;
+     border-radius: 5px;
+     height: auto; /* 고정 높이 대신 자동으로 설정 */
+     min-height: 38px; /* 최소 높이 설정 */
+     width: 100%;
+     box-sizing: border-box;
+     text-align: center; /* 가로 중앙 정렬 */
+     display: flex; /* Flexbox로 정렬 */
+     align-items: center; /* Flexbox로 세로 중앙 정렬 */
+     justify-content: center; /* Flexbox로 가로 중앙 정렬 */
+     background-color: white;
 }
 
 /* 하위 콘텐츠 */

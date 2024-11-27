@@ -108,12 +108,4 @@ public class ManagementService {
         userMapper.insertEmployee(userDTO);
     }
 
-    public int getTotalAuthCount(String auth) {
-        return userMapper.getTotalAuthCount(auth);
-    }
-
-    public List<UserDTO> getauthList(int page, int pageSize, String auth) {
-        int offset = (page - 1) * pageSize; // 오프셋 계산
-        return userMapper.getauthList(offset, pageSize, auth); // Mapper 메소드 호출
-    }
 }

@@ -289,24 +289,6 @@
         SELECT * FROM tb_user WHERE user_telno=#{telno}
     </select>
 
-    <select id="getTotalAuthCount" resultType="java.lang.Integer">
-        SELECT count(*)
-        FROM
-        tb_code
-        WHERE
-        code_cl = '101'   -- 101번 권한 코드임
-    </select>
-
-    <select id="getauthList" resultType="com.team.financial_project.dto.UserDTO">
-        SELECT *
-        FROM tb_code
-        WHERE code_cl LIKE '101'  <!-- 권한 코드 101에 해당하는 데이터만 -->
-        <if test="auth != null and auth != ''">
-            AND auth_name LIKE CONCAT('%', #{auth}, '%') <!-- auth가 null이 아니고, 빈 문자열이 아닐 경우 -->
-        </if>
-        LIMIT #{pageSize} OFFSET #{offset} <!-- 페이징 처리 -->
-    </select>
-
     <!--  등록버튼 동작  -->
     <update id="updateUserFromReg" parameterType="com.team.financial_project.dto.UserDTO">
         UPDATE tb_user
