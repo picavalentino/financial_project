@@ -24,7 +24,7 @@
                          th:src="${mypageDTO.userImgpath != null ? mypageDTO.userImgpath : '/css/mypage/img/mypage_default_profile.jpg'}"
                          alt="Profile Image" />
                     <label for="file" class="custom-file-upload">파일 선택</label>
-                    <input type="file" id="file" name="profileImage">
+                    <input type="file" id="file" name="profileImage" accept="image/*">
                     <button type="button" id="pw_edit">비밀번호 변경하기</button>
                 </div>
                 <div class="input_box">
@@ -126,18 +126,17 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>비밀번호 변경하기</h2>
-            <form id="passwordChangeForm" method="POST" action="/mypage/update" enctype="multipart/form-data">
+            <form id="passwordChangeForm" method="POST" action="/mypage/change-password" enctype="multipart/form-data">
                 <label for="newPassword">변경 비밀번호</label>
                 <div class="password-wrapper">
-                    <input type="password" id="newPassword" placeholder="비밀번호를 입력해주세요.">
+                    <input type="password" id="newPassword" name="newPassword" placeholder="비밀번호를 입력해주세요.">
                     <button type="button" id="eyeIcon" class="eye-button">
                         <img id="eye-open" th:src="@{/images/common/icon-eye.png}" alt="눈 이미지" style="display: block;">
                         <img id="eye-close" th:src="@{/images/common/icon-hide.png}" alt="숨김 이미지" style="display: none;">
                     </button>
-
                 </div>
                 <label for="confirmPassword">비밀번호 확인</label>
-                <input type="password" id="confirmPassword" placeholder="비밀번호를 입력해주세요.">
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호를 입력해주세요.">
                 <button class="modal-button" type="button" id="changePasswordBtn">변경</button>
             </form>
         </div>
@@ -224,7 +223,25 @@
         }
     });
 });
-
+ $("#file").on("change", function (event) {
+        const file = event.target.files[0]; // 선택된 파일
+        if (file) {
+            // 파일이 이미지인지 확인
+            if (file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // 이미지 미리보기 표시
+                    $("#profile_img").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(file); // 파일을 Data URL로 읽기
+            } else {
+                alert("이미지 파일만 업로드 가능합니다.");
+                // 입력 값 초기화
+                $(this).val("");
+                $("#profile_img").attr("src", '/css/mypage/img/mypage_default_profile.jpg'); // 기본 이미지로 복원
+            }
+        }
+    });
 
      const $modal = $("#passwordModal"); // 모달창
     const $openBtn = $("#pw_edit"); // 열기 버튼
@@ -249,32 +266,6 @@
         }
     });
 
-   $changePasswordBtn.on("click", function () {
-        const newPassword = $("#newPassword").val();
-        const confirmPassword = $("#confirmPassword").val();
-
-        if (newPassword === confirmPassword && newPassword !== "") {
-            const passwordUpdateData = { newPassword };
-
-            // 비밀번호 변경 AJAX 요청
-            $.ajax({
-                type: "POST",
-                url: "/mypage/update/password",
-                contentType: "application/json",
-                data: JSON.stringify(passwordUpdateData),
-                success: function (response) {
-                    alert("비밀번호가 성공적으로 변경되었습니다.");
-                    $modal.fadeOut(); // 비밀번호 변경 성공 시 모달 닫기
-                },
-                error: function (error) {
-                    console.error("비밀번호 변경 실패:", error);
-                    alert("비밀번호 변경에 실패했습니다.");
-                }
-            });
-        } else {
-            alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
-        }
-    });
 
 
 
@@ -355,6 +346,48 @@
             },
         });
     }
+
+     // 비밀번호 변경 버튼 클릭 이벤트
+    $("#changePasswordBtn").on("click", function () {
+        const newPassword = $("#newPassword").val();
+        const confirmPassword = $("#confirmPassword").val();
+
+        // 비밀번호 유효성 검사
+        if (!newPassword || !confirmPassword) {
+            alert("비밀번호를 입력해주세요.");
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+            return;
+        }
+
+        // CSRF 토큰 설정
+        const csrfToken = $('meta[name="_csrf"]').attr("content");
+        const csrfHeader = $('meta[name="_csrf_header"]').attr("content");
+
+        // AJAX 요청으로 서버에 비밀번호 전달
+        $.ajax({
+            type: "POST",
+            url: "/mypage/change-password",
+            data: {
+                newPassword: newPassword,
+                confirmPassword: confirmPassword
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 헤더 추가
+            },
+            success: function (response) {
+                alert("비밀번호가 성공적으로 변경되었습니다!");
+                location.reload(); // 성공 시 페이지 새로고침
+            },
+            error: function (xhr) {
+                console.error("오류 발생:", xhr.responseText);
+                alert("비밀번호 변경 중 오류가 발생했습니다. 다시 시도해주세요.");
+            },
+        });
+    });
+
 
     // 데이터 가져오기 호출
     fetchAndRenderData();

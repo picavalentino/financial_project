@@ -6,6 +6,7 @@ import com.team.financial_project.mypage.dto.MypageDTO;
 import com.team.financial_project.mypage.mapper.MypageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,11 +19,11 @@ import java.util.UUID;
 @Transactional
 public class MypageService {
     private final MypageMapper mypageMapper;
-    private final S3Service s3Service;
+    private final BCryptPasswordEncoder pwEncoder;
 
-    public MypageService(MypageMapper mypageMapper, S3Service s3Service) {
+    public MypageService(MypageMapper mypageMapper, BCryptPasswordEncoder pwEncoder) {
         this.mypageMapper = mypageMapper;
-        this.s3Service = s3Service;
+        this.pwEncoder = pwEncoder;
     }
 
 
@@ -51,7 +52,19 @@ public class MypageService {
             return false;
         }
     }
+    public boolean updateUserPassword(String userId, String plainPassword) {
+        try {
+            // 비밀번호 암호화
+            String encryptedPassword = pwEncoder.encode(plainPassword);
 
+            // MyBatis Mapper를 사용하여 업데이트 실행
+            int rowsAffected = mypageMapper.updatePassword(userId, encryptedPassword);
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 }

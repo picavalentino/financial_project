@@ -1,6 +1,5 @@
 package com.team.financial_project.mypage.controller;
 
-import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.login.service.RegisterService;
 import com.team.financial_project.main.service.S3Service;
 import com.team.financial_project.mypage.dto.MypageDTO;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -43,6 +40,7 @@ public class MypageController{
 
         // 1. 인증된 사용자 ID 가져오기
         String userId = getAuthenticatedUserId();
+
 
         // 2. 서비스 호출하여 사용자 정보 조회
         MypageDTO mypageDTO = mypageService.getMypageByUserId(userId);
@@ -115,24 +113,35 @@ public class MypageController{
 
 
 
-//    @PostMapping("/mypage/change-password")
-//    @ResponseBody
-//    public  changePassword(@RequestBody MypageDTO mypageDTO) {
-//        try {
-//            System.out.println("수정 요청 데이터: " + mypageDTO); // 디버깅용
-//
-//            // 필요한 필드만 업데이트 처리
-//            boolean isUpdated = mypageService.updateUserInfo(mypageDTO);
-//            if (isUpdated) {
-//                return ResponseEntity.ok("수정 완료");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
-//        }
-//    }
+    @PostMapping("/mypage/change-password")
+    @ResponseBody
+    public ResponseEntity<?> changePassword(@RequestParam("newPassword") String newPassword,
+                                            @RequestParam("confirmPassword") String confirmPassword    ) {
+        try {
+            // 비밀번호 일치 여부 확인
+            if (!newPassword.equals(confirmPassword)) {
+                return ResponseEntity.badRequest().body("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            }
+
+            // 현재 사용자 ID 가져오기 (예: SecurityContextHolder 사용)
+            String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+
+            // 서비스 호출
+            boolean isUpdated = mypageService.updateUserPassword(userId, newPassword);
+
+            if (isUpdated) {
+                return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 변경에 실패했습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경 중 오류가 발생했습니다.");
+        }
+    }
+
+
 
 
 

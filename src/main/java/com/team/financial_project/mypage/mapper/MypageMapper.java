@@ -17,5 +17,7 @@ public interface MypageMapper {
 
     int updateUser(MypageDTO mypageDTO);
     int updateUserInfo(MypageDTO mypageDTO);
+    int updatePassword(@Param("userId") String userId, @Param("encryptedPassword") String encryptedPassword);
+
 
 }
