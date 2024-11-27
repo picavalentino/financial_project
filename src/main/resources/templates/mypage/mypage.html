@@ -7,15 +7,17 @@
     <title>마이페이지</title>
     <link rel="stylesheet" th:href="@{/css/mypage/mypage.css}">
 </head>
-
+<meta name="_csrf" th:content="${_csrf.token}">
+<meta name="_csrf_header" th:content="${_csrf.headerName}">
 <body>
 <div layout:fragment="content" class="content">
     <h1>나의 정보</h1>
     <div class="content1">
         <div class="mypage_right">
+            <meta name="_csrf" th:content="${_csrf.token}">
+            <meta name="_csrf_header" th:content="${_csrf.headerName}">
             <form id="updateForm" method="POST" action="/mypage/update" enctype="multipart/form-data">
-                <!-- CSRF 토큰 추가 -->
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                <input type="hidden" id="hidden_user_id" name="userId" th:value="${mypageDTO.userId}">
 
                 <div id="myprofile_mid">
                     <img id="profile_img"
@@ -42,20 +44,21 @@
                     </div>
                     <div id="myprofile_right">
                         <p>이름 <br>
-                            <input type="text" id="user_name" name="userName" th:value="${mypageDTO.userName}">
+                            <input type="text" id="user_name" name="userName" th:value="${mypageDTO.userName}" disabled>
                         </p>
                         <div class="phone">
                             <p>휴대전화 <br>
-                                <input class="phone" type="text" id="phone_input1" name="phonePart1" th:value="${#strings.substring(mypageDTO.userTelno, 0, 3)}"> -
-                                <input class="phone" type="text" id="phone_input2" name="phonePart2" th:value="${#strings.substring(mypageDTO.userTelno, 4, 8)}"> -
-                                <input class="phone" type="text" id="phone_input3" name="phonePart3" th:value="${#strings.substring(mypageDTO.userTelno, 9)}">
+                                <input class="phone" type="text" id="phone_input1" name="phonePart1" th:value="${#strings.substring(mypageDTO.userTelno, 0, 3)}" disabled> -
+                                <input class="phone" type="text" id="phone_input2" name="phonePart2" th:value="${#strings.substring(mypageDTO.userTelno, 4, 8)}" disabled> -
+                                <input class="phone" type="text" id="phone_input3" name="phonePart3" th:value="${#strings.substring(mypageDTO.userTelno, 9)}" disabled>
                             </p>
                         </div>
                         <p>E-Mail <br>
-                            <input type="email" id="user_email" name="userEmail" th:value="${mypageDTO.userEmail}">
+                            <input type="email" id="user_email" name="userEmail" th:value="${mypageDTO.userEmail}" disabled>
                         </p>
                         <div class="buttons">
-                            <button type="submit" id="adminButton">등록하기</button>
+                            <button type="button" id="editButton">수정하기</button>
+                            <button type="submit" id="submitButton">등록하기</button>
                         </div>
                     </div>
                 </div>
@@ -171,54 +174,58 @@
         }
     });
 
+      // CSRF 토큰 및 헤더 가져오기
+    const csrfTokenMeta = document.querySelector("meta[name='_csrf']");
+    const csrfHeaderMeta = document.querySelector("meta[name='_csrf_header']");
+
+    // CSRF 토큰과 헤더 값 확인
+    if (!csrfTokenMeta || !csrfHeaderMeta) {
+        console.error("CSRF 메타 태그를 찾을 수 없습니다.");
+        return;
+    }
+
+    const csrfToken = csrfTokenMeta.getAttribute("content");
+    const csrfHeader = csrfHeaderMeta.getAttribute("content");
+
     // "수정하기" 버튼 클릭 시
-    $editButton.on("click", function () {
+    $("#editButton").on("click", function () {
         console.log("수정하기 버튼 클릭됨");
         $(".phone").prop("disabled", false);
         $("#user_name").prop("disabled", false);
-        $email.prop("disabled", false); // 이메일 필드 활성화
+        $("#user_email").prop("disabled", false);
     });
 
-    // "등록하기" 버튼 클릭 시
-    $adminButton.on("click", function () {
-        console.log("등록하기 버튼 클릭됨");
-         $(".phone").prop("disabled", true);
-        $("#user_name").prop("disabled", true); // 비활성화 해제 (폼에 데이터 포함)
-        $email.prop("disabled", false);
-        $form.submit(); // 폼 제출
-    });
-
-    // 폼 제출 시 AJAX 처리
   $("#updateForm").on("submit", function (event) {
     event.preventDefault();
 
-    // 사용자 정보 업데이트 데이터 객체
-    const userUpdateData = {
-        userId: $("#user_id").val(),
-        userName: $("#user_name").val(),
-        userEmail: $("#user_email").val(),
-        userTelno: $("#phone_input1").val() + "-" + $("#phone_input2").val() + "-" + $("#phone_input3").val(),
-        userImgpath: $("#file").val()
-    };
+    const formData = new FormData(this);
 
-    // 사용자 정보 업데이트 AJAX 요청
-   const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-$.ajax({
-    type: "POST",
-    url: "/mypage/update",
-    contentType: "application/json",
-    headers: { [csrfHeader]: csrfToken }, // CSRF 토큰 추가
-    data: JSON.stringify(userUpdateData),
-    success: function(response) {
-        alert("사용자 정보가 성공적으로 수정되었습니다!");
-    },
-    error: function(xhr, status, error) {
-        console.error("서버 오류:", xhr.responseText);
-        alert("서버에서 오류가 발생했습니다. 관리자에게 문의하세요.");
+    // 디버깅: FormData 값 확인
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
     }
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+    $.ajax({
+        type: "POST",
+        url: "/mypage/update",
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: { [csrfHeader]: csrfToken },
+        success: function (response) {
+            alert("사용자 정보가 성공적으로 수정되었습니다!");
+        },
+        error: function (xhr, status, error) {
+            console.error("서버 오류:", xhr.responseText);
+            alert("서버에서 오류가 발생했습니다. 관리자에게 문의하세요.");
+        }
+    });
 });
+
+
      const $modal = $("#passwordModal"); // 모달창
     const $openBtn = $("#pw_edit"); // 열기 버튼
     const $closeBtn = $(".close"); // 닫기 버튼

@@ -28,6 +28,12 @@ public class MypageDTO {
         // 나의 상품 정보 리스트
         private List<CustProdDTO> custProds;
 
+    public MypageDTO(String userId, String userName, String userEmail, String userTelno) {
+    }
+
+        public MypageDTO() {
+
+        }
 }
 
 

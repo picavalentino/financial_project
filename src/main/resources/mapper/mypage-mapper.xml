@@ -76,5 +76,13 @@
         WHERE user_id = #{userId}
     </update>
 
+    <update id="updateUserInfo" parameterType="com.team.financial_project.mypage.dto.MypageDTO">
+        UPDATE tb_user
+        SET
+        user_email = #{userEmail},
+        user_telno = #{userTelno},
+        user_imgpath = #{userImgpath}
+        WHERE user_id = #{userId}
+    </update>
 
 </mapper>

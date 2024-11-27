@@ -16,4 +16,6 @@ public interface MypageMapper {
     List<CustProdDTO> selectCustProdsByUserId(String userId); // 가입 상품 리스트
 
     int updateUser(MypageDTO mypageDTO);
+    int updateUserInfo(MypageDTO mypageDTO);
+
 }
