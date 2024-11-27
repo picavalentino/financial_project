@@ -30,7 +30,7 @@
     <div class="top">
       <h1 class="title">상품목록조회</h1>
       <div class="condition-box">
-        <form id="searchForm" action="/product/search" method="GET">
+        <form id="searchForm" action="/product/list" method="GET">
         <div class="menu-top">
           <div class="condition">
             <label>상품유형</label>
@@ -45,7 +45,7 @@
             <label>판매상태</label>
             <select name="prodCurrStcd" id="prodCurrStcd">
               <option value="1">판매</option>
-              <option value="0">준비</option>
+              <option value="0">판매대기</option>
               <option value="2">판매종료</option>
               <option value="all">전체</option>
             </select>

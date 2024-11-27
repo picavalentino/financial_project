@@ -18,14 +18,103 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductDTO> findAll() {
-        List<ProductDTO> list = productMapper.findAll();
+    // 매핑 데이터 정의
+    private static final Map<String, String> PAY_TYPE_MAP = Map.of(
+            "1", "월납",
+            "3", "3개월납",
+            "6", "6개월납",
+            "8", "연납",
+            "9", "일시납"
+    );
+
+    private static final Map<String, String> TAX_TYPE_MAP = Map.of(
+            "1", "일반과세",
+            "2", "세금우대",
+            "3", "비과세"
+    );
+
+    private static final Map<String, String> CURR_STCD_TYPE_MAP = Map.of(
+            "0", "판매대기",
+            "1", "판매중",
+            "2", "판매종료"
+    );
+
+    private static final Map<String, String> PROD_TYPE_MAP = Map.of(
+            "1", "적금",
+            "2", "예금",
+            "3", "대출"
+    );
+
+    private static final Map<String, String> SBSTG_TYPE_MAP = Map.of(
+            "1", "일반개인",
+            "2", "청년생활지원",
+            "3", "장애자우선지원"
+    );
+
+    // 단일 ProductDTO에 매핑 적용
+    private void applyMappingsToProduct(ProductDTO product) {
+        if (product.getProdPayTyCd() != null) {
+            product.setProdPayTyCd(PAY_TYPE_MAP.getOrDefault(product.getProdPayTyCd(), product.getProdPayTyCd()));
+        }
+        if (product.getProdIntTaxTyCd() != null) {
+            product.setProdIntTaxTyCd(TAX_TYPE_MAP.getOrDefault(product.getProdIntTaxTyCd(), product.getProdIntTaxTyCd()));
+        }
+        if (product.getProdCurrStcd() != null) {
+            product.setProdCurrStcd(CURR_STCD_TYPE_MAP.getOrDefault(product.getProdCurrStcd(), product.getProdCurrStcd()));
+        }
+        if (product.getProdTyCd() != null) {
+            product.setProdTyCd(PROD_TYPE_MAP.getOrDefault(product.getProdTyCd(), product.getProdTyCd()));
+        }
+        if (product.getProdSbstgTyCd() != null) {
+            product.setProdSbstgTyCd(SBSTG_TYPE_MAP.getOrDefault(product.getProdSbstgTyCd(), product.getProdSbstgTyCd()));
+        }
+    }
+
+    // 전체 ProductDTO 리스트에 매핑 적용
+    private void applyMappingsToProducts(List<ProductDTO> products) {
+        for (ProductDTO product : products) {
+            applyMappingsToProduct(product);
+        }
+    }
+
+    // 전체 리스트 조회
+    public List<ProductDTO> findAllList() {
+        List<ProductDTO> list = productMapper.findAllList();
+        applyMappingsToProducts(list); // 매핑 적용
         log.info("product list: " + list);
         return list;
     }
 
+    // 검색 조건에 따른 리스트 조회
+    public List<ProductDTO> searchProducts(Map<String, Object> searchParams) {
+        List<ProductDTO> list = productMapper.searchProducts(searchParams);
+        applyMappingsToProducts(list); // 매핑 적용
+        log.info("searched product list: " + list);
+        return list;
+    }
+
+    // 정렬된 리스트 조회
+    public List<ProductDTO> getSortedProducts(String sortColumn, String sortDirection) {
+        if (sortColumn == null || sortColumn.isEmpty()) {
+            sortColumn = "prodCd"; // 기본 정렬 기준
+        }
+        if (!"asc".equals(sortDirection) && !"desc".equals(sortDirection)) {
+            sortDirection = "asc"; // 기본 정렬 방향
+        }
+        List<ProductDTO> list = productMapper.getProductsSorted(sortColumn, sortDirection);
+        applyMappingsToProducts(list); // 매핑 적용
+        log.info("sorted product list: " + list);
+        return list;
+    }
+
+    // 단일 제품 조회
     public ProductDTO findById(Long prodSn) {
-        return productMapper.findById(prodSn);
+        ProductDTO product = productMapper.findById(prodSn);
+        if (product != null) {
+            applyMappingsToProduct(product); // 매핑 적용
+        }
+        log.info("found product: " + product);
+        return product;
     }
 
     public void updateProduct(ProductDTO dto) {
@@ -88,20 +177,4 @@ public class ProductService {
         System.out.println("### create prodCd: " + dto.getProdCd());
         productMapper.insertProduct(dto);
     }
-
-    public List<ProductDTO> searchProducts(Map<String, Object> searchParams) {
-        List<ProductDTO> list = productMapper.searchProducts(searchParams);
-        return list;
-    }
-
-    public List<ProductDTO> getSortedProducts(String sortColumn, String sortDirection) {
-        if (sortColumn == null || sortColumn.isEmpty()) {
-            sortColumn = "prodCd"; // 기본 정렬 기준
-        }
-        if (!sortDirection.equals("asc") && !sortDirection.equals("desc")) {
-            sortDirection = "asc"; // 기본 정렬 방향
-        }
-        return productMapper.getProductsSorted(sortColumn, sortDirection);
-    }
-
 }

@@ -1,3 +1,7 @@
+// CSRF 토큰 가져오기
+let csrfToken = $('meta[name="_csrf"]').attr('content');
+let csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
 // formatNumber 함수 정의
 function formatNumber(input) {
     // 기존 입력값에서 숫자만 추출
@@ -11,93 +15,83 @@ function formatNumber(input) {
 }
 
 $(document).ready(function () {
-    // CSRF 토큰 가져오기
-    let csrfToken = $('meta[name="_csrf"]').attr('content');
-    let csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+    // 필드 유효성 검사 함수
+    function validateForm() {
+        let isValid = true;
+        let errorMessage = "";
+        let firstInvalidField = null; // 가장 먼저 비어 있는 필드를 찾기 위한 변수
 
-    // 초기 값 저장
-    $("input[name='prodAirMin'], input[name='prodAirMax'], input[name='prodAirBgnYmd'], input[name='prodAirEndYmd'], input[name='prodNtslBgnYmd'], input[name='prodNtslEndYmd']").each(function () {
-        $(this).attr("data-original-value", $(this).val());
-    });
-
-    // 수정 버튼 클릭
-    $("#btn-register").on("click", function (e) {
-        e.preventDefault(); // 기본 동작 방지
-        const productId = $("input[name='prodSn']").val(); // 상품 ID
-        if (!productId) {
-            alert("상품 ID가 유효하지 않습니다.");
-            return;
-        }
-        const updateUrl = `/product/detail/${productId}/update`; // 수정 요청 URL
-
-        // 변경된 데이터 추출
-        const changedData = { prodSn: productId }; // prodSn을 항상 포함
-        $("input[name='prodAirMin'], input[name='prodAirMax'], input[name='prodAirBgnYmd'], input[name='prodAirEndYmd'], input[name='prodNtslBgnYmd'], input[name='prodNtslEndYmd']").each(function () {
-            const originalValue = $(this).attr("data-original-value");
-            const currentValue = $(this).val();
-            if (originalValue !== currentValue) {
-                changedData[$(this).attr("name")] = currentValue;
+        // 모든 input, select 태그 순회하며 값 확인
+        $("#product-form").find("input, select").each(function () {
+            const value = $(this).val().trim();
+            if (!value) {
+                if (!firstInvalidField) {
+                    // 비어 있는 필드의 레이블 텍스트 가져오기
+                    const label = $(this).closest("tr").find("th label").text();
+                    firstInvalidField = label;
+                }
             }
         });
-        if (Object.keys(changedData).length === 0) {
-            alert("변경된 항목이 없습니다.");
+        if (firstInvalidField) {
+            isValid = false;
+            errorMessage = `${firstInvalidField} 필드를 입력해주세요.`;
+            alert(errorMessage);
+        }
+        return isValid;
+    }
+
+    // 등록 버튼 클릭
+    $("#btn-register").on("click", function (e) {
+        e.preventDefault(); // 기본 동작 방지
+        // 유효성 검사 실행
+        if (!validateForm()) {
             return;
         }
+        // 가입금액에서 콤마 제거
+        $("#prodInstlAmtMin").val(function () {
+            return $(this).val().replace(/,/g, '');
+        });
+        $("#prodInstlAmtMax").val(function () {
+            return $(this).val().replace(/,/g, '');
+        });
 
-        // Ajax 요청
+        // 폼 데이터를 JavaScript 객체로 수집
+        const formData = {
+            prodNm: $("#prodNm").val(),
+            prodTyCd: $("#prodTyCd").val(),
+            prodSbstgTyCd: $("#prodSbstgTyCd").val(),
+            prodInstlAmtMin: $("#prodInstlAmtMin").val(),
+            prodInstlAmtMax: $("#prodInstlAmtMax").val(),
+            prodPayTyCd: $("#prodPayTyCd").val(),
+            prodAirMin: $("#prodAirMin").val(),
+            prodAirMax: $("#prodAirMax").val(),
+            prodAirBgnYmd: $("#prodAirBgnYmd").val(),
+            prodAirEndYmd: $("#prodAirEndYmd").val(),
+            prodIntTaxTyCd: $("#prodIntTaxTyCd").val(),
+            prodCurrStcd: $("#prodCurrStcd").val(),
+            prodNtslBgnYmd: $("#prodNtslBgnYmd").val(),
+            prodNtslEndYmd: $("#prodNtslEndYmd").val(),
+            staffName: $("#staffName").val(),
+            userId: $("#userId").val(),
+        };
+        const insertUrl = "/product/insert"; // 등록 요청 URL
+        console.log("등록 데이터: ", formData);
+
         $.ajax({
-            url: updateUrl,
+            url: insertUrl,
             type: "POST",
-            contentType: "application/json", // Content-Type 설정
-            data: JSON.stringify(changedData),
+            contentType: "application/json",
+            data: JSON.stringify(formData),
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 헤더 설정
             },
             success: function (response) {
-                console.log("수정 데이터: ", changedData);
-                alert("수정되었습니다.");
-                // 변경된 값 반영
-                for (const key in changedData) {
-                    $(`input[name='${key}']`).attr("data-original-value", changedData[key]);
-                }
-                location.reload(); // 성공 시 새로고침
+                alert("신규 상품이 등록되었습니다.");
+                window.location.href = "/product/list"; // 목록 페이지로 이동
             },
             error: function (xhr, status, error) {
-                const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : "알 수 없는 오류";
-                console.error("수정 실패: ", errorMessage);
-                alert(`수정에 실패했습니다: ${errorMessage}`);
-            },
-        });
-    });
-
-    // 판매 종료 버튼 클릭
-    $("#btn-end").on("click", function (e) {
-        e.preventDefault();
-        if (!confirm("지금부터 해당 상품 판매를 중지하시겠습니까?")) {
-            return;
-        }
-
-        const productId = $("input[name='prodSn']").val();
-        if (!productId) {
-            alert("상품 ID가 유효하지 않습니다.");
-            return;
-        }
-
-        const deleteUrl = `/product/detail/${productId}/delete`;
-        $.ajax({
-            url: deleteUrl,
-            type: "POST",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(csrfHeader, csrfToken);
-            },
-            success: function (response) {
-                alert("판매중지되었습니다.");
-                window.location.href = "/product/list"; // 목록 페이지 이동
-            },
-            error: function (xhr, status, error) {
-                const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : "알 수 없는 오류";
-                console.error("판매 중지 실패: ", errorMessage);
-                alert(`판매 중지에 실패했습니다: ${errorMessage}`);
+                console.error("등록 실패: ", error);
+                alert("상품 등록에 실패했습니다.");
             },
         });
     });
@@ -138,6 +132,7 @@ $(document).ready(function () {
             alert("검색어를 입력하세요.");
             return;
         }
+
         // 서버로 Ajax 요청 보내기
         $.ajax({
             url: "/product/user/search", // API 엔드포인트
@@ -146,7 +141,6 @@ $(document).ready(function () {
             success: function (response) {
                 const resultsContainer = $("#staffSearchResults");
                 resultsContainer.empty();
-
                 if (response.length === 0) {
                     resultsContainer.append("<p>검색 결과가 없습니다.</p>");
                 } else {
@@ -170,7 +164,6 @@ $(document).ready(function () {
                                 <td>${item.name}</td>
                             </tr>
                         `);
-
                         // 행 클릭 이벤트 추가
                         row.on("click", function () {
                             $("#staffName").val(item.name); // 입력 필드에 이름 설정

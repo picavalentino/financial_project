@@ -154,96 +154,96 @@
 
         </div>
 
-    <script th:inline="javascript">
-        $(document).ready(function () {
-            // CSRF 토큰 가져오기
-            let csrfToken = $('meta[name="_csrf"]').attr('content');
-            let csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+<!--    <script th:inline="javascript">-->
+<!--        $(document).ready(function () {-->
+<!--            // CSRF 토큰 가져오기-->
+<!--            let csrfToken = $('meta[name="_csrf"]').attr('content');-->
+<!--            let csrfHeader = $('meta[name="_csrf_header"]').attr('content');-->
 
-            // 초기 값을 저장 (페이지 로드 시)
-            $("input[name='prodAirMin'], input[name='prodAirMax'], input[name='prodAirBgnYmd'], input[name='prodAirEndYmd'], input[name='prodNtslBgnYmd'], input[name='prodNtslEndYmd']").each(function () {
-                $(this).attr("data-original-value", $(this).val());
-            });
+<!--            // 초기 값을 저장 (페이지 로드 시)-->
+<!--            $("input[name='prodAirMin'], input[name='prodAirMax'], input[name='prodAirBgnYmd'], input[name='prodAirEndYmd'], input[name='prodNtslBgnYmd'], input[name='prodNtslEndYmd']").each(function () {-->
+<!--                $(this).attr("data-original-value", $(this).val());-->
+<!--            });-->
 
-            // 수정 버튼 클릭
-            $("#btn-register").on("click", function (e) {
-                e.preventDefault(); // 기본 동작 방지
-                const productId = $("input[name='prodSn']").val(); // 상품코드 또는 ID 가져오기
-                const updateUrl = "/product/detail/" + productId + "/update"; // 수정 요청 URL
+<!--            // 수정 버튼 클릭-->
+<!--            $("#btn-register").on("click", function (e) {-->
+<!--                e.preventDefault(); // 기본 동작 방지-->
+<!--                const productId = $("input[name='prodSn']").val(); // 상품코드 또는 ID 가져오기-->
+<!--                const updateUrl = "/product/detail/" + productId + "/update"; // 수정 요청 URL-->
 
-                // 변경된 데이터만 추출
-                const changedData = {};
-                $("input[name='prodAirMin'], input[name='prodAirMax'], input[name='prodAirBgnYmd'], input[name='prodAirEndYmd'], input[name='prodNtslBgnYmd'], input[name='prodNtslEndYmd']").each(function () {
-                    const originalValue = $(this).attr("data-original-value");
-                    const currentValue = $(this).val();
-                    console.log("원래 값: ", currentValue);
+<!--                // 변경된 데이터만 추출-->
+<!--                const changedData = {};-->
+<!--                $("input[name='prodAirMin'], input[name='prodAirMax'], input[name='prodAirBgnYmd'], input[name='prodAirEndYmd'], input[name='prodNtslBgnYmd'], input[name='prodNtslEndYmd']").each(function () {-->
+<!--                    const originalValue = $(this).attr("data-original-value");-->
+<!--                    const currentValue = $(this).val();-->
+<!--                    console.log("원래 값: ", currentValue);-->
 
-                    // 변경된 값만 포함
-                    if (originalValue !== currentValue) {
-                        changedData[$(this).attr("name")] = currentValue;
-                    }
-                });
+<!--                    // 변경된 값만 포함-->
+<!--                    if (originalValue !== currentValue) {-->
+<!--                        changedData[$(this).attr("name")] = currentValue;-->
+<!--                    }-->
+<!--                });-->
 
-                // 변경된 데이터가 없으면 요청하지 않음
-                if (Object.keys(changedData).length === 0) {
-                    alert("변경된 항목이 없습니다.");
-                    return;
-                }
+<!--                // 변경된 데이터가 없으면 요청하지 않음-->
+<!--                if (Object.keys(changedData).length === 0) {-->
+<!--                    alert("변경된 항목이 없습니다.");-->
+<!--                    return;-->
+<!--                }-->
 
-                // 서버에 변경된 데이터 전송
-                $.ajax({
-                    url: updateUrl,
-                    type: "POST",
-                    data: JSON.stringify(changedData),
-                    beforeSend: function (xhr) {
-                        // CSRF 헤더 추가
-                        xhr.setRequestHeader(csrfHeader, csrfToken);
-                    },
-                    success: function (response) {
-                        alert("수정되었습니다.");
-                        location.reload(); // 성공 시 페이지 새로고침
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("수정 실패: ", error);
-                        alert("수정에 실패했습니다.");
-                    },
-                });
-            });
+<!--                // 서버에 변경된 데이터 전송-->
+<!--                $.ajax({-->
+<!--                    url: updateUrl,-->
+<!--                    type: "POST",-->
+<!--                    data: JSON.stringify(changedData),-->
+<!--                    beforeSend: function (xhr) {-->
+<!--                        // CSRF 헤더 추가-->
+<!--                        xhr.setRequestHeader(csrfHeader, csrfToken);-->
+<!--                    },-->
+<!--                    success: function (response) {-->
+<!--                        alert("수정되었습니다.");-->
+<!--                        location.reload(); // 성공 시 페이지 새로고침-->
+<!--                    },-->
+<!--                    error: function (xhr, status, error) {-->
+<!--                        console.error("수정 실패: ", error);-->
+<!--                        alert("수정에 실패했습니다.");-->
+<!--                    },-->
+<!--                });-->
+<!--            });-->
 
-            // 판매종료 버튼 클릭
-            $("#btn-end").on("click", function (e) {
-                e.preventDefault();
-                // 확인창
-                if (!confirm("지금부터 해당 상품 판매를 중지하시겠습니까?")) {
-                    return;
-                }
-                const productId = $("input[name='prodSn']").val(); // 상품 코드 가져오기
-                const deleteUrl = "/product/detail/" + productId + "/delete"; // 삭제 요청 URL
-                $.ajax({
-                    url: deleteUrl,
-                    type: "POST",
-                    beforeSend: function (xhr) {
-                        // CSRF 헤더 추가
-                        xhr.setRequestHeader(csrfHeader, csrfToken);
-                    },
-                    success: function (response) {
-                        alert("판매중지되었습니다.");
-                        location.reload();
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("판매 중지 실패: ", error);
-                        alert("판매 중지에 실패했습니다.");
-                    },
-                });
-            });
+<!--            // 판매종료 버튼 클릭-->
+<!--            $("#btn-end").on("click", function (e) {-->
+<!--                e.preventDefault();-->
+<!--                // 확인창-->
+<!--                if (!confirm("지금부터 해당 상품 판매를 중지하시겠습니까?")) {-->
+<!--                    return;-->
+<!--                }-->
+<!--                const productId = $("input[name='prodSn']").val(); // 상품 코드 가져오기-->
+<!--                const deleteUrl = "/product/detail/" + productId + "/delete"; // 삭제 요청 URL-->
+<!--                $.ajax({-->
+<!--                    url: deleteUrl,-->
+<!--                    type: "POST",-->
+<!--                    beforeSend: function (xhr) {-->
+<!--                        // CSRF 헤더 추가-->
+<!--                        xhr.setRequestHeader(csrfHeader, csrfToken);-->
+<!--                    },-->
+<!--                    success: function (response) {-->
+<!--                        alert("판매중지되었습니다.");-->
+<!--                        location.reload();-->
+<!--                    },-->
+<!--                    error: function (xhr, status, error) {-->
+<!--                        console.error("판매 중지 실패: ", error);-->
+<!--                        alert("판매 중지에 실패했습니다.");-->
+<!--                    },-->
+<!--                });-->
+<!--            });-->
 
-            // 목록 버튼 클릭
-            $("#btn-list").on("click", function (e) {
-                e.preventDefault(); // 기본 동작 방지
-                window.location.href = "/product/list"; // 목록 페이지로 이동
-            });
-        });
-    </script>
+<!--            // 목록 버튼 클릭-->
+<!--            $("#btn-list").on("click", function (e) {-->
+<!--                e.preventDefault(); // 기본 동작 방지-->
+<!--                window.location.href = "/product/list"; // 목록 페이지로 이동-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
 
 </div>
 </body>

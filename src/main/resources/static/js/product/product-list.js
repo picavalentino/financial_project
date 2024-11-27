@@ -3,7 +3,6 @@
 let currentSortColumn = null; // 현재 정렬 기준
 let sortDirection = 'asc';   // 기본 정렬 방향 (오름차순)
 
-// 정렬 함수
 function sortTable(column) {
     if (currentSortColumn === column) {
         sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
@@ -11,10 +10,21 @@ function sortTable(column) {
         currentSortColumn = column;
         sortDirection = 'asc';
     }
+    updateSortIcons(column);
     filterResults(1);
 }
 
-// 필터 초기화 및 전체 검색
+function updateSortIcons(column) {
+    $('.sortable').removeClass('sort-asc sort-desc');
+    const header = $(`[onclick="sortTable('${column}')"]`);
+    if (sortDirection === 'asc') {
+        header.addClass('sort-asc');
+    } else {
+        header.addClass('sort-desc');
+    }
+}
+
+// 정렬 초기화
 function resetFilters(page = 1) {
     $('#prodCurrStcd').val('');
     $('#prodTyCd').val('');
@@ -27,6 +37,7 @@ function resetFilters(page = 1) {
     sortDirection = 'asc';
     filterResults(page);
 }
+
 
 // 조건 검색 및 정렬
 function filterResults(page = 1) {
@@ -48,12 +59,11 @@ function filterResults(page = 1) {
     $.ajax({
         url: window.location.origin + '/product/list',
         method: 'GET',
-        data,
+        data: data,
         success: function (response) {
-            console.log(response);
             renderTable(response.list);
             updatePagination(response.totalPages, response.currentPage);
-            console.log('Rendering data:', data);
+            updateProductSize(response.totalItems);
         },
         error: function (error) {
             console.error('Error fetching filtered results:', error);
@@ -61,33 +71,40 @@ function filterResults(page = 1) {
     });
 }
 
+function updateProductSize(size) {
+    $('.product-size span').text(size);
+}
+
 // 테이블 렌더링
 function renderTable(data) {
-    console.log('Rendering data:', data); // 데이터 확인
+    console.log('Rendering data:', data);
     const tableBody = $('#result-table-body');
     tableBody.empty();
 
     if (data && data.length > 0) {
-        console.log('Populating table with data'); // 데이터 렌더링 시작 확인
+        console.log('Populating table with data');
         data.forEach(product => {
-            const row = `
-                <tr>
+            const row = $(`
+                <tr class="table-row" style="cursor: pointer;">
                     <td><input type="checkbox" class="row-checkbox"></td>
                     <td>${product.prodCd || 'N/A'}</td>
                     <td>${product.prodNm || 'N/A'}</td>
-                    <td>${product.prodInstlAmtMin || 0}</td>
-                    <td>${product.prodInstlAmtMax || 0}</td>
+                    <td>${new Intl.NumberFormat('ko-KR').format(product.prodInstlAmtMin || 0)}원</td>
+                    <td>${new Intl.NumberFormat('ko-KR').format(product.prodInstlAmtMax || 0)}원</td>
                     <td>${product.prodPayTyCd || 'N/A'}</td>
                     <td>${product.prodAirMin || 'N/A'}</td>
                     <td>${product.prodAirMax || 'N/A'}</td>
                     <td>${product.prodIntTaxTyCd || 'N/A'}</td>
-                    <td>${product.prodNtslBgnYmd || 'N/A'} ~ ${product.prodNtslEndYmd || 'N/A'}</td>
+                    <td>${product.prodNtslBgnYmd || ''} ~ ${product.prodNtslEndYmd || ''}</td>
                 </tr>
-            `;
+            `);
+            row.on('click', function () {
+                window.location.href = `/product/detail/${product.prodSn}`;
+            });
             tableBody.append(row);
         });
     } else {
-        console.log('No data available for rendering'); // 데이터가 없는 경우
+        console.log('No data available for rendering');
         tableBody.append('<tr><td colspan="10">데이터가 없습니다.</td></tr>');
     }
 }

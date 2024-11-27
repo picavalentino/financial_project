@@ -60,7 +60,7 @@ public class ProductController {
             hasSearchParams = true;
         }
         // 판매 상태 조건
-        if (prodCurrStcd != null && !prodCurrStcd.trim().isEmpty() && !"all".equals(prodCurrStcd)) {
+        if (prodCurrStcd != null && !prodCurrStcd.trim().isEmpty()) {
             searchParams.put("prodCurrStcd", prodCurrStcd.trim());
             hasSearchParams = true;
         }
@@ -97,8 +97,8 @@ public class ProductController {
             fullList = productService.searchProducts(searchParams);
         } else {
             // 전체 결과 조회
-            fullList = productService.findAll().stream()
-                    .filter(product -> Objects.equals(product.getProdCurrStcd(), "1"))
+            fullList = productService.findAllList().stream()
+                    .filter(product -> Objects.equals(product.getProdCurrStcd(), "판매중"))
                     .collect(Collectors.toList());
         }
         log.info("### Retrieved fullList in Controller: {}", fullList);
@@ -106,7 +106,6 @@ public class ProductController {
         // requestURI에 페이지 URL을 포함
         String requestURI = request.getRequestURI();
         model.addAttribute("requestURI", requestURI);
-        model.addAttribute("productSize", fullList.size());
 
         // 정렬
         if (sortColumn != null && sortDirection != null) {
@@ -156,12 +155,14 @@ public class ProductController {
             response.put("list", paginatedList);
             response.put("totalPages", totalPages);
             response.put("currentPage", page);
+            response.put("totalItems", totalItems); // 총 상품 개수 추가
             return ResponseEntity.ok(response); // JSON 데이터 반환
         }
 
         model.addAttribute("list", paginatedList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("productSize", totalItems);
         return "product/product-list"; // HTML 템플릿 반환
     }
 
@@ -224,7 +225,7 @@ public class ProductController {
     // 상품 수정 -------------------------------------------------------
     @PostMapping("/detail/{prodSn}/update")
     @ResponseBody
-    public ResponseEntity<?> productUpdate(ProductDTO dto) {
+    public ResponseEntity<?> productUpdate(@RequestBody ProductDTO dto) {
         try {
             log.info("### Received DTO: " + dto);
 
@@ -235,6 +236,8 @@ public class ProductController {
             }
             // 서비스 호출
             productService.updateProduct(dto);
+            ProductDTO updateDTO = productService.findById(dto.getProdSn());
+            log.info("### updated dto: "+updateDTO);
             return ResponseEntity.ok("상품 수정 성공");
         } catch (Exception e) {
             log.error("상품 수정 중 오류 발생: ", e);

@@ -38,33 +38,23 @@
         </collection>
     </resultMap>
 
-    <select id="findAll" resultMap="ProductResultMap" resultType="com.team.financial_project.dto.ProductDTO">
+    <select id="findAllList" resultMap="ProductResultMap">
         SELECT
-        p.prod_sn,
-        p.prod_nm,
-        p.prod_instl_amt_min,
-        p.prod_instl_amt_max,
-        p.prod_create_at,
-        p.prod_update_at,
-        p.user_id,
-        p.prod_cd,
-        c1.code_nm AS prod_ty_cd,
-        c2.code_nm AS prod_sbstg_ty_cd,
-        c3.code_nm AS prod_pay_ty_cd,
-        c4.code_nm AS prod_int_tax_ty_cd,
-        p.prod_air_min,
-        p.prod_air_max,
-        p.prod_air_bgn_ymd,
-        p.prod_air_end_ymd,
-        p.prod_curr_stcd,
-        p.prod_ntsl_bgn_ymd,
-        p.prod_ntsl_end_ymd
+            p.prod_sn,
+            p.prod_nm,
+            p.prod_instl_amt_min,
+            p.prod_instl_amt_max,
+            p.prod_cd,
+            p.prod_ty_cd,
+            p.prod_pay_ty_cd,
+            p.prod_int_tax_ty_cd,
+            p.prod_air_min,
+            p.prod_air_max,
+            p.prod_ntsl_bgn_ymd,
+            p.prod_ntsl_end_ymd,
+            p.prod_curr_stcd
         FROM tb_product p
-        LEFT JOIN tb_code c1 ON c1.code_cl = p.prod_ty_cd_code_cl AND c1.code_no = p.prod_ty_cd
-        LEFT JOIN tb_code c2 ON c2.code_cl = p.prod_sbstg_ty_cd_code_cl AND c2.code_no = p.prod_sbstg_ty_cd
-        LEFT JOIN tb_code c3 ON c3.code_cl = p.prod_pay_ty_cd_code_cl AND c3.code_no = p.prod_pay_ty_cd
-        LEFT JOIN tb_code c4 ON c4.code_cl = p.prod_int_tax_ty_cd_code_cl AND c4.code_no = p.prod_int_tax_ty_cd
-        ORDER BY p.prod_create_at DESC;
+        ORDER BY p.prod_sn DESC;
     </select>
 
     <select id="findById" parameterType="Long" resultMap="ProductResultMap">
@@ -77,15 +67,15 @@
         p.prod_update_at,
         p.user_id,
         p.prod_cd,
-        c1.code_nm AS prod_ty_cd,
-        c2.code_nm AS prod_sbstg_ty_cd,
-        c3.code_nm AS prod_pay_ty_cd,
-        c4.code_nm AS prod_int_tax_ty_cd,
+        p.prod_ty_cd,
+        p.prod_sbstg_ty_cd,
+        p.prod_pay_ty_cd,
+        p.prod_int_tax_ty_cd,
         p.prod_air_min,
         p.prod_air_max,
         p.prod_air_bgn_ymd,
         p.prod_air_end_ymd,
-        c5.code_nm AS prod_curr_stcd,
+        p.prod_curr_stcd,
         p.prod_ntsl_bgn_ymd,
         p.prod_ntsl_end_ymd,
         h.hist_id,
@@ -98,66 +88,40 @@
         h.hist_create_at,
         h.hist_curr_stcd
         FROM tb_product p
-        LEFT JOIN tb_code c1 ON c1.code_cl = p.prod_ty_cd_code_cl AND c1.code_no = p.prod_ty_cd
-        LEFT JOIN tb_code c2 ON c2.code_cl = p.prod_sbstg_ty_cd_code_cl AND c2.code_no = p.prod_sbstg_ty_cd
-        LEFT JOIN tb_code c3 ON c3.code_cl = p.prod_pay_ty_cd_code_cl AND c3.code_no = p.prod_pay_ty_cd
-        LEFT JOIN tb_code c4 ON c4.code_cl = p.prod_int_tax_ty_cd_code_cl AND c4.code_no = p.prod_int_tax_ty_cd
-        LEFT JOIN tb_code c5 ON c5.code_cl = p.prod_curr_stcd_code_cl AND c5.code_no = p.prod_curr_stcd
         LEFT JOIN tb_prod_hist h ON h.prod_sn = p.prod_sn
         WHERE p.prod_sn = #{prodSn}
     </select>
 
-    <!-- ### 조건 검색 제대로 못불러옴 ### -->
     <!-- 조건 검색 -->
-    <select id="searchProducts" parameterType="map" resultType="com.team.financial_project.dto.ProductDTO">
+    <select id="searchProducts" parameterType="map" resultMap="ProductResultMap">
         SELECT
-        p.prod_sn,
-        p.prod_nm,
-        p.prod_instl_amt_min,
-        p.prod_instl_amt_max,
-        p.prod_create_at,
-        p.prod_update_at,
-        p.user_id,
-        p.prod_cd,
-        c1.code_nm AS prod_ty_cd,
-        c2.code_nm AS prod_sbstg_ty_cd,
-        c3.code_nm AS prod_pay_ty_cd,
-        c4.code_nm AS prod_int_tax_ty_cd,
-        p.prod_air_min,
-        p.prod_air_max,
-        p.prod_air_bgn_ymd,
-        p.prod_air_end_ymd,
-        c5.code_nm AS prod_curr_stcd,
-        p.prod_ntsl_bgn_ymd,
-        p.prod_ntsl_end_ymd,
-        h.hist_id,
-        h.user_id,
-        h.prod_sn,
-        h.hist_prod_air_min,
-        h.hist_prod_air_max,
-        h.hist_prod_air_bgn_ymd,
-        h.hist_prod_air_end_ymd,
-        h.hist_create_at,
-        h.hist_curr_stcd
+            p.prod_sn,
+            p.prod_nm,
+            p.prod_instl_amt_min,
+            p.prod_instl_amt_max,
+            p.prod_cd,
+            p.prod_ty_cd,
+            p.prod_pay_ty_cd,
+            p.prod_int_tax_ty_cd,
+            p.prod_air_min,
+            p.prod_air_max,
+            p.prod_ntsl_bgn_ymd,
+            p.prod_ntsl_end_ymd,
+            p.prod_curr_stcd
         FROM tb_product p
-        LEFT JOIN tb_code c1 ON c1.code_cl = p.prod_ty_cd_code_cl AND c1.code_no = p.prod_ty_cd
-        LEFT JOIN tb_code c2 ON c2.code_cl = p.prod_sbstg_ty_cd_code_cl AND c2.code_no = p.prod_sbstg_ty_cd
-        LEFT JOIN tb_code c3 ON c3.code_cl = p.prod_pay_ty_cd_code_cl AND c3.code_no = p.prod_pay_ty_cd
-        LEFT JOIN tb_code c4 ON c4.code_cl = p.prod_int_tax_ty_cd_code_cl AND c4.code_no = p.prod_int_tax_ty_cd
-        LEFT JOIN tb_code c5 ON c5.code_cl = p.prod_curr_stcd_code_cl AND c5.code_no = p.prod_curr_stcd
-        LEFT JOIN tb_prod_hist h ON h.prod_sn = p.prod_sn
         WHERE 1=1
-        <if test="prodTyCd != null and prodTyCd.trim() != ''">
+        <if test="prodTyCd != null and prodTyCd != ''">
             AND p.prod_ty_cd = #{prodTyCd}
         </if>
-        <if test="prodCurrStcd != null and prodCurrStcd.trim() != ''">
+        <if test="prodCurrStcd != null and prodCurrStcd != '' and prodCurrStcd != 'all'">
             AND p.prod_curr_stcd = #{prodCurrStcd}
         </if>
-        <if test="prodPayTyCd != null and prodPayTyCd.trim() != ''">
+        <if test="prodPayTyCd != null and prodPayTyCd != ''">
             AND p.prod_pay_ty_cd = #{prodPayTyCd}
         </if>
-        <if test="prodNm != null and prodNm.trim() != ''">
-            AND p.prod_nm LIKE CONCAT('%', #{prodNm}, '%')
+        <if test="prodNm != null and prodNm != ''">
+            <bind name="prodNmPattern" value="'%' + prodNm + '%'" />
+            AND p.prod_nm LIKE #{prodNmPattern}
         </if>
         <if test="prodNtslBgnYmdRange != null">
             AND p.prod_ntsl_bgn_ymd BETWEEN #{prodNtslBgnYmdRange[0]} AND #{prodNtslBgnYmdRange[1]}
@@ -168,7 +132,7 @@
     </select>
 
     <!-- 컬럼명으로 정렬 -->
-    <select id="getProductsSorted" resultType="com.team.financial_project.dto.ProductDTO">
+    <select id="getProductsSorted" resultMap="ProductResultMap">
         SELECT *
         FROM tb_product
         ORDER BY
@@ -229,35 +193,34 @@
     <update id="updateProduct" parameterType="com.team.financial_project.dto.ProductDTO">
         <!-- 기존 데이터를 tb_prod_hist 테이블에 추가 -->
         INSERT INTO tb_prod_hist (
-        hist_id,
-        prod_sn,
-        hist_prod_air_min,
-        hist_prod_air_max,
-        hist_prod_air_bgn_ymd,
-        hist_prod_air_end_ymd,
-        hist_create_at
+            hist_id,
+            prod_sn,
+            hist_prod_air_min,
+            hist_prod_air_max,
+            hist_prod_air_bgn_ymd,
+            hist_prod_air_end_ymd,
+            hist_create_at
         )
         SELECT
-        nextval('tb_prod_hist_hist_id_seq'),
-        prod_sn,
-        prod_air_min,
-        prod_air_max,
-        prod_air_bgn_ymd,
-        prod_air_end_ymd,
-        now()
+            nextval('tb_prod_hist_hist_id_seq'),
+            prod_sn,
+            prod_air_min,
+            prod_air_max,
+            prod_air_bgn_ymd,
+            prod_air_end_ymd,
+            now()
         FROM tb_product
         WHERE prod_sn = #{prodSn};
-
         <!-- tb_product 테이블에 데이터 업데이트 -->
         UPDATE tb_product
         SET
-        prod_air_min = CASE WHEN #{prodAirMin,jdbcType=NUMERIC} IS NOT NULL THEN CAST(#{prodAirMin,jdbcType=NUMERIC} AS NUMERIC(5, 2)) ELSE prod_air_min END,
-        prod_air_max = CASE WHEN #{prodAirMax,jdbcType=NUMERIC} IS NOT NULL THEN CAST(#{prodAirMax,jdbcType=NUMERIC} AS NUMERIC(5, 2)) ELSE prod_air_max END,
-        prod_air_bgn_ymd = CASE WHEN #{prodAirBgnYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodAirBgnYmd,jdbcType=VARCHAR} ELSE prod_air_bgn_ymd END,
-        prod_air_end_ymd = CASE WHEN #{prodAirEndYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodAirEndYmd,jdbcType=VARCHAR} ELSE prod_air_end_ymd END,
-        prod_ntsl_bgn_ymd = CASE WHEN #{prodNtslBgnYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodNtslBgnYmd,jdbcType=VARCHAR} ELSE prod_ntsl_bgn_ymd END,
-        prod_ntsl_end_ymd = CASE WHEN #{prodNtslEndYmd,jdbcType=VARCHAR} IS NOT NULL THEN #{prodNtslEndYmd,jdbcType=VARCHAR} ELSE prod_ntsl_end_ymd END,
-        prod_update_at = now()
+            prod_air_min = COALESCE(#{prodAirMin,jdbcType=NUMERIC}, prod_air_min),
+            prod_air_max = COALESCE(#{prodAirMax,jdbcType=NUMERIC}, prod_air_max),
+            prod_air_bgn_ymd = COALESCE(#{prodAirBgnYmd,jdbcType=VARCHAR}, prod_air_bgn_ymd),
+            prod_air_end_ymd = COALESCE(#{prodAirEndYmd,jdbcType=VARCHAR}, prod_air_end_ymd),
+            prod_ntsl_bgn_ymd = COALESCE(#{prodNtslBgnYmd,jdbcType=VARCHAR}, prod_ntsl_bgn_ymd),
+            prod_ntsl_end_ymd = COALESCE(#{prodNtslEndYmd,jdbcType=VARCHAR}, prod_ntsl_end_ymd),
+            prod_update_at = now()
         WHERE prod_sn = #{prodSn};
     </update>
 

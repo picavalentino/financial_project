@@ -12,7 +12,7 @@ import java.util.Map;
 @Mapper
 public interface ProductMapper {
     /* 상품관리 페이지 */
-    List<ProductDTO> findAll();
+    List<ProductDTO> findAllList();
     ProductDTO findById(Long prodSn);
     void updateProduct(ProductDTO dto);
     void deleteProduct(BigDecimal prodSn);
