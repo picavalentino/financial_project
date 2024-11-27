@@ -67,4 +67,8 @@ public interface UserMapper {
     UserDTO certifyByUserTelno(String telno);
 
     void updateUserFromReg(UserDTO user);
+
+    int getTotalAuthCount(String auth);
+
+    List<UserDTO> getauthList(int offset, int pageSize, String auth);
 }

@@ -23,7 +23,7 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests((auth)-> auth.requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/login/**", "/register/**").permitAll()
+                .requestMatchers("/login/**", "/register/**","/system/**","/management/**").permitAll()
                 .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated() // 그외 모든 요청은 인증된 사용자들만 접근 가능
         );
