@@ -73,8 +73,14 @@ public interface UserMapper {
     void updateUserFromReg(UserDTO user);
 
     // 사번 찾기에서 해당 유저가 있는지 확인
-    UserDTO hasExist(@Param("name") String name, @Param("telno")String telno);
+    UserDTO hasExistByUser_name(@Param("name") String name, @Param("telno")String telno);
 
     // 사번 찾기
     String findUserIdByUserTelno(String telno);
+
+    // 비밀번호 찾기에서 해당 유저가 있는지 확인
+    UserDTO hasExistByUser_id(@Param("id") String id, @Param("telno")String telno);
+
+    // 사원번호로 찾아 비밀번호 변경
+    void updateUserPw(@Param("id")String userId, @Param("pw")String userPw);
 }

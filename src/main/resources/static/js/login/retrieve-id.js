@@ -20,18 +20,19 @@ $(document).ready(function(){
         }
     }
     // 매초마다 updateTimer 함수 실행
-    const timerInterval = setInterval(updateTimer, 1000);
+    let timerInterval = setInterval(updateTimer, 1000);
 
     // 모달창 닫기
     $("#btn-id-cross").on("click", function(){
         $("#id-modal").css("display", "none");
+        window.location.href = "/login";
     })
     // 유효성
     $("#phone1, #phone2, #phone3, #user_name").on("input change", function() {
         $("#msg-not-match").css("display", "none");
         $("#user_telno").val("");
         $("#btn-retrieve").prop("disabled", true);
-        $("#btn-certify").val("인증하기");
+        $("#btn-certify").val("인증");
         let code = $("#input-code").val();
         if(code.length==6){
             $("#btn-certify").prop("disabled", false);
@@ -56,7 +57,7 @@ $(document).ready(function(){
     // 인증하기 버튼 활성화
     $("#input-code").on("input", function(){
         $("#msg-not-match").css("display", "none");
-        $("#btn-certify").prop("disabled", true).val("인증하기");
+        $("#btn-certify").prop("disabled", true).val("인증");
         let code = $(this).val();
         if(code.length==6){
             $("#btn-certify").prop("disabled", false);
@@ -68,7 +69,7 @@ $(document).ready(function(){
     $("#btn-send, #btn-resend").on("click", function(){
         $.ajax({
             type: 'GET',
-            url: '/login/exist',
+            url: '/login/exist/pw',
             data: {
                 name: $("#user_name").val(),
                 telno: $("#user_telno").val()
@@ -129,7 +130,8 @@ $(document).ready(function(){
             },
             success: function(response) {
                 if(response){
-                    $("#btn-certify").prop("disabled", true).val("인증완료");
+                    $("#btn-certify").prop("disabled", true).val("완료");
+                    clearInterval(timerInterval);
                     $("#btn-retrieve").prop("disabled", false);
                 }else{
                     $("#msg-not-match").css("display", "flex");
@@ -150,6 +152,7 @@ $(document).ready(function(){
             },
             success: function(response) {
                 alert("사원 번호 : "+ response);
+                sessionStorage.setItem("id", response);
                 window.location.href = "/login";
             },
             error: function() {

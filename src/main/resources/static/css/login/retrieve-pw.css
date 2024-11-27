@@ -1,5 +1,5 @@
 .pw-btns{
-    display: flex;
+    display: none;
     gap: 5px;
 }
 .pw-btns input{

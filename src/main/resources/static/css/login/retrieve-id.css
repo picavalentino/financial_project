@@ -70,6 +70,7 @@ label {
     gap: 10px;
 }
 .input-and-timer{
+    width: 100%;
     display: flex;
     justify-content: space-between;
     padding: 10px 10px 10px 0;
@@ -94,7 +95,7 @@ input:focus{
     background-color: #a17777;
     color: #ffffff;
     border: none;
-    border-radius: 10px;
+    border-radius: 30px;
     font-size: 14px;
     font-weight: bold;
     transition: background-color 0.3s, box-shadow 0.3s;
@@ -131,6 +132,7 @@ input:focus{
     align-items: center;
     width: 20px;
     height: 20px;
+    margin: 3px;
 }
 .btn-retrieve{
     display: none;

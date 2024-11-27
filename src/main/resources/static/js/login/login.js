@@ -22,6 +22,13 @@ $(document).ready(function(){
         $("#user_id").val(savedUserId);
         $("#remember_checkbox").prop("checked", true);
     }
+    // 사번찾기에서 자동으로 사번 입력창에 삽입
+    const id = sessionStorage.getItem("id");
+    if(id){
+        $("#user_id").val(id);
+        $("#remember_checkbox").prop("checked", true);
+        sessionStorage.clear();
+    }
     // 로그인 폼 제출 시 쿠키 저장 처리
     $("#loginForm").on("submit", function () {
         if ($("#remember_checkbox").is(":checked")) {
@@ -45,12 +52,10 @@ $(document).ready(function(){
         }
     })
     // 로그인 실패시 알림창
-    var errorMessage = $("#hiddenErrorMessage").val();
+    const errorMessage = $('#error-container').data('error-message');
     if (errorMessage) {
         alert(errorMessage);
-        $("#hiddenErrorMessage").val('');
     }
-
     // 아이디 찾기 모달창
     $(".btn-retrieve-id").on("click", function(){
         $("#id-modal").css("display", "flex");
@@ -59,4 +64,12 @@ $(document).ready(function(){
     $(".btn-retrieve-pw").on("click", function(){
         $("#pw-modal").css("display", "flex");
     })
+    // 비밀번호 변경 모달창
+    $("#btn-change").on("click", function(){
+        sessionStorage.setItem("id",$("#pw-user_id").val());
+        $("#pw-modal").css("display", "none");
+        $("#change-pw-modal").css("display", "flex");
+    })
+
+
 })

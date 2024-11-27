@@ -102,6 +102,14 @@ body {
     width: 100%;
     color: #ffffff;
 }
+.btn-login:disabled{
+    background-color: rgb(140 140 140);
+    cursor: not-allowed;
+}
+.btn-login:enabled:hover{
+    background-color: #567d84;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+}
 
 .btns{
     display: flex;
@@ -124,6 +132,12 @@ body {
 .btn-retrieve-id,
 .btn-retrieve-pw{
     font-size: small;
+    margin: 0 10px;
+}
+.btn-register:hover,
+.btn-retrieve-id:hover,
+.btn-retrieve-pw:hover{
+    color: black;
 }
 /* 모달창 */
 .modal{

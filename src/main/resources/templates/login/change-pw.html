@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="change-pw" class="modal" id="change-pw-modal">
+    <link rel="stylesheet" th:href="@{/css/login/change-pw.css}">
     <div class="title input-box">
         <div class="text">비밀번호 변경</div>
         <button type="button" class="btn btn-link p-0 ms-2" id="btn-change-pw-cross">
@@ -9,18 +10,20 @@
         </button>
     </div>
     <div class="mb-4 input-box position-relative">
-        <label for="user_pw">변경 비밀번호<span id="msg-invalid-pw" class="msg"></span></label>
-        <input type="password" name="user_pw" id="user_pw" class="password-input" placeholder="숫자+영문 6~13자리">
-        <button type="button" class="btn position-absolute end-0 btn-eye" id="btn-eye">
-            <i class="bi bi-eye-slash text-secondary" id="btn-hide"></i>
-            <i class="bi bi-eye text-secondary" id="btn-show"></i>
+        <label for="change-user_pw">변경 비밀번호<span id="change-msg-invalid-pw" class="msg">숫자+영문 6~13자리로 입력해주세요.</span></label>
+        <input type="password" id="change-user_pw" class="password-input" placeholder="숫자+영문 6~13자리">
+        <button type="button" class="btn position-absolute end-0 btn-eye" id="change-btn-eye">
+            <i class="bi bi-eye-slash text-secondary" id="change-btn-hide"></i>
+            <i class="bi bi-eye text-secondary" id="change-btn-show"></i>
         </button>
     </div>
     <div class="mb-4 input-box">
-        <label for="confirm-user_pw">비밀번호 확인<span id="msg-not-match" class="msg"></span></label>
-        <input type="password" id="confirm-user_pw" class="confirm-user_pw" placeholder="비밀번호를 입력해주세요.">
+        <label for="change-confirm-user_pw">비밀번호 확인<span id="change-msg-not-match" class="msg">일치하지 않습니다.</span></label>
+        <input type="password" id="change-confirm-user_pw" class="confirm-user_pw" placeholder="비밀번호를 입력해주세요.">
     </div>
-    <input type="button" value="변경하기" class="btn-retrieve mt-3" id="btn-retrieve" disabled>
+    <input type="button" value="변경하기" class="btn-login mt-3" id="btn-change-pw" disabled>
+
+    <script th:src="@{/js/login/change-pw.js}"></script>
 </div>
 </body>
 </html>
