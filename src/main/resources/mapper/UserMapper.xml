@@ -298,4 +298,11 @@
         user_imgpath = #{user_imgpath}
         WHERE user_id = #{user_id}
     </update>
+
+    <!-- 상품등록페이지: 사원 이름으로 아이디 조회  -->
+    <select id="findByNameContaining" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT user_id AS id, user_name AS name
+        FROM tb_user
+        WHERE user_name LIKE CONCAT('%', #{name}, '%')
+    </select>
 </mapper>

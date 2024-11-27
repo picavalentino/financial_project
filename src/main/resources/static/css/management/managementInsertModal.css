@@ -1,13 +1,23 @@
-/* 모달 전체 스타일 */
-.modal-content {
-  border-radius: 15px;
-  background-color: #f8f9fa;
-  padding: 20px;
+.modal-content{
+    margin-bottom: 60px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    display: flex; /* 플렉스 박스 적용 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    align-items: center; /* 가로 가운데 정렬 */
+    justify-content: center; /* 세로 가운데 정렬 */
 }
 
 .modal-header {
   border-bottom: none;
-  text-align: center;
+  padding-right: 32%;
+  padding-left: 32%;
 }
 
 .modal-title {
@@ -20,74 +30,39 @@
   justify-content: center;
 }
 
-/* 입력 폼 스타일 */
-.form-label {
-  font-weight: bold;
-  color: #333;
+.modal-backdrop{
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
-.form-control {
-  border-radius: 8px;
-  border: 1px solid #ced4da;
+.btn-userIdGenerate{
+    border: none;
+    border-radius: 5px;
+    padding: 6px;
+    background-color: #5ba1aa;
+    color: white;
+    width: 20%;
+    height: 25%;
+    font-size: 17px;
+    font-weight: bold;
 }
 
-.input-group .btn-outline-secondary {
-  border-radius: 8px;
-  border: 1px solid #ced4da;
+.btn-submit{
+    border: none;
+    border-radius: 5px;
+    padding: 6px;
+    background-color: #1b1f44;
+    color: white;
+    width: 25%;
+    height: 25%;
+    font-size: 17px;
+    font-weight: bold;
 }
 
-/* 상태 셀렉트 박스 스타일 */
-.form-select {
-  border-radius: 8px;
-  border: 1px solid #ced4da;
+input[readonly] {
+    background-color: #f0f0f0; /* 연한 회색 배경 */
+    color: #6c757d; /* 텍스트 색상 */
 }
 
-/* 등록 및 닫기 버튼 스타일 */
-.btn-primary {
-  background-color: #17a2b8;
-  border: none;
-  border-radius: 25px;
-  padding: 10px 20px;
-}
-
-.btn-primary:hover {
-  background-color: #138496;
-}
-
-.btn-secondary {
-  border-radius: 25px;
-  padding: 10px 20px;
-}
-
-/* 반응형 모달 스타일 */
-@media (max-width: 768px) {
-  .modal-dialog {
-    margin: 10px;
-  }
-
-  .modal-content {
-    padding: 15px;
-  }
-
-  .btn-primary, .btn-secondary {
-    width: 100%;
-    margin-top: 10px;
-  }
-}
-
-/* 모달 내부 요소 간격 */
-.mb-3 {
-  margin-bottom: 1.5rem;
-}
-
-/* 모달의 중앙 정렬 스타일 */
-.modal-dialog-centered {
-  display: flex;
-  align-items: center;
-  min-height: calc(100% - 1rem);
-}
-
-/* 모달 크기 조정 */
-.modal-dialog {
-  max-width: 500px;
+.btn-close{
+    margin-left: auto;
 }

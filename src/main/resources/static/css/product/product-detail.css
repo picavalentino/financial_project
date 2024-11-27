@@ -1,0 +1,150 @@
+/* 전체 폼 스타일 */
+.sub_content{
+    align: center;
+}
+.product{
+    margin: auto;
+    position: relative;
+}
+.info-table {
+    display: absolute;
+}
+.product-info{
+    display: flex;
+    align-items: flex-start; /* 테이블과 이율변동내역 디브를 나란히 배치 */
+    /*height: 800px;*/
+}
+.table-product-form {
+    width: 100%;
+    min-width: 900px;
+    height: 100%;
+    border-collapse: collapse;
+    margin: 15px;
+    margin-top: 0px;
+    margin-left: 30px;
+ /*   float: left; *//* 이율변동내역과 나란히 배치 */
+    background-color: white;
+    padding: 40px;
+    padding-top: 70px;
+    padding-bottom: 70px;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 테이블 헤더 스타일 */
+.table-product-form th {
+    text-align: left;
+    padding-left: 30px;
+    color: #495057;
+    width: 20%;
+}
+
+/* 테이블 셀 스타일 */
+.table-product-form td {
+    padding: 10px;
+    padding-right: 20px;
+}
+
+/* 입력 필드 스타일 */
+.table-product-form input[type="text"],
+.table-product-form input[type="date"] {
+    width: 40%; /* 입력 필드 너비 */
+    padding: 8px;
+    padding-left: 10px;
+    font-size: 14px;
+    border: 1px solid #8E98A8;
+    border-radius: 6px;
+    outline: none;
+}
+.readonly input{
+    background-color: #eceef1;
+    border: none;
+    color: black;
+}
+
+.table-product-form .inp_wrap {
+    display: flex;
+    gap: 10px;
+}
+
+.inp_wrap.inactive input {
+    background-color: #EAECF0; /* 회색 배경 */
+    pointer-events: none; /* 입력 불가 */
+    opacity: 0.7; /* 투명도 조절 */
+}
+
+.table-product-form .inp_wrap span {
+    flex-shrink: 0;
+    align-self: center;
+    text-align: center;
+    font-size: 14px; /* 크기 조정 */
+}
+
+#btn-end{
+    border: 0px;
+    border-radius: 5px;
+    color: white;
+    background-color: #BD3232;
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+/* 이율변동내역 스타일 */
+.air-info {
+    width: 35%;
+    height: 100%;
+    max-height: 650px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 50px; /* 간격 조정 */
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.air-info label{
+    margin: 10px;
+    margin-top: 5px;
+    font-size: 18px;
+}
+
+.air-info-box{
+    border: 1px solid #8E98A8;
+    border-radius: 8px;
+    padding: 8px;
+    height: 100%;
+    align-items: center;
+}
+
+.air-table{
+    width: 100%;
+    text-align: center;
+    padding: 3px;
+    font-size: 15px;
+}
+.air-table th{
+    border-bottom: 1px solid #EAECF0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.air-table td{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #EAECF0;
+}
+
+/* 버튼 섹션 스타일 */
+.button-wrap {
+    clear: both;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);}
+    text-align: center; /* 버튼 중앙 정렬 */
+    margin-top: 10px;
+    gap: 20px;
+}
