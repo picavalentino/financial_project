@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.financial_project.mapper.InquireMapper">
+    <insert id="insertInquire" parameterType="inquireDTO">
+        INSERT INTO t_inquire (
+        user_id, inq_category, inq_title, inq_anonym,
+        inq_content, inq_pwd, inq_attach_file_1,
+        inq_attach_file_2, inq_attach_file_3, inq_attach_file_4,
+        inq_attach_file_5, inq_create_at, inq_status, inq_notice, inq_reply
+        ) VALUES (
+        #{userId}, #{inqCategory}, #{inqTitle}, #{inqAnonym},
+        #{inqContent}, #{inqPwd}, #{inqAttachFile1},
+        #{inqAttachFile2}, #{inqAttachFile3}, #{inqAttachFile4},
+        #{inqAttachFile5}, CURRENT_TIMESTAMP, '1', '0', '0'
+        )
+    </insert>
+</mapper>
