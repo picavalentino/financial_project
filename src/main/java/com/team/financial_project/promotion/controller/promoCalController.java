@@ -80,8 +80,13 @@ public class promoCalController {
             String dsTyCd = promoCalService.findDsTyCd(dsgnSn);
             System.out.println("===========" + dsTyCd);
 
+
             switch (dsTyCd) {
                 case "1":
+                    DsgnDetailDto dsgnDetailDto = promoCalService.findSavgDetails(dsgnSn);
+                    System.out.println("Result from findSavgDetails: " + dsgnDetailDto);
+                    model.addAttribute("savgInfo", dsgnDetailDto);
+                    model.addAttribute("dsgnSn", dsgnSn);
                     return "/promotion/promotionDetailSavg";
                 case "2":
                     return "/promotion/promotionDetailAcml";
@@ -90,12 +95,14 @@ public class promoCalController {
                 case "4":
                     return "/promotion/promotionDetailLoan";
                 default:
+                    model.addAttribute("startPage", 1); // 시작 페이지
+                    model.addAttribute("endPage", 10); // 끝 페이지
                     model.addAttribute("errorMessage", "잘못된 설계유형코드입니다.");
-                    return "/promotion/promotionList";
+                    return "/promotion/list";
             }
         } catch (Exception e) {
             model.addAttribute("errorMessage", "처리 중 오류가 발생했습니다: " + e.getMessage());
-            return "/promotion/promotionList";
+            return "redirect:/promotion/list";
         }
     }
 

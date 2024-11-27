@@ -43,7 +43,7 @@
             <div class="customer-container hidden">
                 <div class="customer-content">
                     <div class="customer-label-group">
-                        <label for="custCreateAt">작성일자</label>
+                        <label for="custCreateAt">등록일자</label>
                         <label for="custNm">고객명</label>
                         <label for="custBirth">생년월일</label>
                         <label for="custEmail">이메일</label>
@@ -54,18 +54,18 @@
                     </div>
                     <div class="customer-input-group">
                         <input type="hidden" id="custId"> <!-- 고객ID -->
-                        <input type="text" id="custCreateAt" disabled>
+                        <input type="text" id="custCreateAt" th:value="${savgInfo.custCreateAt}" disabled>
                         <div class="customer-input-with-button">
-                            <input type="text" id="custNm" disabled>
+                            <input type="text" id="custNm" th:value="${savgInfo.custNm}" disabled>
                             <button class="btn-icon" id="openCustomerModalButton"><i class="bi bi-search"></i></button>
                         </div>
-                        <input type="text" id="custBirth" disabled>
-                        <input type="text" id="custEmail" disabled>
-                        <input type="text" id="custTelno" disabled>
-                        <input type="text" id="custOccp" disabled>
-                        <textarea id="custAddr" disabled></textarea>
+                        <input type="text" id="custBirth" th:value="${savgInfo.custRrn}" disabled>
+                        <input type="text" id="custEmail" th:value="${savgInfo.custEmail}" disabled>
+                        <input type="text" id="custTelno" th:value="${savgInfo.custTelno}" disabled>
+                        <input type="text" id="custOccp" th:value="${savgInfo.codeNm}" disabled>
+                        <textarea id="custAddr" th:text="${savgInfo.custAddr}" disabled></textarea>
                         <input type="hidden" id="userId"> <!-- 담당자ID -->
-                        <input type="text" id="userNm" disabled>
+                        <input type="text" id="userNm" th:value="${savgInfo.userName}" disabled>
                     </div>
                 </div>
             </div>
@@ -104,12 +104,6 @@
                                     <td>010-1234-5678</td>
                                     <td>김담당</td>
                                 </tr>
-                                <tr>
-                                    <td>이고객</td>
-                                    <td>88-12-21</td>
-                                    <td>010-1111-1234</td>
-                                    <td>김담당</td>
-                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -135,7 +129,7 @@
                     <div class="input-group">
                         <div class="input-group-content">
                             <!-- 설계번호 -->
-                            <input type="text" id="dsgnSn" name="dsgnSn" disabled>
+                            <input type="text" id="dsgnSn" name="dsgnSn" th:value="${dsgnSn}" disabled>
 
                             <!-- 상품선택 -->
                             <div class="input-with-button">
@@ -144,15 +138,15 @@
                                 <!-- 설계유형코드 -->
                                 <input type="hidden" id="prodDsTyCd" name="prodDsTyCd">
                                 <!-- 상품코드 -->
-                                <input type="text" id="prodCd" name="prodCd" disabled>
+                                <input type="text" id="prodCd" name="prodCd" th:value="${savgInfo.prodCd}" disabled>
                                 <!-- 상품명 -->
-                                <input type="text" id="prodNm" name="prodNm" readonly>
+                                <input type="text" id="prodNm" name="prodNm" th:value="${savgInfo.prodNm}" readonly>
                                 <button><i class="bi bi-search" id="openProductModalButton"></i></button>
                             </div>
 
                             <!-- 납입주기 -->
                             <!-- 표시용 -->
-                            <input type="text" id="prodPayTy" name="prodPayTy" disabled>
+                            <input type="text" id="prodPayTy" name="prodPayTy" th:value="${savgInfo.payTerm}" disabled>
                             <!-- 저장용 -->
                             <input type="hidden" id="prodPayTyCd" name="prodPayTyCd">
 
@@ -160,15 +154,15 @@
 <!--                            <input type="date" id="savgStrtDt" name="savgStrtDt">-->
                             <div class="input-with-button">
                                 <!-- 시작일자 -->
-                                <input type="date" id="savgStrtDt" name="savgStrtDt">
+                                <input type="date" id="savgStrtDt" name="savgStrtDt" th:value="${savgInfo.savgStrtDt}">
                                 <!-- 만기일자 -->
                                 <label for="savgMtrDt">만기일자</label>
-                                <input type="text" id="savgMtrDt" name="savgMtrDt" disabled>
+                                <input type="text" id="savgMtrDt" name="savgMtrDt" th:value="${savgInfo.savgMtrDt}" disabled>
                             </div>
 
                             <!-- 불입금액 -->
                             <div class="button-row">
-                                <input type="text" id="savgCircleAmt" name="savgCircleAmt" value="0">
+                                <input type="text" id="savgCircleAmt" name="savgCircleAmt" th:value="${savgInfo.savgGoalAmt}">
                                 <div class="button-group">
                                     <button class="button-plus button-plus-amt">+ 10만원</button>
                                     <button class="button-plus button-plus-amt">+ 50만원</button>
@@ -179,7 +173,7 @@
 
                             <!-- 목표기간 -->
                             <div class="button-row">
-                                <input type="text" id="savgGoalPrd" name="savgGoalPrd" value="0">
+                                <input type="text" id="savgGoalPrd" name="savgGoalPrd" th:value="${savgInfo.savgGoalPrd}">
                                 <div class="button-group">
                                     <button class="button-plus button-plus-prd">+ 3개월</button>
                                     <button class="button-plus button-plus-prd">+ 6개월</button>
@@ -195,19 +189,19 @@
                                     <option value="prodairmin">최소금리</option>
                                     <option value="prodairmax">최대금리</option>
                                 </select>
-                                <input type="text" id="savgAplyRate" name="savgAplyRate" disabled>
+                                <input type="text" id="savgAplyRate" name="savgAplyRate" th:value="${savgInfo.savgAplyRate}" disabled>
                             </div>
 
                             <!-- 이자과세 -->
                             <!-- 표시용 -->
-                            <input type="text" id="prodIntTaxTy" name="prodIntTaxTy" disabled>
+                            <input type="text" id="prodIntTaxTy" name="prodIntTaxTy" th:value="${savgInfo.newSavgTaxRate}" disabled>
                             <!-- 계산용 -->
-                            <input type="hidden" id="prodIntTaxRate" name="prodIntTaxRate">
+                            <input type="hidden" id="prodIntTaxRate" th:value="${savgInfo.newSavgTaxRate}" name="prodIntTaxRate">
                             <!-- 저장용 -->
-                            <input type="hidden" id="savgIntTaxTyCd" name="savgIntTaxTyCd">
+                            <input type="hidden" id="savgIntTaxTyCd" th:value="${savgInfo.newSavgTaxRate}" name="savgIntTaxTyCd">
 
                             <!-- 설계일자 -->
-                            <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" disabled>
+                            <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" th:value="${savgInfo.effectiveDsgnDate}" disabled>
 
                             <!-- 수정일자 -->
                             <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" disabled>
@@ -366,6 +360,12 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
+                window.addEventListener('DOMContentLoaded', () => {
+                const button = document.querySelector('.btn-int-cal'); // 버튼 선택
+                 if (button) {
+                button.click(); // 버튼 클릭 이벤트 트리거
+                    }
+                });
                 document.querySelector('.btn-print').addEventListener('click', function () {
                     window.print();
                 });
@@ -380,11 +380,11 @@
                     }
 
                     // 날짜 필드 설정 (오늘 날짜)
-                    const dsgnCreateAt = document.getElementById('dsgnCreateAt');
+<!--                    const dsgnCreateAt = document.getElementById('dsgnCreateAt');-->
                     const dsgnUpdateAt = document.getElementById('dsgnUpdateAt');
                     const savgStrtDt = document.getElementById('savgStrtDt'); // 시작일자
 
-                    if (dsgnCreateAt) dsgnCreateAt.value = getTodayDate();
+<!--                    if (dsgnCreateAt) dsgnCreateAt.value = getTodayDate();-->
                     if (dsgnUpdateAt) dsgnUpdateAt.value = getTodayDate();
 
                     // 시작일자 기본값과 최소값 설정

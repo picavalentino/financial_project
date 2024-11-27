@@ -200,4 +200,88 @@
         )
     </insert>
 
+    <select id="findSavgDetails" parameterType="long" resultType="com.team.financial_project.promotion.dto.DsgnDetailDto">
+        WITH dsgn_data AS (
+        SELECT
+        dsgn_create_at, dsgn_update_at, cust_id, user_id, prod_sn, dsgn_ds_ty_cd
+        FROM tb_custprod_dsgn
+        WHERE dsgn_sn = #{dsgnSn}
+        ),
+        cust_data AS (
+        SELECT
+        cust_nm, cust_rrn, cust_email, cust_telno, cust_addr, cust_create_at
+        FROM tb_customer
+        WHERE cust_id = (SELECT cust_id FROM dsgn_data)
+        ),
+        code_data AS (
+        SELECT
+        code_nm
+        FROM tb_code
+        WHERE code_no = (SELECT cust_occp_ty_cd FROM tb_customer WHERE cust_id = (SELECT cust_id FROM dsgn_data))
+        AND code_cl = (SELECT cust_occp_ty_cd_code_cl FROM tb_customer WHERE cust_id = (SELECT cust_id FROM dsgn_data))
+        ),
+        user_data AS (
+        SELECT
+        user_name
+        FROM tb_user
+        WHERE user_id = (SELECT user_id FROM dsgn_data)
+        ),
+        prod_data AS (
+        SELECT
+        prod_cd, prod_nm
+        FROM tb_product
+        WHERE prod_sn = (SELECT prod_sn FROM dsgn_data)
+        ),
+        savg_data AS (
+        SELECT
+        savg_strt_dt, savg_mtr_dt, savg_goal_amt, savg_goal_prd, savg_aply_rate
+        FROM tb_prod_dsgn_savg
+        WHERE dsgn_sn = #{dsgnSn}
+        ),
+        tax_code_data AS (
+        SELECT
+        code_tax_rate
+        FROM tb_code
+        WHERE
+        code_no = (SELECT savg_int_tax_ty_cd FROM tb_prod_dsgn_savg WHERE dsgn_sn = #{dsgnSn})
+        AND code_cl = (SELECT savg_int_tax_ty_cd_code_cl FROM tb_prod_dsgn_savg WHERE dsgn_sn = #{dsgnSn})
+        ),
+        pay_term_data AS (
+        SELECT
+        code_nm
+        FROM tb_code
+        WHERE code_no = (SELECT savg_pay_ty_cd FROM tb_prod_dsgn_savg WHERE dsgn_sn = #{dsgnSn})
+        AND code_cl = (SELECT savg_pay_ty_cd_code_cl FROM tb_prod_dsgn_savg WHERE dsgn_sn = #{dsgnSn})
+        )
+        SELECT
+        CASE
+        WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
+            ELSE dsgn_data.dsgn_create_at
+        END AS effectiveDsgnDate,
+        prod_data.prod_cd AS prodCd,
+        prod_data.prod_nm AS prodNm,
+        cust_data.cust_nm AS custNm,
+        cust_data.cust_rrn AS custRrn,
+        cust_data.cust_email AS custEmail,
+        cust_data.cust_telno AS custTelno,
+        cust_data.cust_addr AS custAddr,
+        cust_data.cust_create_at AS custCreateAt,
+        code_data.code_nm AS codeNm,
+        user_data.user_name AS userName,
+        savg_data.savg_strt_dt AS savgStrtDt,
+        savg_data.savg_mtr_dt AS savgMtrDt,
+        savg_data.savg_goal_amt AS savgGoalAmt,
+        savg_data.savg_goal_prd AS savgGoalPrd,
+        savg_data.savg_aply_rate AS savgAplyRate,
+        tax_code_data.code_tax_rate AS savgTaxRate,
+        pay_term_data.code_nm AS payTerm
+        FROM dsgn_data
+        LEFT JOIN cust_data ON 1=1
+        LEFT JOIN code_data ON 1=1
+        LEFT JOIN user_data ON 1=1
+        LEFT JOIN prod_data ON 1=1
+        LEFT JOIN savg_data ON dsgn_data.dsgn_ds_ty_cd = '1'
+        LEFT JOIN tax_code_data ON dsgn_data.dsgn_ds_ty_cd = '1'
+        LEFT JOIN pay_term_data ON dsgn_data.dsgn_ds_ty_cd = '1'
+    </select>
 </mapper>

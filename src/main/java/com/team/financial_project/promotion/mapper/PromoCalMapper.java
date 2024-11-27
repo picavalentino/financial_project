@@ -1,5 +1,6 @@
 package com.team.financial_project.promotion.mapper;
 
+import com.team.financial_project.promotion.dto.DsgnDetailDto;
 import com.team.financial_project.promotion.dto.ProductInfoDto;
 import com.team.financial_project.promotion.dto.SavingsSaveDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -34,4 +35,6 @@ public interface PromoCalMapper {
     void insertLoanCustprodDsgn(SavingsSaveDto savingsSaveDto);
 
     void insertProdDsgnLoan(SavingsSaveDto savingsSaveDto);
+
+    DsgnDetailDto findSavgDetails(Long dsgnSn);
 }

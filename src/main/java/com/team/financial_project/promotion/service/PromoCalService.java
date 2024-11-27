@@ -1,5 +1,6 @@
 package com.team.financial_project.promotion.service;
 
+import com.team.financial_project.promotion.dto.DsgnDetailDto;
 import com.team.financial_project.promotion.dto.ProductInfoDto;
 import com.team.financial_project.promotion.dto.SavingsSaveDto;
 import com.team.financial_project.promotion.mapper.PromoCalMapper;
@@ -65,5 +66,10 @@ public class PromoCalService {
 
         // Step 3: TB_PROD_DSGN_APST에 데이터 삽입
         promoCalMapper.insertProdDsgnLoan(savingsSaveDto);
+    }
+
+    @Transactional
+    public DsgnDetailDto findSavgDetails(Long dsgnSn) {
+        return promoCalMapper.findSavgDetails(dsgnSn);
     }
 }
