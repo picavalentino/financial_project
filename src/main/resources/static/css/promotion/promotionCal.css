@@ -431,6 +431,13 @@ input[type="date"] {
     gap: 16px;
 }
 
+.input-with-button label {
+    height: 32px;
+    color: #303249;
+    font-size: 16px;
+    line-height: 32px;
+}
+
 .input-with-button button {
     width: 32px;
     height: 32px;
