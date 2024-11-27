@@ -96,36 +96,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 이벤트 등록
   masterCheckbox.addEventListener('click', () => {
-    selectAll(masterCheckbox);
+    selectAllAcrossPages(masterCheckbox.checked);
     saveCheckboxState();
   });
 
   allCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('click', () => {
-      checkSelected();
+      updateMasterCheckboxState();
       saveCheckboxState();
     });
   });
 });
 
-/* 체크박스 선택 여부에 따라 전체 선택 체크박스 상태 업데이트 */
-function checkSelected() {
-  const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
-  const checkedCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]:checked');
+/* 전체 선택 체크박스 상태를 모든 페이지 기준으로 업데이트 */
+function updateMasterCheckboxState() {
+  const savedState = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
   const masterCheckbox = document.querySelector('input[name="selectAllCustomers"]');
 
-  // 상태 동기화
-  masterCheckbox.checked = allCheckboxes.length > 0 && allCheckboxes.length === checkedCheckboxes.length;
+  // 모든 페이지에서 선택된 상태 확인
+  const allSelected = Object.values(savedState).every((isChecked) => isChecked);
+
+  // 전체 선택 체크박스 상태 업데이트
+  masterCheckbox.checked = allSelected;
 }
 
-/* 마스터 체크박스 선택 시, 모든 개별 체크박스 동기화 */
-function selectAll(selectAll) {
-  const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
-  const isChecked = selectAll.checked;
+/* 마스터 체크박스가 모든 페이지의 체크박스를 선택/해제 */
+function selectAllAcrossPages(isChecked) {
+  const savedState = JSON.parse(localStorage.getItem('selectedCustomersState')) || {};
 
+  // 모든 체크박스를 선택/해제
+  Object.keys(savedState).forEach((key) => {
+    savedState[key] = isChecked;
+  });
+
+  // 현재 페이지의 체크박스 상태 동기화
+  const allCheckboxes = document.querySelectorAll('input[name="selectedCustomers"]');
   allCheckboxes.forEach((checkbox) => {
     checkbox.checked = isChecked;
+    savedState[checkbox.value] = isChecked;
   });
+
+  // 업데이트된 상태 저장
+  localStorage.setItem('selectedCustomersState', JSON.stringify(savedState));
 }
 
 /* 체크박스 상태를 로컬스토리지에 저장 */
@@ -152,7 +164,7 @@ function restoreCheckboxState() {
   });
 
   // 전체 체크박스 상태 동기화
-  checkSelected();
+  updateMasterCheckboxState();
 }
 
 
