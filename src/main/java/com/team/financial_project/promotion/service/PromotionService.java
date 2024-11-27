@@ -106,7 +106,9 @@ public class PromotionService {
 
     // 진행 상태 업데이트
     @Transactional
-    public boolean updateAllProgressStatuses() {
+    public int updateAllProgressStatuses() {
+        int updatedCount = 0; // 상태 변경된 항목 수를 저장할 변수
+
         try {
             // 1. 모든 데이터 조회
             List<PromotionListDto> promotionList = mapper.getAllPromotions();
@@ -139,6 +141,7 @@ public class PromotionService {
                 // 상태 변경
                 if (!newStatus.equals(dto.getPrgStcd())) { // 상태 변경이 필요한 경우만 업데이트
                     mapper.updateProgressStatus(dto.getDsgnSn(), newStatus);
+                    updatedCount++; // 변경된 항목 수 증가
 
                     // 변경 내역을 콘솔에 출력
                     System.out.println("Updated Status: ID = " + dto.getDsgnSn() +
@@ -147,11 +150,11 @@ public class PromotionService {
                 }
             }
             System.out.println("Progress status update completed.");
-            return true; // 업데이트 성공
+            return updatedCount; // 변경된 건수 반환
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("Error occurred during status update.");
-            return false; // 업데이트 실패
+            e.printStackTrace();
+            throw new RuntimeException("진행 상태 갱신 중 오류 발생", e);
         }
     }
 

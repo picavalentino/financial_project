@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -166,10 +167,16 @@ public class PromotionController {
     @PostMapping("/update-statuses")
     @ResponseBody
     public ResponseEntity<String> updateProgressStatuses() {
-        boolean result = promotionService.updateAllProgressStatuses();
-        if (result) {
-            return ResponseEntity.ok("진행 상태가 최신 상태로 갱신되었습니다.");
-        } else {
+        try {
+            int updatedCount = promotionService.updateAllProgressStatuses();
+            String formattedDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            if (updatedCount > 0) {
+                return ResponseEntity.ok("총 " + updatedCount + "건의 진행 상태가 " + formattedDateTime + " 기준으로 업데이트되었습니다.");
+            } else {
+                return ResponseEntity.ok("업데이트가 필요한 진행 상태가 없습니다. (" + formattedDateTime + ")");
+            }
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("진행 상태를 갱신하는 중 오류가 발생했습니다.");
         }
