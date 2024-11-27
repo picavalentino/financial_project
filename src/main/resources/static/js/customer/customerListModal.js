@@ -442,5 +442,48 @@ function removeTag(event) {
     }
 }
 
+// ===============================================================
+// 찐 메세지 발송
+function sendMessage() {
+    const tagBody = document.getElementById('tagContainer');
+    const messageBox = document.querySelector('.message-box textarea');
 
+    if (!tagBody || !messageBox) {
+        alert('메시지를 보낼 데이터가 없습니다.');
+        return;
+    }
+
+    // 선택된 고객 정보 추출
+    const tags = tagBody.querySelectorAll('.tag-btn');
+    const selectedCustomers = Array.from(tags).map(tag => {
+        const customerInfo = tag.textContent.trim().split(' (');
+        return {
+            custNm: customerInfo[0],
+            custTelno: customerInfo[1]?.replace(')', '').trim() || ''
+        };
+    });
+
+    if (selectedCustomers.length === 0) {
+        alert('선택된 고객이 없습니다.');
+        return;
+    }
+
+    // 메시지 내용 추출
+    const messageContent = messageBox.value.trim();
+    if (!messageContent) {
+        alert('메시지 내용이 비어 있습니다.');
+        return;
+    }
+
+    // 최종 메시지 준비
+    let finalMessage = `--- 메시지 발송 ---\n`;
+    selectedCustomers.forEach(customer => {
+        finalMessage += `고객: ${customer.custNm} / ${customer.custTelno}`;
+    });
+    finalMessage += `${messageContent}`;
+
+    // 발송 전 확인
+    console.log(finalMessage);
+    alert('메시지가 콘솔에 출력되었습니다. 실제 발송 로직을 추가하세요.');
+}
 
