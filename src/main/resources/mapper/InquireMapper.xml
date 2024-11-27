@@ -13,6 +13,8 @@
         <result property="inqContent" column="inq_content"/>
         <result property="inqPwd" column="inq_pwd"/>
         <result property="inqReply" column="inq_reply"/>
+        <result property="inqCheck" column="inq_check"/>
+        <result property="inqNotice" column="inq_notice"/>
         <result property="inqAttachFile1" column="inq_attach_file_1"/>
         <result property="inqAttachFile2" column="inq_attach_file_2"/>
         <result property="inqAttachFile3" column="inq_attach_file_3"/>
@@ -26,17 +28,18 @@
     <!-- 전체 목록 조회  -->
     <select id="findAllList" resultMap="InquireResultMap">
         SELECT
-        inq_id,
-        user_id,
-        inq_title,
-        inq_category,
-        inq_anonym,
-        inq_reply,
-        inq_check,
-        inq_notice,
-        inq_create_at
-        FROM t_inquire
-        WHERE inq_status LIKE '1'
+            i.inq_id,
+            COALESCE(u.user_name, '익명') AS user_id, -- 익명 처리 (NULL일 경우 기본값 '익명')
+            i.inq_title,
+            i.inq_category,
+            i.inq_anonym,
+            i.inq_reply,
+            i.inq_check,
+            i.inq_notice,
+            i.inq_create_at
+        FROM t_inquire i
+        LEFT JOIN tb_user u ON u.user_id = i.user_id
+        ORDER BY i.inq_id DESC
     </select>
 
     <!-- 상세 보기 -->
@@ -50,6 +53,8 @@
         inq_content,
         inq_pwd,
         inq_reply,
+        inq_check,
+        inq_notice,
         inq_attach_file_1,
         inq_attach_file_2,
         inq_attach_file_3,
@@ -61,6 +66,39 @@
         FROM t_inquire
         WHERE inq_id = #{inqId}
     </select>
+
+    <!-- 조건 검색 -->
+    <select id="searchInquires" resultMap="InquireResultMap">
+        SELECT
+        i.inq_id,
+        COALESCE(u.user_name, '익명') AS user_id, -- 익명 처리 (NULL일 경우 기본값 '익명')
+        i.inq_title,
+        i.inq_category,
+        i.inq_anonym,
+        i.inq_reply,
+        i.inq_check,
+        i.inq_notice,
+        i.inq_create_at
+        FROM t_inquire i
+        LEFT JOIN tb_user u ON u.user_id = i.user_id
+        WHERE 1=1
+        <if test="inqCategory != null and inqCategory != ''">
+            AND i.inq_category = #{inqCategory}
+        </if>
+        <if test="inqTitle != null and inqTitle != ''">
+            <bind name="inqTitlePattern" value="'%' + inqTitle + '%'"></bind>
+            AND i.inq_title LIKE #{inqTitlePattern}
+        </if>
+        <if test="userName != null and userName != ''">
+            <bind name="userNamePattern" value="'%' + userName + '%'"></bind>
+            AND u.user_name LIKE #{userNamePattern}
+        </if>
+        <if test="inqCreateAt != null and inqCreateAt != ''">
+            AND DATE(i.inq_create_at) = #{inqCreateAt}
+        </if>
+    </select>
+
+    <!-- 게시글 등록 -->
     <insert id="insertInquire" parameterType="inquireDTO">
         INSERT INTO t_inquire (
         user_id, inq_category, inq_title, inq_anonym,

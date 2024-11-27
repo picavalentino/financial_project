@@ -149,3 +149,62 @@
     border: none;
     margin: auto;
 }
+/* 페이지네이션 */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 10px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+/* 페이지 버튼 및 링크 */
+.pagination-button, .pagination-number {
+    color: #333;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+/* 현재 페이지 */
+.pagination-active {
+    background-color: #010535;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* 버튼 및 링크 호버 효과 */
+.pagination-button:hover, .pagination-number:hover {
+    background-color: #ced4da;
+}
+
+/* 이전/다음 버튼 */
+.pagination-prev, .pagination-next {
+    font-size: 16px;
+    padding: 6px 8px;
+    background-color: white;
+}
+
+/* 페이지 정보 */
+.pagination-info {
+    margin-left: auto;
+    font-size: 14px;
+    color: #666;
+    position: absolute;
+    right: 20px;
+}

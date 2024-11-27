@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/css/system/notice-list.css">
   <link rel="stylesheet" href="/css/buttons/button.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/system/notice-list.js?v=1" defer></script>
+
 </head>
 <title>GS Bank</title>
 <!-- 전체 적용될 CSS -->
@@ -24,39 +26,36 @@
     <!--  위치  -->
     <div class="location">
       <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-      <a th:href="@{/system/notice}"> / 시스템 관리</a>
-      <a th:href="@{/system/notice}"> / 게시판 관리 </a>
-      <a> / 게시판 관리 </a>
+      <a th:href="@{/system/inquire}"> / 시스템 관리</a>
+      <a th:href="@{/system/inquire}"> / 게시판 관리 </a>
     </div>
     <!--  상단 메뉴  -->
     <div class="top-menu">
       <h1 class="title">게시글 목록</h1>
       <div class="condition-box">
-        <form id="search-form" action="/inquire/search" method="GET">
+        <form id="search-form" action="/system/inquire" method="GET">
           <!-- 카테고리 -->
           <div class="condition">
-            <select id="category" name="inqCategory">
+            <select id="inqCategory" name="inqCategory">
               <option value="">카테고리</option>
               <option value="1">공지사항</option>
               <option value="2">시스템관련문의</option>
               <option value="3">기타건의사항</option>
             </select>
           </div>
-
           <!-- 검색 키워드 -->
           <div class="condition" id="condition-keyword">
             <div style="display: flex; gap: 0px;">
-              <select id="keyword-type">
+              <select id="keywordType" name="keywordType">
                 <option value="inqTitle">제목</option>
                 <option value="userName">작성자</option>
               </select>
               <input id="keyword" name="keyword" type="text" placeholder="검색어를 입력하세요">
             </div>
           </div>
-
           <!-- 작성일 -->
           <div class="condition condition-date">
-            <input placeholder="작성일" id="created-at" name="inqCreateAt" type="date">
+            <input placeholder="작성일" id="inqCreateAt" name="inqCreateAt" type="date">
           </div>
 
           <!-- 버튼 그룹 -->
@@ -74,7 +73,7 @@
     <!-- 하단 컨텐츠: 게시글 목록 테이블 -->
     <div class="bottom">
       <div class="bottom-menu">
-        <div class="inquire-size"> 총 : <span>n</span>개</div>
+        <div class="product-size"> 총 : <span th:text="${productSize}"></span>개</div>
         <div class="btn-wrap" id="btn-bottom-menu">
           <button class="btn" id="btn-register">
             <div class="icon-container"><i class="icon bi bi-plus-circle-fill"></i></div> 등록
@@ -85,66 +84,62 @@
         <table class="table-inquire">
           <thead>
           <tr>
-            <th>NO.</th>
-            <th>카테고리</th>
-            <th>작성자</th>
-            <th>제목</th>
-            <th>날짜</th>
-            <th>조회</th>
-            <th>답변상태</th>
-            <th>공지사항</th>
+            <th class="sortTable" onclick="sortTable('inqId')">NO.</th>
+            <th class="sortTable" onclick="sortTable('inqCategory')">카테고리</th>
+            <th class="sortTable" onclick="sortTable('userId')">작성자</th>
+            <th class="sortTable" onclick="sortTable('inqTitle')">제목</th>
+            <th class="sortTable" onclick="sortTable('inqCreateAt')">날짜</th>
+            <th class="sortTable" onclick="sortTable('inqCheck')">조회</th>
+            <th class="sortTable" onclick="sortTable('inqReply')">답변상태</th>
+            <th class="sortTable" onclick="sortTable('inqNotice')">공지사항</th>
           </tr>
           </thead>
           <tbody id="result-table-body">
-          <tr th:each="inquire : ${list}" th:onclick="'window.location.href=\'/system/notice/detail/' + ${inquire.inqId} + '\';'" style="cursor: pointer;">
+          <tr th:each="inquire : ${list}" th:onclick="'window.location.href=\'/system/inquire/detail/' + ${inquire.inqId} + '\';'" style="cursor: pointer;">
             <td>[[ ${inquire.inqId} ]]</td>
             <td>[[ ${inquire.inqCategory} ]]</td>
-            <td>[[ ${inquire.userId} ]]</td>
+            <td  th:text="${inquire.inqAnonym == 1 ? '익명' : inquire.userId}"></td>
             <td>[[ ${inquire.inqTitle} ]]</td>
-            <td>[[ ${inquire.inqCreateAt} ]]</td>
+            <td th:text="${inquire.formattedInqCreateAt}"></td>
             <td>[[ ${inquire.inqCheck} ]]</td>
             <td id="td-reply">
-              <div class="reply" id="rep-completed">답변완료</div>
-              <div class="reply" id="rep-wait">답변대기</div>
+              <div th:if="${inquire.inqReply == '1'}" class="reply" id="rep-completed">답변완료</div>
+              <div th:if="${inquire.inqReply == '0'}" class="reply" id="rep-wait"
+                   th:onclick="|window.location.href='/inquire/detail/' + ${inquire.inqId};|"
+                   style="cursor: pointer;">답변대기</div>
             </td>
             <td>
-              <button class="btn-notice-register">등록</button>
-              <button class="btn-notice-cancel">해제</button>
+              <button type="button" th:if="${inquire.inqNotice == '2'}" class="btn-notice-register">등록</button>
+              <button type="button" th:if="${inquire.inqNotice == '1'}" class="btn-notice-cancel">해제</button>
             </td>
           </tr>
           </tbody>
         </table>
       </div>
+      <!--  페이지네이션  -->
+      <div class="pagination-container">
+        <div class="pagination">
+          <!-- 이전 버튼 -->
+          <button class="pagination-prev pagination-button" th:if="${currentPage > 1}"
+                  th:href="@{${requestURI}(page=${currentPage - 1}, inqCategory=${inqCategory ?: ''}, keywordType=${keywordType ?: ''}, keyword=${keyword ?: ''}, inqCreateAt=${inqCreateAt ?: ''})}">
+            &lt;</button>
+          <button class="pagination-prev pagination-button" th:if="${currentPage == 1}" disabled>&lt;</button>
+          <!-- 페이지 번호 -->
+          <a th:each="page : ${#numbers.sequence(1, totalPages)}"
+             th:classappend="${page == currentPage} ? 'pagination-active' : ''"
+             th:href="@{${requestURI}(page=${currentPage}, inqCategory=${inqCategory ?: ''}, keywordType=${keywordType ?: ''}, keyword=${keyword ?: ''}, inqCreateAt=${inqCreateAt ?: ''})}"
+             th:text="${page}" class="pagination-number"></a>
+          <!-- 다음 버튼 -->
+          <button class="pagination-next pagination-button" th:if="${currentPage < totalPages}"
+                  th:href="@{${requestURI}(page=${currentPage + 1}, inqCategory=${inqCategory ?: ''}, keywordType=${keywordType ?: ''}, keyword=${keyword ?: ''}, inqCreateAt=${inqCreateAt ?: ''})}">
+            &gt;</button>
+          <button class="pagination-next pagination-button" th:if="${currentPage == totalPages}" disabled>&gt;</button>
+          <span class="pagination-info" th:text="'Page ' + ${currentPage} + ' of ' + ${totalPages}"></span>
+        </div>
+      </div>
     </div>
-    <!--  페이지네이션  -->
-    <div class="pagination-container">
-      <!--      <div class="pagination">-->
-      <!--        &lt;!&ndash; 이전 버튼 &ndash;&gt;-->
-      <!--        <button class="prev" th:if="${currentPage > 1}"-->
-      <!--                th:data-url="@{${requestURI}(page=${currentPage - 1}, prodTyCd=${prodTyCd ?: ''}, prodCurrStcd=${prodCurrStcd ?: ''}, prodPayTyCd=${prodPayTyCd ?: ''}, prodNm=${prodNm ?: ''})}">-->
-      <!--          이전-->
-      <!--        </button>-->
-      <!--        <span th:each="page : ${#numbers.sequence(1, totalPages)}"-->
-      <!--              th:classappend="${page == currentPage} ? 'active' : ''"-->
-      <!--              th:data-url="@{${requestURI}(page=${page}, prodTyCd=${prodTyCd ?: ''}, prodCurrStcd=${prodCurrStcd ?: ''}, prodPayTyCd=${prodPayTyCd ?: ''}, prodNm=${prodNm ?: ''})}">-->
-      <!--              <span th:text="${page}"></span>-->
-      <!--          </span>-->
-      <!--        &lt;!&ndash; 다음 버튼 &ndash;&gt;-->
-      <!--        <button class="next" th:if="${currentPage < totalPages}"-->
-      <!--                data-url="@{${requestURI}(page=${currentPage + 1}, prodTyCd=${prodTyCd}, prodCurrStcd=${prodCurrStcd}, prodPayTyCd=${prodPayTyCd}, prodNm=${prodNm})}">-->
-      <!--          다음-->
-      <!--        </button>-->
-      <!--      </div>-->
+    </div>
   </div>
-  </div>
-  <script th:inline="javascript">
-      $(document).ready(function(){
-          //등록 버튼 클릭
-          $("#btn-register").on("click", function (e){
-            window.location.href="/inquire/insert";
-          });
-      });
-  </script>
 </div>
 </body>
 </html>
