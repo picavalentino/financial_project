@@ -1,18 +1,16 @@
 /* ======================================================================================================= */
-/* 검색 영역 */
+/* 검색 바탕, 테이블 바탕 */
 .search-controls-area, .bottom-container {
-    padding: 20px;
-    margin: 20px auto;
-    /*background-color: #f4f4f6;*/
-    background-color: white;
-    /*border-radius: 8px;*/
-    border-radius: 15px;
     display: flex;
     flex-direction: column;
     gap: 15px; /* search-row 수직 간격 */
-    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+    margin: 20px auto;
+    width: 100%;
+    max-width: 1440px;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /*margin-bottom: 30px;*/
 }
 
 .bottom-container {
@@ -135,7 +133,8 @@
 /* 테이블 헤더 */
 .data-table thead th {
     font-weight: bold;
-    background-color: #f8f9fa;
+    /*background-color: #f8f9fa;*/
+    background-color: #f1f3f5;
     text-align: center;
     color: #495057;
     position: relative;
