@@ -6,7 +6,7 @@
         <div class="container">
             <!-- 사용자 프로필 -->
             <div class="profile text-center mb-4">
-                <img src="/images/common/profile.png" alt="User Profile" class="img-fluid" id="userProfileImage">
+                <a th:href="@{/customer/list}"><img src="/images/common/profile.png" alt="User Profile" class="img-fluid" id="userProfileImage"></a>
                 <h4 id="userProfileName">000 님</h4>
             </div>
 
@@ -21,7 +21,7 @@
                         <div class="collapse" id="customerManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/customer/list}">고객 목록</a>
+                                    <a th:href="@{/customer/list}">고객 목록</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="5">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
@@ -39,19 +39,19 @@
                         <div class="collapse" id="productManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/product/list}">상품 목록 조회</a>
+                                    <a th:href="@{/product/list}">상품 목록 조회</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="6">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/product/insert}">신규 상품 등록</a>
+                                    <a th:href="@{/product/insert}">신규 상품 등록</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="7">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/product/sales}">매출 조회</a>
+                                    <a th:href="@{/product/sales}">매출 조회</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="8">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
@@ -69,13 +69,13 @@
                         <div class="collapse" id="eventManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/schedule/personal}">개인 일정 관리</a>
+                                    <a th:href="@{/schedule/personal}">개인 일정 관리</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="9">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/schedule/customer}">고객 이벤트 관리</a>
+                                    <a th:href="@{/schedule/customer}">고객 이벤트 관리</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="10">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
@@ -93,13 +93,13 @@
                         <div class="collapse" id="promotionManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/promotion/list}">상품 설계 조회</a>
+                                    <a th:href="@{/promotion/list}">상품 설계 조회</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="11">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/promotion/cal}">금융 계산기</a>
+                                    <a th:href="@{/promotion/cal}">금융 계산기</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="12">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
@@ -117,19 +117,19 @@
                         <div class="collapse" id="employeeManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/management/list}">직원 목록</a>
+                                    <a th:href="@{/management/list}">직원 목록</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="13">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/management/insert}">직원 등록</a>
+                                    <a th:href="@{/management/insert}">직원 등록</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="14">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/management/employees}">직원 정보 관리</a>
+                                    <a th:href="@{/management/employees}">직원 정보 관리</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="15">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
@@ -147,13 +147,13 @@
                         <div class="collapse" id="boardManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/board/list}">게시글 목록</a>
+                                    <a th:href="@{/inquire/list}">게시글 목록</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="16">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/board/insert}">게시글 등록</a>
+                                    <a th:href="@{/inquire/insert}">게시글 등록</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="17">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
@@ -171,13 +171,13 @@
                         <div class="collapse" id="systemManagement">
                             <ul class="list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/system/board}">게시판 관리</a>
+                                    <a th:href="@{/system/inquire}">게시판 관리</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="18">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center">
-                                    <a href="@{/system/auth}">권한 관리</a>
+                                    <a th:href="@{/system/auth}">권한 관리</a>
                                     <a href="javascript:void(0);" class="ml-auto bookmark-btn" data-menu-id="19">
                                         <img src="/images/common/pin_no.png" class="img-pin">
                                     </a>
@@ -213,7 +213,7 @@
                 if (data) {
                     // 프로필 이미지 업데이트
                     const profileImage = document.getElementById('userProfileImage');
-                    profileImage.src = data.user_imgpath || '/images/common/default-profile.png';
+                    profileImage.src = data.user_imgpath || '/images/common/profile.png';
 
                     // 이름과 직위 업데이트
                     const profileName = document.getElementById('userProfileName');
