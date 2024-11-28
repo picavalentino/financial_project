@@ -61,13 +61,29 @@ public interface UserMapper {
     // employee InsertModal에서 직원등록하기
     void insertEmployee(UserDTO userDTO);
 
+    // 로그인
     UserDTO findById(String id);
 
+    // 이름으로 사원번호 찾기
     List<UserDTO> findUsersByKeyword(String keyword);
 
+    // 휴대전화 중복확인
     UserDTO certifyByUserTelno(String telno);
 
+    // 사원 등록
     void updateUserFromReg(UserDTO user);
+
+    // 사번 찾기에서 해당 유저가 있는지 확인
+    UserDTO hasExistByUser_name(@Param("name") String name, @Param("telno")String telno);
+
+    // 사번 찾기
+    String findUserIdByUserTelno(String telno);
+
+    // 비밀번호 찾기에서 해당 유저가 있는지 확인
+    UserDTO hasExistByUser_id(@Param("id") String id, @Param("telno")String telno);
+
+    // 사원번호로 찾아 비밀번호 변경
+    void updateUserPw(@Param("id")String userId, @Param("pw")String userPw);
 
     // 상품등록페이지: 담당자 검색
     List<Map<String, Object>> findByNameContaining(@Param("name") String name);
