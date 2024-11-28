@@ -69,6 +69,8 @@ document.getElementById('user_birthday').addEventListener('input', function (e) 
 });
 
 $(document).ready(function () {
+    let csrfToken = $('meta[name="_csrf"]').attr('content');
+    let csrfHeader = $('meta[name="_csrf_header"]').attr('content');
     $("#btn-register").on("click", function () {
 
         // 서버로부터 데이터 가져오기
@@ -127,6 +129,9 @@ $(document).ready(function () {
             type: "POST",
             url: "/management/generate/userId",
             data: { joiningDate: joiningDate },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
             success: function(user_id) {
                 $("#user_id").val(user_id); // 생성된 사원번호를 입력 필드에 채움
             },
