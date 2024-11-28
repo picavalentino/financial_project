@@ -203,7 +203,7 @@ body {
 }
 /* 등록 버튼 */
 .btn-photoReg {
-    width: 95px;
+    width: 100px;
     background-color: #5ba1aa;
 }
 
@@ -217,7 +217,7 @@ body {
 /* 초기화 버튼 */
 .btn-reset {
     background-color: #5a5a5a;
-    width: 80px;
+    width: 85px;
 }
 
 .btn-reset .icon {
@@ -270,6 +270,9 @@ body {
 }
 
 /* 드롭다운 */
+.id-container{
+    position: relative;
+}
 .dropdown {
     display: none;
     position: absolute;
@@ -281,12 +284,19 @@ body {
     z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
     padding: 0;
     margin: 0 5px;
+    width: 97%;
+}
+.dropdown span{
+    font-size: small;
+    color: #878787;
+    margin-left: 20px;
+    justify-content: center;
 }
 
 .dropdown .dropdown-item {
     width: 100%;
-    padding: 10px; /* 항목 간격 설정 */
-    cursor: pointer; /* 커서 모양 변경 */
+    padding: 10px;
+    cursor: pointer;
     border-bottom: 1px solid #f0f0f0; /* 항목 구분선 */
 }
 

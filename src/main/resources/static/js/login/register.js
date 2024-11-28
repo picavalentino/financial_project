@@ -31,7 +31,7 @@ $(document).ready(function(){
                             $('#userResults').append('<div class="dropdown-item" data-name="' + user.user_name
                             + '" data-birthday="' + user.user_birthday
                             + '" data-id="' + user.user_id+ '">'
-                            + user.user_name +" / "+ user.user_birthday + '</div>');
+                            + user.user_name +" / "+ user.user_birthday +'<span>'+ user.user_id +'</span></div>');
                         });
                         // 검색한 이름 선택시
                         $('.dropdown-item').on('click', function() {
