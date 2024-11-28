@@ -3,6 +3,7 @@ package com.team.financial_project.counsel.service;
 import com.team.financial_project.counsel.dto.CodeDTO;
 import com.team.financial_project.counsel.dto.TbCounselDTO;
 import com.team.financial_project.counsel.mapper.CounselMapper;
+import com.team.financial_project.dto.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -50,6 +51,10 @@ public class CounselService {
         return response;
     }
 
+    public UserDTO getUserById(String userId) {
+        return mapper.getUserById(userId);
+    }
+
     public void insertCounsel(TbCounselDTO dto) {
         mapper.insertCounsel(dto);
     }
@@ -58,8 +63,6 @@ public class CounselService {
         mapper.updateCounsel(id, category, content);
     }
 
-    
-    
     public void deleteCounsel(Long id) {
         mapper.deleteCounsel(id);
     }

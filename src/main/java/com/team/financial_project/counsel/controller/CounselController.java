@@ -30,16 +30,6 @@ public class CounselController {
         // 코드 리스트 조회 후 모델에 추가
         List<CodeDTO> counselCategories = counselService.getCodeListByCl("700");
         model.addAttribute("counselCategories", counselCategories);
-        return "/counsel/counsel";
-    }
-
-    @GetMapping("/managementEmployees")
-    public String managementEmployees(){
-        return "/management/managementEmployees";
-    }
-
-    @GetMapping("/managementList")
-    public String managementList(){
-        return "/management/managementList";
+        return "counsel/counsel";
     }
 }

@@ -44,6 +44,23 @@
         SELECT COUNT(*) FROM TB_COUNSEL
     </select>
 
+    <select id="getUserById" parameterType="String" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+            tu.user_id,                         -- 직원ID
+            tu.user_name,                       -- 직원명
+            tu.user_dept_cd AS user_dept_cd,    -- 부서코드
+            dept_cd.code_nm AS dept_name        -- 부서명
+        FROM
+            tb_user tu
+        LEFT JOIN
+            tb_code dept_cd
+        ON
+            tu.user_dept_cd_code_cl = dept_cd.code_cl
+            AND tu.user_dept_cd = dept_cd.code_no
+        WHERE
+            tu.user_id = #{userId}
+    </select>
+
     <!-- 상담 작성 -->
     <insert id="insertCounsel" parameterType="com.team.financial_project.counsel.dto.TbCounselDTO">
         INSERT INTO TB_COUNSEL (

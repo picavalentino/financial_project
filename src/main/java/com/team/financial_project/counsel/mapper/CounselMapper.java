@@ -2,6 +2,7 @@ package com.team.financial_project.counsel.mapper;
 
 import com.team.financial_project.counsel.dto.CodeDTO;
 import com.team.financial_project.counsel.dto.TbCounselDTO;
+import com.team.financial_project.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +21,9 @@ public interface CounselMapper {
 
     // 총 레코드 수를 가져오는 사용자 정의 방법
     long getTotalCounselCount();
+
+    // 로그인된 유저 아이디로 정보 가져오기
+    UserDTO getUserById(@Param("userId") String userId);
 
     // 상담 작성
     void insertCounsel(@Param("dto") TbCounselDTO dto);

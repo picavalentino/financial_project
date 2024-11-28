@@ -249,13 +249,45 @@ counselWriteBtn.onclick = function() {
     document.getElementById("insert_counsel_category").value = "선택";
     document.getElementById("insert_counsel_content").value = "";
 
-    document.getElementById("writer_user_id").value = "20160518007"; // 로그인된 user_id 넣기
-    document.getElementById("cust_id").value = "20241118004"; // cust_id 넣기
-    document.getElementById("writer_user_name").value = "손사원"; // 로그인된 user_name 넣기
-    document.getElementById("writer_user_dept_cd").value = "3"; // 로그인된 user_dept_cd 넣기
-    document.getElementById("writer_user_dept_nm").value = "영업2부"; // 로그인된 user_dept_cd 넣기
+    // 페이지에서 고객 ID 가져오기
+    const customerId = document.getElementById("custId").value;
+    document.getElementById("cust_id").value = customerId; // 상담 작성 모달 필드에 값 설정
+    console.log("Fetched Customer ID:", customerId); // 고객 아이디 콘솔에 출력
 
-    writeModal.style.display = "flex";
+    // 로그인한 직원 정보 가져오기
+    fetch('/user/me', {
+        method: 'GET',
+        headers: {
+            [csrfHeader]: csrfToken // CSRF 토큰 포함
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch user info");
+            }
+            return response.json();
+        })
+        .then(user => {
+            // 가져온 정보 확인용
+            console.log("Fetched User Info Object:", user);
+            console.log("User ID:", user.user_id);
+            console.log("User Name:", user.user_name);
+            console.log("User Dept Code:", user.user_dept_cd);
+            console.log("Dept Name:", user.dept_name);
+
+            // 사용자 정보를 모달 필드에 설정
+            document.getElementById("writer_user_id").value = user.user_id; // 로그인된 user_id 넣기
+            document.getElementById("writer_user_name").value = user.user_name; // 로그인된 user_name 넣기
+            document.getElementById("writer_user_dept_cd").value = user.user_dept_cd; // 로그인된 user_dept_cd 넣기
+            document.getElementById("writer_user_dept_nm").value = user.dept_name; // 로그인된 user_dept_nm 넣기
+
+            // 모든 데이터를 설정한 뒤 모달 열기
+            writeModal.style.display = "flex";
+        })
+        .catch((error) => {
+            console.error("Error fetching user info:", error);
+            alert("직원 정보를 가져오는 데 실패했습니다.");
+        });
 }
 
 // 상담작성 insert 버튼 클릭
