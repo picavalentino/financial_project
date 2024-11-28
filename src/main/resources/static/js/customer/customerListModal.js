@@ -463,21 +463,32 @@ function openMessageModal(defaultMessage) {
             }
         });
 
-    // 태그 컨테이너 초기화 및 데이터 추가
-    tagBody.innerHTML = '';
-    if (selectedData.length === 0) {
-        tagBody.innerHTML = '<p id="noCustomerMessage">선택된 데이터가 없습니다. 고객을 선택하세요.</p>';
-    } else {
-        selectedData.forEach((customer) => {
-            const newRow = document.createElement('div');
-            newRow.className = 'tag-btn';
-            newRow.innerHTML = `
-                ${customer.custNm} (${customer.custTelno})
-                <span class="close-tag" onclick="removeTag(event)">X</span>
-            `;
-            tagBody.appendChild(newRow);
-        });
-    }
+   // 태그 컨테이너 초기화 및 데이터 추가
+   tagBody.innerHTML = '';
+   if (selectedData.length === 0) {
+       tagBody.innerHTML = '<p id="noCustomerMessage">선택된 데이터가 없습니다. 고객을 선택하세요.</p>';
+   } else {
+       selectedData.forEach((customer) => {
+           const newRow = document.createElement('div');
+           newRow.className = 'tag-btn';
+
+           // 고객명과 전화번호 텍스트 추가
+           const customerText = document.createElement('span');
+           customerText.className = 'customer-info';
+           customerText.textContent = `${customer.custNm} (${customer.custTelno})`;
+
+           // X 버튼 추가
+           const closeButton = document.createElement('span');
+           closeButton.className = 'close-tag';
+           closeButton.textContent = 'X';
+           closeButton.onclick = removeTag; // 태그 삭제 이벤트
+
+           // 태그에 요소 추가
+           newRow.appendChild(customerText);
+           newRow.appendChild(closeButton);
+           tagBody.appendChild(newRow);
+       });
+   }
 
     // 메시지 박스를 기본 메시지로 초기화
     resetMessageBox(defaultMessage);
@@ -516,12 +527,11 @@ function sendMessage() {
     }
 
     // 선택된 고객 정보 추출
-    const tags = tagBody.querySelectorAll('.tag-btn');
-    const selectedCustomers = Array.from(tags).map(tag => {
-        const customerInfo = tag.textContent.trim().split(' (');
+    const selectedCustomers = Array.from(tagBody.querySelectorAll('.customer-info')).map(info => {
+        const customerInfo = info.textContent.trim().split(' (');
         return {
             custNm: customerInfo[0],
-            custTelno: customerInfo[1]?.replace(')', '').trim() || ''
+            custTelno: customerInfo[1]?.replace(')', '').replace(/-/g, '').trim() || ''
         };
     });
 
@@ -537,15 +547,35 @@ function sendMessage() {
         return;
     }
 
-    // 최종 메시지 준비
-    let finalMessage = `--- 메시지 발송 ---\n`;
-    selectedCustomers.forEach(customer => {
-        finalMessage += `고객: ${customer.custNm} / ${customer.custTelno}`;
-    });
-    finalMessage += `${messageContent}`;
+    // 서버로 데이터 전송
+    const requestData = {
+        messageContent: messageContent,
+        recipients: selectedCustomers
+    };
 
-    // 발송 전 확인
-    console.log(finalMessage);
-    alert('메시지가 콘솔에 출력되었습니다. 실제 발송 로직을 추가하세요.');
+    const csrfToken = $('meta[name="_csrf"]').attr("content");
+    const csrfHeader = $('meta[name="_csrf_header"]').attr("content");
+
+    fetch('/customer/sms/send', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
+        body: JSON.stringify(requestData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('메시지가 성공적으로 발송되었습니다.');
+            } else {
+                alert('메시지 발송에 실패했습니다: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('메시지 발송 중 오류가 발생했습니다:', error);
+            alert('오류가 발생했습니다. 다시 시도해주세요.');
+        });
 }
+
 

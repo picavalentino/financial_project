@@ -4,7 +4,9 @@ import com.team.financial_project.customer.service.CustomerService;
 import com.team.financial_project.dto.CustomerDTO;
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.inquire.service.InquireService;
+import com.team.financial_project.main.service.SmsService;
 import com.team.financial_project.management.service.ManagementService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,11 +22,14 @@ import java.util.Map;
 @RequestMapping("/customer")
 public class CustomerController {
 
+
+    private final SmsService smsService;
     private final CustomerService customerService;
     private final ManagementService managementService;
     private final InquireService inquireService;
 
-    public CustomerController(CustomerService customerService, ManagementService managementService, InquireService inquireService) {
+    public CustomerController(SmsService smsService, CustomerService customerService, ManagementService managementService, InquireService inquireService) {
+        this.smsService = smsService;
         this.customerService = customerService;
         this.managementService = managementService;
         this.inquireService = inquireService;
@@ -134,4 +139,32 @@ public class CustomerController {
         }
     }
     /* ================================================================================================================= */
+    /* 찐 메세지 발송 */
+    @PostMapping("/sms/send")
+    public ResponseEntity<?> sendMessage(@RequestBody Map<String, Object> request) {
+        try {
+            // 메시지 내용
+            String messageContent = (String) request.get("messageContent");
+
+            // 수신자 목록
+            List<Map<String, String>> recipients = (List<Map<String, String>>) request.get("recipients");
+
+            // 각 수신자에게 메시지 발송
+            for (Map<String, String> recipient : recipients) {
+                String custNm = recipient.get("custNm");
+                String custTelno = recipient.get("custTelno");
+
+                // 메시지 발송
+                boolean sent = smsService.sendCustomMessage(custTelno, messageContent);
+
+                if (!sent) {
+                    return ResponseEntity.badRequest().body(Map.of("success", false, "message", "메시지 발송에 실패했습니다."));
+                }
+            }
+
+            return ResponseEntity.ok(Map.of("success", true, "message", "메시지가 성공적으로 발송되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("success", false, "message", "오류 발생: " + e.getMessage()));
+        }
+    }
 }
