@@ -24,7 +24,7 @@ $(document).ready(function(){
 
     // 모달창 닫기
     $("#btn-id-cross").on("click", function(){
-        $("#id-modal").css("display", "none");
+        $("#id-modal").removeClass('show');
         window.location.href = "/login";
     })
     // 전화번호, 인증번호 숫자만

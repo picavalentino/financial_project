@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $("#btn-pw-cross").on("click", function(){
-        $("#pw-modal").css("display", "none");
+        $("#pw-modal").removeClass('show');
         window.location.href = "/login";
     })
     // 타이머 시작 시간 (2분)

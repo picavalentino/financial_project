@@ -68,17 +68,17 @@ $(document).ready(function(){
     }
     // 아이디 찾기 모달창
     $(".btn-retrieve-id").on("click", function(){
-        $("#id-modal").css("display", "flex");
+        $("#id-modal").addClass('show');
     })
     // 비밀번호 찾기 모달창
     $(".btn-retrieve-pw").on("click", function(){
-        $("#pw-modal").css("display", "flex");
+        $("#pw-modal").addClass('show');
     })
     // 비밀번호 변경 모달창
     $("#btn-change").on("click", function(){
         sessionStorage.setItem("id",$("#pw-user_id").val());
-        $("#pw-modal").css("display", "none");
-        $("#change-pw-modal").css("display", "flex");
+        $("#pw-modal").removeClass('show');
+        $("#change-pw-modal").addClass('show');
     })
 
 

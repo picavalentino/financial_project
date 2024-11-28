@@ -165,19 +165,6 @@ body {
     color: #696969;
 }
 
-/* 모든 브라우저에서 스핀 버튼 제거 */
-input[type="number"] {
-    -moz-appearance: textfield; /* Firefox */
-    -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
-    appearance: none; /* 일반적인 속성 */
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
-    margin: 0; /* 스핀 버튼의 여백 제거 */
-}
-
 .img-btns{
     display: flex;
     justify-content: center;

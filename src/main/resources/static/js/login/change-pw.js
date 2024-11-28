@@ -61,7 +61,7 @@ $(document).ready(function(){
     })
     // 창닫기
     $("#btn-change-pw-cross").on("click", function(){
-        $("#change-pw-modal").css("display", "none");
+        $("#change-pw-modal").removeClass('show');
         sessionStorage.clear();
         window.location.href = "/login";
     })
