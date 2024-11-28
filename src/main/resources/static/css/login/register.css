@@ -307,3 +307,8 @@ body {
 .dropdown .dropdown-item:hover {
     background-color: #f8f8f8; /* 항목에 마우스를 올렸을 때 배경색 변경 */
 }
+/* 인풋박스 포커스 */
+input:focus{
+    outline: none;
+    border: 1.5px solid #040a47;
+}

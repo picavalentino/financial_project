@@ -9,11 +9,11 @@
         </button>
     </div>
     <div class="mb-4 input-box">
-        <label for="user_name">이름</label>
+        <label for="user_name" class="retrieve-label">이름</label>
         <input type="text" id="user_name" class="name-input" placeholder="이름을 입력해주세요." autocomplete="off">
     </div>
     <div class="mb-4 input-box">
-        <label for="user_telno">휴대전화</label>
+        <label for="user_telno" class="retrieve-label">휴대전화</label>
         <div class="user_telno">
             <select id="phone1">
                 <option value="010">010</option>
@@ -29,7 +29,7 @@
         </div>
     </div>
     <div id="code-container" class="code-container mb-4">
-        <label for="input-code" class="code-label">인증번호<span id="msg-not-match">인증번호가 일치하지 않습니다.</span></label>
+        <label for="input-code" class="code-label retrieve-label">인증번호<span id="msg-not-match">인증번호가 일치하지 않습니다.</span></label>
         <div class="code-input-box" id="code-input-box">
             <div class="input-and-timer">
                 <input type="text" inputmode="numeric" maxlength="6" class="code-input" id="input-code" placeholder="6자리 숫자" autocomplete="off">

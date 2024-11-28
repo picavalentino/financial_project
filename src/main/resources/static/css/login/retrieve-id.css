@@ -16,7 +16,7 @@
     cursor: pointer;
 }
 
-label {
+.retrieve-label {
     display: block;
     color: #4a4a4a;
     margin-bottom: 5px;
