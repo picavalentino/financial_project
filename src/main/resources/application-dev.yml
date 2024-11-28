@@ -16,6 +16,11 @@ spring:
       connection-timeout: 30000     # 연결 시도 제한 시간 (밀리초)
       idle-timeout: 600000          # 유휴 연결 종료 시간 (밀리초)
       max-lifetime: 1800000         # 연결 최대 유지 시간 (밀리초)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ${REDIS}
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -29,3 +34,11 @@ aws:
     access-key: ${ACCESS}
     secret-key: ${SECRET}
     region: ap-northeast-2
+
+coolsms:
+  api:
+    key: ${SMS.API.KEY}
+    secret: ${SMS.API.SECRET}
+  sender: ${SMS.PHONE}
+
+
