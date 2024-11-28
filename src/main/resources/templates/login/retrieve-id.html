@@ -10,7 +10,7 @@
     </div>
     <div class="mb-4 input-box">
         <label for="user_name">이름</label>
-        <input type="text" name="user_name" id="user_name" class="name-input" placeholder="이름을 입력해주세요." autocomplete="off">
+        <input type="text" id="user_name" class="name-input" placeholder="이름을 입력해주세요." autocomplete="off">
     </div>
     <div class="mb-4 input-box">
         <label for="user_telno">휴대전화</label>
@@ -23,8 +23,8 @@
                 <option value="018">018</option>
                 <option value="019">019</option>
             </select><span>-</span>
-            <input type="number" id="phone2" class="phone2" placeholder="0000" autocomplete="off"><span>-</span>
-            <input type="number" id="phone3" class="phone3" placeholder="0000" autocomplete="off">
+            <input type="text" inputmode="numeric" maxlength="4" id="phone2" class="phone2" placeholder="0000" autocomplete="off"><span>-</span>
+            <input type="text" inputmode="numeric" maxlength="4" id="phone3" class="phone3" placeholder="0000" autocomplete="off">
             <input type="hidden" name="user_telno" id="user_telno">
         </div>
     </div>
@@ -32,7 +32,7 @@
         <label for="input-code" class="code-label">인증번호<span id="msg-not-match">인증번호가 일치하지 않습니다.</span></label>
         <div class="code-input-box" id="code-input-box">
             <div class="input-and-timer">
-                <input type="text"  class="code-input" name="input-code" id="input-code" placeholder="6자리 숫자" autocomplete="off">
+                <input type="text" inputmode="numeric" maxlength="6" class="code-input" id="input-code" placeholder="6자리 숫자" autocomplete="off">
                 <div class="timer" id="timer"></div>
             </div>
             <input type="button" value="인증" class="btn-certify" id="btn-certify" disabled>

@@ -30,7 +30,7 @@ public class LoginController {
     @GetMapping("send-auth-code")
     @ResponseBody
     public String sendAuthCode(@RequestParam("telno") String userTelno){
-        return smsService.sendVerificationCode(userTelno);
+        return smsService.canSendVerification(userTelno);
     }
 
     // 인증 번호 확인

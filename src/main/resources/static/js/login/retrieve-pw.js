@@ -26,7 +26,16 @@ $(document).ready(function(){
     }
     // 매초마다 updateTimer 함수 실행
     let timerInterval = setInterval(updateTimer, 1000);
-
+    // 전화번호 숫자만
+    $("#pw-phone2, #pw-phone3, #pw-input-code").on('keypress', function (event) {
+        // 숫자 (0-9)만 입력 가능하게 설정
+        if (event.which < 48 || event.which > 57) {
+            // 백스페이스 (8), 탭 (9), 화살표 키 등은 허용
+            if (event.which !== 8 && event.which !== 9) {
+                event.preventDefault();
+            }
+        }
+    });
     // 유효성
     $("#pw-phone1, #pw-phone2, #pw-phone3, #pw-user_id").on("input change", function() {
         $("#pw-msg-not-match").css("display", "none");

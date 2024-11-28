@@ -1,4 +1,14 @@
 $(document).ready(function(){
+    // 사원번호 숫자만
+    $("#user_id").on('keypress', function (event) {
+        // 숫자 (0-9)만 입력 가능하게 설정
+        if (event.which < 48 || event.which > 57) {
+            // 백스페이스 (8), 탭 (9), 화살표 키 등은 허용
+            if (event.which !== 8 && event.which !== 9) {
+                event.preventDefault();
+            }
+        }
+    });
     // 쿠키 설정 함수
     function setCookie(name, value, days) {
         const date = new Date();

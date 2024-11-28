@@ -26,7 +26,7 @@ public class SmsService {
 
     private DefaultMessageService messageService;
     private static final int MAX_ATTEMPTS = 5;
-    private static final long EXPIRATION_TIME = 24; // 인증 횟수 제한 만료 시간 (24시간)
+    private static final long EXPIRATION_TIME = 12; // 인증 횟수 제한 만료 시간 (12시간)
     private final RedisTemplate<String, String> redisTemplate;
 
     public SmsService(RedisTemplate<String, String> redisTemplate) {
@@ -45,26 +45,34 @@ public class SmsService {
     }
 
     // 5번 인증제한
-    public boolean canSendVerification(String phoneNumber) {
+    public String canSendVerification(String phoneNumber) {
         String redisKey = "sms:attempts:" + phoneNumber;
         String attempts = redisTemplate.opsForValue().get(redisKey);
 
         if (attempts == null) {
             // 처음 시도할 때
-            redisTemplate.opsForValue().set(redisKey, "1", EXPIRATION_TIME, TimeUnit.HOURS);
-            return true;
+            if(sendVerificationCode(phoneNumber)){
+                redisTemplate.opsForValue().set(redisKey, "1", EXPIRATION_TIME, TimeUnit.HOURS);
+                return "인증번호가 발송되었습니다. 인증 시도 횟수 : 1회";
+            }else {
+                return "인증번호 발송에 실패했습니다.";
+            }
         } else if (Integer.parseInt(attempts) < MAX_ATTEMPTS) {
             // 5번 미만일 때 시도 가능
-            redisTemplate.opsForValue().increment(redisKey);
-            return true;
+            if(sendVerificationCode(phoneNumber)){
+                redisTemplate.opsForValue().increment(redisKey);
+                return "인증번호가 발송되었습니다. 인증 시도 횟수 : "+ redisTemplate.opsForValue().get(redisKey) +"회";
+            }else {
+                return "인증번호 발송에 실패했습니다.";
+            }
         } else {
             // 5번을 초과했을 때
-            return false;
+            return "인증 횟수를 초과하셨습니다. 12시간 후 시도해주세요.";
         }
     }
 
     // SMS 전송 로직
-    public String sendVerificationCode(String phoneNumber) {
+    public Boolean sendVerificationCode(String phoneNumber) {
         Message message = new Message();
         message.setFrom(sender);
         message.setTo(phoneNumber);
@@ -77,10 +85,10 @@ public class SmsService {
 
             // 인증번호를 Redis에 저장 (유효기간 2분)
             redisTemplate.opsForValue().set(phoneNumber, verificationCode, 2, TimeUnit.MINUTES);
-            return "인증번호를 발송했습니다.";
+            return true;
         } catch (Exception e) {
             System.err.println("SMS 발송 실패: " + e.getMessage());
-            return "인증번호를 발송에 실패했습니다.";
+            return false;
         }
     }
 

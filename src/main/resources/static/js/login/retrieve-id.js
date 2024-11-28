@@ -27,6 +27,16 @@ $(document).ready(function(){
         $("#id-modal").css("display", "none");
         window.location.href = "/login";
     })
+    // 전화번호, 인증번호 숫자만
+    $("#phone2, #phone3, #input-code").on('keypress', function (event) {
+        // 숫자 (0-9)만 입력 가능하게 설정
+        if (event.which < 48 || event.which > 57) {
+            // 백스페이스 (8), 탭 (9), 화살표 키 등은 허용
+            if (event.which !== 8 && event.which !== 9) {
+                event.preventDefault();
+            }
+        }
+    });
     // 유효성
     $("#phone1, #phone2, #phone3, #user_name").on("input change", function() {
         $("#msg-not-match").css("display", "none");

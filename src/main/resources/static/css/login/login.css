@@ -132,7 +132,7 @@ body {
 .btn-retrieve-id,
 .btn-retrieve-pw{
     font-size: small;
-    margin: 0 10px;
+    margin-left: 5px;
 }
 .btn-register:hover,
 .btn-retrieve-id:hover,

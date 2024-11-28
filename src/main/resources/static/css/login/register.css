@@ -117,6 +117,7 @@ body {
     border: 1.5px solid #5252528c;
 }
 .msg{
+    display: none;
     color: rgb(172, 35, 35);
     font-size: smaller;
     margin-left: 10px;

@@ -104,62 +104,32 @@ $(document).ready(function(){
         }
     })
     // 비밀번호 유효성 검사
-    $("#user_pw").on("input", function() {
-        let pw = $(this).val();
+    $("#user_pw, #confirm-user_pw").on("input", function() {
+        let pw = $("#user_pw").val();
         let confirm_pw = $("#confirm-user_pw").val();
         const pwPattern = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,13}$/;
-        if(confirm_pw !==0){
-            if (pw !== confirm_pw) {
-                if($("#msg-not-match").text().length === 0){
-                    $("#msg-not-match").text("일치하지 않습니다.");
-                }
-                isMatchConfirmPw = false;
-                validateForm();
-            }else{
-                $("#msg-not-match").text("");
-                isMatchConfirmPw = true;
-                validateForm();
-            }
-        }else{
-            $("#msg-not-match").text("");
-            isMatchConfirmPw = false;
-            validateForm();
-        }
-        if (pw.length === 0) {
-            $("#msg-invalid-pw").text("");
-            isPwValid = false;
-            validateForm();
-        } else if (!pwPattern.test(pw)) {
-            if($("#msg-invalid-pw").text().length === 0){
-                $("#msg-invalid-pw").text("숫자+영문 6~13자리여야 합니다");
-            }
-            isPwValid = false;
-            validateForm();
-        } else {
-            $("#msg-invalid-pw").text("");
-            isPwValid = true;
-            validateForm();
-        }
-    })
-    // 비밀번호 일치 확인
-    $("#confirm-user_pw").on("input", function(){
-        let pw = $("#user_pw").val();
-        let confirm_pw = $(this).val();
-        if (confirm_pw.length === 0) {
-            $("#msg-not-match").text("");
-            isMatchConfirmPw = false;
-            validateForm();
-        } else if (pw !== confirm_pw) {
-            if($("#msg-not-match").text().length === 0){
-                $("#msg-not-match").text("일치하지 않습니다.");
-            }
-            isMatchConfirmPw = false;
-            validateForm();
-        } else {
-            $("#msg-not-match").text("");
+        if (pw === confirm_pw) {
             isMatchConfirmPw = true;
-            validateForm();
+            $("#msg-not-match").css("display", "none");
+            if (pwPattern.test(pw)) {
+                $("#msg-invalid-pw").css("display", "none");
+                isPwValid = true;
+            } else {
+                $("#msg-invalid-pw").css("display", "inline");
+                isPwValid = false;
+            }
+        }else {
+            isMatchConfirmPw = false;
+            $("#msg-not-match").css("display", "inline");
+            if (pwPattern.test(pw)) {
+                $("#msg-invalid-pw").css("display", "none");
+                isPwValid = true;
+            } else {
+                $("#msg-invalid-pw").css("display", "inline");
+                isPwValid = false;
+            }
         }
+        validateForm();
     })
     // 이메일 유효성 검사
     $("#user_email").on("input", function (){
@@ -171,16 +141,25 @@ $(document).ready(function(){
                 $("#msg-invalid-email").text("유효하지 않는 이메일입니다.");
             }
             isEmailValid = false;
-            validateForm();
         } else {
             $("#msg-invalid-email").text("");
             isEmailValid = true;
-            validateForm();
         }
         if(email.length==0){
             $("#msg-invalid-email").text("");
             isEmailValid = false;
-            validateForm();
+        }
+        validateForm();
+
+    });
+    // 전화번호 숫자만
+    $("#phone2, #phone3").on('keypress', function (event) {
+        // 숫자 (0-9)만 입력 가능하게 설정
+        if (event.which < 48 || event.which > 57) {
+            // 백스페이스 (8), 탭 (9), 화살표 키 등은 허용
+            if (event.which !== 8 && event.which !== 9) {
+                event.preventDefault();
+            }
         }
     });
     // 휴대전화 유효성 검사
