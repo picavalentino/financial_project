@@ -306,8 +306,8 @@
         WHERE user_name LIKE CONCAT('%', #{name}, '%')
     </select>
 
-    // 고객 관리 페이지 : 담당자 이름으로 담당자 정보 조회
-    <select id="findManagersByName" parameterType="String" resultType="UserDTO">
+    <!--고객 관리 페이지 : 담당자 이름으로 담당자 정보 조회-->
+    <select id="findManagersByName" parameterType="String" resultType="com.team.financial_project.dto.UserDTO">
         SELECT
         usr.user_id,
         usr.user_name,

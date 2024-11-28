@@ -44,11 +44,15 @@ document.addEventListener("DOMContentLoaded", function() {
             custAddr: custAddr
         };
 
+        const csrfToken = $('meta[name="_csrf"]').attr('content');
+        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
         // 비동기적으로 데이터를 서버에 전송
         fetch('/customer/list/insert', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken,
             },
             body: JSON.stringify(customerData)
         })

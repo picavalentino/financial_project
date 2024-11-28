@@ -186,12 +186,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 user_id: userId
             }
         };
+         const csrfToken = $('meta[name="_csrf"]').attr('content');
+         const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
         // 서버로 PUT 요청 전송
         fetch(`/customer/update`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken,
             },
             body: JSON.stringify(updatedCustomerData)
         })

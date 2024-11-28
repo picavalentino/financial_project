@@ -55,10 +55,6 @@ public class ManagementService {
     // /employees 요청에서 전체 직원 수 가져오기 (검색 조건 포함)
     public int getTotalEmployeeCount(String dept, String position, String status, String searchField, String searchValue) {
         return userMapper.getTotalEmployeeCount(dept, position, status, searchField, searchValue);
-
-    // 담당자 목록 조회
-    public List<UserDTO> getManagersByName(String name) {
-        return userMapper.findManagersByName(name);
     }
 
     // /employees 요청에서 현재 페이지에 맞는 직원 목록 가져오기 (검색 조건 포함)
@@ -110,6 +106,11 @@ public class ManagementService {
     @Transactional
     public void insertEmployee(UserDTO userDTO) {
         userMapper.insertEmployee(userDTO);
+    }
+
+    // 고객 관리 페이지 : 담당자 목록 조회
+    public List<UserDTO> getManagersByName(String name) {
+        return userMapper.findManagersByName(name);
     }
 
 }
