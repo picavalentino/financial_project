@@ -18,9 +18,9 @@ spring:
       max-lifetime: 1800000         # 연결 최대 유지 시간 (밀리초)
   data:
     redis:
-      host: localhost
+      host: ${REDIS.HOST}
       port: 6379
-      password: ${REDIS}
+      password: ${REDIS.PW}
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
