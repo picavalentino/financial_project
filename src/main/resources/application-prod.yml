@@ -10,6 +10,11 @@ spring:
     url: jdbc:postgresql://${rds.hostname}:${rds.port}/${rds.db.name}
     username: ${rds.username}
     password: ${rds.password}
+  data:
+    redis:
+      host: ${REDIS.HOST}
+      port: 6379
+      password: ${REDIS.PW}
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -23,3 +28,9 @@ aws:
     access-key: ${ACCESS}
     secret-key: ${SECRET}
     region: ap-northeast-2
+
+coolsms:
+  api:
+    key: ${SMS.API.KEY}
+    secret: ${SMS.API.SECRET}
+  sender: ${SMS.PHONE}
