@@ -83,4 +83,7 @@ public interface UserMapper {
 
     // 사원번호로 찾아 비밀번호 변경
     void updateUserPw(@Param("id")String userId, @Param("pw")String userPw);
+
+    // 상품등록페이지: 담당자 검색
+    List<Map<String, Object>> findByNameContaining(@Param("name") String name);
 }

@@ -193,9 +193,10 @@ body, input::placeholder {
 }
 
 .sidebar .profile img {
-    width: 96px;
-    height: 128px;
-    border-radius: 5%;
+    width: 112px;
+    height: 149px;
+    border-radius: 15%;
+    border: 1.5px solid #000000;
 }
 
 .sidebar .profile h4 {
@@ -277,6 +278,10 @@ body, input::placeholder {
 
     .log{
         margin-right: 50px;
+    }
+
+    .bookmark-container {
+        display: none !important;
     }
 }
 

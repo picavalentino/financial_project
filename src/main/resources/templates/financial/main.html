@@ -227,11 +227,14 @@
                                     </div>
                                     <div class="col-md-4 kospi">
                                         <div class="stock-box">
+                                            <canvas id="kospiChart"></canvas>
                                         </div>
                                         <div class="score-text">코스피</div>
                                     </div>
                                     <div class="col-md-4 kosdaq">
-                                        <div class="stock-box"></div>
+                                        <div class="stock-box">
+                                            <canvas id="kosdaqChart"></canvas>
+                                        </div>
                                         <div class="score-text">코스닥</div>
                                     </div>
                                 </div>
@@ -264,6 +267,7 @@
             </div>
         </div>
     </section>
+
 
     <!-- Chart.js를 로드 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -439,6 +443,131 @@
                     console.error('데이터를 가져오는 중 오류 발생:', error);
                 }
             });
+
+            // 코스피 차트
+            $.ajax({
+                url: '/api/kospi-statistics', // REST API 엔드포인트
+                method: 'GET',
+                success: function (response) {
+                    console.log('성공적으로 데이터를 가져왔습니다:', response);
+                    if (response.length > 0) {
+                        // 날짜와 체결가를 배열로 추출
+                        const labels = response.map(item => item.basDt); // 날짜
+                        const data = response.map(item => parseFloat(item.clpr)); // 체결가 (숫자로 변환)
+
+                        // 차트 생성
+                        const ctx = document.getElementById('kospiChart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels.reverse(), // 날짜를 최근순으로 정렬
+                                datasets: [{
+                                    data: data.reverse(), // 체결가도 순서 맞춤
+                                    borderColor: 'red',
+                                    borderWidth: 2,
+                                    fill: false
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false, // 비율 유지 비활성화
+                                scales: {
+                                    x: {
+                                        ticks: {
+                                            display: false // X축 라벨 숨김
+                                        },
+                                        grid: {
+                                            display: false // X축 그리드 숨김 (선택 사항)
+                                        }
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: '체결가'
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: false // 범례 숨기기 (선택 사항)
+                                    }
+                                }
+                            }
+
+                        });
+                    } else {
+                        console.warn('응답 데이터가 비어 있습니다.');
+                    }
+                },
+                error: function (error) {
+                    console.error('데이터를 가져오는 중 오류 발생:', error);
+                }
+            });
+
+            // 코스닥 차트
+            $.ajax({
+                url: '/api/kosdaq-statistics', // REST API 엔드포인트
+                method: 'GET',
+                success: function (response) {
+                    console.log('성공적으로 데이터를 가져왔습니다:', response);
+                    if (response.length > 0) {
+                        // 날짜와 체결가를 배열로 추출
+                        const labels = response.map(item => item.basDt); // 날짜
+                        const data = response.map(item => parseFloat(item.clpr)); // 체결가 (숫자로 변환)
+
+                        // 차트 생성
+                        const ctx = document.getElementById('kosdaqChart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels.reverse(), // 날짜를 최근순으로 정렬
+                                datasets: [{
+                                    data: data.reverse(), // 체결가도 순서 맞춤
+                                    borderColor: 'red',
+                                    borderWidth: 2,
+                                    fill: false
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false, // 비율 유지 비활성화
+                                scales: {
+                                    x: {
+                                        ticks: {
+                                            display: false // X축 라벨 숨김
+                                        },
+                                        grid: {
+                                            display: false // X축 그리드 숨김 (선택 사항)
+                                        }
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: '체결가'
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: false // 범례 숨기기 (선택 사항)
+                                    }
+                                }
+                            }
+
+                        });
+                    } else {
+                        console.warn('응답 데이터가 비어 있습니다.');
+                    }
+                },
+                error: function (error) {
+                    console.error('데이터를 가져오는 중 오류 발생:', error);
+                }
+            });
+
+
+
+
+
 
         });
     </script>
