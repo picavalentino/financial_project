@@ -1,6 +1,7 @@
 package com.team.financial_project.mapper;
 
 import com.team.financial_project.dto.CustomerDTO;
+import com.team.financial_project.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -8,6 +9,8 @@ import java.util.List;
 
 @Mapper
 public interface CustomerMapper {
+
+    List<UserDTO> findManagersByName(@Param("name") String name);
 
     // 검색 조건이 있는 고객 목록 조회
     List<CustomerDTO> searchCustomers(@Param("pageSize") int pageSize,

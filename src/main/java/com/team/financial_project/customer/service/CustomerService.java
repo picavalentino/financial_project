@@ -1,9 +1,11 @@
 package com.team.financial_project.customer.service;
 
 import com.team.financial_project.dto.CustomerDTO;
+import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.CustomerMapper;
 import com.team.financial_project.mapper.InquireMapper;
 import com.team.financial_project.mapper.UserMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.team.financial_project.dto.UserDTO;
@@ -31,6 +33,11 @@ public class CustomerService {
         this.customerMapper = customerMapper;
         this.userMapper = userMapper;
         this.inquireMapper = inquireMapper;
+    }
+
+    // 담당자 목록 조회
+    public List<UserDTO> getManagersByName(String name) {
+        return customerMapper.findManagersByName(name);
     }
 
     // ======================================================================================================

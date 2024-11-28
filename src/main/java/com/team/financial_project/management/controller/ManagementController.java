@@ -68,7 +68,7 @@ public class ManagementController {
         model.addAttribute("searchField", searchField);
         model.addAttribute("searchValue", searchValue);
 
-        return "/management/managementList";
+        return "management/managementList";
     }
 
 

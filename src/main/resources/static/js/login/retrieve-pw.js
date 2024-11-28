@@ -93,25 +93,26 @@ $(document).ready(function(){
                         data: { telno: $("#pw-user_telno").val() },
                         success : function(response){
                             if(response){
-                                $("#pw-code-container").css("display", "block");
-                                $("#pw-btn-send").css("display", "none");
-                                $("#pw-btns").css("display", "flex");
-                                alert(response);
+                                if (response.endsWith("회")) {
+                                    $("#code-container").css("display", "block");
+                                    $("#btn-send").css("display", "none");
+                                    $("#btn-retrieve").css("display", "block");
+                                    // 타이머 초기화
+                                    clearInterval(timerInterval); // 이전 타이머 중지 (중복 방지)
+                                    timeLeft = 2 * 60; // 시간을 초기화
+
+                                    // 타이머 컨테이너 표시
+                                    $('#timer').css("display","block");
+
+                                    // 타이머 시작
+                                    timerInterval = setInterval(updateTimer, 1000);
+                                    updateTimer();
+                                }
                                 if(response==="인증횟수 초과"){
                                     // 타이머 멈추기
                                     clearInterval(timerInterval);
                                     alert("인증횟수가 초과되었습니다. 24시간 뒤 시도해주세요.");
                                 }
-                                // 타이머 초기화
-                                clearInterval(timerInterval); // 이전 타이머 중지 (중복 방지)
-                                timeLeft = 2 * 60; // 시간을 초기화
-
-                                // 타이머 컨테이너 표시
-                                $('#pw-timer').css("display","block");
-
-                                // 타이머 시작
-                                timerInterval = setInterval(updateTimer, 1000);
-                                updateTimer();
                             }else{
                                 alert("인증번호 전송 중 오류가 발생했습니다. 다시 시도해주세요.");
                             }
