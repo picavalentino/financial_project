@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="_csrf" th:content="${_csrf.token}">
-    <meta name="_csrf_header" th:content="${_csrf.headerName}">
-</head>
 <body>
-<div th:fragment="id-modal" class="id-modal" id="id-modal">
-    <div class="title">
-        <div class="text">등록하기</div>
-        <button type="button" class="btn btn-link p-0 ms-2" id="btn-cross">
+<div th:fragment="retrieve-id" class="modal" id="id-modal">
+    <div class="title input-box">
+        <div class="text">사번 찾기</div>
+        <button type="button" class="btn btn-link p-0 ms-2" id="btn-id-cross">
             <i class="bi bi-x-circle text-secondary"></i>
         </button>
     </div>
-    <div class="mb-2 input-container">
-        <label for="user_id">사원번호</label>
-        <input type="text" name="user_id" id="user_id" class="id-input" placeholder="이름으로 사원번호를 검색해주세요." autocomplete="off">
+    <div class="mb-4 input-box">
+        <label for="user_name" class="retrieve-label">이름</label>
+        <input type="text" id="user_name" class="name-input" placeholder="이름을 입력해주세요." autocomplete="off">
     </div>
-    <div class="mb-2 input-container">
-        <label for="user_telno">휴대전화<span id="msg-already-exist" class="msg"></span></label>
+    <div class="mb-4 input-box">
+        <label for="user_telno" class="retrieve-label">휴대전화</label>
         <div class="user_telno">
             <select id="phone1">
                 <option value="010">010</option>
@@ -28,12 +23,28 @@
                 <option value="018">018</option>
                 <option value="019">019</option>
             </select><span>-</span>
-            <input type="number" id="phone2" class="phone2" placeholder="0000" autocomplete="off"><span>-</span>
-            <input type="number" id="phone3" class="phone3" placeholder="0000" autocomplete="off">
+            <input type="text" inputmode="numeric" maxlength="4" id="phone2" class="phone2" placeholder="0000" autocomplete="off"><span>-</span>
+            <input type="text" inputmode="numeric" maxlength="4" id="phone3" class="phone3" placeholder="0000" autocomplete="off">
             <input type="hidden" name="user_telno" id="user_telno">
         </div>
     </div>
-    <input type="button" value="아이디 찾기" class="btn-retrieve mt-3" id="btn-retrieve" disabled>
+    <div id="code-container" class="code-container mb-4">
+        <label for="input-code" class="code-label retrieve-label">인증번호<span id="msg-not-match">인증번호가 일치하지 않습니다.</span></label>
+        <div class="code-input-box" id="code-input-box">
+            <div class="input-and-timer">
+                <input type="text" inputmode="numeric" maxlength="6" class="code-input" id="input-code" placeholder="6자리 숫자" autocomplete="off">
+                <div class="timer" id="timer"></div>
+            </div>
+            <input type="button" value="인증" class="btn-certify" id="btn-certify" disabled>
+            <button type="button" class="btn-resend" id="btn-resend">
+                <img src="/images/common/icon-resend.png" alt="재전송.icon" class="icon-resend">
+            </button>
+        </div>
+    </div>
+    <input type="button" value="인증번호 전송" class="btn-send mt-3" id="btn-send" disabled>
+    <input type="button" value="사원번호 찾기" class="btn-retrieve mt-3" id="btn-retrieve" disabled>
+
+    <script th:src="@{/js/login/retrieve-id.js}"></script>
 </div>
 </body>
 </html>
