@@ -18,15 +18,17 @@ margin: 0px 0px 0px 0px;
 }
 
 .calendar-container {
-width: 90%;
-max-width: 1200px;
-margin: 20px auto;
-margin-bottom: -20px;
-background-color: white;
-border: 1px solid #ddd;
-border-radius: 15px;
-padding: 20px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+   display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* 제목 */
@@ -34,18 +36,19 @@ h1 {
 font-size: 24px;
 margin-top: 10px;
 font-weight:800;
-margin-left: 65px;
+margin-left: 105px;
 font-size: 35px;
 
 }
 
 /* 캘린더 헤더 */
 .calendar-header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 20px;
-margin-left: 340px;
+   display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-left: 470px;
 }
 
 .calendar-header #btn_left {
@@ -69,43 +72,53 @@ font-size: 30px;
 margin: 0;
 font-size: 30px;
 align-items: center;
+margin-left: 50px;
 }
 
 /* 캘린더 테이블 */
 .calendar-table {
-width: 100%;
+width: 850px;
 border-collapse: collapse;
 text-align: left;
 table-layout: fixed;
 }
+.calendar-table th,
+.calendar-table td {
+    width: 14.28%; /* 7일 기준으로 균등 분배 */
+
+    vertical-align: top;
+    padding: 10px;
+    border: 1px solid #eee;
+}
 
 .calendar-table thead th {
-padding: 10px 0;
-font-weight: bold;
-text-align: center;
-font-size: 18px;
-border-bottom: 1px solid #ababab;
+ font-weight: bold;
+    color: #333;
+    background-color: #f9f9f9;
+        text-align: center;
+        border: none;
+   border-bottom: 1px solid #ababab;
+    background: none;
 }
 
 .calendar-table tbody td {
-height: 150px;
-width: 150px;
-padding: 5px;
-font-weight: 600;
-border: 1px solid #e1e4e8;
-vertical-align: top;
-position: relative;
+   position: relative;
+    height: 120px; /* 셀 높이를 일정하게 유지 */
+    overflow: hidden; /* 내용 넘침 방지 */
+     text-align: left;
+    background-color: #fff;
 }
 .event-bar-team-allday {
 background-color: #7ac6dc;
 color: rgba(0, 0, 0, 0.6);
 padding: 5px;
 margin-top: 5px;
-margin-left: -5px;
 border-radius: 5px;
 font-size: 14px;
+font-weight:600;
 text-align: center;
-width: 110%;
+width: 120%;
+margin-left:-10px;
 overflow: hidden;
 white-space: nowrap;
 }
@@ -114,12 +127,13 @@ background-color: #ffa366;
 color: rgba(0, 0, 0, 0.6);
 padding: 5px;
 margin-top: 5px;
-margin-left: -8px;
 border-radius: 5px;
+font-weight:600;
 font-size: 14px;
 text-align: center;
 height: 30px;
-width: 110%;
+width: 120%;
+margin-left:-10px;
 overflow: hidden;
 white-space: nowrap;
 }
@@ -151,37 +165,39 @@ margin-top: 5px;
 
 
 .today-tasks {
-width: 400px;
+width: 300px;
 margin-top: 20px;
-height: auto;
+height: 130px;
 border: 1px solid #ababab;
 border-radius: 15px;
 background-color: #f8f9fa;
-padding-left: 50px;
+padding-left: 30px;
+padding-right: 15px;
 padding-top: 15px;
-padding-bottom: 15px;
+padding-bottom: 10px;
 }
 #task_text{
 display: flex;
 color: rgba(0, 0, 0, 0.6);
 width: 90%;
 justify-content: space-between;
-margin-top: -20px;
-
+margin-top: -40px;
+margin-left:10px;
+font-size: 14px;
 
 }
 .today_task{
-margin-left: 50px;
+margin-left: 30px;
 }
 .today_task img{
-width: 25px;
-margin-top:-3px;
+width: 18px;
+margin-top: -5px;
 
 }
 .today_task h3 {
 margin-left: 15px;
 margin-top: 96px;
-font-size: 25px;
+font-size: 20px;
 font-weight: 500;
 
 }
@@ -203,7 +219,7 @@ font-weight: 600;
 margin-top: 8px;
 }
 label{
-font-size: 22px;
+font-size: 20px;
 color: rgba(0, 0, 0, 0.6);
 
 }
@@ -222,22 +238,25 @@ background-color: #f9fcff; /* 약간의 배경 강조 */
 
 }
 
+
 /* 이벤트 제목 컨테이너 */
 .event-bar-personal {
 display: flex; /* Flexbox 사용 */
 align-items: center; /* 수직 정렬 */
 margin-bottom: 5px;
-font-size: 15px;
+font-size: 13px;
 padding-top: 10px;
-margin-left :10px;
+font-weight:600;
+margin-left :0px;
 }
 .event-bar-team {
 display: flex; /* Flexbox 사용 */
 align-items: center; /* 수직 정렬 */
 margin-bottom: 5px;
-font-size: 15px;
+font-size: 13px;
+font-weight:600;
 padding-top: 10px;
-margin-left :10px;
+margin-left :0px;
 }
 
 /* 일정 점 스타일 */
@@ -411,6 +430,15 @@ margin-right: 5px;
 cursor: pointer;
 accent-color: #7AAEBC;
 }
+#event-allday{
+margin-left: 200px;
+
+}
+#event-allday label{
+font-weight:700px;
+
+ }
+
 
 /* Details Section */
 .details {
@@ -590,14 +618,17 @@ display: flex;
 justify-content: flex-start; /* 왼쪽 정렬 */
 gap: 10px; /* 버튼 간격 */
 margin-right: auto;
-margin-left: 140px;
+margin-left: 90px;
 }
 .today_task button{
 border: none;
 background: none;
-margin-top: -5px;
-margin-left: 218px;
+margin-top: 0px;
+margin-left: 190px;
 
+}
+#delete{
+margin-top: -60px;
 }
 #schedule_team_btn {
 background-color: #7AAEBC; /* 버튼 배경색 */
@@ -639,7 +670,11 @@ background-color: #ababab; /* 호버 시 색상 변경 */
 }
 
 #task_etc_btn {
-margin-top: -55px;
-margin-left: 30px;
-width:30px;
+margin-top: -110px;
+margin-left: 25px;
+width:24px;
+}
+strong{
+
+font-size: 18px;
 }

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
-
+<meta name="_csrf" content="CSRF_TOKEN_VALUE">
+<meta name="_csrf_header" content="X-CSRF-TOKEN">
+<meta name="user_id" th:attr="content=${user_id}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +14,7 @@
 <div layout:fragment="content" class="content">
     <div class="container1">
         <div class="content1">
+            <!-- 캘린더 영역 -->
             <div class="calendar-container">
                 <div class="calendar-header">
                     <h2>
@@ -39,50 +42,43 @@
                     </tr>
                     </thead>
                     <tbody class="calendar-body">
-                    <!-- 달력 날짜가 JavaScript로 생성됩니다 -->
+                    <!-- JavaScript로 날짜 생성 -->
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- 오늘의 할 일 -->
         <div class="today_task">
             <h3>
-                <img th:src="@{/css/schedule/img/task_img.png}">
+                <img th:src="@{/css/schedule/img/task_img.png}" alt="Task">
                 오늘의 할 일
             </h3>
-            <div class="today-tasks">
-                <label for="task1"><strong> &middot; 11:30</strong></label>
-                <button><img id="delete" th:src="@{/css/schedule/img/delete.png}" alt="Delete"></button>
-                <button class="task_etc"><img id="task_etc_btn" th:src="@{/css/schedule/img/memo.png}"
-                                              alt="memo"></button>
-                <div id="task_text">
-                    <p> 점심 미팅 </p><input type="checkbox" id="task1">
-                </div>
+            <div class="today-tasks-list">
+                <!-- JavaScript로 Today Tasks 생성 -->
             </div>
         </div>
     </div>
 
     <!-- 일정 등록 모달 -->
-    <div class="schedule_detail">
+    <div class="schedule_detail" style="display:none;">
         <div class="scheduler-container">
             <h1>일정 등록</h1>
             <div class="date-display">
                 <button id="prev-day">&lt;</button>
-                <span id="current-date">2024.11.20</span>
+                <span id="current-date"></span>
                 <button id="next-day">&gt;</button>
             </div>
             <div class="scheduler">
                 <span class="close">&times;</span>
                 <div class="row">
-                    <select class="time-select" id="time-select">
-                        <!-- Generate time slots dynamically -->
-                        <option value="00:00">00:00</option>
-                        <option value="23:30">23:30</option>
-                    </select>
+                    <select class="time-select" id="time-select"></select>
                     <input type="text" class="task-title" placeholder="Enter title...">
                     <input type="text" class="location-input" placeholder="Enter location...">
                     <div class="checkboxes">
-                        <label><input type="checkbox" class="select-checkbox" id="team-team"> 팀 </label>
-                        <label><input type="checkbox" class="select-checkbox" id="team-personal"> 개인 </label>
+                        <label><input type="checkbox" class="select-checkbox" id="team-team"> 팀</label>
+                        <label><input type="checkbox" class="select-checkbox" id="team-personal"> 개인</label>
+                        <label><input type="checkbox" id="event-allday"> 종일</label>
                     </div>
                 </div>
                 <div class="details">
@@ -104,178 +100,455 @@
             </div>
         </div>
         <div class="card-details">
-            <div><img th:src="@{/css/schedule/img/time.png}" alt="time"> <span class="event-time"></span></div>
-            <div><img th:src="@{/css/schedule/img/location.png}" alt="place"> <span class="event-location"></span>
+            <div>
+                <img th:src="@{/css/schedule/img/time.png}" alt="time">
+                <span class="event-time"></span>
             </div>
-            <div><img th:src="@{/css/schedule/img/memo.png}" alt="memo"> <span class="event-memo"></span></div>
+            <div>
+                <img th:src="@{/css/schedule/img/location.png}" alt="place">
+                <span class="event-location"></span>
+            </div>
+            <div>
+                <img th:src="@{/css/schedule/img/memo.png}" alt="memo">
+                <span class="event-memo"></span>
+            </div>
         </div>
     </div>
 
+
     <script th:inline="javascript">
         $(document).ready(function () {
-            const $scheduleModal = $('.schedule_detail'); // 일정 등록 모달
-            const $eventModal = $('.event-card'); // 이벤트 카드 모달
-            const $closeSchedule = $('.schedule_detail .close');
-            const $closeEvent = $('.close-event'); // 이벤트 카드 모달 닫기 버튼
-            const $currentDateSpan = $('#current-date'); // 모달 내 현재 날짜 표시
+        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+const csrfToken = $('meta[name="_csrf"]').attr('content');
+console.log("CSRF Header:", csrfHeader);
+console.log("CSRF Token:", csrfToken);
 
-            let selectedDate = null; // 선택된 날짜 저장
-            let modalSelectedDate = new Date(); // 일정 등록 모달에서 선택된 날짜 저장
+    const scheduleList = /*[[${personalScheduleList}]]*/ []; // 서버에서 전달받은 일정 데이터
 
-            // 다른 모달 닫기
-            function closeAllModals() {
+    // 현재 날짜 설정
+    let currentDate = new Date();
+
+    // 초기화 및 캘린더 생성
+    updateMonthYear();
+    generateCalendar();
+    renderEvents(scheduleList);
+
+    /** 캘린더 관련 함수 */
+    function updateMonthYear() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        $('#current-month-year').text(`${year}년 ${month}월`);
+    }
+
+   let currentFilter = 'all'; // 현재 필터 상태
+
+function generateCalendar() {
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+    const lastDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+    const prevLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+
+    $('.calendar-body').html(''); // 캘린더 내용 초기화
+    let date = 1;
+    let isLastDateDisplayed = false;
+
+    for (let i = 0; i < 6; i++) {
+        const row = document.createElement('tr');
+
+        for (let j = 0; j < 7; j++) {
+            const cell = document.createElement('td');
+            cell.classList.add('calendar-cell');
+
+            if (i === 0 && j < firstDay) {
+                const prevDate = prevLastDate - (firstDay - j - 1);
+                cell.textContent = prevDate;
+                cell.classList.add('prev-month-cell');
+                cell.style.color = '#aaaaaa';
+                cell.style.backgroundColor = '#f0f0f0';
+            } else if (date <= lastDate) {
+                cell.innerHTML = `<div class="calendar-date">${date}</div>`;
+
+                if (date === lastDate) {
+                    isLastDateDisplayed = true;
+                }
+
+                date++;
+            } else {
+                const nextDate = date - lastDate;
+                cell.textContent = nextDate;
+                cell.classList.add('next-month-cell');
+                cell.style.color = '#aaaaaa';
+                cell.style.backgroundColor = '#f0f0f0';
+                date++;
+            }
+
+            row.appendChild(cell);
+        }
+
+        $('.calendar-body').append(row);
+
+        if (isLastDateDisplayed && i === 4) {
+            break;
+        }
+    }
+}
+
+function renderEvents(events) {
+    $('.calendar-body .calendar-cell').each(function () {
+        const dateElement = $(this).find('.calendar-date');
+        if (dateElement.length) {
+            const dateText = dateElement.text().padStart(2, '0');
+            const currentFormattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${dateText}`;
+
+            // 해당 날짜의 이벤트 필터링
+            let dayEvents = events.filter(event =>
+                event.calendar_event_bgn_date.startsWith(currentFormattedDate) &&
+                (event.calendar_type === '1' || event.calendar_type === '2')
+            );
+
+            // 이벤트 추가
+            dayEvents.forEach(event => {
+                const eventClass = event.calendar_is_all_day === 'Y'
+                    ? (event.calendar_type === '1' ? 'event-bar-team-allday' : 'event-bar-personal-allday')
+                    : (event.calendar_type === '1' ? 'event-bar-team' : 'event-bar-personal');
+
+                const dotClass = event.calendar_type === '2' ? 'event-dot-personal' : 'event-dot-team';
+
+                console.log(`Rendering Event: calendar_sn=${event.calendar_sn}, title=${event.calendar_event_title}`);
+
+                const $eventElement = $(`
+                    <div class="${eventClass}" data-calendar-sn="${event.calendar_sn}"
+                         data-title="${event.calendar_event_title}"
+                         data-date="${event.calendar_event_bgn_date}"
+                         data-location="${event.calendar_event_location || ''}">
+                        <span class="${dotClass}"></span>${event.calendar_event_title}
+                    </div>
+                `);
+                $(this).append($eventElement);
+            });
+        }
+    });
+
+    // 스타일 업데이트
+    updateCalendarStyles();
+}
+
+
+function updateCalendarStyles() {
+    const checkedCalendarSn = $('.today-tasks-list input[type="checkbox"]:checked')
+        .closest('.today-tasks')
+        .map(function () {
+            return $(this).data('calendar-sn');
+        })
+        .get();
+
+    console.log('Checked Calendar SN:', checkedCalendarSn);
+
+    $('.event-bar-team, .event-bar-personal, .event-bar-team-allday, .event-bar-personal-allday').css({
+        'background-color': ''
+    }).find('.event-dot-team, .event-dot-personal').css({
+        'background-color': ''
+    });
+
+    checkedCalendarSn.forEach(sn => {
+        $(`.event-bar-team[data-calendar-sn="${sn}"],
+           .event-bar-personal[data-calendar-sn="${sn}"],
+           .event-bar-team-allday[data-calendar-sn="${sn}"],
+           .event-bar-personal-allday[data-calendar-sn="${sn}"]`).each(function () {
+            if ($(this).hasClass('event-bar-team-allday') || $(this).hasClass('event-bar-personal-allday')) {
+                $(this).css('background-color', '#ababab');
+            } else {
+                const dot = $(this).find('.event-dot-team, .event-dot-personal');
+                if (dot.length) {
+                    dot.css('background-color', '#ababab');
+                }
+            }
+        });
+    });
+}
+
+// 체크박스 이벤트 핸들러
+$('.today-tasks input[type="checkbox"]').on('change', function () {
+    updateCalendarStyles(); // 체크박스 변경 후 스타일 동기화
+});
+
+// 체크박스 변경 이벤트 핸들러
+$('.today-tasks-list').on('change', 'input[type="checkbox"]', function () {
+    const taskContainer = $(this).closest('.today-tasks');
+    const calendarSn = taskContainer.data('calendar-sn');
+    const taskCheckedVal = $(this).is(':checked');
+
+    console.log(`Checkbox Changed: Calendar SN: ${calendarSn}, Checked: ${taskCheckedVal}`);
+
+    // AJAX 요청으로 상태 업데이트
+    $.ajax({
+        type: 'POST',
+        url: '/schedule/personal/update-task-status',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            calendar_sn: calendarSn,
+            task_checked_val: taskCheckedVal
+        }),
+        beforeSend: function (xhr) {
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success: function () {
+            console.log('Task status updated successfully.');
+            updateCalendarStyles();
+        },
+        error: function (xhr) {
+            console.error('Failed to update task status:', xhr.responseText);
+        }
+    });
+});
+
+
+function applyFilter(filter) {
+    if (filter === 'team') {
+        $('.event-bar-team, .event-bar-team-allday').show();
+        $('.event-bar-personal, .event-bar-personal-allday').hide();
+    } else if (filter === 'personal') {
+        $('.event-bar-personal, .event-bar-personal-allday').show();
+        $('.event-bar-team, .event-bar-team-allday').hide();
+    } else {
+        $('.event-bar-team, .event-bar-personal, .event-bar-team-allday, .event-bar-personal-allday').show();
+    }
+}
+
+$('#schedule_team_btn').on('click', function () {
+    currentFilter = 'team';
+    applyFilter(currentFilter);
+});
+
+$('#schedule_personal_btn').on('click', function () {
+    currentFilter = 'personal';
+    applyFilter(currentFilter);
+});
+
+$('#schedule_all_btn').on('click', function () {
+    currentFilter = 'all';
+    applyFilter(currentFilter);
+});
+
+updateMonthYear();
+generateCalendar();
+renderEvents(scheduleList);
+
+
+
+
+$('#btn_left').on('click', function () {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    updateMonthYear();
+    generateCalendar();
+    renderEvents(scheduleList);
+    applyFilter(currentFilter);
+});
+
+$('#btn_right').on('click', function () {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    updateMonthYear();
+    generateCalendar();
+    renderEvents(scheduleList);
+    applyFilter(currentFilter);
+});
+
+    /** 필터 버튼 이벤트 */
+    $('#schedule_team_btn').on('click', function () {
+    // 팀 이벤트(1)와 종일 팀 이벤트 필터링
+    $('.event-bar-team, .event-bar-team-allday').show(); // 팀 이벤트만 표시
+    $('.event-bar-personal, .event-bar-personal-allday').hide(); // 개인 이벤트 숨김
+});
+
+$('#schedule_personal_btn').on('click', function () {
+    // 개인 이벤트(2)와 종일 개인 이벤트 필터링
+    $('.event-bar-personal, .event-bar-personal-allday').show(); // 개인 이벤트만 표시
+    $('.event-bar-team, .event-bar-team-allday').hide(); // 팀 이벤트 숨김
+});
+
+$('#schedule_all_btn').on('click', function () {
+    // 모든 이벤트 표시
+    $('.event-bar-team, .event-bar-personal, .event-bar-team-allday, .event-bar-personal-allday').show();
+});
+
+    /** 모달 관련 기능 */
+    const $scheduleModal = $('.schedule_detail');
+    const $eventModal = $('.event-card');
+    const $currentDateSpan = $('#current-date');
+    let modalSelectedDate = new Date();
+
+
+    function closeAllModals() {
                 $scheduleModal.fadeOut();
                 $eventModal.fadeOut();
             }
-
-            // 일정 등록 모달이 열려 있고, 클릭한 대상이 모달 내부가 아닌 경우 모달 닫기
-
-
-            // 날짜를 YYYY.MM.DD 형식으로 변환
-             function formatDateWithDay(date) {
-        const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+    function formatDate(date) {
         const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const dayName = days[date.getDay()]; // 요일 계산
-        return `${year}.${month}.${day} (${dayName})`;
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const day = String(date.getDate()).padStart(2, '0'); // 날짜
+        return `${year}-${month}-${day}`;
     }
 
-            // 초기 날짜 표시
-    updateModalDateDisplay();
+     function updateModalDateDisplay() {
+        const formattedDate = formatDate(modalSelectedDate);
+        $currentDateSpan.text(formattedDate); // 모달에 날짜 표시
+    }
+     updateModalDateDisplay();
 
-    // 이전 날짜 버튼 클릭
-    $('#prev-day').on('click', function () {
-        modalSelectedDate.setDate(modalSelectedDate.getDate() - 1); // 하루 감소
-        updateModalDateDisplay();
+
+      $('#prev-day').on('click', function () {
+        modalSelectedDate.setDate(modalSelectedDate.getDate() - 1); // 하루 전으로 이동
+        updateModalDateDisplay(); // 날짜 업데이트
     });
 
-    // 다음 날짜 버튼 클릭
+    // 다음 날짜 버튼 클릭 이벤트
     $('#next-day').on('click', function () {
-        modalSelectedDate.setDate(modalSelectedDate.getDate() + 1); // 하루 증가
+        modalSelectedDate.setDate(modalSelectedDate.getDate() + 1); // 하루 후로 이동
+        updateModalDateDisplay(); // 날짜 업데이트
+    });
+
+    // 모달이 열릴 때 현재 날짜를 설정 (필요 시 추가)
+    $('.schedule_detail').on('show', function () {
+        modalSelectedDate = new Date(); // 모달이 열릴 때 현재 날짜로 초기화
         updateModalDateDisplay();
     });
-            // 일정 등록 모달에서 날짜 업데이트
-             function updateModalDateDisplay() {
-        const formattedDate = formatDateWithDay(modalSelectedDate);
-        $currentDateSpan.text(formattedDate);
+
+    $('.calendar-body').on('click', '.calendar-cell', function (event) {
+    const $target = $(event.target);
+    const $dateElement = $(this).find('.calendar-date'); // 클릭한 셀의 날짜 요소
+
+
+    // 이벤트 바 클릭 시 일정 등록 모달 열리지 않음
+    if ($target.closest('.event-bar-team, .event-bar-personal, .event-bar-allday').length > 0) {
+        return; // 이벤트 바를 클릭했으면 일정 등록 모달 열지 않음
+    }
+     if ($eventModal.is(':visible')) {
+        $eventModal.fadeOut();
     }
 
-            // 날짜 셀 클릭 시 일정 등록 모달 열기
-            $('.calendar-body').on("click", '.calendar-cell', function (event) {
-                if (
-                    $(event.target).hasClass('event-bar-team-allday') ||
-                    $(event.target).hasClass('event-bar-personal-allday') ||
-                    $(event.target).hasClass('event-bar-personal') ||
-                    $(event.target).hasClass('event-bar-team')
-                ) {
-                    return; // 이벤트 관련 요소 클릭 시 일정 등록 모달 열리지 않음
-                }
+     if ($dateElement.length) {
+            const selectedDate = parseInt($dateElement.text()); // 선택된 날짜 숫자 가져오기
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth(); // 현재 월 (0부터 시작)
+            modalSelectedDate = new Date(year, month, selectedDate); // 선택된 날짜 설정
+            updateModalDateDisplay(); // 모달에 선택된 날짜 표시
+        }
 
-                const dateElement = $(this).find('.calendar-date'); // 날짜 요소
-                if (!dateElement.length) return; // 날짜가 없는 빈 셀 클릭 시 무시
 
-                // 선택된 날짜 설정
-                selectedDate = parseInt(dateElement.text());
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth(); // 0부터 시작
-                modalSelectedDate = new Date(year, month, selectedDate);
+    // 모달 위치 설정
+    const clickX = event.pageX;
+    const clickY = event.pageY;
+    $scheduleModal.css({
+        display: 'block',
+        top: clickY + 'px',
+        left: clickX + 'px',
+        position: 'absolute',
+        transform: 'translate(-50%, 5%)'
+    }).fadeIn();
+});
 
-                updateModalDateDisplay(); // 모달 내 날짜 표시 업데이트
+// 일정 등록 모달 닫기
+$('.schedule_detail .close').on('click', function () {
+    $scheduleModal.fadeOut();
+});
 
-                closeAllModals(); // 다른 모달 닫기
+// 윈도우 클릭 시 모달 닫기
+$(window).on('click', function (event) {
+    if ($(event.target).is($scheduleModal)) {
+        $scheduleModal.fadeOut();
+    }
+    if ($(event.target).is($eventModal)) {
+        $eventModal.fadeOut();
+    }
+});
+$('.calendar-body').on('click', '.event-bar-team, .event-bar-personal, .event-bar-team-allday, .event-bar-personal-allday', function (event) {
+    // 이벤트 전파 방지
+    event.stopPropagation();
 
-                // 모달 위치 설정
-                const clickX = event.pageX; // 클릭한 X 좌표
-                const clickY = event.pageY; // 클릭한 Y 좌표
-                $scheduleModal.css({
-                    display: "block",
-                    top: clickY + "px",
-                    left: clickX + "px",
-                    position: "absolute",
-                    transform: "translate(-50%, -5%)"
-                }).fadeIn();
-            });
+    // 일정 등록 모달 닫기
+    if ($scheduleModal.is(':visible')) {
+        $scheduleModal.fadeOut();
+    }
 
-            // 일정 등록 모달 왼쪽 버튼 클릭: 전날로 이동
-            $('#prev-day').on('click', function () {
-                modalSelectedDate.setDate(modalSelectedDate.getDate() - 1); // 하루 감소
-                updateModalDateDisplay(); // 날짜 업데이트
-            });
+    // 데이터 정렬 및 필터링
+    const allEvents = []; // 이벤트 데이터를 수집할 배열
+    $('.calendar-body .event-bar-team, .event-bar-personal').each(function () {
+        const $event = $(this);
+        const title = $event.data('title');
+        const date = $event.data('date');
+        const location = $event.data('location');
+        const detail = $event.data('detail');
+        const isAllDay = $event.hasClass('event-bar-team-allday') || $event.hasClass('event-bar-personal-allday');
 
-            // 일정 등록 모달 오른쪽 버튼 클릭: 다음날로 이동
-            $('#next-day').on('click', function () {
-                modalSelectedDate.setDate(modalSelectedDate.getDate() + 1); // 하루 증가
-                updateModalDateDisplay(); // 날짜 업데이트
-            });
+        allEvents.push({ title, date, location, detail, isAllDay });
+    });
 
-            // 일정 등록 모달 닫기
-            $closeSchedule.on("click", function () {
-                $scheduleModal.fadeOut();
-            });
+    // All Day 이벤트 필터링
+    const allDayEvent = allEvents.find(event => event.isAllDay);
 
-            // 이벤트 바 클릭 시 이벤트 카드 모달 열기
-            $('.calendar-body').on("click", '.event-bar-team-allday, .event-bar-personal-allday, .event-bar-team, .event-bar-personal', function (event) {
-                closeAllModals(); // 다른 모달 닫기
+    // 일반 이벤트 필터링: 시간순 정렬 후 최대 2개 가져오기
+    const timedEvents = allEvents
+        .filter(event => !event.isAllDay)
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .slice(0, 2);
 
-                const $target = $(event.currentTarget); // 클릭된 요소
-                const title = $target.data('title');
-                const date = $target.data('date');
-                const time = $target.data('time');
-                const location = $target.data('location');
-                const memo = $target.data('memo');
+    // 모달에 데이터 추가
+    let modalContent = '';
 
-                // 모달 내용 설정
-                $('.event-title').text(title);
-                $('.event-time').text(`${date} - ${time}`);
-                $('.event-location').text(location);
-                $('.event-memo').text(memo || "메모 없음");
+    if (allDayEvent) {
+        modalContent += `
+            <div class="event-allday">
+                <strong>종일: </strong>${allDayEvent.title || '제목 없음'}
+            </div>`;
+    }
 
-                // 모달 위치 설정
-                const clickX = event.pageX; // 클릭한 X 좌표
-                const clickY = event.pageY; // 클릭한 Y 좌표
-                $eventModal.css({
-                    display: "block",
-                    top: clickY + "px",
-                    left: clickX + "px",
-                    position: "absolute",
-                    transform: "translate(-50%, 5%)"
-                }).fadeIn();
-            });
+    timedEvents.forEach(event => {
+        let formattedDate = '시간 없음';
+        if (event.date) {
+            const originalDate = new Date(event.date); // 원본 UTC 날짜
+            originalDate.setHours(originalDate.getHours() + 9); // 9시간 추가
+            formattedDate = `${String(originalDate.getHours()).padStart(2, '0')}:${String(originalDate.getMinutes()).padStart(2, '0')}`;
+        }
 
-            // 이벤트 카드 모달 닫기
-            $closeEvent.on("click", function () {
-                $eventModal.fadeOut();
-            });
+        modalContent += `
+            <div class="event-item">
+                <strong>${formattedDate}</strong> ${event.title || '제목 없음'}
+            </div>`;
+    });
 
-            // task_etc 버튼 클릭 시 이벤트 모달 열기
-            $(document).on('click', '.task_etc', function (event) {
-                closeAllModals(); // 다른 모달 닫기
+    // 모달 설정
+    $eventModal.find('.event-title').html(modalContent);
 
-                const taskContainer = $(this).closest('.today-tasks'); // 가장 가까운 부모 요소
-                const taskTitle = taskContainer.find('p').text().trim(); // 할 일 제목 가져오기
-                const taskTime = taskContainer.find('label strong').text().trim(); // 할 일 시간 가져오기
+    // 모달 위치 설정
+    const clickX = event.pageX;
+    const clickY = event.pageY;
+    $eventModal.css({
+        display: 'block',
+        top: clickY + 'px',
+        left: clickX + 'px',
+        position: 'absolute',
+        transform: 'translate(-50%, 5%)'
+    }).fadeIn();
+});
+// 상위 요소의 클릭 이벤트 처리 방지
+$('.calendar-body').on('click', function (event) {
+    // 여기서는 아무 작업도 하지 않음
+    event.stopPropagation();
+});
 
-                // 모달 내용 설정
-                $('.event-title').text(taskTitle || "제목 없음");
-                $('.event-time').text(taskTime || "시간 없음");
-                $('.event-location').text("오늘의 할 일");
-                $('.event-memo').text("추가 정보를 입력해주세요");
+// 윈도우 클릭 시 모달 닫기
+$(window).on('click', function (event) {
+    if ($(event.target).is($scheduleModal)) {
+        $scheduleModal.fadeOut();
+    }
+    if ($(event.target).is($eventModal)) {
+        $eventModal.fadeOut();
+    }
+});
 
-                // 모달 위치 설정
-                const clickX = event.pageX; // 클릭한 X 좌표
-                const clickY = event.pageY; // 클릭한 Y 좌표
-                $eventModal.css({
-                    display: "block",
-                    top: clickY + "px",
-                    left: clickX + "px",
-                    position: "absolute",
-                    transform: "translate(-80%, 12%)"
-                }).fadeIn();
-            });
 
-            // 시간 옵션 동적 생성
-            const timeSelect = document.getElementById('time-select');
+ const timeSelect = document.getElementById('time-select');
             for (let i = 0; i < 48; i++) {
                 const hour = Math.floor(i / 2).toString().padStart(2, '0'); // 시간 계산
                 const minute = (i % 2 === 0 ? '00' : '30'); // 분 계산
@@ -284,181 +557,19 @@
                 option.textContent = `${hour}:${minute}`;
                 timeSelect.appendChild(option);
             }
+    $('.close-event').on('click', function () {
+        $eventModal.fadeOut();
+    });
 
-            // 모달 외부 클릭 시 닫기
-            $(window).on("click", function (event) {
-                if ($(event.target).is($scheduleModal)) {
-                    $scheduleModal.fadeOut();
-                }
-                if ($(event.target).is($eventModal)) {
-                    $eventModal.fadeOut();
-                }
-            });
-
-            // 색출 버튼
-            const scheduleTeamBtn = document.getElementById('schedule_team_btn'); // 팀 버튼
-            const schedulePersonalBtn = document.getElementById('schedule_personal_btn'); // 개인 버튼
-            const scheduleAllBtn = document.getElementById('schedule_all_btn'); // 전체 버튼
-
-            scheduleTeamBtn.addEventListener('click', () => {
-                document.querySelectorAll('.event-bar-team, .event-bar-personal, .event-bar-team-allday, .event-bar-personal-allday').forEach(div => {
-                    div.style.display = 'none';
-                });
-
-                document.querySelectorAll('.event-bar-team').forEach(div => {
-                    div.style.display = 'flex';
-                });
-
-                document.querySelectorAll('.event-bar-team-allday').forEach(div => {
-                    div.style.display = 'block';
-                });
-            });
-
-            schedulePersonalBtn.addEventListener('click', () => {
-                document.querySelectorAll('.event-bar-team, .event-bar-personal, .event-bar-team-allday, .event-bar-personal-allday').forEach(div => {
-                    div.style.display = 'none';
-                });
-
-                document.querySelectorAll('.event-bar-personal').forEach(div => {
-                    div.style.display = 'flex';
-                });
-
-                document.querySelectorAll('.event-bar-personal-allday').forEach(div => {
-                    div.style.display = 'block';
-                });
-            });
-
-            scheduleAllBtn.addEventListener('click', () => {
-                document.querySelectorAll('.event-bar-team, .event-bar-personal').forEach(div => {
-                    div.style.display = 'flex';
-                });
-
-                document.querySelectorAll('.event-bar-personal-allday').forEach(div => {
-                    div.style.display = 'block';
-                });
-
-                document.querySelectorAll('.event-bar-team-allday').forEach(div => {
-                    div.style.display = 'block';
-                });
-            });
-
-            // 체크박스 색상 변경
-            document.querySelectorAll('.today-tasks input[type="checkbox"]').forEach((checkbox) => {
-                checkbox.addEventListener('change', function () {
-                    const taskContainer = this.closest('.today-tasks');
-                    if (this.checked) {
-                        taskContainer.style.backgroundColor = '#ababab';
-                    } else {
-                        taskContainer.style.backgroundColor = '#f8f9fa';
-                    }
-                });
-            });
-
-            // 날짜 관련 스크립트
-            const currentMonthYear = document.getElementById('current-month-year');
-            const calendarBody = document.querySelector('.calendar-body');
-            const leftButton = document.getElementById('btn_left');
-            const rightButton = document.getElementById('btn_right');
-
-            const events = [
-                { date: '2024-11-01', type: 'team-allday', title: '금융프로젝트', time: '오전 9:00~11:00', location: '강남역', memo: '김철수' },
-                { date: '2024-11-04', type: 'team-allday', title: '점심 약속', time: '오후 12:00~13:00', location: '회사 식당', memo: '홍길동' },
-                { date: '2024-11-06', type: 'team-allday', title: '프로젝트 발표', time: '오전 10:00~12:00', location: '회의실', memo: '팀원' },
-                { date: '2024-11-06', type: 'personal', title: '영화보기', time: '오전 10:00~12:00', location: '영화관', person: '친구' },
-                { date: '2024-11-11', type: 'personal', title: '점심약속', time: '오전 11:00~01:00', location: '영화관', memo: '혼자' },
-                { date: '2024-11-20', type: 'personal-allday', title: '제주도 여행', time: '오전 8:00~오후 6:00', location: '제주도', memo: '여행팀' },
-            ];
-
-            let currentDate = new Date();
-
-            function updateMonthYear() {
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth() + 1;
-                document.getElementById('current-month-year').textContent = `${year}년 ${month}월`;
-            }
-
-            function generateCalendar() {
-                const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(); // 현재 달 첫날 요일
-                const lastDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(); // 현재 달 마지막 날짜
-
-                // 이전 달 마지막 날짜 계산
-                const prevLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
-
-                calendarBody.innerHTML = '';
-                let date = 1;
-                let isLastDateDisplayed = false; // 마지막 날짜가 표시되었는지 확인
-
-                for (let i = 0; i < 6; i++) { // 최대 6줄까지 출력
-                    const row = document.createElement('tr');
-
-                    for (let j = 0; j < 7; j++) {
-                        const cell = document.createElement('td');
-                        cell.classList.add('calendar-cell');
-
-                        if (i === 0 && j < firstDay) {
-                            // 이전 달 날짜 채우기
-                            const prevDate = prevLastDate - (firstDay - j - 1);
-                            cell.textContent = prevDate;
-                            cell.classList.add('prev-month-cell');
-                            cell.style.color = '#aaaaaa';
-                            cell.style.backgroundColor = '#f0f0f0';
-                        } else if (date <= lastDate) {
-                            // 현재 달 날짜
-                            const currentFormattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-                            cell.innerHTML = `<div class="calendar-date">${date}</div>`;
-
-                            const dayEvents = events.filter(event => event.date === currentFormattedDate);
-                            dayEvents.forEach(event => {
-                                const dotClass = event.type.includes('personal') ? 'event-dot-personal' : 'event-dot-team';
-                                cell.innerHTML += `
-                    <div class="event-bar-${event.type}" data-title="${event.title}" data-date="${event.date}" data-time="${event.time}" data-location="${event.location}" ${event.memo ? `data-memo="${event.memo}"` : ''}>
-                        <span class="${dotClass}"></span>${event.title}
-                    </div>`;
-                            });
-
-                            if (date === lastDate) {
-                                isLastDateDisplayed = true; // 마지막 날짜가 표시됨
-                            }
-
-                            date++;
-                        } else {
-                            // 다음 달 날짜 채우기
-                            const nextDate = date - lastDate;
-                            cell.textContent = nextDate;
-                            cell.classList.add('next-month-cell');
-                            cell.style.color = '#aaaaaa';
-                            cell.style.backgroundColor = '#f0f0f0';
-                            date++;
-                        }
-
-                        row.appendChild(cell);
-                    }
-
-                    calendarBody.appendChild(row);
-
-                    // 마지막 날짜가 표시되었고, 5줄 내에 출력이 완료되었으면 루프 종료
-                    if (isLastDateDisplayed && i === 4) {
-                        break;
-                    }
-                }
-            }
-
-            leftButton.addEventListener('click', function () {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-                updateMonthYear();
-                generateCalendar();
-            });
-
-            rightButton.addEventListener('click', function () {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                updateMonthYear();
-                generateCalendar();
-            });
-
-            updateMonthYear();
-            generateCalendar();
-
-            document.querySelectorAll('.select-checkbox').forEach(checkbox => {
+    $('.today-tasks input[type="checkbox"]').on('change', function () {
+        const taskContainer = $(this).closest('.today-tasks');
+        if ($(this).is(':checked')) {
+            taskContainer.css('background-color', '#ababab');
+        } else {
+            taskContainer.css('background-color', '#f8f9fa');
+        }
+    });
+    document.querySelectorAll('.select-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function () {
                     if (this.checked) {
                         document.querySelectorAll('.select-checkbox').forEach(otherCheckbox => {
@@ -469,7 +580,178 @@
                     }
                 });
             });
+
+     // "팀"과 "개인" 체크박스는 하나만 선택 가능, "종일"은 독립적으로 동작
+    $('.select-checkbox').on('change', function () {
+          const id = $(this).attr('id');
+
+        if (id === 'team-team' || id === 'team-personal') {
+            // 팀과 개인은 서로 배타적으로 동작
+            $('#team-team, #team-personal').not(this).prop('checked', false);
+        }
+    });
+
+
+    // 등록 버튼 클릭 시 데이터 처리
+      $('#submit_btn').on('click', function () {
+        const modalDate = $('#current-date').text(); // 모달의 날짜
+        const selectedTime = $('#time-select').val(); // 선택된 시간
+
+        let combinedDateTime = null;
+
+        if (modalDate && selectedTime) {
+            combinedDateTime = `${modalDate} ${selectedTime}:00`; // 초(:00) 추가
+            console.log("Combined DateTime:", combinedDateTime);
+        } else {
+            console.error("Error: Missing modalDate or selectedTime.");
+            alert("날짜와 시간을 선택하세요.");
+            return;
+        }
+
+        const userId = /*[[${user_id}]]*/ ''; // user_id 가져오기
+        const eventTitle = $('.task-title').val();
+        const eventLocation = $('.location-input').val();
+        const eventDetail = $('.details-input').val();
+
+        // "팀"인지 "개인"인지 확인
+        const eventType = $('#team-team').is(':checked') ? '1' : ($('#team-personal').is(':checked') ? '2' : null);
+        if (!eventType) {
+            alert("팀 또는 개인을 선택하세요.");
+            return;
+        }
+
+        // "종일" 체크 여부
+        const isAllDay = $('#event-allday').is(':checked') ? 'Y' : 'N';
+
+        // 디버깅 로그
+        console.log("User ID:", userId);
+        console.log("Event Title:", eventTitle);
+        console.log("Event Location:", eventLocation);
+        console.log("Event Detail:", eventDetail);
+        console.log("Event Type:", eventType);
+        console.log("Calendar is All Day:", isAllDay);
+
+        if (!eventTitle) {
+            alert("제목을 입력하세요.");
+            return;
+        }
+
+        const now = new Date();
+        const createdAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+        // AJAX 요청
+        $.ajax({
+            type: "POST",
+            url: "/schedule/personal/register",
+            contentType: "application/json",
+            data: JSON.stringify({
+                user_id: userId, // user_id 전달
+                calendar_event_bgn_date: combinedDateTime, // 일정 시작 날짜와 시간
+                calendar_create_at: createdAt, // 일정이 추가된 시간
+                calendar_event_title: eventTitle, // 제목
+                calendar_event_location: eventLocation, // 장소
+                calendar_type: eventType, // 팀 또는 개인
+                calendar_event_detail: eventDetail, // 상세 정보
+                calendar_is_all_day: isAllDay // 종일 여부
+            }),
+            beforeSend: function (xhr) {
+                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 헤더 추가
+            },
+            success: function () {
+                alert("일정이 성공적으로 등록되었습니다.");
+                location.reload();
+            },
+            error: function (xhr) {
+                console.error("일정 등록 실패:", xhr.responseText);
+                alert("일정 등록에 실패했습니다.");
+            }
         });
+    });
+function getTodayDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+function addNineHoursToUTC(utcDate) {
+    const date = new Date(utcDate); // UTC 시간 기준으로 생성
+    date.setHours(date.getHours() + 9); // 9시간 추가
+    return date;
+}
+// 오늘의 일정 렌더링
+function renderTodayTasks(events) {
+    const todayFormatted = formatDate(new Date());
+    const currentUserId = /*[[${user_id}]]*/ ''; // 현재 로그인된 user_id 가져오기
+
+    const todayEvents = events.filter(event => {
+        const eventDate = addNineHoursToUTC(event.calendar_event_bgn_date).toISOString().split('T')[0];
+        return eventDate === todayFormatted && event.user_id === currentUserId;
+    });
+
+    const $todayTaskContainer = $('.today_task .today-tasks-list');
+    $todayTaskContainer.empty();
+
+    if (todayEvents.length === 0) {
+        $todayTaskContainer.append('<p>오늘 일정이 없습니다.</p>');
+        return;
+    }
+
+    todayEvents.forEach(event => {
+        let time = '종일';
+        if (event.calendar_is_all_day !== 'Y') {
+            const localDate = addNineHoursToUTC(event.calendar_event_bgn_date);
+            time = localDate.toTimeString().substring(0, 5); // HH:mm 추출
+        }
+
+        const $taskElement = $(`
+            <div class="today-tasks" data-calendar-sn="${event.calendar_sn}">
+                <label><strong>&middot; ${time}</strong></label>
+                <button><img id="delete" src="/css/schedule/img/delete.png" alt="Delete"></button>
+                <button class="task_etc"><img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo"></button>
+                <div id="task_text">
+                    <p>${event.calendar_event_title || '제목 없음'}</p>
+                    <input type="checkbox">
+                </div>
+            </div>
+        `);
+        $todayTaskContainer.append($taskElement);
+    });
+
+    console.log('Today Tasks Rendered:', $todayTaskContainer);
+}
+
+
+// 초기화 시 호출
+console.log("Schedule List on load:", scheduleList); // 디버깅용
+renderTodayTasks(scheduleList);
+
+ // 체크박스 색상 변경
+            document.querySelectorAll('.today-tasks input[type="checkbox"]').forEach((checkbox) => {
+                checkbox.addEventListener('change', function () {
+                    const taskContainer = this.closest('.today-tasks');
+                    if (this.checked) {
+                        taskContainer.style.backgroundColor = '#ababab';
+                    } else {
+                        taskContainer.style.backgroundColor = '#f8f9fa';
+                    }
+                });
+            });
+$('.today-tasks').each(function () {
+    console.log('Today Task Calendar SN:', $(this).data('calendar-sn'));
+});
+$('.event-bar-team, .event-bar-personal, .event-bar-team-allday, .event-bar-personal-allday').each(function () {
+    console.log('Calendar Event Calendar SN:', $(this).data('calendar-sn'));
+});
+$('.today-tasks input[type="checkbox"]').on('change', function () {
+    const taskContainer = $(this).closest('.today-tasks');
+    const calendarSn = taskContainer.data('calendar-sn'); // today-tasks의 calendar_sn 가져오기
+    console.log('Checkbox Changed: Calendar SN:', calendarSn, 'Checked:', $(this).is(':checked'));
+});
+        });
+
     </script>
 
 
