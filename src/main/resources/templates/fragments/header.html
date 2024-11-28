@@ -28,10 +28,10 @@
             </div>
 
             <!-- 로그인 / 로그아웃 -->
-            <form class="d-flex log" th:action="@{/logout}" method="post">
+            <div class="d-flex log">
                 <a th:href="@{/mypage}" class="btn">MyPage</a>
-                <button class="btn">Logout</button>
-            </form>
+                <button class="btn" id="btn-logout">Logout</button>
+            </div>
 
             <!-- 토글 버튼 (헤더 위에 고정시키기) -->
             <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
@@ -274,7 +274,22 @@
         // 페이지 로드 시 북마크 목록 로드
         document.addEventListener('DOMContentLoaded', loadBookmarks);
 
-
+        // 로그아웃
+        $("#btn-logout").on("click", function () {
+            try {
+                const response = $.ajax({
+                    url: '/logout',
+                    type: 'POST',
+                });
+                if (response) {
+                    alert("로그아웃이 완료되었습니다.");
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error("로그아웃 실패:", error);
+                alert("로그아웃 중 문제가 발생했습니다.");
+            }
+        })
     </script>
 
 </div>

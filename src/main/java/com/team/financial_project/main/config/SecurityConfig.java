@@ -2,6 +2,7 @@ package com.team.financial_project.main.config;
 
 import com.team.financial_project.main.security.CustomAuthFailureHandler;
 import com.team.financial_project.main.service.CustomUserDetailService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -34,7 +35,11 @@ public class SecurityConfig{
                 .permitAll());
         http.logout((auth)->auth
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.getWriter().write("{\"message\": \"로그아웃 성공\"}");
+                    response.getWriter().flush();
+                })
                 .invalidateHttpSession(true)
                 .permitAll());
         return http.build();
