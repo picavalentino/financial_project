@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="retrieve-pw" class="modal" id="pw-modal">
+    <link rel="stylesheet" th:href="@{/css/login/retrieve-pw.css}">
+    <div class="title input-box">
+        <div class="text">비밀번호 찾기</div>
+        <button type="button" class="btn btn-link p-0 ms-2" id="btn-pw-cross">
+            <i class="bi bi-x-circle text-secondary"></i>
+        </button>
+    </div>
+    <div class="mb-4 input-box">
+        <label for="pw-user_id" class="retrieve-label">사원번호</label>
+        <input type="text" inputmode="numeric" maxlength="11" id="pw-user_id" class="pw-user_id" placeholder="사원번호를 입력해주세요." autocomplete="off">
+    </div>
+    <div class="mb-4 input-box">
+        <label for="pw-user_telno" class="retrieve-label">휴대전화</label>
+        <div class="user_telno">
+            <select id="pw-phone1">
+                <option value="010">010</option>
+                <option value="011">011</option>
+                <option value="016">016</option>
+                <option value="017">017</option>
+                <option value="018">018</option>
+                <option value="019">019</option>
+            </select><span>-</span>
+            <input type="text" inputmode="numeric" maxlength="4" id="pw-phone2" class="phone2" placeholder="0000" autocomplete="off"><span>-</span>
+            <input type="text" inputmode="numeric" maxlength="4" id="pw-phone3" class="phone3" placeholder="0000" autocomplete="off">
+            <input type="hidden" id="pw-user_telno">
+        </div>
+    </div>
+    <div id="pw-code-container" class="code-container mb-4">
+        <label for="pw-input-code" class="code-label">인증번호<span id="pw-msg-not-match">인증번호가 일치하지 않습니다.</span></label>
+        <div class="code-input-box" id="pw-code-input-box">
+            <div class="input-and-timer">
+                <input type="text" inputmode="numeric" maxlength="6" class="code-input" id="pw-input-code" placeholder="6자리 숫자" autocomplete="off">
+                <div class="timer" id="pw-timer"></div>
+            </div>
+            <input type="button" value="인증" class="btn-certify" id="pw-btn-certify" disabled>
+            <button type="button" class="btn-resend" id="pw-btn-resend">
+                <img src="/images/common/icon-resend.png" alt="재전송.icon" class="icon-resend">
+            </button>
+        </div>
+    </div>
+    <input type="button" value="인증번호 전송" class="btn-send mt-3" id="pw-btn-send" disabled>
+    <div class="pw-btns" id="pw-btns">
+        <input type="button" value="초기화" class="btn-reset mt-3" id="btn-reset" disabled>
+        <input type="button" value="변경" class="btn-change mt-3" id="btn-change" disabled>
+    </div>
+    <script th:src="@{/js/login/retrieve-pw.js}"></script>
+</div>
+</body>
+</html>

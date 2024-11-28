@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    let csrfToken = $('meta[name="_csrf"]').attr('content');
+    let csrfHeader = $('meta[name="_csrf_header"]').attr('content');
     $(".btn-insertEmployee").on("click", function () {
         // Bootstrap 5 Modal을 JavaScript로 열기
         var insertModal = new bootstrap.Modal(document.getElementById('InsertModal'));
@@ -61,6 +63,9 @@ $(document).ready(function () {
                 type: "POST",
                 url: "/management/generate/userId",
                 data: { joiningDate: joiningDate },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
                 success: function(user_id) {
                     $("#user_id").val(user_id); // 생성된 사원번호를 입력 필드에 채움
                 },

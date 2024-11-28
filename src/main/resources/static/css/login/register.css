@@ -2,6 +2,28 @@
     font-family: "Pretendard";
     src: url("../fonts/Pretendard-Medium.otf");
 }
+@media (max-width: 768px) {
+    body{
+        overflow: auto;
+    }
+    .register-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .left-logo {
+        width: 100%;
+        padding: 40px;
+        border-radius: 0;
+        min-width: 500px;
+        height: 100px;
+    }
+    .left-logo img {
+        width: 210px;
+    }
+    .right{
+        padding: 40px 0;
+    }
+}
 body {
     margin: 0;
     padding: 0;
@@ -9,21 +31,17 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #00000081;
+    background-color: #ecececa3;
+    border-radius: 10px;
 }
 
 .register-container {
     display: flex;
     width: 100%;
     height: 100%;
-    background-color: #ececec;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
 }
 
 .left-logo {
-    width: 70%;
     background-color: #010535;
     display: flex;
     justify-content: center;
@@ -37,14 +55,15 @@ body {
 }
 
 .right{
+    min-width: 500px;
     width: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ecececa3;
 }
 
 .register{
+    min-width: 400px;
     width: 70%;
     height: auto;
     padding: 30px;
@@ -65,7 +84,7 @@ body {
 
 .title .text {
     font-weight: bold;
-    font-size: 30px
+    font-size: 25px;
 }
 
 .title img {
@@ -83,7 +102,7 @@ body {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid rgb(103, 103, 103);
+    border: 1px solid rgb(141, 141, 141);
     font-size: small;
 }
 
@@ -117,6 +136,7 @@ body {
     border: 1.5px solid #5252528c;
 }
 .msg{
+    display: none;
     color: rgb(172, 35, 35);
     font-size: smaller;
     margin-left: 10px;
@@ -128,7 +148,6 @@ body {
 }
 .user_telno input{
     text-align: center;
-    width: 80px;
     padding: 10px;
     border-radius: 8px;
     border: 1px solid rgb(103, 103, 103);
@@ -136,27 +155,11 @@ body {
 }
 .user_telno select{
     text-align: center;
-    width: 80px;
-    padding: 10px 0;
+    padding: 10px;
     border-radius: 8px;
     border: 1px solid rgb(103, 103, 103);
     font-size: small;
     color: #696969;
-}
-.user_telno span{
-    font-size: larger;
-}
-/* 모든 브라우저에서 스핀 버튼 제거 */
-input[type="number"] {
-    -moz-appearance: textfield; /* Firefox */
-    -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
-    appearance: none; /* 일반적인 속성 */
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
-    margin: 0; /* 스핀 버튼의 여백 제거 */
 }
 
 .img-btns{
@@ -177,7 +180,7 @@ input[type="number"]::-webkit-inner-spin-button {
     transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
     color: white;
     padding: 0;
-    gap: 5px;
+    gap: 2px;
 }
 .img-btns button .icon i{
     display: flex;
@@ -197,7 +200,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 /* 등록 버튼 */
 .btn-photoReg {
-    width: 95px;
+    width: 100px;
     background-color: #5ba1aa;
 }
 
@@ -211,7 +214,7 @@ input[type="number"]::-webkit-inner-spin-button {
 /* 초기화 버튼 */
 .btn-reset {
     background-color: #5a5a5a;
-    width: 80px;
+    width: 85px;
 }
 
 .btn-reset .icon {
@@ -264,21 +267,33 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* 드롭다운 */
+.id-container{
+    position: relative;
+}
 .dropdown {
-    display: none; /* JavaScript에서 조건에 따라 표시 */
-    position: absolute; /* 부모 요소 기준 위치 설정 */
-    max-height: 200px; /* 드롭다운 최대 높이 설정 (스크롤을 위한 제한) */
-    overflow-y: auto; /* 최대 높이를 넘길 경우 스크롤 */
-    border: 1px solid #ccc; /* 테두리 추가 */
-    background-color: white; /* 배경색 흰색 */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
-    z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
+    display: none;
+    position: absolute;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 999; /* 다른 요소 위에 표시되도록 설정 */
+    padding: 0;
+    margin: 0 5px;
+    width: 97%;
+}
+.dropdown span{
+    font-size: small;
+    color: #878787;
+    margin-left: 20px;
+    justify-content: center;
 }
 
 .dropdown .dropdown-item {
     width: 100%;
-    padding: 10px; /* 항목 간격 설정 */
-    cursor: pointer; /* 커서 모양 변경 */
+    padding: 10px;
+    cursor: pointer;
     border-bottom: 1px solid #f0f0f0; /* 항목 구분선 */
 }
 
@@ -288,4 +303,9 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .dropdown .dropdown-item:hover {
     background-color: #f8f8f8; /* 항목에 마우스를 올렸을 때 배경색 변경 */
+}
+/* 인풋박스 포커스 */
+input:focus,
+select:focus{
+    outline: 1.3px solid #656565 !important;
 }

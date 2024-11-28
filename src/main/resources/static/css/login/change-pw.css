@@ -1,0 +1,12 @@
+.btn-eye{
+    padding: 10px;
+}
+#change-btn-show{
+    display: none;
+}
+.msg{
+    color: rgb(172, 35, 35);
+    font-size: smaller;
+    margin-left: 10px;
+    display: none;
+}
