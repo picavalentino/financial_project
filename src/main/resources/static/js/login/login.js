@@ -1,6 +1,19 @@
 $(document).ready(function(){
+    // 인풋 포커스
+    $("#user_id").on("focus", function(){
+        $("#id-border").css("border-bottom", "2px solid #040a47");
+    })
+    $("#user_pw").on("focus", function(){
+        $("#pw-border").css("border-bottom", "2px solid #040a47");
+    })
+    $("#user_id").on("blur", function(){
+        $("#id-border").css("border-bottom", "2px solid #929292");
+    })
+    $("#user_pw").on("blur", function(){
+        $("#pw-border").css("border-bottom", "2px solid #929292");
+    })
     // 사원번호 숫자만
-    $("#user_id").on('keypress', function (event) {
+    $("#user_id").on("keypress", function (event) {
         // 숫자 (0-9)만 입력 가능하게 설정
         if (event.which < 48 || event.which > 57) {
             // 백스페이스 (8), 탭 (9), 화살표 키 등은 허용
@@ -80,6 +93,4 @@ $(document).ready(function(){
         $("#pw-modal").removeClass('show');
         $("#change-pw-modal").addClass('show');
     })
-
-
 })
