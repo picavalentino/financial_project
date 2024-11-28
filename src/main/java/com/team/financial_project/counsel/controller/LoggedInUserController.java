@@ -19,6 +19,7 @@ public class LoggedInUserController {
         this.counselService = counselService;
     }
 
+    // 로그인된 직원ID로 직원 정보 가져오기
     @GetMapping("/user/me")
     public ResponseEntity<UserDTO> getLoggedInUserId() {
         // SecurityContextHolder를 통해 Authentication 객체 가져오기

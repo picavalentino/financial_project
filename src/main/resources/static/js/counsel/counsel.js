@@ -2,6 +2,9 @@
 const csrfToken = $('meta[name="_csrf"]').attr('content');
 const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
+// 고객 ID 가져오기
+const customerId = document.getElementById("custId").value;
+
 // 상담 목록 관련 변수
 const listModal = document.getElementById("myModal");
 const openModalBtn = document.getElementById("openModalBtn");
@@ -30,11 +33,19 @@ const backBtn2 = document.getElementById("backBtn2");
 let global_currentPage = 1;  // 현재 페이지
 const pageSize = 10;   // 한 페이지에 표시할 데이터 수
 
-// 모달 열기
+// 상담 목록 모달 열기 (특정 고객 상담 내역)
 openModalBtn.onclick = function() {
-    loadPageData(global_currentPage);  // 페이지 데이터 로드
-    listModal.style.display = "flex";
+    loadCustomerPageData(global_currentPage) // 고객 ID 기반 상담 데이터 로드
+        .then(() => {
+            listModal.style.display = "flex";
+        });
 }
+
+// 전체 상담 목록 모달 열기 (전체 목록)
+//openModalBtn.onclick = function() {
+//    loadPageData(global_currentPage);  // 페이지 데이터 로드
+//    listModal.style.display = "flex";
+//}
 
 // 상담 목록 모달 닫기
 closeModalBtn.onclick = function() {
@@ -56,7 +67,7 @@ closeUpdateModalBtn.onclick = function() {
     updateModal.style.display = "none";
 }
 
-// 모달 외부 클릭 시 닫기
+// 상담 목록 모달 외부 클릭 시 닫기
 window.onclick = function(event) {
     if (event.target == listModal) {
         listModal.style.display = "none";
@@ -69,14 +80,38 @@ function loadPageData(page) {
         .then(response => response.json())
         .then(data => {
             renderUserList(data.content, data.number);
-            renderPagination(data.totalPages, data.number); // undefined
+            renderPagination(data.totalPages, data.number);
         })
         .catch(error => console.log('Error:', error));
 }
 
-// 사용자 목록 렌더링
+// 특정 고객 ID로 페이지 데이터 로드
+function loadCustomerPageData(page) {
+    return fetch(`/customer/counsel/getPagedDataByCustomer?custId=${customerId}&page=${page}&size=${pageSize}`)
+        .then(response => response.json())
+        .then(data => {
+            renderUserList(data.content, data.number);
+            renderPagination(data.totalPages, data.number);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// 상담 목록 렌더링
 function renderUserList(counsels, currentPage) {
     counselList.innerHTML = '';  // 이전 내용 지우기
+
+    // 데이터가 비어있는 경우
+    if (counsels.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 6;
+        td.textContent = '상담 내역이 없습니다.';
+        td.style.textAlign = 'center';  // 텍스트 가운데 정렬
+        tr.appendChild(td);
+        counselList.appendChild(tr);
+        return;  // 이후 렌더링을 중지
+    }
+
     // 각 필드 이름을 배열로 정의
     const counselFields = [
         'counsel_id',
@@ -204,7 +239,7 @@ function renderPagination(totalPages, currentPage) {
     }
     prevButton.onclick = function () {
         if (currentPage > 1) {
-            loadPageData(currentPage - 1);
+            loadCustomerPageData(currentPage - 1);
         }
     };
     pagination.appendChild(prevButton);
@@ -220,7 +255,7 @@ function renderPagination(totalPages, currentPage) {
         }
         pageLink.onclick = function () {
             if (i !== currentPage) {
-                loadPageData(i);
+                loadCustomerPageData(i);
             }
         };
         pagination.appendChild(pageLink);
@@ -235,7 +270,7 @@ function renderPagination(totalPages, currentPage) {
     }
     nextButton.onclick = function () {
         if (currentPage < totalPages) {
-            loadPageData(currentPage + 1);
+            loadCustomerPageData(currentPage + 1);
         }
     };
     pagination.appendChild(nextButton);
@@ -249,10 +284,9 @@ counselWriteBtn.onclick = function() {
     document.getElementById("insert_counsel_category").value = "선택";
     document.getElementById("insert_counsel_content").value = "";
 
-    // 페이지에서 고객 ID 가져오기
-    const customerId = document.getElementById("custId").value;
-    document.getElementById("cust_id").value = customerId; // 상담 작성 모달 필드에 값 설정
-    console.log("Fetched Customer ID:", customerId); // 고객 아이디 콘솔에 출력
+    // 고객ID를 모달 필드에 설정
+    document.getElementById("cust_id").value = customerId;
+    console.log("Fetched Customer ID:", customerId); // 확인용
 
     // 로그인한 직원 정보 가져오기
     fetch('/user/me', {
@@ -323,7 +357,8 @@ insert_counsel_btn.onclick = function(event) {
             console.log("Form submitted successfully:", data);
 
             // 등록 후 목록 새로고침
-            return loadPageData(global_currentPage);
+            // return loadPageData(global_currentPage);
+            return loadCustomerPageData(global_currentPage);
         })
         .then(() => {
             // 등록 완료 후 모달 닫기 및 목록 모달 열기
@@ -395,10 +430,14 @@ counsel_update_btn_2.onclick = function(event) {
         updateDetailModal(updatedData);
 
         // 리스트도 갱신
-        loadPageData(global_currentPage).then(() => {
+        loadCustomerPageData(global_currentPage).then(() => {
             updateModal.style.display = "none"; // 수정 모달 닫기
             detailModal.style.display = "flex"; // 상세 모달 다시 열기
         });
+//        loadPageData(global_currentPage).then(() => {
+//            updateModal.style.display = "none"; // 수정 모달 닫기
+//            detailModal.style.display = "flex"; // 상세 모달 다시 열기
+//        });
     })
     .catch(error => {
         console.error("Error submitting form:", error);
@@ -436,7 +475,8 @@ counsel_delete.onclick = function() {
     deleteCouncel(counselId)
         .then(() => {
             // 페이지 데이터를 최신화하고 모달을 열기
-            return loadPageData(global_currentPage);
+            // return loadPageData(global_currentPage);
+            return loadCustomerPageData(global_currentPage);
         })
         .then(() => {
             detailModal.style.display = "none"; // 상세 모달 닫기
@@ -448,19 +488,19 @@ counsel_delete.onclick = function() {
 }
 
 // 상담 삭제 : 기존 Get 매핑 -> DELETE 매핑 변경
-/*
-function deleteCouncel(id) {
-    return fetch('/customer/counsel/deleteCounsel?id=' + id)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to delete counsel");
-            }
-            return response.text();
-        })
-        .then(data => {
-            alert(data);
-        });
-}*/
+
+//function deleteCouncel(id) {
+//    return fetch('/customer/counsel/deleteCounsel?id=' + id)
+//        .then(response => {
+//            if (!response.ok) {
+//                throw new Error("Failed to delete counsel");
+//            }
+//            return response.text();
+//        })
+//        .then(data => {
+//            alert(data);
+//        });
+//}
 
 function deleteCouncel(id) {
     console.log("Counsel ID:", id); // 디버깅 용

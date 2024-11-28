@@ -28,6 +28,7 @@ public class CounselService {
         return mapper.getCodeListByCl(codeCl);
     }
 
+    // 상담 전체 내역 가져오기
     public Map<String, Object> getPagedCounselData(int page, int size) {
         int offset = (page - 1) * size;  // 페이지 매김에 대한 오프셋 계산
 
@@ -47,6 +48,36 @@ public class CounselService {
         response.put("number", page);  // Current page
         response.put("size", size);  // Page size
         response.put("totalElements", totalElements);  // Total number of records
+
+        return response;
+    }
+
+    // 특정 고객 상담 내역 가져오기
+    public Map<String, Object> getPagedCounselDataByCustomerId(String custId, int page, int size) {
+        int offset = (page - 1) * size;  // 페이지네이션 offset 계산
+
+        // 쿼리 파라미터 준비
+        Map<String, Object> params = new HashMap<>();
+        params.put("custId", custId);
+        params.put("limit", size);
+        params.put("offset", offset);
+
+        // 페이지네이션된 상담 데이터 가져오기
+        List<TbCounselDTO> content = mapper.getCounselByCustomerId(params);
+
+        // 총 상담 개수 가져오기
+        long totalElements = mapper.getTotalCounselCountByCustomerId(custId);
+
+        // 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+
+        // 응답 데이터 준비
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", content);
+        response.put("totalPages", totalPages);
+        response.put("number", page);
+        response.put("size", size);
+        response.put("totalElements", totalElements);
 
         return response;
     }

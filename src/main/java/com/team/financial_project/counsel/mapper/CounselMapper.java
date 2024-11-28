@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface CounselMapper {
@@ -17,9 +18,10 @@ public interface CounselMapper {
     // 페이지에 출력하기 위한 코드 리스트 조회
     List<CodeDTO> getCodeListByCl(@Param("codeCl") String codeCl);
 
+    // 상담 전체 내역 가져오기
     List<TbCounselDTO> getPagedCounselData(@Param("limit") int limit, @Param("offset") int offset);
 
-    // 총 레코드 수를 가져오는 사용자 정의 방법
+    // 총 레코드 수 가져오기
     long getTotalCounselCount();
 
     // 로그인된 유저 아이디로 정보 가져오기
@@ -33,4 +35,10 @@ public interface CounselMapper {
     void deleteCounsel(@Param("id") Long id);
 
     TbCounselDTO getCounselById(@Param("id") Long id);
+
+    // 특정 고객 상담 내역 가져오기
+    List<TbCounselDTO> getCounselByCustomerId(Map<String, Object> params);
+
+    // 특정 고객 상담 - 총 레코드 수 가져오기
+    long getTotalCounselCountByCustomerId(String custId);
 }
