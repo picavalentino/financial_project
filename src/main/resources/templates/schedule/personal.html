@@ -462,63 +462,35 @@ $(window).on('click', function (event) {
         $eventModal.fadeOut();
     }
 });
+
 $('.calendar-body').on('click', '.event-bar-team, .event-bar-personal, .event-bar-team-allday, .event-bar-personal-allday', function (event) {
     // 이벤트 전파 방지
     event.stopPropagation();
 
-    // 일정 등록 모달 닫기
-    if ($scheduleModal.is(':visible')) {
-        $scheduleModal.fadeOut();
+    // 클릭된 이벤트 데이터 추출
+    const $target = $(event.currentTarget);
+    const title = $target.data('title') || '제목 없음';
+    const date = $target.data('date') || '시간 없음';
+    const location = $target.data('location') || '위치 없음';
+    const detail = $target.data('detail') || '세부 정보 없음';
+    const isAllDay = $target.hasClass('event-bar-team-allday') || $target.hasClass('event-bar-personal-allday');
+
+    console.log(`Clicked Event Data: Title=${title}, Date=${date}, Location=${location}, AllDay=${isAllDay}`);
+
+    // 시간 형식 변환 (UTC -> 로컬)
+    let formattedDate = date;
+    if (date && !isAllDay) {
+        const originalDate = new Date(date);
+        originalDate.setHours(originalDate.getHours() + 9); // 9시간 추가
+        formattedDate = `${originalDate.getFullYear()}-${String(originalDate.getMonth() + 1).padStart(2, '0')}-${String(originalDate.getDate()).padStart(2, '0')} ${String(originalDate.getHours()).padStart(2, '0')}:${String(originalDate.getMinutes()).padStart(2, '0')}`;
     }
-
-    // 데이터 정렬 및 필터링
-    const allEvents = []; // 이벤트 데이터를 수집할 배열
-    $('.calendar-body .event-bar-team, .event-bar-personal').each(function () {
-        const $event = $(this);
-        const title = $event.data('title');
-        const date = $event.data('date');
-        const location = $event.data('location');
-        const detail = $event.data('detail');
-        const isAllDay = $event.hasClass('event-bar-team-allday') || $event.hasClass('event-bar-personal-allday');
-
-        allEvents.push({ title, date, location, detail, isAllDay });
-    });
-
-    // All Day 이벤트 필터링
-    const allDayEvent = allEvents.find(event => event.isAllDay);
-
-    // 일반 이벤트 필터링: 시간순 정렬 후 최대 2개 가져오기
-    const timedEvents = allEvents
-        .filter(event => !event.isAllDay)
-        .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .slice(0, 2);
 
     // 모달에 데이터 추가
-    let modalContent = '';
-
-    if (allDayEvent) {
-        modalContent += `
-            <div class="event-allday">
-                <strong>종일: </strong>${allDayEvent.title || '제목 없음'}
-            </div>`;
-    }
-
-    timedEvents.forEach(event => {
-        let formattedDate = '시간 없음';
-        if (event.date) {
-            const originalDate = new Date(event.date); // 원본 UTC 날짜
-            originalDate.setHours(originalDate.getHours() + 9); // 9시간 추가
-            formattedDate = `${String(originalDate.getHours()).padStart(2, '0')}:${String(originalDate.getMinutes()).padStart(2, '0')}`;
-        }
-
-        modalContent += `
-            <div class="event-item">
-                <strong>${formattedDate}</strong> ${event.title || '제목 없음'}
-            </div>`;
-    });
-
-    // 모달 설정
-    $eventModal.find('.event-title').html(modalContent);
+    const $eventModal = $('.event-card');
+    $eventModal.find('.event-title').text(title);
+    $eventModal.find('.event-time').text(isAllDay ? '종일' : formattedDate);
+    $eventModal.find('.event-location').text(location);
+    $eventModal.find('.event-memo').text(detail);
 
     // 모달 위치 설정
     const clickX = event.pageX;
@@ -531,6 +503,12 @@ $('.calendar-body').on('click', '.event-bar-team, .event-bar-personal, .event-ba
         transform: 'translate(-50%, 5%)'
     }).fadeIn();
 });
+
+// 모달 닫기 버튼
+$('.close-event').on('click', function () {
+    $('.event-card').fadeOut();
+});
+
 // 상위 요소의 클릭 이벤트 처리 방지
 $('.calendar-body').on('click', function (event) {
     // 여기서는 아무 작업도 하지 않음
