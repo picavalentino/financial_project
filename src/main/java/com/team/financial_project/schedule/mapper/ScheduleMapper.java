@@ -15,4 +15,6 @@ public interface ScheduleMapper {
 
 
     int updateTaskCheckedStatus(ScheduleDTO scheduleDTO);
+
+    int deleteSchedule(int calendarSn);
 }

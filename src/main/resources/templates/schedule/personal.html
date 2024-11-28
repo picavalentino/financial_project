@@ -508,7 +508,52 @@ $('.calendar-body').on('click', '.event-bar-team, .event-bar-personal, .event-ba
 $('.close-event').on('click', function () {
     $('.event-card').fadeOut();
 });
+$(document).on('click', '.task_etc', function (event) {
+    // 이벤트 전파 방지
+    event.stopPropagation();
 
+    // 클릭한 오늘의 할 일에서 데이터 추출
+    const $taskContainer = $(this).closest('.today-tasks');
+    const title = $taskContainer.find('#task_text p').text() || '제목 없음';
+    const calendarSn = $taskContainer.data('calendar-sn') || 'N/A';
+    const isAllDay = $taskContainer.data('is-all-day') === 'Y'; // 종일 여부
+    const date = $taskContainer.data('date') || '시간 없음';
+    const location = $taskContainer.data('location') || '위치 없음';
+    const detail = $taskContainer.data('detail') || '세부 정보 없음';
+
+    console.log(`Task Data: Title=${title}, Calendar SN=${calendarSn}, Date=${date}, Location=${location}, AllDay=${isAllDay}`);
+
+    // 시간 변환 (UTC -> 로컬 시간, 종일 제외)
+    let formattedDate = date;
+    if (date && !isAllDay) {
+        const originalDate = new Date(date);
+        originalDate.setHours(originalDate.getHours() + 9); // 9시간 추가
+        formattedDate = `${originalDate.getFullYear()}-${String(originalDate.getMonth() + 1).padStart(2, '0')}-${String(originalDate.getDate()).padStart(2, '0')} ${String(originalDate.getHours()).padStart(2, '0')}:${String(originalDate.getMinutes()).padStart(2, '0')}`;
+    }
+
+    // 모달에 데이터 추가
+    const $eventModal = $('.event-card');
+    $eventModal.find('.event-title').text(title);
+    $eventModal.find('.event-time').text(isAllDay ? '종일' : formattedDate);
+    $eventModal.find('.event-location').text(location);
+    $eventModal.find('.event-memo').text(detail);
+
+    // 모달 위치 설정
+      const clickX = event.pageX; // 클릭한 X 좌표
+                const clickY = event.pageY; // 클릭한 Y 좌표
+                $eventModal.css({
+                    display: "block",
+                    top: clickY + "px",
+                    left: clickX + "px",
+                    position: "absolute",
+                    transform: "translate(-80%, 12%)"
+                }).fadeIn();
+});
+
+// 모달 닫기 이벤트
+$('.close-event').on('click', function () {
+    $('.event-card').fadeOut();
+});
 // 상위 요소의 클릭 이벤트 처리 방지
 $('.calendar-body').on('click', function (event) {
     // 여기서는 아무 작업도 하지 않음
@@ -687,7 +732,9 @@ function renderTodayTasks(events) {
         const $taskElement = $(`
             <div class="today-tasks" data-calendar-sn="${event.calendar_sn}">
                 <label><strong>&middot; ${time}</strong></label>
-                <button><img id="delete" src="/css/schedule/img/delete.png" alt="Delete"></button>
+               <button class="delete-task">
+        <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
+    </button>
                 <button class="task_etc"><img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo"></button>
                 <div id="task_text">
                     <p>${event.calendar_event_title || '제목 없음'}</p>
@@ -727,6 +774,50 @@ $('.today-tasks input[type="checkbox"]').on('change', function () {
     const taskContainer = $(this).closest('.today-tasks');
     const calendarSn = taskContainer.data('calendar-sn'); // today-tasks의 calendar_sn 가져오기
     console.log('Checkbox Changed: Calendar SN:', calendarSn, 'Checked:', $(this).is(':checked'));
+});
+
+$(document).on('click', '.delete-task', function (event) {
+    event.stopPropagation(); // 이벤트 전파 방지
+
+    // 해당 task의 calendar_sn 가져오기
+    const $taskContainer = $(this).closest('.today-tasks');
+    const calendarSn = $taskContainer.data('calendar-sn');
+
+    if (!calendarSn) {
+        console.error('Calendar SN is missing!');
+        return;
+    }
+
+    // 확인 메시지
+    const confirmDelete = confirm('정말로 이 일정을 삭제하시겠습니까?');
+    if (!confirmDelete) return;
+
+    console.log(`Deleting Task: Calendar SN=${calendarSn}`);
+
+    // AJAX 요청으로 데이터 삭제
+    $.ajax({
+        type: 'POST',
+        url: '/schedule/personal/delete-task', // 삭제 API 엔드포인트
+        contentType: 'application/json',
+        data: JSON.stringify({ calendar_sn: calendarSn }),
+        beforeSend: function (xhr) {
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content'); // CSRF 헤더 이름
+            const csrfToken = $('meta[name="_csrf"]').attr('content'); // CSRF 토큰 값
+            xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 헤더 설정
+        },
+        success: function () {
+            console.log('Task deleted successfully.');
+
+            // 화면에서 해당 Task 제거
+            $taskContainer.fadeOut(300, function () {
+                $(this).remove();
+            });
+        },
+        error: function (xhr) {
+            console.error('Failed to delete task:', xhr.responseText);
+            alert('일정 삭제에 실패했습니다.');
+        }
+    });
 });
         });
 

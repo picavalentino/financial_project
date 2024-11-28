@@ -60,5 +60,8 @@
         SET task_checked_val = #{task_checked_val}
         WHERE calendar_sn = #{calendar_sn}
     </update>
-
+    <delete id="deleteSchedule" parameterType="int">
+        DELETE FROM tb_calendar
+        WHERE calendar_sn = #{calendarSn}
+    </delete>
 </mapper>

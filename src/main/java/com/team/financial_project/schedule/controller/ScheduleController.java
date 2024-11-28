@@ -85,6 +85,25 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
+    @PostMapping("/schedule/personal/delete-task")
+    @ResponseBody
+    public ResponseEntity<?> deleteTask(@RequestBody Map<String, Integer> requestData) {
+        try {
+            int calendarSn = requestData.get("calendar_sn");
+
+            // 데이터 삭제 서비스 호출
+            boolean isDeleted = personalScheduleService.deleteSchedule(calendarSn);
+
+            if (isDeleted) {
+                return ResponseEntity.ok("Task deleted successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete task: " + e.getMessage());
+        }
+    }
 
     @GetMapping("/schedule/customer")
     public String scheduleCustomer(Model model){

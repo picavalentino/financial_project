@@ -48,4 +48,9 @@ public class PersonalScheduleService {
             return false;
         }
     }
+
+    public boolean deleteSchedule(int calendarSn) {
+        int result = scheduleMapper.deleteSchedule(calendarSn);
+        return result > 0; // 삭제 성공 여부
+    }
 }
