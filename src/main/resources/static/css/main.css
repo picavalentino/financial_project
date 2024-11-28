@@ -246,7 +246,7 @@ a.news-title-link:hover {
 /*코스피 코스닥*/
 .stock-box{
     border-radius: 8px; /* 모서리 둥글게 */
-    padding: 10px 15px; /* 내부 여백 */
+    /*padding: 10px 15px;*/ /* 내부 여백 */
     width: 100%;
     aspect-ratio: 10 / 7;
     border: 2px solid #010535;

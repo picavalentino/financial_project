@@ -7,6 +7,8 @@ import com.team.financial_project.main.service.NewsService;
 import com.team.financial_project.main.service.StockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,17 +33,23 @@ public class MainController {
     @Autowired
     private StockService stockService;
 
+    //로그인
+    private String getAuthenticatedUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName(); // username을 반환
+    }
+
     // test용
     @GetMapping("/test")
     public String test() {
-        return "/financial/test";
+        return "financial/test";
     }
 
     // main
     @GetMapping("/main")
     public String main(Model model) {
-        //로그인 했다 치고
-        String userId = "20240706002";
+        //로그인
+        String userId = getAuthenticatedUserId(); // 인증된 사용자 ID 가져오기
 
         //공지사항 데이터 가져오기
         List<MainInquireDTO> mainInquireDTOList = mainService.mainInqireList();
@@ -60,8 +68,12 @@ public class MainController {
         model.addAttribute("exchangeRates", exchangeRates);
 
         // KOSPI 데이터 가져오기
-//         Map<String, Object> kospiData = stockService.getKospiData();
-//        String kospiData = stockService.getKospiData();
+//        String kosdaqRawData = stockService.getKosdaqData();
+//        List<Map<String, String>> kosdaqData = stockService.parseKosdaqData(kosdaqRawData);
+//        log.info("파싱 데이터: "+kosdaqData.toString());
+//        // 데이터를 모델에 추가
+//        model.addAttribute("kospiData", kospiData);
+
 
         return "financial/main";
     }

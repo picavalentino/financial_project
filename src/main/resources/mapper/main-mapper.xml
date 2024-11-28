@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.financial_project.mapper.MainMapper">
 
-    <select id="mainInqireList" resultType="MainInquireDTO">
+    <select id="mainInqireList" resultType="mainInquireDTO">
         SELECT
         inq_id AS inqId,
         user_id AS userId,

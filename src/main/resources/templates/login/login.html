@@ -16,7 +16,7 @@
         <img src="/images/common/big-logo.png" alt="GS Bank Logo">
     </div>
     <div class="right">
-        <form class="login" th:action="@{/loginProc}" method="post">
+        <form class="login" th:action="@{/loginProc}" method="post" id="loginForm">
             <input type="hidden" id="hiddenErrorMessage" th:value="${errorMessage}">
             <div class="mb-5">
                 <label for="user_id" class="form-label">사원번호</label>

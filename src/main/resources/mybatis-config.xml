@@ -8,5 +8,8 @@
         <typeAlias type="com.team.financial_project.dto.MainStatisticsGenderDTO" alias="mainStatisticsGenderDTO"></typeAlias>
         <typeAlias type="com.team.financial_project.dto.MainStatisticsAgeDTO" alias="mainStatisticsAgeDTO"></typeAlias>
         <typeAlias type="com.team.financial_project.dto.MainStatisticsSalesDTO" alias="mainStatisticsSalesDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.ProductDTO" alias="productDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.ProdHistDTO" alias="prodHistDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.TotalSalesDTO" alias="totalSalesDTO"></typeAlias>
     </typeAliases>
 </configuration>

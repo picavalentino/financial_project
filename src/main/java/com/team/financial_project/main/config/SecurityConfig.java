@@ -32,7 +32,11 @@ public class SecurityConfig{
                 .defaultSuccessUrl("/main", true)
                 .failureHandler(new CustomAuthFailureHandler())
                 .permitAll());
-        http.logout((auth)-> auth.logoutUrl("/logout").logoutSuccessUrl("/login").permitAll());
+        http.logout((auth)->auth
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .invalidateHttpSession(true)
+                .permitAll());
         return http.build();
     }
 
