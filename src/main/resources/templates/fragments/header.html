@@ -193,6 +193,8 @@
     </div>
 
     <script>
+        const csrfToken = $('meta[name="_csrf"]').attr('content');
+        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
         $(window).on('resize', function () {
             // 화면의 너비가 768px 이상이면
             if ($(window).width() >= 768) {
@@ -252,8 +254,6 @@
 
         // 북마크 삭제
         function deleteBookmark(menuId) {
-            const csrfToken = $('meta[name="_csrf"]').attr('content');
-            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
             fetch(`/bookmark/delete?menuId=${menuId}`, {
                 method: 'DELETE',
                 headers: {
@@ -276,19 +276,22 @@
 
         // 로그아웃
         $("#btn-logout").on("click", function () {
-            try {
-                const response = $.ajax({
-                    url: '/logout',
-                    type: 'POST',
-                });
-                if (response) {
-                    alert("로그아웃이 완료되었습니다.");
+            $.ajax({
+                url: '/logout',
+                type: 'POST',
+                contentType: 'application/json',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    alert(response.message);
                     window.location.href = '/login';
+                },
+                error: function (error) {
+                    console.error("로그아웃 실패:", error);
+                    alert("로그아웃 중 문제가 발생했습니다.");
                 }
-            } catch (error) {
-                console.error("로그아웃 실패:", error);
-                alert("로그아웃 중 문제가 발생했습니다.");
-            }
+            });
         })
     </script>
 

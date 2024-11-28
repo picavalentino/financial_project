@@ -1,4 +1,4 @@
-package com.team.financial_project.main.security;
+package com.team.financial_project.security.etc;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

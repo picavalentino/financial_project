@@ -1,10 +1,10 @@
-package com.team.financial_project.main.service;
+package com.team.financial_project.security.service;
 
 import com.team.financial_project.dto.CodeDTO;
-import com.team.financial_project.main.security.CustomUserDetails;
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.CodeMapper;
 import com.team.financial_project.mapper.UserMapper;
+import com.team.financial_project.security.etc.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
