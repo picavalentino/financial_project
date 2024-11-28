@@ -64,7 +64,7 @@ a {
     }
 
     /* 모달창, 헤더, 사이드바 등 숨김 */
-    .modal, .page-breadcrumb, .tabs, .control-container {
+    .modal, .page-breadcrumb, .tabs, .control-container, .button-group {
         display: none !important;
     }
     /* 차트 캔버스 크기 조정 */
@@ -92,5 +92,11 @@ a {
     .calculation-container {
         overflow: visible !important; /* 계산 결과가 잘리지 않도록 */
     }
+
+    .button-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem; /* 버튼과 다른 요소 간격 추가 */
+        }
 }
 

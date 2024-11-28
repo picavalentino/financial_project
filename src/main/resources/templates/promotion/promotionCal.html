@@ -366,70 +366,7 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
-<!--        document.getElementById('sendCurrentPageButton').addEventListener('click', async () => {-->
-<!--    const customerEmail = document.getElementById('custEmail').value.trim();-->
 
-<!--    if (!customerEmail) {-->
-<!--        alert('고객 이메일이 입력되지 않았습니다.');-->
-<!--        return;-->
-<!--    }-->
-
-<!--    // 차트 캔버스를 이미지로 변환-->
-<!--    const chartCanvas = document.getElementById('resultChart');-->
-<!--    if (chartCanvas) {-->
-<!--        const chartImage = chartCanvas.toDataURL('image/png'); // 캔버스를 이미지 데이터 URL로 변환-->
-<!--        document.querySelector('.chart-container').innerHTML = `<img src="${chartImage}" alt="그래프 이미지">`;-->
-<!--    }-->
-
-<!--    // 현재 페이지의 HTML과 스타일 추출-->
-<!--    function getInlineStyles() {-->
-<!--        const styles = [...document.styleSheets]-->
-<!--            .map(sheet => [...sheet.cssRules || []]-->
-<!--                .map(rule => rule.cssText)-->
-<!--                .join(''))-->
-<!--            .join('');-->
-<!--        return `<style>${styles}</style>`;-->
-<!--    }-->
-
-<!--    // 이미지 경로 변환 함수-->
-<!--    function makeImagePathsAbsolute(html) {-->
-<!--        const baseUrl = window.location.origin; // 현재 사이트의 기본 URL-->
-<!--        return html.replace(/<img[^>]+src="([^"]+)"/g, (match, src) => {-->
-<!--            if (!src.startsWith('http')) {-->
-<!--                return match.replace(src, `${baseUrl}${src}`);-->
-<!--            }-->
-<!--            return match;-->
-<!--        });-->
-<!--    }-->
-
-<!--// HTML과 스타일 통합-->
-<!--    const pageHtmlWithStyles = `${getInlineStyles()}${document.documentElement.outerHTML}`;-->
-
-<!--    // 이미지 경로를 절대 경로로 변환-->
-<!--    const pageHtmlWithAbsolutePaths = makeImagePathsAbsolute(pageHtmlWithStyles);-->
-
-<!--    // 서버로 HTML 소스를 전송-->
-<!--    try {-->
-<!--        const response = await fetch('/promotion/sendFullPage', {-->
-<!--            method: 'POST',-->
-<!--            headers: {-->
-<!--                'Content-Type': 'application/json',-->
-<!--            },-->
-<!--            body: JSON.stringify({-->
-<!--                email: customerEmail,-->
-<!--                htmlContent: pageHtml,-->
-<!--            }),-->
-<!--        });-->
-
-<!--        if (!response.ok) throw new Error('이메일 발송 요청 실패');-->
-
-<!--        const result = await response.text();-->
-<!--        alert(`이메일 발송 성공: ${result}`);-->
-<!--    } catch (error) {-->
-<!--        console.error('이메일 발송 중 오류:', error);-->
-<!--        alert('이메일 발송 중 오류가 발생했습니다.');-->
-<!--    }-->
-<!--});-->
 
                 document.querySelector('.btn-print').addEventListener('click', function () {
                     window.print();

@@ -6,12 +6,8 @@ import com.team.financial_project.promotion.calculator.SavingsCalculator;
 import com.team.financial_project.promotion.dto.*;
 import com.team.financial_project.promotion.service.PromoCalService;
 import com.team.financial_project.promotion.service.PromotionService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RestController
 @RequestMapping("/promotion")
 public class promoCalController {
     @Autowired
@@ -218,30 +213,6 @@ public class promoCalController {
         return ResponseEntity.ok("저장이 완료되었습니다.");
     }
 
-    // 메일발송
-//    @Autowired
-//    private JavaMailSender mailSender;
-//
-//    @PostMapping("/sendFullPage")
-//    public String sendFullPageEmail(@RequestBody FullPageEmailRequest emailRequest) {
-//        try {
-//            MimeMessage message = mailSender.createMimeMessage();
-//            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-//
-//            helper.setTo(emailRequest.getEmail());
-//            helper.setSubject("현재 화면 전송");
-//
-//            // 클라이언트에서 받은 HTML 소스를 이메일 본문으로 사용
-//            String htmlContent = emailRequest.getHtmlContent();
-//            helper.setText(htmlContent, true);
-//
-//            mailSender.send(message);
-//
-//            return "이메일이 성공적으로 발송되었습니다.";
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//            return "이메일 발송에 실패했습니다.";
-//        }
-//    }
+
 }
 
