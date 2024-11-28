@@ -5,8 +5,6 @@ function closeAllModals() {
         modal.style.display = "none";
     });
 }
-// ========================================================================
-// 수정내역 기록
 // =========================================================================
 // 담당자 검색 모달 열기
 function openSearchModal() {
@@ -236,4 +234,10 @@ function DetailPrint() {
 function goList() {
     // Spring Controller의 목록 페이지 URL로 이동
     window.location.href = "/customer/list";
+}
+// =========================================================================
+// 상품설계 페이지로
+function goPromotion() {
+    // Spring Controller의 목록 페이지 URL로 이동
+    window.location.href = "/promotion/list";
 }

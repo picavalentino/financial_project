@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,23 +58,6 @@ public class CustomerController {
         model.addAttribute("keyword", keyword);
 
         return "customer/customerList"; // 뷰 이름
-    }
-
-    /* ================================================================================================================= */
-    // 고객 메세지 발송 페이지
-    @GetMapping("/list/message")
-    public ResponseEntity<?> getCustomerMessage(@RequestParam("custId") String custId) {
-        try {
-            // custId를 이용해 고객 정보를 가져옴 (예: 데이터베이스에서)
-            CustomerDTO customer = customerService.getCustomerById(custId);
-
-            if (customer == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("고객 정보를 찾을 수 없습니다.");
-            }
-            return ResponseEntity.ok(customer);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("고객 정보를 가져오는 중 오류가 발생했습니다.");
-        }
     }
 
     /* ================================================================================================================= */

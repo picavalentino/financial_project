@@ -56,6 +56,7 @@
                             </label>
                             <label>활동 상태 <input type="text" th:value="${customer.custStateCd}" disabled></label>
                             <label>가입 일자 <input type="text" th:value="${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')}" disabled></label>
+                            <label>상품 설계 <input type="button" value="페이지로 이동" class="go-promotion-btn" onclick="goPromotion()"></label>
                         </div>
                     </div>
                     <!-- ===================================================================================== -->
