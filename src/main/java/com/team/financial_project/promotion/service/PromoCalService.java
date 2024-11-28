@@ -72,4 +72,12 @@ public class PromoCalService {
     public DsgnDetailDto findSavgDetails(Long dsgnSn) {
         return promoCalMapper.findSavgDetails(dsgnSn);
     }
+
+    public DsgnDetailDto findAcmlDetails(Long dsgnSn) {
+        return promoCalMapper.findAcmlDetails(dsgnSn);
+    }
+
+    public DsgnDetailDto findDpstDetails(Long dsgnSn) {
+        return promoCalMapper.findDpstDetails(dsgnSn);
+    }
 }

@@ -89,8 +89,14 @@ public class promoCalController {
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "/promotion/promotionDetailSavg";
                 case "2":
+                    DsgnDetailDto detailDto = promoCalService.findAcmlDetails(dsgnSn);
+                    model.addAttribute("savgInfo",detailDto);
+                    model.addAttribute("dsgnSn", dsgnSn);
                     return "/promotion/promotionDetailAcml";
                 case "3":
+                    DsgnDetailDto detailDtos = promoCalService.findDpstDetails(dsgnSn);
+                    model.addAttribute("savgInfo",detailDtos);
+                    model.addAttribute("dsgnSn", dsgnSn);
                     return "/promotion/promotionDetailDpst";
                 case "4":
                     return "/promotion/promotionDetailLoan";

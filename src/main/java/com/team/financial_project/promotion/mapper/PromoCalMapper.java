@@ -37,4 +37,8 @@ public interface PromoCalMapper {
     void insertProdDsgnLoan(SavingsSaveDto savingsSaveDto);
 
     DsgnDetailDto findSavgDetails(Long dsgnSn);
+
+    DsgnDetailDto findAcmlDetails(Long dsgnSn);
+
+    DsgnDetailDto findDpstDetails(Long dsgnSn);
 }
