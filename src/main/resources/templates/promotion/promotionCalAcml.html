@@ -627,6 +627,7 @@
             searchProductButton.addEventListener("click", () => {
                 const productCode = document.getElementById('prodCdSearch').value.trim();
                 const productName = document.getElementById('prodNmSearch').value.trim();
+                console.log(`Searching for product: code=${productCode}, name=${productName}`);
                 loadProductList(productCode, productName);
             });
 

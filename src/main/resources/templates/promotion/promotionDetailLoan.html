@@ -54,18 +54,20 @@
                     </div>
                     <div class="customer-input-group">
                         <input type="hidden" id="custId"> <!-- 고객ID -->
-                        <input type="text" id="custCreateAt" disabled>
+                        <input type="text" id="custCreateAt" th:value="${savgInfo.custCreateAt}" disabled>
                         <div class="customer-input-with-button">
-                            <input type="text" id="custNm" disabled>
+                            <input type="text" id="custNm" th:value="${savgInfo.custNm}" disabled>
                             <button class="btn-icon" id="openCustomerModalButton"><i class="bi bi-search"></i></button>
                         </div>
-                        <input type="text" id="custBirth" disabled>
-                        <input type="text" id="custEmail" disabled>
-                        <input type="text" id="custTelno" disabled>
-                        <input type="text" id="custOccp" disabled>
-                        <textarea id="custAddr" disabled></textarea>
+                        <input type="text" id="custBirth" th:value="${savgInfo.custRrn.substring(0, 2) <= '22'
+                        ? '20' + savgInfo.custRrn.substring(0, 2) + '-' + savgInfo.custRrn.substring(2, 4) + '-' + savgInfo.custRrn.substring(4, 6)
+                        : '19' + savgInfo.custRrn.substring(0, 2) + '-' + savgInfo.custRrn.substring(2, 4) + '-' + savgInfo.custRrn.substring(4, 6)}" disabled>
+                        <input type="text" id="custEmail" th:value="${savgInfo.custEmail}" disabled>
+                        <input type="text" id="custTelno" th:value="${savgInfo.custTelno}" disabled>
+                        <input type="text" id="custOccp" th:value="${savgInfo.codeNm}" disabled>
+                        <textarea id="custAddr" th:text="${savgInfo.custAddr}" disabled></textarea>
                         <input type="hidden" id="userId"> <!-- 담당자ID -->
-                        <input type="text" id="userNm" disabled>
+                        <input type="text" id="userNm" th:value="${savgInfo.userName}" disabled>
                     </div>
                 </div>
             </div>
@@ -135,7 +137,7 @@
                     <div class="input-group">
                         <div class="input-group-content">
                             <!-- 설계번호 -->
-                            <input type="text" id="dsgnSn" name="dsgnSn" disabled>
+                            <input type="text" id="dsgnSn" name="dsgnSn" th:value="${dsgnSn}" disabled>
 
                             <!-- 상품선택 -->
                             <div class="input-with-button">
@@ -144,9 +146,9 @@
                                 <!-- 설계유형코드 -->
                                 <input type="hidden" id="prodDsTyCd" name="prodDsTyCd">
                                 <!-- 상품코드 -->
-                                <input type="text" id="prodCd" name="prodCd" disabled>
+                                <input type="text" id="prodCd" name="prodCd" th:value="${savgInfo.prodCd}" disabled>
                                 <!-- 상품명 -->
-                                <input type="text" id="prodNm" name="prodNm" readonly>
+                                <input type="text" id="prodNm" name="prodNm" th:value="${savgInfo.prodNm}" readonly>
                                 <button><i class="bi bi-search" id="openProductModalButton"></i></button>
                             </div>
 
@@ -160,15 +162,15 @@
 <!--                            <input type="date" id="savgStrtDt" name="savgStrtDt">-->
                             <div class="input-with-button">
                                 <!-- 시작일자 -->
-                                <input type="date" id="savgStrtDt" name="savgStrtDt">
+                                <input type="date" id="savgStrtDt" name="savgStrtDt" th:value="${savgInfo.savgStrtDt}">
                                 <!-- 만기일자 -->
                                 <label for="savgMtrDt">만기일자</label>
-                                <input type="text" id="savgMtrDt" name="savgMtrDt" disabled>
+                                <input type="text" id="savgMtrDt" name="savgMtrDt" th:value="${savgInfo.savgMtrDt}" disabled>
                             </div>
 
                             <!-- 불입금액 -->
                             <div class="button-row">
-                                <input type="text" id="savgCircleAmt" name="savgCircleAmt" value="0">
+                                <input type="text" id="savgCircleAmt" name="savgCircleAmt" th:value="${savgInfo.formattedSavgGoalAmt}">
                                 <div class="button-group">
                                     <button class="button-plus button-plus-amt">+ 100만원</button>
                                     <button class="button-plus button-plus-amt">+ 500만원</button>
@@ -179,7 +181,7 @@
 
                             <!-- 목표기간 -->
                             <div class="button-row">
-                                <input type="text" id="savgGoalPrd" name="savgGoalPrd" value="0">
+                                <input type="text" id="savgGoalPrd" name="savgGoalPrd" th:value="${savgInfo.savgGoalPrd}">
                                 <div class="button-group">
                                     <button class="button-plus button-plus-prd">+ 3개월</button>
                                     <button class="button-plus button-plus-prd">+ 6개월</button>
@@ -195,7 +197,7 @@
                                     <option value="prodairmin">최소금리</option>
                                     <option value="prodairmax">최대금리</option>
                                 </select>
-                                <input type="text" id="savgAplyRate" name="savgAplyRate" disabled>
+                                <input type="text" id="savgAplyRate" name="savgAplyRate" th:value="${savgInfo.savgAplyRate}" disabled>
                             </div>
 
                             <!-- 상환방법 -->
@@ -207,6 +209,7 @@
                                     <option value="equalPrincipalAndInterest">원리금균등상환</option>
                                     <option value="lumpSum">원금만기일시상환</option>
                                 </select>
+                                <input type="text" id="selectedRepaymentMethod" name="selectedRepaymentMethod" th:value="${savgInfo.savgTaxRate}" disabled>
                             </div>
                             <!-- 계산용 -->
                             <input type="hidden" id="prodIntTaxRate" name="prodIntTaxRate">
@@ -214,7 +217,7 @@
                             <input type="hidden" id="savgIntTaxTyCd" name="savgIntTaxTyCd">
 
                             <!-- 설계일자 -->
-                            <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" disabled>
+                            <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" th:value="${savgInfo.effectiveDsgnDate}" disabled>
 
                             <!-- 수정일자 -->
                             <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" disabled>
@@ -363,6 +366,43 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+        // 서버에서 제공된 한글 값
+        const selectedMethod = document.getElementById("selectedRepaymentMethod").value;
+
+        // 한글 값과 select의 value 값 매핑
+        const methodMapping = {
+            "원금균등상환": "equalPrincipal",
+            "원리금균등상환": "equalPrincipalAndInterest",
+            "원금만기일시상환": "lumpSum",
+        };
+
+        // 셀렉트 박스 설정
+        const repaymentSelect = document.getElementById("repaymentMethod");
+
+        if (selectedMethod) {
+            // 매핑 테이블을 통해 한글 값을 영어 값으로 변환
+            const mappedValue = methodMapping[selectedMethod];
+
+            if (mappedValue) {
+                // repaymentMethod에서 변환된 값에 해당하는 옵션 선택
+                for (let option of repaymentSelect.options) {
+                    if (option.value === mappedValue) {
+                        option.selected = true;
+                        break;
+                        }
+                    }
+                }
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+                const button = document.querySelector('.btn-int-cal'); // 버튼 선택
+                 if (button) {
+                button.click(); // 버튼 클릭 이벤트 트리거
+                    }
+                });
+
         document.querySelector('.btn-print').addEventListener('click', function () {
                     window.print();
                 });
@@ -377,7 +417,7 @@
             }
 
             // 날짜 필드 설정 (오늘 날짜)
-            const dsgnCreateAt = document.getElementById('dsgnCreateAt');
+<!--            const dsgnCreateAt = document.getElementById('dsgnCreateAt');-->
             const dsgnUpdateAt = document.getElementById('dsgnUpdateAt');
             const savgStrtDt = document.getElementById('savgStrtDt'); // 시작일자
 

@@ -60,4 +60,5 @@ public interface PromotionMapper {
     void insertCustprodDsgn(SavingsSaveDto savingsSaveDto);
 
     void insertProdDsgnSavg(SavingsSaveDto savingsSaveDto);
+
 }

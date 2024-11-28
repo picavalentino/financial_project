@@ -160,4 +160,5 @@ public class PromotionService {
         // Step 3: TB_PROD_DSGN_SAVG에 데이터 삽입
         mapper.insertProdDsgnSavg(savingsSaveDto);
     }
+
 }

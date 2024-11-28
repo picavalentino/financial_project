@@ -454,4 +454,80 @@
         LEFT JOIN tax_code_data ON dsgn_data.dsgn_ds_ty_cd = '3'
         LEFT JOIN pay_term_data ON dsgn_data.dsgn_ds_ty_cd = '3'
     </select>
+
+    <select id="findLoanDetails" parameterType="long" resultType="com.team.financial_project.promotion.dto.DsgnDetailDto">
+        WITH dsgn_data AS (
+        SELECT
+        dsgn_create_at, dsgn_update_at, cust_id, user_id, prod_sn, dsgn_ds_ty_cd
+        FROM tb_custprod_dsgn
+        WHERE dsgn_sn = #{dsgnSn}
+        ),
+        cust_data AS (
+        SELECT
+        cust_nm, cust_rrn, cust_email, cust_telno, cust_addr, cust_create_at
+        FROM tb_customer
+        WHERE cust_id = (SELECT cust_id FROM dsgn_data)
+        ),
+        code_data AS (
+        SELECT
+        code_nm
+        FROM tb_code
+        WHERE code_no = (SELECT cust_occp_ty_cd FROM tb_customer WHERE cust_id = (SELECT cust_id FROM dsgn_data))
+        AND code_cl = (SELECT cust_occp_ty_cd_code_cl FROM tb_customer WHERE cust_id = (SELECT cust_id FROM dsgn_data))
+        ),
+        user_data AS (
+        SELECT
+        user_name
+        FROM tb_user
+        WHERE user_id = (SELECT user_id FROM dsgn_data)
+        ),
+        prod_data AS (
+        SELECT
+        prod_cd, prod_nm
+        FROM tb_product
+        WHERE prod_sn = (SELECT prod_sn FROM dsgn_data)
+        ),
+        loan_data AS (
+        SELECT
+        loan_strt_dt, loan_mtr_dt, loan_amt, loan_repy_prd, loan_rate
+        FROM tb_prod_dsgn_loan
+        WHERE dsgn_sn = #{dsgnSn}
+        ),
+        repayment_data AS (
+        SELECT
+        code_nm
+        FROM tb_code
+        WHERE
+        code_no = (SELECT loan_rpty_cd FROM tb_prod_dsgn_loan WHERE dsgn_sn = #{dsgnSn})
+        AND code_cl = (SELECT loan_rpty_cd_code_cl FROM tb_prod_dsgn_loan WHERE dsgn_sn = #{dsgnSn})
+        )
+        SELECT
+        CASE
+        WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
+        ELSE dsgn_data.dsgn_create_at
+        END AS effectiveDsgnDate,
+        prod_data.prod_cd AS prodCd,
+        prod_data.prod_nm AS prodNm,
+        cust_data.cust_nm AS custNm,
+        cust_data.cust_rrn AS custRrn,
+        cust_data.cust_email AS custEmail,
+        cust_data.cust_telno AS custTelno,
+        cust_data.cust_addr AS custAddr,
+        cust_data.cust_create_at AS custCreateAt,
+        code_data.code_nm AS codeNm,
+        user_data.user_name AS userName,
+        loan_data.loan_strt_dt AS savgStrtDt,
+        loan_data.loan_mtr_dt AS savgMtrDt,
+        loan_data.loan_amt AS savgGoalAmt,
+        loan_data.loan_repy_prd AS savgGoalPrd,
+        loan_data.loan_rate AS savgAplyRate,
+        repayment_data.code_nm AS savgTaxRate
+        FROM dsgn_data
+        LEFT JOIN cust_data ON 1=1
+        LEFT JOIN code_data ON 1=1
+        LEFT JOIN user_data ON 1=1
+        LEFT JOIN prod_data ON 1=1
+        LEFT JOIN loan_data ON dsgn_data.dsgn_ds_ty_cd = '4'
+        LEFT JOIN repayment_data ON dsgn_data.dsgn_ds_ty_cd = '4'
+    </select>
 </mapper>

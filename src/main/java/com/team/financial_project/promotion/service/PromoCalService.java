@@ -20,15 +20,15 @@ public class PromoCalService {
     }
 
     public List<ProductInfoDto> getAcmlProductList(String prodCd, String prodNm) {
-        return promoCalMapper.getAcmlProductList();
+        return promoCalMapper.getAcmlProductList(prodCd, prodNm);
     }
 
     public List<ProductInfoDto> getDpstProductList(String prodCd, String prodNm) {
-        return promoCalMapper.getDpstProductList();
+        return promoCalMapper.getDpstProductList(prodCd, prodNm);
     }
 
     public List<ProductInfoDto> getLoanProductList(String prodCd, String prodNm) {
-        return promoCalMapper.getLoanProductList();
+        return promoCalMapper.getLoanProductList(prodCd, prodNm);
     }
 
     @Transactional
@@ -79,5 +79,9 @@ public class PromoCalService {
 
     public DsgnDetailDto findDpstDetails(Long dsgnSn) {
         return promoCalMapper.findDpstDetails(dsgnSn);
+    }
+
+    public DsgnDetailDto findLoanDetails(Long dsgnSn) {
+        return promoCalMapper.findLoanDetails(dsgnSn);
     }
 }

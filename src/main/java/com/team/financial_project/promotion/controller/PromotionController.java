@@ -112,6 +112,7 @@ public class PromotionController {
     }
 
     // 상품 리스트 조회
+    // 적금
     @GetMapping("/cal/productList")
     @ResponseBody
     public List<ProductInfoDto> getProductList(

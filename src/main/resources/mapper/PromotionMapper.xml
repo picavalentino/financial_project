@@ -244,6 +244,7 @@
     </select>
 
     <!-- 상품 정보 리스트 조회 -->
+    <!-- 적금  -->
     <select id="getProductList" resultType="com.team.financial_project.promotion.dto.ProductInfoDto">
         SELECT
             p.PROD_SN as prodSn,                        -- 상품설계번호
@@ -280,6 +281,144 @@
                     tb_code
                 WHERE
                     prod_nm LIKE '%적금%')
+        <if test="prodCd != null and prodCd != ''">
+            AND p.PROD_CD LIKE '%' || #{prodCd} || '%'
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND p.PROD_NM LIKE '%' || #{prodNm} || '%'
+        </if>
+        ORDER BY p.PROD_CD ASC
+    </select>
+
+    <!-- 목돈적금  -->
+    <select id="getAcmlProductList" resultType="com.team.financial_project.promotion.dto.ProductInfoDto">
+        SELECT
+        p.PROD_SN as prodSn,                        -- 상품설계번호
+        p.PROD_DS_TY_CD as prodDsTyCd,              -- 설계유형코드
+        p.PROD_CD as prodCd,                        -- 상품코드
+        p.PROD_NM as prodNm,                        -- 상품명
+        sbstgCode.CODE_NM as prodSbstgTy,           -- 가입대상
+        payTyCode.CODE_NM as prodPayTy,             -- 납입주기
+        p.PROD_PAY_TY_CD as prodPayTyCd,            -- 납입주기코드
+        p.PROD_AIR_MIN as prodAirMin,               -- 최소적용금리
+        p.PROD_AIR_MAX as prodAirMax,               -- 최대적용금리
+        p.PROD_INT_TAX_TY_CD as prodIntTaxTyCd,     -- 이자과세코드
+        intTaxCode.CODE_NM as prodIntTaxTy,         -- 이자과세명
+        intTaxCode.CODE_TAX_RATE as prodIntTaxRate  -- 이자과세율
+        FROM TB_PRODUCT p
+        -- 가입대상 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE sbstgCode
+        ON sbstgCode.CODE_CL = p.PROD_SBSTG_TY_CD_CODE_CL
+        AND sbstgCode.CODE_NO = p.PROD_SBSTG_TY_CD
+        -- 납입주기 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE payTyCode
+        ON payTyCode.CODE_CL = p.PROD_PAY_TY_CD_CODE_CL
+        AND payTyCode.CODE_NO = p.PROD_PAY_TY_CD
+        -- 이자과세 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE intTaxCode
+        ON intTaxCode.CODE_CL = p.PROD_INT_TAX_TY_CD_CODE_CL
+        AND intTaxCode.CODE_NO = p.PROD_INT_TAX_TY_CD
+        WHERE
+        -- 적금 상품만 조회
+        p.prod_ty_cd IN (
+        SELECT
+        code_no
+        FROM
+        tb_code
+        WHERE
+        prod_nm LIKE '%목돈%')
+        <if test="prodCd != null and prodCd != ''">
+            AND p.PROD_CD LIKE '%' || #{prodCd} || '%'
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND p.PROD_NM LIKE '%' || #{prodNm} || '%'
+        </if>
+        ORDER BY p.PROD_CD ASC
+    </select>
+
+    <!-- 예금  -->
+    <select id="getDpstProductList" resultType="com.team.financial_project.promotion.dto.ProductInfoDto">
+        SELECT
+        p.PROD_SN as prodSn,                        -- 상품설계번호
+        p.PROD_DS_TY_CD as prodDsTyCd,              -- 설계유형코드
+        p.PROD_CD as prodCd,                        -- 상품코드
+        p.PROD_NM as prodNm,                        -- 상품명
+        sbstgCode.CODE_NM as prodSbstgTy,           -- 가입대상
+        payTyCode.CODE_NM as prodPayTy,             -- 납입주기
+        p.PROD_PAY_TY_CD as prodPayTyCd,            -- 납입주기코드
+        p.PROD_AIR_MIN as prodAirMin,               -- 최소적용금리
+        p.PROD_AIR_MAX as prodAirMax,               -- 최대적용금리
+        p.PROD_INT_TAX_TY_CD as prodIntTaxTyCd,     -- 이자과세코드
+        intTaxCode.CODE_NM as prodIntTaxTy,         -- 이자과세명
+        intTaxCode.CODE_TAX_RATE as prodIntTaxRate  -- 이자과세율
+        FROM TB_PRODUCT p
+        -- 가입대상 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE sbstgCode
+        ON sbstgCode.CODE_CL = p.PROD_SBSTG_TY_CD_CODE_CL
+        AND sbstgCode.CODE_NO = p.PROD_SBSTG_TY_CD
+        -- 납입주기 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE payTyCode
+        ON payTyCode.CODE_CL = p.PROD_PAY_TY_CD_CODE_CL
+        AND payTyCode.CODE_NO = p.PROD_PAY_TY_CD
+        -- 이자과세 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE intTaxCode
+        ON intTaxCode.CODE_CL = p.PROD_INT_TAX_TY_CD_CODE_CL
+        AND intTaxCode.CODE_NO = p.PROD_INT_TAX_TY_CD
+        WHERE
+        -- 적금 상품만 조회
+        p.prod_ty_cd IN (
+        SELECT
+        code_no
+        FROM
+        tb_code
+        WHERE
+        prod_nm LIKE '%예금%')
+        <if test="prodCd != null and prodCd != ''">
+            AND p.PROD_CD LIKE '%' || #{prodCd} || '%'
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND p.PROD_NM LIKE '%' || #{prodNm} || '%'
+        </if>
+        ORDER BY p.PROD_CD ASC
+    </select>
+
+    <!-- 대출  -->
+    <select id="getLoanProductList" resultType="com.team.financial_project.promotion.dto.ProductInfoDto">
+        SELECT
+        p.PROD_SN as prodSn,                        -- 상품설계번호
+        p.PROD_DS_TY_CD as prodDsTyCd,              -- 설계유형코드
+        p.PROD_CD as prodCd,                        -- 상품코드
+        p.PROD_NM as prodNm,                        -- 상품명
+        sbstgCode.CODE_NM as prodSbstgTy,           -- 가입대상
+        payTyCode.CODE_NM as prodPayTy,             -- 납입주기
+        p.PROD_PAY_TY_CD as prodPayTyCd,            -- 납입주기코드
+        p.PROD_AIR_MIN as prodAirMin,               -- 최소적용금리
+        p.PROD_AIR_MAX as prodAirMax,               -- 최대적용금리
+        p.PROD_INT_TAX_TY_CD as prodIntTaxTyCd,     -- 이자과세코드
+        intTaxCode.CODE_NM as prodIntTaxTy,         -- 이자과세명
+        intTaxCode.CODE_TAX_RATE as prodIntTaxRate  -- 이자과세율
+        FROM TB_PRODUCT p
+        -- 가입대상 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE sbstgCode
+        ON sbstgCode.CODE_CL = p.PROD_SBSTG_TY_CD_CODE_CL
+        AND sbstgCode.CODE_NO = p.PROD_SBSTG_TY_CD
+        -- 납입주기 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE payTyCode
+        ON payTyCode.CODE_CL = p.PROD_PAY_TY_CD_CODE_CL
+        AND payTyCode.CODE_NO = p.PROD_PAY_TY_CD
+        -- 이자과세 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE intTaxCode
+        ON intTaxCode.CODE_CL = p.PROD_INT_TAX_TY_CD_CODE_CL
+        AND intTaxCode.CODE_NO = p.PROD_INT_TAX_TY_CD
+        WHERE
+        -- 적금 상품만 조회
+        p.prod_ty_cd IN (
+        SELECT
+        code_no
+        FROM
+        tb_code
+        WHERE
+        prod_nm LIKE '%대출%')
         <if test="prodCd != null and prodCd != ''">
             AND p.PROD_CD LIKE '%' || #{prodCd} || '%'
         </if>

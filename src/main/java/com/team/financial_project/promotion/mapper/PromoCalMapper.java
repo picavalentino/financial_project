@@ -4,6 +4,7 @@ import com.team.financial_project.promotion.dto.DsgnDetailDto;
 import com.team.financial_project.promotion.dto.ProductInfoDto;
 import com.team.financial_project.promotion.dto.SavingsSaveDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,13 +14,13 @@ public interface PromoCalMapper {
     String findDsTyCd(Long dsgnSn);
 
     // 목돈적금 상품 찾기
-    List<ProductInfoDto> getAcmlProductList();
+    List<ProductInfoDto> getAcmlProductList(@Param("prodCd") String prodCd, @Param("prodNm") String prodNm);
 
     // 예금 상품 찾기
-    List<ProductInfoDto> getDpstProductList();
+    List<ProductInfoDto> getDpstProductList(@Param("prodCd") String prodCd, @Param("prodNm") String prodNm);
 
     // 대출 상품 찾기
-    List<ProductInfoDto> getLoanProductList();
+    List<ProductInfoDto> getLoanProductList(@Param("prodCd") String prodCd, @Param("prodNm") String prodNm);
 
     // 목돈 적금 설계 저장
     void insertCustprodDsgn(SavingsSaveDto savingsSaveDto);
@@ -41,4 +42,6 @@ public interface PromoCalMapper {
     DsgnDetailDto findAcmlDetails(Long dsgnSn);
 
     DsgnDetailDto findDpstDetails(Long dsgnSn);
+
+    DsgnDetailDto findLoanDetails(Long dsgnSn);
 }

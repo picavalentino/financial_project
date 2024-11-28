@@ -6,8 +6,12 @@ import com.team.financial_project.promotion.calculator.SavingsCalculator;
 import com.team.financial_project.promotion.dto.*;
 import com.team.financial_project.promotion.service.PromoCalService;
 import com.team.financial_project.promotion.service.PromotionService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RestController
 @RequestMapping("/promotion")
 public class promoCalController {
     @Autowired
@@ -99,10 +104,11 @@ public class promoCalController {
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "/promotion/promotionDetailDpst";
                 case "4":
+                    DsgnDetailDto dsgnDetailDtos = promoCalService.findLoanDetails(dsgnSn);
+                    model.addAttribute("savgInfo",dsgnDetailDtos);
+                    model.addAttribute("dsgnSn", dsgnSn);
                     return "/promotion/promotionDetailLoan";
                 default:
-                    model.addAttribute("startPage", 1); // 시작 페이지
-                    model.addAttribute("endPage", 10); // 끝 페이지
                     model.addAttribute("errorMessage", "잘못된 설계유형코드입니다.");
                     return "/promotion/list";
             }
@@ -118,6 +124,8 @@ public class promoCalController {
     public List<ProductInfoDto> getACmlProductList(
             @RequestParam(value = "prodCd", required = false) String prodCd,
             @RequestParam(value = "prodNm", required = false) String prodNm) {
+        System.out.println("==============="+ prodCd);
+        System.out.println("==============="+ prodNm);
         return promoCalService.getAcmlProductList(prodCd, prodNm);
     }
 
@@ -210,4 +218,30 @@ public class promoCalController {
         return ResponseEntity.ok("저장이 완료되었습니다.");
     }
 
+    // 메일발송
+//    @Autowired
+//    private JavaMailSender mailSender;
+//
+//    @PostMapping("/sendFullPage")
+//    public String sendFullPageEmail(@RequestBody FullPageEmailRequest emailRequest) {
+//        try {
+//            MimeMessage message = mailSender.createMimeMessage();
+//            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+//
+//            helper.setTo(emailRequest.getEmail());
+//            helper.setSubject("현재 화면 전송");
+//
+//            // 클라이언트에서 받은 HTML 소스를 이메일 본문으로 사용
+//            String htmlContent = emailRequest.getHtmlContent();
+//            helper.setText(htmlContent, true);
+//
+//            mailSender.send(message);
+//
+//            return "이메일이 성공적으로 발송되었습니다.";
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//            return "이메일 발송에 실패했습니다.";
+//        }
+//    }
 }
+
