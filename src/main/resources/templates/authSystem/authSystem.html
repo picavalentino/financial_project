@@ -32,36 +32,36 @@
         <h1 class="title">권한관리</h1>
 
         <div class="sub-content">
-            <div class="top">
-                <div class="condition-box">
-                    <form id="searchForm" th:action="@{/system/auth}" method="get" class="d-flex align-items-center">
-                        <div class="condition">
-                            <select name="auth" class="form-select me-2">
-                                <option value="" selected>권한</option>
-                                <th:block th:each="auth : ${authList}">
-                                    <option th:value="${auth.user_auth_cd}" th:text="${auth.auth_name}"
-                                            th:selected="${auth.user_auth_cd == auth}"></option>
-                                </th:block>
-                            </select>
-                        </div>
-                        <div class="button-box">
-                            <div class="btn-wrap">
-                                <button type="submit" class="btn" id="btn-search">
-                                    <div class="icon-container"><i class="icon bi bi-search"></i></div>
-                                    검색
-                                </button>
-                                <button type="button" class="btn" id="btn-reset">
-                                    <div class="icon-container"><i class="icon bi bi-arrow-left-circle-fill"></i></div>
-                                    초기화
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-
             <div class="bottom">
+                <form id="searchForm" th:action="@{/system/auth}" method="get" class="d-flex align-items-center">
+                    <div class="condition">
+                        <select name="auth" class="form-select me-2">
+                            <option value="" selected>권한</option>
+                            <th:block th:each="auth : ${authList}">
+                                <option th:value="${auth.user_auth_cd}" th:text="${auth.auth_name}"
+                                        th:selected="${auth.user_auth_cd == auth}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="button-box">
+                        <div class="btn-wrap">
+                            <button type="submit" class="btn" id="btn-search">
+                                <div class="icon-container"><i class="icon bi bi-search"></i></div>
+                                검색
+                            </button>
+                            <button type="button" class="btn" id="btn-reset">
+                                <div class="icon-container"><i class="icon bi bi-arrow-left-circle-fill"></i></div>
+                                초기화
+                            </button>
+                        </div>
+                    </div>
+                    <div class="btn-move">
+                        <button type="button" class="btn" id="btn-list">
+                            <div class="icon-container"><i class="icon bi bi-file-text"></i></div>
+                            권한수정
+                        </button>
+                    </div>
+                </form>
                 <table class="table-authList">
                     <thead>
                     <tr>
@@ -120,6 +120,10 @@
        // 폼을 다시 제출하여 초기 상태로 이동
        window.location.href = '/system/auth';
      });
+
+        document.getElementById('btn-list').addEventListener('click', function() {
+    window.location.href = '/management/employees';
+    });
     </script>
 </div>
 </body>

@@ -1,5 +1,5 @@
 /* 공통 조건 박스 */
-.condition-box, .bottom {
+.bottom {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -19,7 +19,6 @@
     max-width: 300px;
     flex: 1; /* 각 필드가 동일한 비율로 확장 */
     margin-right: 20px;
-    margin-left: auto;
 }
 
 .condition input, .condition select {
@@ -104,12 +103,20 @@
     font-weight: bold;
 }
 
+.button-box {
+    display: flex; /* flexbox로 설정 */
+    justify-content: space-between; /* 버튼 간의 간격 균등 배분 */
+    align-items: center; /* 세로 정렬 중앙 */
+    gap: 10px; /* 버튼 사이 간격 */
+    flex-wrap: wrap; /* 공간이 부족할 때 줄바꿈 */
+}
+
 /* 버튼 스타일 */
 .btn-wrap {
     display: flex;
     flex-direction: row;
     gap: 20px;
-    margin-left: auto;
+    margin-right: auto;
     margin-top: 4px;
 }
 
@@ -127,13 +134,13 @@
   font-weight: bold;
   border: none;
   border-radius: 8px;
-  width: 85px;
+  width: 100px;
   height: 30px;
   cursor: pointer;
   transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
   color: white;
   padding: 0px;
-  padding-left: 5px;
+  padding-right: 7px;
 }
 /* 아이콘 컨테이너 */
 .icon-container{
@@ -157,6 +164,10 @@
 }
 .icon{
     margin: auto;
+}
+
+.btn-move{
+    margin-left: auto;
 }
 
 /* 버튼 개별 스타일 */
@@ -186,6 +197,21 @@
 
 #btn-search:hover {
     background-color: #13183c;
+}
+
+/* 페이지이동 버튼 */
+#btn-list {
+   margin-top: 4px;
+   background-color: #5ba1aa;
+}
+
+#btn-list .icon {
+  background-color: #4a8b92;
+}
+
+#btn-list:hover {
+  background-color: #4a8b92;
+  transform: scale(1.05);
 }
 
 /* 버튼 활성화 효과 */
