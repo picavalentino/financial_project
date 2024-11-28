@@ -34,7 +34,7 @@ public class CounselPageController {
 
     // 특정 고객 최신 상담 내역 1건 가져오기 (수정, 삭제 후에 페이지 반영)
     @GetMapping("/latest")
-    public ResponseEntity<TbCounselDTO> getLatestCounsel(@RequestParam String custId) {
+    public ResponseEntity<TbCounselDTO> getLatestCounsel(@RequestParam("custId") String custId) {
         TbCounselDTO latestCounsel = counselService.getLatestCounselByCustomerId(custId);
         return ResponseEntity.ok(latestCounsel);
     }

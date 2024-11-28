@@ -1,7 +1,3 @@
-// CSRF 토큰 가져오기
-const csrfToken = $('meta[name="_csrf"]').attr('content');
-const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-
 // 고객 ID 가져오기
 const customerId = document.getElementById("custId").value;
 
@@ -414,36 +410,41 @@ function updateRecentCounsel(data) {
 
 // 최신 상담 데이터 가져오기
 function fetchLatestCounsel() {
-    return fetch(`/customer/counsel/latest?custId=${customerId}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch latest counsel");
-            }
-            return response.text();  // JSON을 먼저 텍스트로 받기
-        })
-        .then(text => {
-            if (text.trim() === "") { // 빈 텍스트 응답 처리
-                updateRecentCounsel({
-                    counsel_content: null // 빈 데이터로 처리
-                });
-            } else {
-                try {
-                    const data = JSON.parse(text); // 정상적인 JSON 데이터 파싱
-                    updateRecentCounsel(data); // 최신 상담 데이터를 갱신
-                } catch (error) {
-                    console.error("Error parsing JSON:", error);
-                    updateRecentCounsel({
-                        counsel_content: null // 파싱 오류 시 빈 데이터로 처리
-                    });
-                }
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching latest counsel:", error);
+    return fetch(`/customer/counsel/latest?custId=${customerId}`, {
+        method: 'GET',
+        headers: {
+            [csrfHeader]: csrfToken // CSRF 토큰을 요청 헤더에 추가
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Failed to fetch latest counsel, status: ${response.status}`);
+        }
+        return response.text();  // JSON을 먼저 텍스트로 받기
+    })
+    .then(text => {
+        if (text.trim() === "") { // 빈 텍스트 응답 처리
             updateRecentCounsel({
-                counsel_content: null // 네트워크 오류 등 예외 처리
+                counsel_content: null // 빈 데이터로 처리
             });
+        } else {
+            try {
+                const data = JSON.parse(text); // 정상적인 JSON 데이터 파싱
+                updateRecentCounsel(data); // 최신 상담 데이터를 갱신
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+                updateRecentCounsel({
+                    counsel_content: null // 파싱 오류 시 빈 데이터로 처리
+                });
+            }
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching latest counsel:", error);
+        updateRecentCounsel({
+            counsel_content: null // 네트워크 오류 등 예외 처리
         });
+    });
 }
 
 // 상담수정 버튼 클릭 (수정 모달)
