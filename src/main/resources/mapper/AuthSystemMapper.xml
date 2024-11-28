@@ -15,7 +15,7 @@
         code_no ASC  -- 코드 번호 순으로 정렬
     </select>
 
-    <select id="getAuthSystemList" resultType="com.team.financial_project.authSystem.dto.AuthSystemDTO">
+    <select id="getAuthSystemList" resultType="com.team.financial_project.dto.AuthSystemDTO">
         SELECT
         tam.tb_id,
         tam.auth_id,
@@ -42,4 +42,16 @@
             AND c.code_no = #{auth}
         </if>
     </select>
+    <select id="getAllAuthMenu" resultType="com.team.financial_project.dto.AuthSystemDTO">
+        SELECT
+        t.menu_url,
+        c.code_nm AS auth_name
+        FROM tb_auth_menu a
+        JOIN tb_menu t
+        ON a.menu_id = t.menu_id
+        JOIN tb_code c
+        ON a.auth_id = c.code_id
+    </select>
+
+
 </mapper>

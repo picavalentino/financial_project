@@ -1,6 +1,6 @@
 package com.team.financial_project.mapper;
 
-import com.team.financial_project.authSystem.dto.AuthSystemDTO;
+import com.team.financial_project.dto.AuthSystemDTO;
 import com.team.financial_project.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,4 +16,7 @@ public interface AuthSystemMapper {
     int getTotalAuthCount(@Param("auth") String auth);
 
     List<UserDTO> selectAuthList();
+
+    // security 권한 설정에 사용할 전체 리스트
+    List<AuthSystemDTO> getAllAuthMenu();
 }

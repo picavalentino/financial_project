@@ -1,4 +1,4 @@
-package com.team.financial_project.authSystem.dto;
+package com.team.financial_project.dto;
 
 import lombok.Data;
 
@@ -9,4 +9,5 @@ public class AuthSystemDTO {
     private int menu_id;
     private String auth_name;
     private String menu_name;
+    private String menu_url;
 }
