@@ -365,8 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // =======================================================================================================================
 document.addEventListener("DOMContentLoaded", function() {
     // 기본 메시지 정의
-    const defaultMessage = `[Web 발신]
-안녕하십니까 GS-BANK입니다.
+    const defaultMessage = `안녕하십니까 GS-BANK입니다.
 고객님 평안한 하루 보내고 계십니까
 저는 퇴근 좀 시켜주세요
 제발...
@@ -421,7 +420,7 @@ function showBirthdayCustomers() {
     // 생일 메시지 준비 및 텍스트박스에 설정
     const messageBox = document.querySelector('.message-box textarea');
     if (messageBox) {
-        messageBox.value = `[Web 발신]
+        messageBox.value = `
 안녕하세요, ${today.getFullYear()}년 생일을 맞이하신 고객님!
 GS-BANK에서 생일을 진심으로 축하드립니다.
 건강과 행복이 가득한 한 해 되시기를 기원합니다.
