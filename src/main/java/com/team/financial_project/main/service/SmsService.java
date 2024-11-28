@@ -1,5 +1,6 @@
 package com.team.financial_project.main.service;
 
+import com.team.financial_project.main.util.SmsVerificationUtil;
 import jakarta.annotation.PostConstruct;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -37,12 +38,6 @@ public class SmsService {
     private void initializeMessageService() {
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
     }
-    // 6자리 랜덤 인증번호 생성 메서드
-    private String generateVerificationCode() {
-        Random random = new Random();
-        int code = 100000 + random.nextInt(900000); // 100000 ~ 999999 범위의 숫자 생성
-        return String.valueOf(code);
-    }
 
     // 5번 인증제한
     public String canSendVerification(String phoneNumber) {
@@ -76,7 +71,7 @@ public class SmsService {
         Message message = new Message();
         message.setFrom(sender);
         message.setTo(phoneNumber);
-        String verificationCode = generateVerificationCode();
+        String verificationCode = SmsVerificationUtil.generateVerificationCode();
         message.setText("인증번호 : [ " + verificationCode + " ]");
 
         try {
