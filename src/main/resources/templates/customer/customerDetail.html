@@ -16,6 +16,8 @@
     <link rel="stylesheet" th:href="@{/css/customer/customerDetailModal.css}">
     <link rel="stylesheet" th:href="@{/css/counsel/counsel.css}">
     <link rel="stylesheet" th:href="@{/css/counsel/button.css}">
+    <!-- 날짜 포맷용 라이브러리 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <script th:src="@{/js/customer/customerDetailModal.js}" defer></script>
     <script th:src="@{/js/counsel/counsel.js}" defer></script>
 </head>
@@ -106,16 +108,21 @@
                         <h2>최근 상담 내역</h2>
                         <button class="consult-btn" id="openModalBtn">상담일지</button>
                     </div>
-                    <textarea disabled>
-                        작성일자: 2024-11-18
-                      .   ____          _            __ _ _
-                     /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-                    ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
-                     \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-                      '  |____| .__|_| |_|_| |_\__, | / / / /
-                     =========|_|==============|___/=/_/_/_/
+                    <textarea id="counselContentTextarea" readonly>
+[[${latestCounsel != null ? #temporals.format(latestCounsel.counsel_create_at, 'yyyy-MM-dd HH:mm') : '상담 내용이 없습니다.'}]]
+
+[[${latestCounsel != null && latestCounsel.counsel_content != null ? latestCounsel.counsel_content : ''}]]
                     </textarea>
                 </div>
+                <!-- 숨겨진 필드: 최신 상담 데이터 전달 -->
+                <input type="hidden" id="latestCounselUserName" th:value="${latestCounsel != null ? latestCounsel.user_name : ''}">
+                <input type="hidden" id="latestCounselDeptName" th:value="${latestCounsel != null ? latestCounsel.user_dept_nm : ''}">
+                <input type="hidden" id="latestCounselCreateDate" th:value="${latestCounsel != null ? #temporals.format(latestCounsel.counsel_create_at, 'yyyy-MM-dd HH:mm') : ''}">
+                <input type="hidden" id="latestCounselUpdateDate" th:value="${latestCounsel != null && latestCounsel.counsel_update_at != null ? #temporals.format(latestCounsel.counsel_update_at, 'yyyy-MM-dd HH:mm') : ''}">
+                <input type="hidden" id="latestCounselCategory" th:value="${latestCounsel != null ? latestCounsel.counsel_category : ''}">
+                <input type="hidden" id="latestCounselCategoryName" th:value="${latestCounsel != null ? latestCounsel.counsel_category_nm : ''}">
+                <input type="hidden" id="latestCounselContent" th:value="${latestCounsel != null ? latestCounsel.counsel_content : ''}">
+                <input type="hidden" id="latestCounselId" th:value="${latestCounsel != null ? latestCounsel.counsel_id : ''}">
 
                 <div class="revision">
                     <h2>최근 수정내역</h2>

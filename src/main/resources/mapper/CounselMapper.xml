@@ -8,6 +8,29 @@
         SELECT 1
     </select>
 
+    <!-- 특정 고객 최근 상담 내역 1건 가져오기 -->
+    <select id="getLatestCounselByCustomerId" parameterType="string" resultType="com.team.financial_project.counsel.dto.TbCounselDTO">
+        SELECT
+            c.*,
+            cc.CODE_NM AS counsel_category_nm,  -- 상담 내용 카테고리명
+            ud.CODE_NM AS user_dept_nm          -- 부서명
+        FROM
+            TB_COUNSEL c
+        LEFT JOIN
+            TB_CODE cc
+            ON c.counsel_category = cc.CODE_NO
+            AND cc.CODE_CL = '700'  -- 상담 카테고리 코드 분류
+        LEFT JOIN
+            TB_CODE ud
+            ON c.user_dept_cd = ud.CODE_NO
+            AND ud.CODE_CL = '200'  -- 부서 코드 분류
+        WHERE
+            c.cust_id = #{custId}  -- 고객 ID 필터링
+        ORDER BY
+            c.counsel_id DESC       -- 최신 상담 내역 우선
+        LIMIT 1                    -- 한 건만 가져오기
+    </select>
+
     <!-- 페이지에 출력하기 위한 코드 리스트 조회 -->
     <select id="getCodeListByCl" parameterType="string" resultType="com.team.financial_project.counsel.dto.CodeDTO">
         SELECT

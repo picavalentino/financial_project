@@ -5,6 +5,9 @@ const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 // 고객 ID 가져오기
 const customerId = document.getElementById("custId").value;
 
+// 최근 상담내역 Textarea
+const counselContentTextarea = document.getElementById('counselContentTextarea');
+
 // 상담 목록 관련 변수
 const listModal = document.getElementById("myModal");
 const openModalBtn = document.getElementById("openModalBtn");
@@ -207,18 +210,21 @@ function renderUserList(counsels, currentPage) {
     });
 }
 
-// 뒤로가기 버튼 클릭
+// 상담 상세 → 상담 목록
 backBtn1.onclick = function() {
     detailModal.style.display = "none";
     listModal.style.display = "flex";
+    loadCustomerPageData(global_currentPage);
 }
 
+// 상담 작성 → 상담 목록
 backBtn2.onclick = function(event) {
     event.preventDefault();
     writeModal.style.display = "none";
     listModal.style.display = "flex";
 }
 
+// 상담 수정 → 상담 상세
 backBtn3.onclick = function(event) {
     event.preventDefault();
     updateModal.style.display = "none";
@@ -357,13 +363,15 @@ insert_counsel_btn.onclick = function(event) {
             console.log("Form submitted successfully:", data);
 
             // 등록 후 목록 새로고침
-            // return loadPageData(global_currentPage);
             return loadCustomerPageData(global_currentPage);
         })
         .then(() => {
             // 등록 완료 후 모달 닫기 및 목록 모달 열기
             writeModal.style.display = "none";
             listModal.style.display = "flex";
+
+            // 최신 상담 내역 갱신
+            fetchLatestCounsel();
 
             // 필드 초기화
             document.getElementById("insert_counsel_category").value = "선택";
@@ -372,6 +380,70 @@ insert_counsel_btn.onclick = function(event) {
     .catch(error => {
         console.error("Error submitting form:", error);
     });
+}
+
+// 최근 상담 내역 필드에 데이터 업데이트
+function updateRecentCounsel(data) {
+
+    if (data.counsel_content) {
+        // 상담 내용이 있으면 날짜와 내용 출력
+        const formattedDate = moment(data.counsel_create_at).format('YYYY-MM-DD HH:mm');
+        counselContentTextarea.textContent =
+            `${formattedDate}\n\n${data.counsel_content}`;
+
+        // 클릭 이벤트 활성화
+        counselContentTextarea.style.pointerEvents = 'auto';
+    } else {
+        // 상담 내용이 없으면 '상담 내용이 없습니다.' 출력
+        counselContentTextarea.textContent = '상담 내용이 없습니다.';
+
+        // 클릭 이벤트 비활성화 (상담 내용이 없을 때)
+        counselContentTextarea.style.pointerEvents = 'none';
+    }
+
+    // 나머지 필드들 업데이트
+    document.getElementById("latestCounselUserName").value = data.user_name || '';
+    document.getElementById("latestCounselDeptName").value = data.user_dept_nm || '';
+    document.getElementById("latestCounselCreateDate").value = data.counsel_create_at || '';
+    document.getElementById("latestCounselUpdateDate").value = data.counsel_update_at || '';
+    document.getElementById("latestCounselCategory").value = data.counsel_category || '';
+    document.getElementById("latestCounselCategoryName").value = data.counsel_category_nm || '';
+    document.getElementById("latestCounselContent").value = data.counsel_content || '';
+    document.getElementById("latestCounselId").value = data.counsel_id || '';
+}
+
+// 최신 상담 데이터 가져오기
+function fetchLatestCounsel() {
+    return fetch(`/customer/counsel/latest?custId=${customerId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch latest counsel");
+            }
+            return response.text();  // JSON을 먼저 텍스트로 받기
+        })
+        .then(text => {
+            if (text.trim() === "") { // 빈 텍스트 응답 처리
+                updateRecentCounsel({
+                    counsel_content: null // 빈 데이터로 처리
+                });
+            } else {
+                try {
+                    const data = JSON.parse(text); // 정상적인 JSON 데이터 파싱
+                    updateRecentCounsel(data); // 최신 상담 데이터를 갱신
+                } catch (error) {
+                    console.error("Error parsing JSON:", error);
+                    updateRecentCounsel({
+                        counsel_content: null // 파싱 오류 시 빈 데이터로 처리
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching latest counsel:", error);
+            updateRecentCounsel({
+                counsel_content: null // 네트워크 오류 등 예외 처리
+            });
+        });
 }
 
 // 상담수정 버튼 클릭 (수정 모달)
@@ -426,18 +498,17 @@ counsel_update_btn_2.onclick = function(event) {
 
         alert("상담 수정이 완료되었습니다.");
 
-        // 최신 데이터를 상세 모달에 업데이트
+        // 상세 모달에 업데이트
         updateDetailModal(updatedData);
+
+        // 최신 상담 내역 필드에 업데이트
+        fetchLatestCounsel();
 
         // 리스트도 갱신
         loadCustomerPageData(global_currentPage).then(() => {
             updateModal.style.display = "none"; // 수정 모달 닫기
             detailModal.style.display = "flex"; // 상세 모달 다시 열기
         });
-//        loadPageData(global_currentPage).then(() => {
-//            updateModal.style.display = "none"; // 수정 모달 닫기
-//            detailModal.style.display = "flex"; // 상세 모달 다시 열기
-//        });
     })
     .catch(error => {
         console.error("Error submitting form:", error);
@@ -475,7 +546,6 @@ counsel_delete.onclick = function() {
     deleteCouncel(counselId)
         .then(() => {
             // 페이지 데이터를 최신화하고 모달을 열기
-            // return loadPageData(global_currentPage);
             return loadCustomerPageData(global_currentPage);
         })
         .then(() => {
@@ -488,20 +558,6 @@ counsel_delete.onclick = function() {
 }
 
 // 상담 삭제 : 기존 Get 매핑 -> DELETE 매핑 변경
-
-//function deleteCouncel(id) {
-//    return fetch('/customer/counsel/deleteCounsel?id=' + id)
-//        .then(response => {
-//            if (!response.ok) {
-//                throw new Error("Failed to delete counsel");
-//            }
-//            return response.text();
-//        })
-//        .then(data => {
-//            alert(data);
-//        });
-//}
-
 function deleteCouncel(id) {
     console.log("Counsel ID:", id); // 디버깅 용
     return fetch(`/customer/counsel/deleteCounsel?id=${id}`, {
@@ -518,5 +574,46 @@ function deleteCouncel(id) {
     })
     .then(data => {
         alert(data);
+        // 삭제 완료 후 최신 상담 내역 가져오기
+        fetchLatestCounsel();
     });
 }
+
+// 최근 상담 내역 TextArea 클릭 이벤트
+document.addEventListener('DOMContentLoaded', function () {
+
+    // '상담 내용이 없습니다.' 또는 비어있는 텍스트가 있을 경우 클릭 비활성화
+    if (!counselContentTextarea.textContent.trim() || counselContentTextarea.textContent.trim() === '상담 내용이 없습니다.') {
+        counselContentTextarea.style.pointerEvents = 'none';  // 클릭 비활성화
+    } else {
+        counselContentTextarea.style.pointerEvents = 'auto';  // 클릭 활성화
+    }
+});
+
+// 최근 상담 내역 TextArea 클릭 시 해당하는 상세 모달 띄우기
+// 상담 상세 모달 열기 버튼 클릭 이벤트
+document.getElementById("counselContentTextarea").addEventListener("click", () => {
+
+    // 상담 내용이 없거나 '상담 내용이 없습니다.'라면 클릭 이벤트 차단
+    if (!counselContentTextarea.value || counselContentTextarea.value === '상담 내용이 없습니다.') {
+        return; // 클릭 이벤트 무시
+    }
+
+    // 최신 상담 데이터 가져오기
+    const latestCounselData = {
+        user_name: document.getElementById("latestCounselUserName").value,
+        user_dept_nm: document.getElementById("latestCounselDeptName").value,
+        counsel_create_at: document.getElementById("latestCounselCreateDate").value,
+        counsel_update_at: document.getElementById("latestCounselUpdateDate").value,
+        counsel_category: document.getElementById("latestCounselCategory").value,
+        counsel_category_nm: document.getElementById("latestCounselCategoryName").value,
+        counsel_content: document.getElementById("latestCounselContent").value,
+        counsel_id: document.getElementById("latestCounselId").value,
+    };
+
+    // 모달에 데이터 업데이트
+    updateDetailModal(latestCounselData);
+
+    // 상세 모달 표시
+    document.getElementById("detailModal").style.display = "flex";
+});

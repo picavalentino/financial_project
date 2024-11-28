@@ -1,6 +1,7 @@
 package com.team.financial_project.customer.controller;
 
 import com.team.financial_project.counsel.dto.CodeDTO;
+import com.team.financial_project.counsel.dto.TbCounselDTO;
 import com.team.financial_project.counsel.service.CounselService;
 import com.team.financial_project.customer.service.CustomerService;
 import com.team.financial_project.dto.CustomerDTO;
@@ -113,11 +114,15 @@ public class CustomerController {
         // 고객 직업정보 셀렉트 박스
         List<CustomerDTO> custOccpTyCdList = customerService.getCustOccpTyCdList();
 
-        // 코드 리스트 조회 후 모델에 추가
+        // 특정 고객 최근 상담 내역 1건 가져오기
+        TbCounselDTO latestCounsel = counselService.getLatestCounselByCustomerId(custId);
+
+        // 페이지에 출력하기 위한 코드 리스트 조회
         List<CodeDTO> counselCategories = counselService.getCodeListByCl("700");
 
         model.addAttribute("custOccpTyCdList",custOccpTyCdList);
         model.addAttribute("customer", customer);
+        model.addAttribute("latestCounsel", latestCounsel);
         model.addAttribute("counselCategories", counselCategories);
         return "customer/customerDetail"; // 고객 상세 정보 페이지로 이동
     }

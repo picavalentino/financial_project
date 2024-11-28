@@ -16,12 +16,6 @@ public class CounselRestController {
     @Autowired
     private CounselService counselService;
 
-/*    @GetMapping("/deleteCounsel")
-    public ResponseEntity<String> deleteCounsel(@RequestParam("id") Long id) {
-        counselService.deleteCounsel(id);
-        return ResponseEntity.ok("상담 삭제가 완료되었습니다.");
-    }*/
-
     @DeleteMapping("/deleteCounsel")
     public ResponseEntity<String> deleteCounsel(@RequestParam("id") Long id) {
         counselService.deleteCounsel(id);
