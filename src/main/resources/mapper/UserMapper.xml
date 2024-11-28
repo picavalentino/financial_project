@@ -2,7 +2,311 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.financial_project.mapper.UserMapper">
+    <!--셀렉트 박스에서 쓸 부서이름 가져오는 구문-->
+    <select id="selectDepartmentList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        code_no AS user_dept_cd,  -- 부서 코드 (코드 번호)
+        code_nm AS dept_name       -- 부서명
+        FROM
+        tb_code
+        WHERE
+        code_cl LIKE '200'  -- 200번대의 코드 클러스터 필터링 (200번대가 부서 코드임)
+        ORDER BY
+        code_no ASC  -- 코드 번호 순으로 정렬
+    </select>
 
+    <!--셀렉트 박스에서 쓸 직위이름 가져오는 구문-->
+    <select id="selectJopPositionList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        code_no AS user_jbps_ty_cd, -- 직위 코드 (코드 번호)
+        code_nm AS position_name    -- 직위명
+        FROM
+        tb_code
+        WHERE
+        code_cl LIKE '201'    -- 201번대가 직위 코드임
+        ORDER BY
+        code_no ASC  -- 코드 번호 순으로 정렬
+    </select>
+
+    <!--셀렉트 박스에서 쓸 상태이름 가져오는 구문-->
+    <select id="selectStatusList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        code_no AS user_status, -- 현재 상태 코드 (코드 번호)
+        code_nm AS status_name    -- 상태명
+        FROM
+        tb_code
+        WHERE
+        code_cl LIKE '100'    -- 100번 현재 상태 코드임
+        ORDER BY
+        code_no ASC  -- 코드 번호 순으로 정렬
+    </select>
+
+<!--    셀렉트 박스에서 쓸 권한 이름 가져오기-->
+    <select id="selectAuthList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        code_no AS user_auth_cd, -- 현재 권한 코드 (코드 번호)
+        code_nm AS auth_name    -- 권한명
+        FROM
+        tb_code
+        WHERE
+        code_cl LIKE '101'    -- 101번 권한 코드임
+        ORDER BY
+        code_no ASC  -- 코드 번호 순으로 정렬
+    </select>
+
+    <!-- 전체 직원 수 가져오기 (검색 조건 포함) / list-->
+    <select id="getTotalDataCount" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_user
+        WHERE 1=1
+        <if test="dept != null and dept != ''">
+            AND user_dept_cd = #{dept}
+        </if>
+        <if test="position != null and position != ''">
+            AND user_jbps_ty_cd = #{position}
+        </if>
+        <if test="searchField != null and searchField != '' and searchValue != null and searchValue != ''">
+            AND ${searchField} LIKE CONCAT('%', #{searchValue}, '%')
+        </if>
+    </select>
+
+    <select id="selectManagementList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        dept_cd.code_nm AS dept_name,  -- 부서명
+        jbps_cd.code_nm AS position_name,  -- 직위명
+        tu.user_name,
+        tu.user_email,
+        tu.user_telno
+        FROM
+        tb_user tu
+        LEFT JOIN
+        tb_code dept_cd
+        ON tu.user_dept_cd_code_cl = dept_cd.code_cl
+        AND tu.user_dept_cd = dept_cd.code_no
+        LEFT JOIN
+        tb_code jbps_cd
+        ON tu.user_jbps_ty_cd_code_cl = jbps_cd.code_cl
+        AND tu.user_jbps_ty_cd = jbps_cd.code_no
+        WHERE 1=1
+        <if test="dept != null and dept != ''">
+            AND tu.user_dept_cd = #{dept}
+        </if>
+        <if test="position != null and position != ''">
+            AND tu.user_jbps_ty_cd = #{position}
+        </if>
+        <if test="searchField != null and searchValue != null and searchValue != ''">
+            <choose>
+                <when test="searchField == 'user_name'">
+                    AND tu.user_name LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchField == 'user_email'">
+                    AND tu.user_email LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchField == 'user_telno'">
+                    AND tu.user_telno LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+            </choose>
+        </if>
+        ORDER BY
+        tu.user_dept_cd,  -- 1차 정렬: 부서 코드
+        jbps_cd.code_no   -- 2차 정렬: 코드 번호 순으로 정렬
+        LIMIT
+        #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- 직원 총 수 가져오기 (검색 조건 포함) / employees -->
+    <select id="getTotalEmployeeCount" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_user tu
+        WHERE 1=1
+        <if test="dept != null and dept != ''">
+            AND tu.user_dept_cd = #{dept}
+        </if>
+        <if test="position != null and position != ''">
+            AND tu.user_jbps_ty_cd = #{position}
+        </if>
+        <if test="status != null and status != ''">
+            AND tu.user_status = #{status}
+        </if>
+        <if test="searchField != null and searchValue != null and searchValue != ''">
+            <choose>
+                <when test="searchField == 'user_name'">
+                    AND tu.user_name LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchField == 'user_auth'">
+                    AND tu.user_auth_cd LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+            </choose>
+        </if>
+    </select>
+
+    <select id="selectEmployeeList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        dept_cd.code_nm AS dept_name,  -- 부서명
+        jbps_cd.code_nm AS position_name,  -- 직위명
+        status_cd.code_nm AS status_name,  -- 활동상태
+        auth_cd.code_nm AS auth_name,    -- 권한 이름
+        tu.user_id,
+        tu.user_name
+        FROM
+        tb_user tu
+        LEFT JOIN
+        tb_code dept_cd
+        ON tu.user_dept_cd_code_cl = dept_cd.code_cl
+        AND tu.user_dept_cd = dept_cd.code_no
+        LEFT JOIN
+        tb_code jbps_cd
+        ON tu.user_jbps_ty_cd_code_cl = jbps_cd.code_cl
+        AND tu.user_jbps_ty_cd = jbps_cd.code_no
+        LEFT JOIN
+        tb_code status_cd
+        ON tu.user_status_code_cl = status_cd.code_cl
+        AND tu.user_status = status_cd.code_no
+        LEFT JOIN
+        tb_code auth_cd
+        ON tu.user_auth_cd_code_cl = auth_cd.code_cl
+        AND tu.user_auth_cd = auth_cd.code_no
+        WHERE 1=1
+        <if test="dept != null and dept != ''">
+            AND tu.user_dept_cd = #{dept}
+        </if>
+        <if test="position != null and position != ''">
+            AND tu.user_jbps_ty_cd = #{position}
+        </if>
+        <if test="status != null and status != ''">
+            AND tu.user_status = #{status}
+        </if>
+        <if test="auth != null and auth != ''">
+            AND tu.user_auth_cd = #{auth}
+        </if>
+        <if test="searchField != null and searchValue != null and searchValue != ''">
+            <choose>
+                <when test="searchField == 'user_name'">
+                    AND tu.user_name LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchField == 'user_id'">
+                    AND tu.user_id LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+            </choose>
+        </if>
+        ORDER BY tu.user_dept_cd, jbps_cd.code_no
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+<!--    employee modal에서 출력할 데이터 찾기-->
+    <select id="selectUserById" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        user_dept_cd,
+        user_jbps_ty_cd,
+        user_status,
+        user_auth_cd,
+        user_id,
+        user_name,
+        user_birthday
+        FROM
+        tb_user
+        WHERE
+        user_id = #{userId}
+    </select>
+
+<!--    modal에서 수정할 데이터 정보-->
+    <update id="updateUser">
+        UPDATE tb_user
+        SET
+        user_name = #{user_name},
+        user_birthday = #{user_birthday},
+        user_dept_cd = #{user_dept_cd},
+        user_jbps_ty_cd = #{user_jbps_ty_cd},
+        user_auth_cd = #{user_auth_cd},
+        user_status = #{user_status}
+        WHERE user_id = #{user_id}
+    </update>
+
+    <!-- 직원 총 수 가져오기 (검색 조건 포함) / insert -->
+    <select id="getTotalInsertCount" parameterType="string" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tb_user tu
+        WHERE
+        tu.user_jncmp_ymd LIKE '2024%'
+        AND tu.user_jncmp_ymd LIKE #{yearMonth} || '%'
+    </select>
+
+    <select id="selectInsertList" parameterType="map" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        dept_cd.code_nm AS dept_name,
+        jbps_cd.code_nm AS position_name,
+        status_cd.code_nm AS status_name,
+        auth_cd.code_nm AS auth_name,
+        tu.user_id,
+        tu.user_name,
+        tu.user_birthday,
+        tu.user_jncmp_ymd
+        FROM tb_user tu
+        LEFT JOIN tb_code dept_cd
+        ON tu.user_dept_cd_code_cl = dept_cd.code_cl
+        AND tu.user_dept_cd = dept_cd.code_no
+        LEFT JOIN tb_code jbps_cd
+        ON tu.user_jbps_ty_cd_code_cl = jbps_cd.code_cl
+        AND tu.user_jbps_ty_cd = jbps_cd.code_no
+        LEFT JOIN tb_code status_cd
+        ON tu.user_status_code_cl = status_cd.code_cl
+        AND tu.user_status = status_cd.code_no
+        LEFT JOIN tb_code auth_cd
+        ON tu.user_auth_cd_code_cl = auth_cd.code_cl
+        AND tu.user_auth_cd = auth_cd.code_no
+        WHERE
+        tu.user_jncmp_ymd LIKE '2024%'
+        AND tu.user_jncmp_ymd LIKE #{yearMonth} || '%'
+        ORDER BY
+        tu.user_jncmp_ymd,   -- 1차 정렬 기준: 입사일자
+        tu.user_id           -- 2차 정렬 기준: 사원번호
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+<!--    insetModal에서 사원번호 생성-->
+    <select id="getEmployeeCountForDate" resultType="int" parameterType="String">
+        SELECT COUNT(*) FROM tb_user WHERE user_jncmp_ymd = #{joiningDate}
+    </select>
+
+    <!--    insertModal에서 직원등록-->
+    <insert id="insertEmployee">
+        INSERT INTO tb_user (user_jncmp_ymd, user_id, user_name, user_birthday, user_dept_cd, user_jbps_ty_cd, user_auth_cd, user_status)
+        VALUES (#{user_jncmp_ymd}, #{user_id}, #{user_name}, #{user_birthday}, #{user_dept_cd}, #{user_jbps_ty_cd}, #{user_auth_cd}, #{user_status})
+    </insert>
+
+    <!--  로그인화면 해당 아이디의 정보 불러오기  -->
+    <select id="findById" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
+        SELECT * FROM tb_user WHERE user_id=#{id}
+    </select>
+
+    <!--  등록화면 사번찾기  -->
+    <select id="findUsersByKeyword" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
+        SELECT * FROM tb_user WHERE user_name LIKE CONCAT('%', #{keyword}, '%') AND user_pw IS NULL
+    </select>
+
+    <!--  등록화면 핸드폰 유니크 검사 -->
+    <select id="certifyByUserTelno" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
+        SELECT * FROM tb_user WHERE user_telno=#{telno}
+    </select>
+
+    <!--  등록버튼 동작  -->
+    <update id="updateUserFromReg" parameterType="com.team.financial_project.dto.UserDTO">
+        UPDATE tb_user
+        SET user_pw = #{user_pw},
+        user_email = #{user_email},
+        user_telno = #{user_telno},
+        user_imgpath = #{user_imgpath}
+        WHERE user_id = #{user_id}
+    </update>
+
+    <!-- 상품등록페이지: 사원 이름으로 아이디 조회  -->
+    <select id="findByNameContaining" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT user_id AS id, user_name AS name
+        FROM tb_user
+        WHERE user_name LIKE CONCAT('%', #{name}, '%')
+    </select>
+
+    // 고객 관리 페이지 : 담당자 이름으로 담당자 정보 조회
     <select id="findManagersByName" parameterType="String" resultType="UserDTO">
         SELECT
         usr.user_id,

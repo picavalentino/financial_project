@@ -1,1 +1,18 @@
-//배포에 사용할 포트 설정
+server:
+  port: 5000
+  servlet:
+    encoding:
+      charset: utf-8
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${rds.hostname}:${rds.port}/${rds.db.name}
+    username: ${rds.username}
+    password: ${rds.password}
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.team.financial_project.dto
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

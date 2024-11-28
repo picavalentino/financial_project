@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/management/managementEmployees.css}">
+    <link rel="stylesheet" th:href="@{/css/management/managementEmployeesModal.css}">
+    <script th:src="@{/js/jQuery.js}"></script>
+</head>
+
+<title>GS Bank</title>
+
+<!-- 전체 적용될 CSS -->
+<th:block layout:fragment="css"></th:block>
+<!-- 전체 적용될 스크립트 -->
+<th:block layout:fragment="script"></th:block>
+
+<body>
+<!-- content 영역 -->
+<div layout:fragment="content" class="content">
+    <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a th:href="@{/management/employees}"> / 직원관리</a>
+        <span> / 직원정보관리 </span>
+    </div>
+
+    <h1 class="title">직원정보관리</h1>
+
+    <!-- 검색 및 필터 폼 시작 -->
+    <div class="sub_content">
+        <div class="top">
+            <div class="condition-box">
+                <form th:action="@{/management/employees}" method="get" id="searchForm"
+                      class="d-flex justify-content-between mb-3">
+                    <div class="condition">
+                        <select name="dept" class="form-select me-2">
+                            <option value="" selected>부서</option>
+                            <th:block th:each="department : ${DepartmentList}">
+                                <option th:value="${department.user_dept_cd}" th:text="${department.dept_name}"
+                                        th:selected="${dept == department.user_dept_cd}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="condition">
+                        <select name="position" class="form-select me-2">
+                            <option value="" selected>직위</option>
+                            <th:block th:each="JopPosition : ${JopPositionList}">
+                                <option th:value="${JopPosition.user_jbps_ty_cd}" th:text="${JopPosition.position_name}"
+                                        th:selected="${position == JopPosition.user_jbps_ty_cd}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="condition">
+                        <select name="status" class="form-select me-2">
+                            <option value="" selected>상태</option>
+                            <th:block th:each="statusItem : ${statusList}">
+                                <option th:value="${statusItem.user_status}" th:text="${statusItem.status_name}"
+                                        th:selected="${status == statusItem.user_status}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="condition">
+                        <select name="auth" class="form-select me-2">
+                            <option value="" selected>권한</option>
+                            <th:block th:each="auth : ${authList}">
+                                <option th:value="${auth.user_auth_cd}" th:text="${auth.auth_name}"
+                                        th:selected="${auth == auth.user_auth_cd}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="condition">
+                        <select name="searchField" class="form-select me-2">
+                            <option value="" selected>검색</option>
+                            <option value="user_name" th:selected="${searchField == 'user_name'}">이름</option>
+                            <option value="user_id" th:selected="${searchField == 'user_id'}">사원번호</option>
+                        </select>
+                    </div>
+
+                    <div class="condition">
+                        <input type="text" name="searchValue" class="form-control me-2" th:value="${searchValue}"
+                               placeholder="검색어를 입력하세요.">
+                    </div>
+
+                    <div class="btn-wrap">
+                        <button type="submit" class="btn" id="btn-search">
+                            <div class="icon-container"><i class="icon bi bi-search"></i></div>
+                            검색
+                        </button>
+                        <button type="button" class="btn" id="btn-reset">
+                            <div class="icon-container"><i class="icon bi bi-arrow-left-circle-fill"></i></div>
+                            초기화
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 검색 및 필터 폼 끝 -->
+        <div class="bottom">
+            <table class="table-managementEmployee">
+                <thead>
+                <tr>
+                    <th scope="col">사원번호</th>
+                    <th scope="col">부서</th>
+                    <th scope="col">직위</th>
+                    <th scope="col">이름</th>
+                    <th scope="col">권한</th>
+                    <th scope="col">활동 상태</th>
+                    <th scope="col">수정</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="employee : ${employeeList}">
+                    <td th:text="${employee.user_id}">사원번호</td>
+                    <td th:text="${employee.dept_name}">부서</td>
+                    <td th:text="${employee.position_name}">직위</td>
+                    <td th:text="${employee.user_name}">이름</td>
+                    <td th:text="${employee.auth_name}">권한</td>
+                    <td th:text="${employee.status_name}">활동 상태</td>
+                    <td>
+                        <div class="btn-insert">
+                            <button type="submit" class="btn-modify" id="btn-modify"
+                                    th:data-user-id="${employee.user_id}">
+                                <div class="icon-container"><i class="icon bi bi-pencil"></i></div>
+                                수정
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${employeeList == null or #lists.isEmpty(employeeList)}">
+                    <td colspan="7">데이터가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <!-- 이전 페이지 -->
+                    <li th:classappend="${currentPageNumber == 1} ? 'disabled' : ''" class="page-item">
+                        <a class="page-link"
+                           th:href="@{/management/employees(page=${currentPageNumber - 1}, dept=${dept}, position=${position}, status=${status}, auth=${auth}, searchField=${searchField}, searchValue=${searchValue})}"
+                           aria-label="Previous">
+                            &lt;
+                        </a>
+                    </li>
+                    <!-- 페이지 번호 -->
+                    <li th:each="pageNumber : ${paginationBarNumbers}"
+                        th:classappend="${pageNumber == currentPageNumber} ? 'active' : ''" class="page-item">
+                        <a class="page-link"
+                           th:href="@{/management/employees(page=${pageNumber}, dept=${dept}, position=${position}, status=${status}, auth=${auth}, searchField=${searchField}, searchValue=${searchValue})}"
+                           th:text="${pageNumber}">1</a>
+                    </li>
+                    <!-- 다음 페이지 -->
+                    <li th:classappend="${currentPageNumber == totalPageNumber} ? 'disabled' : ''" class="page-item">
+                        <a class="page-link"
+                           th:href="@{/management/employees(page=${currentPageNumber + 1}, dept=${dept}, position=${position}, status=${status}, auth=${auth}, searchField=${searchField}, searchValue=${searchValue})}"
+                           aria-label="Next">
+                            &gt;
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 직원 수정 모달 -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">직원 정보 수정</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- 직원 수정 폼 -->
+                        <form th:action="@{/management/employees/edit}" method="post">
+                            <!-- 수정 모달 폼 내용 (등록 폼과 동일하게 복사) -->
+                            <div class="mb-3">
+                                <label for="user_id" class="form-label">사원번호</label>
+                                <input type="text" class="form-control" id="user_id" name="user_id" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="user_name" class="form-label">직원 이름</label>
+                                <input type="text" class="form-control" id="user_name" name="user_name" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="user_birthday" class="form-label">생년 월일</label>
+                                <input type="text" class="form-control" id="user_birthday" name="user_birthday"
+                                       readonly>
+                            </div>
+
+                            <div class="mb-3 d-flex justify-content-between">
+                                <div class="me-2">
+                                    <label class="form-label">부서</label>
+                                    <select name="user_dept_cd" class="form-select me-2" style="width: 150px;"
+                                            id="department">
+                                        <option value="" selected>부서</option>
+                                        <th:block th:each="department : ${DepartmentList}">
+                                            <option th:value="${department.user_dept_cd}"
+                                                    th:text="${department.dept_name}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label">직위</label>
+                                    <select name="user_jbps_ty_cd" class="form-select me-2" style="width: 150px;"
+                                            id="position">
+                                        <option value="" selected>직위</option>
+                                        <th:block th:each="JopPosition : ${JopPositionList}">
+                                            <option th:value="${JopPosition.user_jbps_ty_cd}"
+                                                    th:text="${JopPosition.position_name}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3 d-flex justify-content-between">
+                                <div>
+                                    <label class="form-label">권한</label>
+                                    <select name="user_auth_cd" class="form-select me-2" style="width: 150px;"
+                                            id="auth">
+                                        <option value="" selected>권한</option>
+                                        <th:block th:each="auth : ${authList}">
+                                            <option th:value="${auth.user_auth_cd}"
+                                                    th:text="${auth.auth_name}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label">활동 상태</label>
+                                    <select name="user_status" class="form-select me-2" style="width: 150px;"
+                                            id="status">
+                                        <option value="" selected>상태</option>
+                                        <th:block th:each="statusItem : ${statusList}">
+                                            <option th:value="${statusItem.user_status}"
+                                                    th:text="${statusItem.status_name}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn" id="btn-submit">등록</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('btn-reset').addEventListener('click', function() {
+          // 검색 폼의 모든 값을 초기화
+          document.getElementById('searchForm').reset();
+          // 폼을 다시 제출하여 초기 상태로 이동
+          window.location.href = '/management/employees';
+        });
+
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+          const searchField = document.querySelector('select[name="searchField"]').value;
+          const searchValue = document.querySelector('input[name="searchValue"]').value;
+
+          if (!searchField && searchValue) {
+            // 검색어는 입력되었으나 카테고리가 선택되지 않은 경우 경고창 띄우기
+            e.preventDefault();
+            alert('검색 카테고리를 선택해주세요.');
+          }
+        });
+    </script>
+    <script th:src="@{/js/management/employeeModal.js}"></script>
+</div>
+</body>
+</html>
