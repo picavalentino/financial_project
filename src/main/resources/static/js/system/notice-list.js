@@ -1,5 +1,4 @@
 // notice-list.js
-// product-list.js
 
 let currentSortColumn = null; // 현재 정렬 기준
 let sortDirection = 'asc';   // 기본 정렬 방향 (오름차순)
@@ -78,34 +77,60 @@ function renderTable(data) {
     if (data && data.length > 0) {
         console.log('Populating table with data');
         data.forEach(product => {
-            // 답변 상태에 따라 클래스와 텍스트 설정
             const replyHtml = product.inqReply == '1'
                 ? `<div class="reply" id="rep-completed">답변완료</div>`
                 : `<div class="reply" id="rep-wait" style="cursor: pointer;" onclick="window.location.href='/inquire/detail/${product.inqId}'">답변대기</div>`;
 
-            const row = $(`
-                <tr class="table-row" style="cursor: pointer;">
-                    <td>${product.inqId || 'N/A'}</td>
-                    <td>${product.inqCategory || 'N/A'}</td>
-                    <td>${product.inqAnonym == 1 ? '익명' : product.userId}</td>
-                    <td>${product.inqTitle}</td>
-                    <td>${product.formattedInqCreateAt}</td>
-                    <td>${product.inqCheck}</td>
-                    <td id="td-reply">
-                        ${replyHtml}
-                    </td>
-                    <td>
-                        <button type="button" class="${product.inqNotice == '2' ? 'btn-notice-register' : 'btn-notice-cancel'}">
-                            ${product.inqNotice == '2' ? '등록' : '해제'}
-                        </button>
-                    </td>
-                </tr>
+            const row = $(`<tr class="table-row" style="cursor: pointer;"></tr>`);
+            row.append(`<td>${product.inqId || 'N/A'}</td>`);
+            row.append(`<td>${product.inqCategory || 'N/A'}</td>`);
+            row.append(`<td>${product.inqAnonym == 1 ? '익명' : product.userId}</td>`);
+            row.append(`<td>${product.inqTitle}</td>`);
+            row.append(`<td>${product.formattedInqCreateAt}</td>`);
+            row.append(`<td>${product.inqCheck}</td>`);
+            row.append(`<td id="td-reply">${replyHtml}</td>`);
+            row.append(`
+                <td>
+                    <button type="button" class="${product.inqNotice == '1' ? 'btn-notice-cancel' : 'btn-notice-register'}">
+                        ${product.inqNotice == '1' ? '해제' : '등록'}
+                    </button>
+                </td>
             `);
+
+            // 행 클릭 이벤트 추가
+            row.on('click', function () {
+                const inqCategory = product.inqCategory;
+                const inqId = product.inqId;
+
+                if (inqCategory === '공지사항') {
+                    window.location.href = `/system/inquire/detail/${inqId}`;
+                } else {
+                    window.location.href = `/inquire/detail/${inqId}`;
+                }
+            });
+
             tableBody.append(row);
         });
     } else {
         console.log('No data available for rendering');
         tableBody.append('<tr><td colspan="8">데이터가 없습니다.</td></tr>');
+    }
+}
+
+// 테이블 컬럼 클릭
+function handleRowClick(row) {
+    const inqCategory = row.getAttribute('data-inq-category');
+    const inqId = row.getAttribute('data-inq-id');
+
+    if (!inqId) {
+        alert("게시글 ID가 유효하지 않습니다.");
+        return;
+    }
+
+    if (inqCategory === '공지사항') {
+        window.location.href = `/system/inquire/detail/${inqId}`;
+    } else {
+        window.location.href = `/inquire/detail/${inqId}`;
     }
 }
 
@@ -124,11 +149,12 @@ function updatePagination(totalPages, currentPage) {
     });
 }
 
-// 공지사항 등록/해제
-function handleNoticeStcd()
-
 // Document Ready
 $(document).ready(function () {
+    // CSRF 토큰 가져오기
+    let csrfToken = $('meta[name="_csrf"]').attr('content');
+    let csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
     // 검색 버튼 이벤트
     $('#search-form').on('submit', function (e) {
         e.preventDefault();
@@ -152,8 +178,57 @@ $(document).ready(function () {
     });
 
     // 공지사항 등록 버튼
-    $('.btn-notice-register').on('click', function(){
-        alert('')
-    })
+    $('.btn-notice-register').on('click', function () {
+        const inqId = $(this).data('inq-id');
+        if (!inqId) {
+            alert("게시글 ID가 유효하지 않습니다.");
+            return;
+        }
+        if (!confirm("해당 게시글을 공지로 등록하시겠습니까?")) return;
+
+        $.ajax({
+            url: `/system/inquire/notice-register/${inqId}`,
+            type: "POST",
+            beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function () {
+                alert("공지 등록되었습니다.");
+                window.location.reload(); // 페이지 새로고침
+            },
+            error: function (xhr) {
+                const errorMessage = xhr.responseJSON?.message || "알 수 없는 오류";
+                console.error("공지 등록 실패: ", errorMessage);
+                alert(`공지 등록에 실패했습니다: ${errorMessage}`);
+            },
+        });
+    });
+
+    // 공지사항 해제 버튼
+    $('.btn-notice-cancel').on('click', function () {
+        const inqId = $(this).data('inq-id');
+        if (!inqId) {
+            alert("게시글 ID가 유효하지 않습니다.");
+            return;
+        }
+        if (!confirm("공지 고정을 해제하시겠습니까?")) return;
+
+        $.ajax({
+            url: `/system/inquire/notice-cancel/${inqId}`,
+            type: "POST",
+            beforeSend: function (xhr) {
+                   xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function () {
+                alert("공지 고정이 해제되었습니다.");
+                window.location.reload(); // 페이지 새로고침
+            },
+            error: function (xhr) {
+                const errorMessage = xhr.responseJSON?.message || "알 수 없는 오류";
+                console.error("공지 해제 실패: ", errorMessage);
+                alert(`공지 해제에 실패했습니다: ${errorMessage}`);
+            },
+        });
+    });
 });
 

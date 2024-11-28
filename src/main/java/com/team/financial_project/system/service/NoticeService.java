@@ -6,6 +6,7 @@ import com.team.financial_project.mapper.InquireMapper;
 import groovy.util.logging.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,15 +46,22 @@ public class NoticeService {
         return list;
     }
 
-    public InquireDTO findById(Long inqId) {
+    public List<InquireDTO> searchInquires(Map<String, Object> searchParams) {
+        List<InquireDTO> list = inquireMapper.searchInquiresByParams(searchParams);
+        applyMappingsToInquires(list);
+        return list;
+    }
+
+    public InquireDTO findById(Integer inqId) {
+        // 조회수 증가
+        inquireMapper.incrementInqCheck(inqId);
+        // 상세 정보 조회
         InquireDTO dto = inquireMapper.findById(inqId);
         applyMappingsToInquire(dto);
         return dto;
     }
 
-    public List<InquireDTO> searchInquires(Map<String, Object> searchParams) {
-        List<InquireDTO> list = inquireMapper.searchInquires(searchParams);
-        applyMappingsToInquires(list);
-        return list;
+    public void updateNoticeStatus(Integer inqId, int i) {
+        inquireMapper.updateNoticeStatus(inqId, i);
     }
 }

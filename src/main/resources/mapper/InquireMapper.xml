@@ -2,86 +2,72 @@
 <!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.financial_project.mapper.InquireMapper">
-
-    <!-- resultMap을 사용해 명시적 매핑 -->
-    <resultMap id="InquireResultMap" type="com.team.financial_project.dto.InquireDTO">
-        <id property="inqId" column="inq_id"/>
-        <result property="userId" column="user_id"/>
-        <result property="inqTitle" column="inq_title"/>
-        <result property="inqCategory" column="inq_category"/>
-        <result property="inqAnonym" column="inq_anonym"/>
-        <result property="inqContent" column="inq_content"/>
-        <result property="inqPwd" column="inq_pwd"/>
-        <result property="inqReply" column="inq_reply"/>
-        <result property="inqCheck" column="inq_check"/>
-        <result property="inqNotice" column="inq_notice"/>
-        <result property="inqAttachFile1" column="inq_attach_file_1"/>
-        <result property="inqAttachFile2" column="inq_attach_file_2"/>
-        <result property="inqAttachFile3" column="inq_attach_file_3"/>
-        <result property="inqAttachFile4" column="inq_attach_file_4"/>
-        <result property="inqAttachFile5" column="inq_attach_file_5"/>
-        <result property="inqStatus" column="inq_status"/>
-        <result property="inqCreateAt" column="inq_create_at"/>
-        <result property="inqUpdateAt" column="inq_update_at"/>
-    </resultMap>
-
     <!-- 전체 목록 조회  -->
-    <select id="findAllList" resultMap="InquireResultMap">
+    <select id="findAllList" resultType="inquireDTO">
         SELECT
-            i.inq_id,
-            COALESCE(u.user_name, '익명') AS user_id, -- 익명 처리 (NULL일 경우 기본값 '익명')
-            i.inq_title,
-            i.inq_category,
-            i.inq_anonym,
-            i.inq_reply,
-            i.inq_check,
-            i.inq_notice,
-            i.inq_create_at
+        i.inq_id AS inqId,
+        COALESCE(u.user_name, '익명') AS userId,
+        i.inq_title AS inqTitle,
+        i.inq_category AS inqCategory,
+        i.inq_anonym AS inqAnonym,
+        i.inq_reply AS inqReply,
+        i.inq_check AS inqCheck,
+        i.inq_notice AS inqNotice,
+        i.inq_create_at AS inqCreateAt
         FROM t_inquire i
         LEFT JOIN tb_user u ON u.user_id = i.user_id
+        WHERE i.inq_status = '1'
         ORDER BY i.inq_id DESC
     </select>
 
+    <!-- 조회수 증가 -->
+    <update id="incrementInqCheck" parameterType="Integer">
+        UPDATE t_inquire
+        SET inq_check = inq_check + 1
+        WHERE inq_id = #{inqId};
+    </update>
+
     <!-- 상세 보기 -->
-    <select id="findById" parameterType="Long" resultMap="InquireResultMap">
+    <select id="findById" parameterType="Integer" resultType="inquireDTO">
         SELECT
-        inq_id,
-        user_id,
-        inq_title,
-        inq_category,
-        inq_anonym,
-        inq_content,
-        inq_pwd,
-        inq_reply,
-        inq_check,
-        inq_notice,
-        inq_attach_file_1,
-        inq_attach_file_2,
-        inq_attach_file_3,
-        inq_attach_file_4,
-        inq_attach_file_5,
-        inq_status,
-        inq_create_at,
-        inq_update_at
-        FROM t_inquire
-        WHERE inq_id = #{inqId}
+        i.inq_id AS inqId,
+        COALESCE(u.user_name, '익명') AS userId,
+        i.inq_title AS inqTitle,
+        i.inq_category AS inqCategory,
+        i.inq_anonym AS inqAnonym,
+        i.inq_content AS inqContent,
+        i.inq_pwd AS inqPwd,
+        i.inq_reply AS inqReply,
+        i.inq_check AS inqCheck,
+        i.inq_notice AS inqNotice,
+        i.inq_attach_file_1 AS inqAttachFile1,
+        i.inq_attach_file_2 AS inqAttachFile2,
+        i.inq_attach_file_3 AS inqAttachFile3,
+        i.inq_attach_file_4 AS inqAttachFile4,
+        i.inq_attach_file_5 AS inqAttachFile5,
+        i.inq_status AS inqStatus,
+        i.inq_create_at AS inqCreateAt,
+        i.inq_update_at AS inqUpdateAt
+        FROM t_inquire i
+        LEFT JOIN tb_user u ON u.user_id = i.user_id
+        WHERE i.inq_id = #{inqId} AND i.inq_status = '1'
     </select>
 
     <!-- 조건 검색 -->
-    <select id="searchInquires" resultMap="InquireResultMap">
+    <select id="searchInquiresByParams" resultType="inquireDTO">
         SELECT
-        i.inq_id,
-        COALESCE(u.user_name, '익명') AS user_id, -- 익명 처리 (NULL일 경우 기본값 '익명')
-        i.inq_title,
-        i.inq_category,
-        i.inq_anonym,
-        i.inq_reply,
-        i.inq_check,
-        i.inq_notice,
-        i.inq_create_at
+        i.inq_id AS inqId,
+        COALESCE(u.user_name, '익명') AS userId, -- 필드 이름에 맞춘 별칭 사용
+        i.inq_title AS inqTitle,
+        i.inq_category AS inqCategory,
+        i.inq_anonym AS inqAnonym,
+        i.inq_reply AS inqReply,
+        i.inq_check AS inqCheck,
+        i.inq_notice AS inqNotice,
+        i.inq_create_at AS inqCreateAt
         FROM t_inquire i
         LEFT JOIN tb_user u ON u.user_id = i.user_id
-        WHERE 1=1
+        WHERE 1=1 AND i.inq_status = '1'
         <if test="inqCategory != null and inqCategory != ''">
             AND i.inq_category = #{inqCategory}
         </if>
@@ -104,12 +90,148 @@
         user_id, inq_category, inq_title, inq_anonym,
         inq_content, inq_pwd, inq_attach_file_1,
         inq_attach_file_2, inq_attach_file_3, inq_attach_file_4,
-        inq_attach_file_5, inq_create_at, inq_status, inq_notice, inq_reply
+        inq_attach_file_5, inq_create_at, inq_notice
         ) VALUES (
         #{userId}, #{inqCategory}, #{inqTitle}, #{inqAnonym},
         #{inqContent}, #{inqPwd}, #{inqAttachFile1},
         #{inqAttachFile2}, #{inqAttachFile3}, #{inqAttachFile4},
-        #{inqAttachFile5}, CURRENT_TIMESTAMP, '1', '0', '0'
+        #{inqAttachFile5}, CURRENT_TIMESTAMP, #{inqNotice}
         )
     </insert>
+
+    <select id="searchInquires" resultType="inquireDTO">
+        SELECT
+        inq_id AS inqId,
+        user_id AS userId,
+        inq_title AS inqTitle,
+        inq_category AS inqCategory,
+        inq_anonym AS inqAnonym,
+        inq_content AS inqContent,
+        inq_pwd AS inqPwd,
+        inq_reply AS inqReply,
+        inq_attach_file_1 AS inqAttachFile1,
+        inq_attach_file_2 AS inqAttachFile2,
+        inq_attach_file_3 AS inqAttachFile3,
+        inq_attach_file_4 AS inqAttachFile4,
+        inq_attach_file_5 AS inqAttachFile5,
+        inq_status AS inqStatus,
+        inq_create_at AS inqCreateAt,
+        inq_update_at AS inqUpdateAt,
+        inq_check AS inqCheck
+        FROM t_inquire
+        WHERE 1=1
+        <if test="category != null and category != ''">
+            AND inq_category = #{category}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND ${keywordType} LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="createAt != null and createAt != ''">
+            AND DATE(inq_create_at) = #{createAt}
+        </if>
+        ORDER BY inq_create_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countSearchInquires" resultType="int">
+        SELECT COUNT(*) FROM t_inquire
+        WHERE 1=1
+        <if test="category != null and category != ''">
+            AND inq_category = #{category}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND ${keywordType} LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="createAt != null and createAt != ''">
+            AND DATE(inq_create_at) = #{createAt}
+        </if>
+    </select>
+
+    <select id="getInquireById" resultType="inquireDTO">
+        SELECT
+        inq_id AS inqId,
+        user_id AS userId,
+        inq_title AS inqTitle,
+        inq_category AS inqCategory,
+        inq_anonym AS inqAnonym,
+        inq_content AS inqContent,
+        inq_pwd AS inqPwd,
+        inq_reply AS inqReply,
+        inq_attach_file_1 AS inqAttachFile1,
+        inq_attach_file_2 AS inqAttachFile2,
+        inq_attach_file_3 AS inqAttachFile3,
+        inq_attach_file_4 AS inqAttachFile4,
+        inq_attach_file_5 AS inqAttachFile5,
+        inq_status AS inqStatus,
+        inq_create_at AS inqCreateAt,
+        inq_update_at AS inqUpdateAt,
+        inq_check AS inqCheck
+        FROM t_inquire
+        WHERE inq_id = #{inqId}
+    </select>
+
+    <!-- 수정 -->
+    <update id="updateInquire" parameterType="InquireDTO">
+        UPDATE t_inquire
+        SET inq_title = #{inqTitle},
+        inq_content = #{inqContent},
+        inq_attach_file_1 = #{inqAttachFile1},
+        inq_attach_file_2 = #{inqAttachFile2},
+        inq_attach_file_3 = #{inqAttachFile3},
+        inq_attach_file_4 = #{inqAttachFile4},
+        inq_attach_file_5 = #{inqAttachFile5},
+        inq_update_at = NOW()
+        WHERE inq_id = #{inqId}
+    </update>
+
+    <!-- 답변 상태 변경 -->
+    <update id="updateInqReply">
+        UPDATE t_inquire
+        SET inq_reply = #{inqReply}
+        WHERE inq_id = #{inqId}
+    </update>
+
+    <!-- 공지사항 상태 변경 -->
+    <update id="updateNoticeStatus" parameterType="map">
+        UPDATE t_inquire
+        SET inq_notice = #{status}
+        WHERE inq_id = #{inqId}
+    </update>
+
+    <!-- 삭제 -->
+    <update id="deleteInquire" parameterType="Integer">
+        UPDATE t_inquire
+        SET inq_status = '9'
+        WHERE inq_id = #{inqId}
+    </update>
+
+    <!--  댓글 CRUD  -->
+    <select id="getCommentsByInqId" resultType="inquireCommentDTO">
+        SELECT
+        c.comment_id AS commentId,
+        c.inq_id AS inqId,
+        c.user_id AS userId,
+        c.comment_anonym AS commentAnonym,
+        c.comment_comment AS commentContent,
+        c.comment_create_at AS commentCreateAt,
+        u.user_auth_cd AS userAuthCd,
+        u.user_name AS userName
+        FROM t_inq_comment c
+        LEFT JOIN tb_user u ON c.user_id = u.user_id
+        WHERE c.inq_id = #{inqId}
+        ORDER BY c.comment_create_at ASC
+    </select>
+
+    <insert id="insertComment" parameterType="inquireCommentDTO">
+        INSERT INTO t_inq_comment (
+        inq_id, user_id, comment_anonym, comment_comment, comment_create_at
+        ) VALUES (
+        #{inqId},
+        #{userId},
+        #{commentAnonym},
+        #{commentContent},
+        CURRENT_TIMESTAMP
+        )
+    </insert>
+
 </mapper>

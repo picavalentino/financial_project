@@ -2,11 +2,13 @@
     background-color: #EFEFF1;;
 }
 .sub_content {
-    margin: 20px auto;
+    margin: 5px auto;
+    margin-left: 20px;
 }
 .title{
     font-size: 25px;
-    margin-bottom: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 .location{
     display: flex;

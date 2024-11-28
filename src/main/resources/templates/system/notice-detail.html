@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/css/system/notice-detail.css">
   <link rel="stylesheet" href="/css/buttons/button.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/system/notice-detail.js?v=1" defer></script>
 </head>
 <title>GS Bank</title>
 <!-- 전체 적용될 CSS -->
@@ -29,47 +30,89 @@
       <a> / 공지사항 상세 </a>
     </div>
     <h1 class="title">공지사항 상세</h1>
-    <!--  게시글 상세 폼  -->
-    <div class="form-container">
-      <table class="notice-table">
-        <tbody>
-        <tr>
-          <th>제목</th>
-          <td><input type="text" name="inqTitle" th:value="${dto.inqTitle}"></td>
-        </tr>
-        <tr>
-          <th>내용</th>
-          <td>
-            <textarea rows="20" name="inqContent" th:text="${dto.inqContent}"></textarea>
-          </td>
-        </tr>
-        <tr>
-          <th>첨부파일</th>
-          <td colspan="2">
-            <div class="list-row">
-              <div class="file-input">
-                <input type="file" name="files" onchange="selectFile(this);" />
-              </div>
-              <div class="file-buttons">
-                <button type="button" onclick="removeFile(this);" class="btn-icon"><i class="bi bi-file-earmark-minus"></i></button>
-                <button type="button" onclick="addFile();" class="btn-icon"><i class="bi bi-file-earmark-plus"></i></button>
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <th>비밀번호</th>
-          <td><input class="td-row" type="text" name="inqPwd" placeholder="비밀번호를 입력하세요"></td>
-        </tr>
-        <tr>
-          <th>공지등록</th>
-          <td><input class="td-row" type="checkbox"/></td>
-        </tr>
-        </tbody>
-      </table>
+    <div class="detail-container">
+      <!--  게시글 상세 폼  -->
+      <div class="form-container">
+        <form class="inquire-form">
+          <input type="hidden" id="serverInqPwd" th:value="${inquire.inqPwd}">
+          <input type="hidden" id="inqId" th:value="${inquire.inqId}">
+          <input type="hidden" id="isValid" th:value="${isValid}">
+          <table class="inquire-table">
+            <tbody>
+            <tr class="tr-row">
+              <th>카테고리</th>
+              <td><div class="input-like">공지사항</div></td>
+              <th>제목</th>
+              <td colspan="3"><div class="input-like" th:text="${inquire.inqTitle}"></div></td>
+            </tr>
+            <tr class="tr-row">
+              <th>작성자</th>
+              <td><div class="input-like" th:text="${inquire.userId}"></div></td>
+              <th>등록일</th>
+              <td><div class="input-like" th:text="${inquire.getFormattedCreateAt()}"></div></td>
+            </tr>
+            <tr>
+              <th>내용</th>
+              <td colspan="5"><div class="textarea-like" th:text="${inquire.inqContent}"></div></td>
+            </tr>
+            <tr>
+              <th>첨부파일</th>
+              <td colspan="5">
+                <div class="file-links">
+                  <a th:each="fileName : ${fileNames}" th:href="'https://codechef.s3.ap-northeast-2.amazonaws.com/' + ${fileName}" th:text="${fileName}"></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>비밀번호</th>
+              <td>
+                <input type="password" id="inqPwd">
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+        <!-- 댓글 영역 -->
+        <div class="comments-container">
+          <h2 class="comment-title" th:text="${#lists.size(comments)} + '개의 댓글'"></h2>
+          <table class="comment-table">
+            <thead>
+            <tr>
+              <th>작성자</th>
+              <th>내용</th>
+              <th>상태</th>
+              <th>작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="comment : ${comments}">
+              <td th:text="${comment.commentAnonym == '1' ? '익명' : comment.userName}"></td>
+              <td th:text="${comment.commentContent}"></td>
+              <td th:text="${comment.userAuthCd}"></td>
+              <td th:text="${comment.getFormattedCreateAt()}"></td>
+            </tr>
+            <tr th:each="comment : ${comments}" class="admin-comment" th:if="${comment.userAuthCd == '2'}">
+              <td th:text="${comment.commentAnonym == '1' ? '익명' : comment.userName}">관리자</td>
+              <td th:text="${comment.commentContent}">댓글22</td>
+              <td><span class="status-label">답변완료</span></td>
+              <td th:text="${comment.getFormattedCreateAt()}">2024-11-15 11:33</td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="comment-form">
+            <div class="btn-comment">댓글</div>
+            <textarea name="commentContent" placeholder="댓글을 입력하세요" required></textarea>
+            <button class="btn-submit">입력</button>
+          </div>
+        </div>
+      </div>
+    </div>
       <div class="button-wrap">
         <button class="btn" id="btn-register">
           <div class="icon-container"><i class="icon bi bi-plus-circle-fill"></i></div> 수정
+        </button>
+        <button class="btn" id="btn-delete">
+          <div class="icon-container"><i class="bi bi-trash-fill"></i></div> 삭제
         </button>
         <button class="btn" id="btn-list">
           <div class="icon-container"><i class="icon bi bi-list"></i></div> 목록
@@ -77,14 +120,6 @@
       </div>
     </div>
   </div>
-  <script th:inline="javascript">
-      $(document).ready(function(){
-          //등록 버튼 클릭
-          $("#btn-register").on("click", function (e){
-            window.location.href="/inquire/insert";
-          });
-      });
-  </script>
 </div>
 </body>
 </html>
