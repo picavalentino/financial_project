@@ -1,7 +1,8 @@
-package com.team.financial_project.main.config;
+package com.team.financial_project.security.config;
 
-import com.team.financial_project.main.security.CustomAuthFailureHandler;
-import com.team.financial_project.main.service.CustomUserDetailService;
+import com.team.financial_project.security.etc.CustomAuthFailureHandler;
+import com.team.financial_project.security.service.CustomUserDetailService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -34,7 +35,12 @@ public class SecurityConfig{
                 .permitAll());
         http.logout((auth)->auth
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.setContentType("application/json; charset=UTF-8");
+                    response.getWriter().write("{\"message\": \"로그아웃이 성공적으로 처리되었습니다.\"}");
+                    response.getWriter().flush();
+                })
                 .invalidateHttpSession(true)
                 .permitAll());
         return http.build();
