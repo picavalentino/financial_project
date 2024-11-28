@@ -16,3 +16,10 @@ mybatis:
   type-aliases-package: com.team.financial_project.dto
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+aws:
+  s3:
+    bucket: codechef
+    access-key: ${ACCESS}
+    secret-key: ${SECRET}
+    region: ap-northeast-2
