@@ -20,6 +20,7 @@ spring:
     redis:
       host: localhost
       port: 6379
+      password: ${REDIS}
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

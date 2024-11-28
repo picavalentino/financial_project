@@ -305,6 +305,7 @@ body {
     background-color: #f8f8f8; /* 항목에 마우스를 올렸을 때 배경색 변경 */
 }
 /* 인풋박스 포커스 */
-input:focus{
+input:focus,
+select:focus{
     outline: 1.3px solid #656565 !important;
 }

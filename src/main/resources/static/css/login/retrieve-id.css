@@ -159,7 +159,8 @@ input:focus{
     background-color: #567d84;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
-.input-box input:focus{
+.input-box input:focus,
+select:focus{
     outline: 1.3px solid #656565 !important;
 }
 
