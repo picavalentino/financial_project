@@ -26,7 +26,7 @@ $(document).ready(function(){
                     $('#userResults').empty();
 
                     if (users.length > 0) {
-                        $('#userResults').show();
+                        $('#userResults').css("display", "block");
                         users.forEach(function(user) {
                             $('#userResults').append('<div class="dropdown-item" data-name="' + user.user_name
                             + '" data-birthday="' + user.user_birthday
@@ -43,7 +43,9 @@ $(document).ready(function(){
                             $("#user_name").text(selectedName);
                             $("#user_birthday").text(selectedBirthday);
 
-                            $('#userResults').hide();
+                            alert("⚠️본인정보만 선택해주세요⚠️");
+                            $("#user_id").prop("readonly",true);
+                            $('#userResults').css("display", "none");
                             isSelectedId = true;
                             validateForm();
                         });
@@ -52,13 +54,29 @@ $(document).ready(function(){
                     }
                 },
                 error: function() {
-                    $('#userResults').empty().hide();
+                    $('#userResults').empty().css("display", "none");
                 }
             });
         } else {
-            $('#userResults').empty().hide();
+            $('#userResults').empty().css("display", "none");
         }
     })
+    // 사원번호 선택 후 다시 인풋박스 클릭시
+    $("#user_id").on("click",function(){
+        let id = $(this).val();
+        if(id.length===11 && window.confirm("사원번호를 다시 검색하시겠습니까?")){
+            $("#user_id").prop("readonly", false).val("");
+            $("#user_name").text(" ");
+            $("#user_birthday").text(" ");
+        }
+    })
+    // 검색창, 드롭박스 외 다른 구역 클릭시
+    $(document).on('click', function(event) {
+        // 검색 컨테이너 내부를 클릭하지 않은 경우
+        if (!$(event.target).closest("#id-container").length) {
+            $("#userResults").css("display", "none");
+        }
+    });
     // 사진등록 누르면 숨겨진 파일 입력 태그 동작
     $("#btn-photoReg").on("click", function (e) {
         e.preventDefault();

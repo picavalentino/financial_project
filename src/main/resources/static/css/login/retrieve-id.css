@@ -26,7 +26,7 @@
     width: 100%;
     padding: 12.5px 10px;
     border-radius: 8px;
-    border: 1px solid rgb(103, 103, 103);
+    border: 1px solid rgb(141, 141, 141);
     font-size: small;
 }
 
@@ -159,15 +159,7 @@ input:focus{
     background-color: #567d84;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
-input[type="number"] {
-    -moz-appearance: textfield; /* Firefox */
-    -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
-    appearance: none; /* 일반적인 속성 */
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
-    margin: 0; /* 스핀 버튼의 여백 제거 */
+.input-box input:focus{
+    outline: 1.3px solid #656565 !important;
 }
 

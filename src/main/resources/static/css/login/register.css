@@ -105,7 +105,7 @@ body {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid rgb(103, 103, 103);
+    border: 1px solid rgb(141, 141, 141);
     font-size: small;
 }
 
@@ -281,7 +281,7 @@ body {
     border: 1px solid #ccc;
     background-color: white;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
+    z-index: 999; /* 다른 요소 위에 표시되도록 설정 */
     padding: 0;
     margin: 0 5px;
     width: 97%;
@@ -309,6 +309,5 @@ body {
 }
 /* 인풋박스 포커스 */
 input:focus{
-    outline: none;
-    border: 1.5px solid #040a47;
+    outline: 1.3px solid #656565 !important;
 }
