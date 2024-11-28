@@ -1,12 +1,12 @@
 package com.team.financial_project.customer.service;
 
 import com.team.financial_project.dto.CustomerDTO;
-import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.CustomerMapper;
+import com.team.financial_project.mapper.InquireMapper;
 import com.team.financial_project.mapper.UserMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.team.financial_project.dto.UserDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -16,16 +16,21 @@ import java.util.List;
 
 @Service
 public class CustomerService {
+
     @Autowired
     private CustomerMapper customerMapper;
 
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private InquireMapper inquireMapper;
 
-    public CustomerService(CustomerMapper customerMapper, UserMapper userMapper) {
+
+    public CustomerService(CustomerMapper customerMapper, UserMapper userMapper, InquireMapper inquireMapper) {
         this.customerMapper = customerMapper;
         this.userMapper = userMapper;
+        this.inquireMapper = inquireMapper;
     }
 
     // ======================================================================================================
@@ -68,12 +73,19 @@ public class CustomerService {
 
     // ======================================================================================================
     // 고객 등록 페이지
+
+    @Transactional
     public void insertCustomer(CustomerDTO customerDto) {
 
         // 오늘 날짜를 yyyyMMdd 형식으로 생성
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String datePart = today.format(formatter);
+
+        // CustomerDTO의 users 객체가 null인지 확인 후 초기화
+        if (customerDto.getUsers() == null) {
+            customerDto.setUsers(new UserDTO());
+        }
 
         // 오늘 등록된 고객 수 조회
         int todayCount = customerMapper.countTodayCustomers();

@@ -3,9 +3,12 @@ package com.team.financial_project.customer.controller;
 import com.team.financial_project.customer.service.CustomerService;
 import com.team.financial_project.dto.CustomerDTO;
 import com.team.financial_project.dto.UserDTO;
+import com.team.financial_project.inquire.service.InquireService;
 import com.team.financial_project.management.service.ManagementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +22,18 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final ManagementService managementService;
+    private final InquireService inquireService;
 
-    public CustomerController(CustomerService customerService, ManagementService managementService) {
+    public CustomerController(CustomerService customerService, ManagementService managementService, InquireService inquireService) {
         this.customerService = customerService;
         this.managementService = managementService;
+        this.inquireService = inquireService;
+    }
+
+    //로그인
+    private String getAuthenticatedUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName(); // username을 반환
     }
 
     @GetMapping("/list")
@@ -33,10 +44,17 @@ public class CustomerController {
             @RequestParam(name = "keyword", required = false) String keyword,
             Model model) {
 
-        // 검색 조건 기본값 설정
-        searchType = (searchType == null) ? "" : searchType;
-        keyword = (keyword == null) ? "" : keyword;
+        // 로그인된 사용자 ID 설정
+        String userId = getAuthenticatedUserId();
+        String userName = inquireService.getUserName(userId);
+        model.addAttribute("userName", userName);
+        model.addAttribute("staffId", userId);
 
+        // 검색 조건 기본값 설정
+        if (searchType == null && keyword == null) {
+            searchType = "manager";
+            keyword = userName; // 로그인된 사용자 이름을 기본값으로 설정
+        }
 
         // 검색 조건과 키워드에 따라 페이징 처리된 고객 목록 조회
         List<CustomerDTO> customers = !searchType.isEmpty() && !keyword.isEmpty()
@@ -61,12 +79,6 @@ public class CustomerController {
     }
 
     /* ================================================================================================================= */
-    // 고객 등록 (페이지)
-    @GetMapping("/list/insert")
-    public String showInsertForm(Model model) {
-        model.addAttribute("customer", new CustomerDTO());  // 빈 객체 전달
-        return "customer/list/insert";
-    }
 
     // 고객 등록 (POST 요청)
     @PostMapping("/list/insert")
@@ -85,6 +97,11 @@ public class CustomerController {
     /* 고객 상세 정보 페이지 */
     @GetMapping("/detail/{custId}")
     public String getCustomerDetail(@PathVariable("custId") String custId, Model model) {
+
+        // 로그인된 사용자 ID 설정
+        String staffId = getAuthenticatedUserId();
+        model.addAttribute("staffId",staffId);
+
         // 고객 상세 정보 가져오기
         CustomerDTO customer = customerService.getCustomerById(custId);
 

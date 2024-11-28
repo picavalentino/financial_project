@@ -146,8 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(".edit-btn").addEventListener("click", function (event) {
         event.preventDefault();
 
-        // 수정한 사용자 정보 가져오기
-        const userId = document.querySelector('input[name="user_id"]').value;
+
 
         // 필드 값 가져오기
         const telno = document.querySelector('input[name="custTelno"]').value;
@@ -161,9 +160,13 @@ document.addEventListener("DOMContentLoaded", function () {
             custOccpTyCd = custOccpTyCdElement?.getAttribute('th:selected') || '미정';
         }
 
+         // 수정한 사용자 정보 가져오기
+        const staffId = document.querySelector('input[name="staffId"]').value;
+        const userId = document.querySelector('input[name="user_id"]').value;
+
         // 수정 내역 추가
         const currentTimestamp = getCurrentTimestamp();
-        const newEntry = `수정일자 : ${currentTimestamp} / 담당자ID: ${userId}`;
+        const newEntry = `수정일자 : ${currentTimestamp} / by - ${staffId}`;
 
         // 고객별 수정 내역 관리
         if (!customerRevisions[custId]) {

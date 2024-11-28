@@ -19,4 +19,7 @@ public interface InquireMapper {
     String getUserName(String userId);
 
     List<InquireDTO> searchInquires(Map<String, Object> searchParams);
+
+    @Select("SELECT user_id FROM tb_user WHERE user_id = #{userId}")
+    String getUserId();
 }

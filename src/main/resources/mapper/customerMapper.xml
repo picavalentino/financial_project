@@ -194,10 +194,10 @@
     <insert id="insertCustomer" parameterType="com.team.financial_project.dto.CustomerDTO">
         INSERT INTO tb_customer
         (cust_id, cust_nm, cust_rrn, cust_telno, cust_email, cust_occp_ty_cd, cust_addr,
-        cust_create_at, cust_update_at, cust_state_cd)
+        cust_create_at, cust_update_at, cust_state_cd, user_id)
         VALUES
         (#{custId}, #{custNm}, #{custRrn}, #{custTelno}, #{custEmail}, #{custOccpTyCd}, #{custAddr},
-        #{custCreateAt}, #{custUpdateAt}, #{custStateCd})
+        #{custCreateAt}, #{custUpdateAt}, #{custStateCd}, #{users.user_id})
     </insert>
     <!-- ============================================================================================================= -->
 

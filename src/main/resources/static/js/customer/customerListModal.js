@@ -8,9 +8,8 @@ function closeModal(modalId) {
 $(document).ready(function () {
     // 고객 등록 버튼 클릭 이벤트
     $(".insert-button").on("click", function () {
-    console.log("버튼 눌렀잖아");
-        // openModal 함수로 모달 열기
-        openModal('insertModal');
+        console.log("버튼 눌렀잖아");
+        openModal("insertModal");
     });
 });
 
@@ -19,20 +18,28 @@ function openModal(modalId) {
     modal.style.display = "flex"; // 모달을 중앙에 배치
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var submitButton = document.getElementById("submitCustomer");
 
-    submitButton.addEventListener("click", function(e) {
+    submitButton.addEventListener("click", function (e) {
         // 기본 폼 제출 동작 방지
         e.preventDefault();
 
+        // 유효성 검사
+        if (!validateForm()) {
+            return; // 유효성 검사 실패 시 서버 요청 중단
+        }
+
         // 입력 값 가져오기
-        var custNm = document.getElementById("custNm").value;
-        var custRrn = document.getElementById("custRrn").value;
-        var custTelno = document.getElementById("custTelno").value;
-        var custEmail = document.getElementById("custEmail").value;
+        var custNm = document.getElementById("custNm").value.trim();
+        var custRrn = document.getElementById("custRrn").value.trim();
+        var custTelno = document.getElementById("custTelno").value.trim();
+        var custEmail = document.getElementById("custEmail").value.trim();
         var custOccpTyCd = document.getElementById("custOccpTyCd").value;
-        var custAddr = document.getElementById("custAddr").value;
+        var custAddr = document.getElementById("custAddr").value.trim();
+
+        // 로그인 정보 가져오기
+        const staffId = document.querySelector('input[name="staffId"]').value;
 
         // 고객 정보 객체 생성 (custId는 서버에서 생성되므로 제외)
         var customerData = {
@@ -41,38 +48,89 @@ document.addEventListener("DOMContentLoaded", function() {
             custTelno: custTelno,
             custEmail: custEmail,
             custOccpTyCd: custOccpTyCd,
-            custAddr: custAddr
+            custAddr: custAddr,
+            users: {
+                user_id: staffId,
+            },
         };
 
-        const csrfToken = $('meta[name="_csrf"]').attr('content');
-        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+        const csrfToken = $('meta[name="_csrf"]').attr("content");
+        const csrfHeader = $('meta[name="_csrf_header"]').attr("content");
 
         // 비동기적으로 데이터를 서버에 전송
-        fetch('/customer/list/insert', {
-            method: 'POST',
+        fetch("/customer/list/insert", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 [csrfHeader]: csrfToken,
             },
-            body: JSON.stringify(customerData)
+            body: JSON.stringify(customerData),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('고객이 성공적으로 등록되었습니다.');
-                // 필요한 경우 모달을 닫거나, 폼 초기화 등을 수행
-                document.getElementById("insertModal").style.display = "none";
-                document.getElementById("customerForm").reset();
-            } else {
-                alert('고객 등록에 실패했습니다: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('고객 등록 중 오류가 발생했습니다:', error);
-            alert('오류가 발생했습니다. 다시 시도해주세요.');
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert("고객이 성공적으로 등록되었습니다.");
+                    // 모달 닫기 및 폼 초기화
+                    closeModal("insertModal");
+                    document.getElementById("customerForm").reset();
+                } else {
+                    alert("고객 등록에 실패했습니다: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("고객 등록 중 오류가 발생했습니다:", error);
+                alert("오류가 발생했습니다. 다시 시도해주세요.");
+            });
     });
 });
+
+// 폼 유효성 검사 함수
+function validateForm() {
+    // 각 필드 값 가져오기
+    const custNm = document.getElementById("custNm").value.trim();
+    const custRrn = document.getElementById("custRrn").value.trim();
+    const custTelno = document.getElementById("custTelno").value.trim();
+    const custEmail = document.getElementById("custEmail").value.trim();
+    const custOccpTyCd = document.getElementById("custOccpTyCd").value;
+    const custAddr = document.getElementById("custAddr").value.trim();
+
+    // 정규식 패턴
+    const rrnPattern = /^\d{6}-\d{7}$/; // 주민등록번호 형식
+    const telPattern = /^010-\d{4}-\d{4}$/; // 휴대폰 번호 형식
+
+    // 유효성 검사
+    if (custNm.length < 2 || custNm.length > 50) {
+        alert("이름은 2자 이상 50자 이하로 입력해주세요.");
+        return false;
+    }
+
+    if (!rrnPattern.test(custRrn)) {
+        alert("주민등록번호는 '123456-1234567' 형식으로 입력해주세요.");
+        return false;
+    }
+
+    if (!telPattern.test(custTelno)) {
+        alert("전화번호는 '010-1234-5678' 형식으로 입력해주세요.");
+        return false;
+    }
+
+    if (!custEmail.includes("@") || custEmail.length < 5) {
+        alert("올바른 이메일 주소를 입력해주세요.");
+        return false;
+    }
+
+    if (custOccpTyCd === "") {
+        alert("직업을 선택해주세요.");
+        return false;
+    }
+
+    if (custAddr === "") {
+        alert("주소를 입력해주세요.");
+        return false;
+    }
+
+    return true; // 모든 유효성 검사를 통과한 경우
+}
 
 /* ========================================================================= */
 /* 체크 박스 */
