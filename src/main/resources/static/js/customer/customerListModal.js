@@ -409,10 +409,21 @@ function showBirthdayCustomers() {
         birthdayCustomers.forEach((customer) => {
             const newRow = document.createElement('div');
             newRow.className = 'tag-btn';
-            newRow.innerHTML = `
-                ${customer.custNm} (${customer.custTelno})
-                <span class="close-tag" onclick="removeTag(event)">X</span>
-            `;
+
+            // 고객명과 전화번호 텍스트 추가
+            const customerText = document.createElement('span');
+            customerText.className = 'customer-info';
+            customerText.textContent = `${customer.custNm} (${customer.custTelno})`;
+
+            // X 버튼 추가
+            const closeButton = document.createElement('span');
+            closeButton.className = 'close-tag';
+            closeButton.textContent = 'X';
+            closeButton.onclick = removeTag; // 태그 삭제 이벤트
+
+            // 태그에 요소 추가
+            newRow.appendChild(customerText);
+            newRow.appendChild(closeButton);
             tagBody.appendChild(newRow);
         });
     }
@@ -428,6 +439,7 @@ GS-BANK에서 생일을 진심으로 축하드립니다.
         `;
     }
 }
+
 
 // 일반 버튼 클릭 시 선택된 고객 복원 및 메시지 상태 복원 함수
 function showSelectedCustomers() {
