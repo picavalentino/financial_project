@@ -6,6 +6,7 @@ import com.team.financial_project.mapper.InquireMapper;
 import groovy.util.logging.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +47,6 @@ public class NoticeService {
         return list;
     }
 
-    public List<InquireDTO> searchInquires(Map<String, Object> searchParams) {
-        List<InquireDTO> list = inquireMapper.searchInquiresByParams(searchParams);
-        applyMappingsToInquires(list);
-        return list;
-    }
-
     public InquireDTO findById(Integer inqId) {
         // 조회수 증가
         inquireMapper.incrementInqCheck(inqId);
@@ -63,5 +58,66 @@ public class NoticeService {
 
     public void updateNoticeStatus(Integer inqId, int i) {
         inquireMapper.updateNoticeStatus(inqId, i);
+    }
+
+    public Map<String, Object> getNotices(String inqCategory, String keywordType, String keyword,
+                                          String inqCreateAt, int page, int size,
+                                          String sortColumn, String sortDirection) {
+        // 검색 조건에 따라 데이터를 가져옴
+        List<InquireDTO> list;
+        if (inqCategory != null || keywordType != null || keyword != null || inqCreateAt != null) {
+            list = inquireMapper.searchInquiresAll(inqCategory, keywordType, keyword, inqCreateAt);
+        } else {
+            list = inquireMapper.findAllList();
+        }
+        applyMappingsToInquires(list);
+
+        // 정렬 로직
+        if (sortColumn != null && sortDirection != null) {
+            Comparator<InquireDTO> comparator = getComparator(sortColumn);
+            if ("desc".equalsIgnoreCase(sortDirection) && comparator != null) {
+                comparator = comparator.reversed();
+            }
+            if (comparator != null) {
+                list.sort(comparator);
+            }
+        }
+
+        // 페이징 처리
+        int totalItems = list.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+        int startIndex = (page - 1) * size;
+        int endIndex = Math.min(startIndex + size, totalItems);
+        List<InquireDTO> paginatedList = list.subList(startIndex, endIndex);
+
+        // 결과 반환
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", paginatedList);
+        result.put("totalPages", totalPages);
+        result.put("totalItems", totalItems);
+        return result;
+    }
+
+    private Comparator<InquireDTO> getComparator(String sortColumn) {
+        switch (sortColumn) {
+            case "inqId":
+                return Comparator.comparing(InquireDTO::getInqId);
+            case "inqCategory":
+                return Comparator.comparing(InquireDTO::getInqCategory);
+            case "userId":
+                return Comparator.comparing(InquireDTO::getUserId);
+            case "inqTitle":
+                return Comparator.comparing(InquireDTO::getInqTitle);
+            case "inqCreateAt":
+                return Comparator.comparing(InquireDTO::getInqCreateAt);
+            case "inqCheck":
+                return Comparator.comparing(InquireDTO::getInqCheck);
+            case "inqReply":
+                return Comparator.comparing(InquireDTO::getInqReply);
+            case "inqNotice":
+                return Comparator.comparing(InquireDTO::getInqNotice);
+            default:
+                return Comparator.comparing(InquireDTO::getInqId);
+        }
     }
 }

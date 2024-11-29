@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class InquireService {
@@ -36,11 +37,16 @@ public class InquireService {
     }
 
     public InquireDTO getInquireById(Integer inqId) {
+        // 조회수 증가
+        inquireMapper.incrementInqCheck(inqId);
         return inquireMapper.getInquireById(inqId);
     }
 
     // 게시글 저장
     public void saveInquire(InquireDTO inquireDTO) {
+        if (!Objects.equals(inquireDTO.getInqNotice(), "1")) {
+            inquireDTO.setInqNotice("0");
+        }
         inquireMapper.insertInquire(inquireDTO);
     }
 

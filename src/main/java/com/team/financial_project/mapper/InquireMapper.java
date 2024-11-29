@@ -17,7 +17,7 @@ public interface InquireMapper {
     @Select("SELECT user_name FROM tb_user WHERE user_id = #{userId}")
     String getUserName(String userId);
 
-    List<InquireDTO> searchInquiresByParams(Map<String, Object> searchParams);
+    List<InquireDTO> searchInquiresAll(String inqCategory, String keywordType, String keyword, String inqCreateAt);
 
     List<InquireDTO> searchInquires(@Param("category") String category,
                                     @Param("keywordType") String keywordType,
@@ -47,11 +47,14 @@ public interface InquireMapper {
     // 댓글 CRUD
     List<InquireCommentDTO> getCommentsByInqId(Integer inqId);
 
-    String getUserAuthCdByUserId(String userId);
+    // user_auth_cd 조회 쿼리
+    @Select("SELECT user_auth_cd FROM tb_user WHERE user_id = #{userId}")
+    String getUserAuthCdByUserId(@Param("userId") String userId);
 
     void updateInqReply(Integer inqId, String inqReply);
 
     void insertComment(InquireCommentDTO commentDTO);
 
     void updateInquire(InquireDTO inquireDTO);
+
 }

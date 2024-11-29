@@ -41,122 +41,45 @@ public class NoticeController {
     @GetMapping("")
     public Object noticeManageView(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "8") int size, // 페이지당 데이터 개수
+            @RequestParam(value = "size", required = false, defaultValue = "8") int size,
             @RequestParam(required = false) String inqCategory,
             @RequestParam(required = false) String keywordType,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String inqCreateAt,
-            @RequestParam(value = "sortColumn", required = false) String sortColumn, // 정렬 기준 컬럼
-            @RequestParam(value = "sortDirection", required = false) String sortDirection, // 정렬 방향
-            @RequestParam(value = "ajax", required = false, defaultValue = "false") boolean ajax, // AJAX 여부
+            @RequestParam(value = "sortColumn", required = false) String sortColumn,
+            @RequestParam(value = "sortDirection", required = false) String sortDirection,
+            @RequestParam(value = "ajax", required = false, defaultValue = "false") boolean ajax,
             Model model, HttpServletRequest request
     ) {
-        System.out.println("### search conditons: inqCategory="+inqCategory+", keyword="+keyword+", keywordType="+keywordType+", inqCreateAt="+inqCreateAt);
-        
-        // 조건 설정
-        Map<String, Object> searchParams = new HashMap<>();
-        boolean hasSearchParams = false;
+        System.out.println("### search conditions: inqCategory=" + inqCategory + ", keyword=" + keyword +
+                ", keywordType=" + keywordType + ", inqCreateAt=" + inqCreateAt);
 
-        // 카테고리
-        if(inqCategory != null && !inqCategory.trim().isEmpty()){
-            searchParams.put("inqCategory", inqCategory.trim());
-            hasSearchParams = true;
-        }
-        // 키워드 검색
-        if(keywordType != null && keyword != null){
-            switch (keywordType){
-                case "inqTitle":
-                    searchParams.put("inqTitle", keyword);
-                    hasSearchParams = true;
-                    break;
-                case "userName":
-                    searchParams.put("userName", keyword);
-                    break;
-                default:
-                    System.out.println("Invalid keywordType: "+keywordType);
-                    break;
-            }
-        }
-        //작성일
-        if(inqCreateAt != null && !inqCategory.trim().isEmpty()){
-            searchParams.put("inqCreateAt", inqCreateAt.trim());
-            hasSearchParams = true;
-        }
+        // 서비스 계층으로 개별 파라미터 전달
+        Map<String, Object> result = noticeService.getNotices(
+                inqCategory, keywordType, keyword, inqCreateAt, page, size, sortColumn, sortDirection
+        );
 
-        // 검색 결과 가져오기
-        List<InquireDTO> list;
-        if(hasSearchParams){
-            list = noticeService.searchInquires(searchParams);  // 조건 검색
-        }else{
-            list = noticeService.findAllList();  // 전체 결과
-        }
-        log.info("### Retrieved list in Controller: {}", list);
-        
-        // requestURI에 페이지 url 포함
-        String requestURI = request.getRequestURI();
-        model.addAttribute("requestURI", requestURI);
-        
-        // 정렬
-        if (sortColumn != null && sortDirection != null) {
-            Comparator<InquireDTO> comparator = null;
-            switch (sortColumn) {
-                case "inqId":
-                    comparator = Comparator.comparing(InquireDTO::getInqId);
-                    break;
-                case "inqCategory":
-                    comparator = Comparator.comparing(InquireDTO::getInqCategory);
-                    break;
-                case "userId":
-                    comparator = Comparator.comparing(InquireDTO::getUserId);
-                    break;
-                case "inqTitle":
-                    comparator = Comparator.comparing(InquireDTO::getInqTitle);
-                    break;
-                case "inqCreateAt":
-                    comparator = Comparator.comparing(InquireDTO::getInqCreateAt);
-                    break;
-                case "inqCheck": // 조회수 -> integer로 변경
-                    comparator = Comparator.comparing(InquireDTO::getInqCheck);
-                    break;
-                case "inqReply":
-                    comparator = Comparator.comparing(InquireDTO::getInqReply);
-                    break;
-                case "inqNotice":
-                    comparator = Comparator.comparing(InquireDTO::getInqNotice);
-                    break;
-                default:
-                    // 기본 정렬: 상품명
-                    comparator = Comparator.comparing(InquireDTO::getInqId);
-                    break;
-            }
-            // 내림차순 정렬
-            if (comparator != null && "desc".equals(sortDirection)) {
-                comparator = comparator.reversed();
-            }
-            if (comparator != null) {
-                list.sort(comparator);
-            }
-        }
+        // 결과에서 필요한 데이터 추출
+        List<InquireDTO> paginatedList = (List<InquireDTO>) result.get("list");
+        int totalPages = (int) result.get("totalPages");
+        int totalItems = (int) result.get("totalItems");
 
-        int totalItems = list.size();
-        int totalPages = (int) Math.ceil((double) totalItems / size);
-        int startIndex = (page - 1) * size;
-        int endIndex = Math.min(startIndex + size, totalItems);
-        List<InquireDTO> paginatedList = list.subList(startIndex, endIndex);
-
+        // AJAX 요청 처리
         if (ajax) {
             Map<String, Object> response = new HashMap<>();
             response.put("list", paginatedList);
             response.put("totalPages", totalPages);
             response.put("currentPage", page);
-            response.put("totalItems", totalItems); // 총 상품 개수 추가
-            return ResponseEntity.ok(response); // JSON 데이터 반환
+            response.put("totalItems", totalItems);
+            return ResponseEntity.ok(response);
         }
 
+        // 모델에 데이터 추가
         model.addAttribute("list", paginatedList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("productSize", totalItems);
+        model.addAttribute("totalItems", totalItems);
+        model.addAttribute("requestURI", request.getRequestURI());
         return "system/notice-list";
     }
 

@@ -41,7 +41,7 @@ function filterResults(page = 1) {
         inqCategory: $('#inqCategory').val(),
         keywordType: $('#keywordType').val(),
         keyword: $('input[name="keyword"]').val(),
-        inqCreateAt: $('input[name="inqCreateAt"]').val(),
+        inqCreateAt: $('input[name="inqCreateAt"]').val(), // 이름 유지
         page,
         size: 8,
         sortColumn: currentSortColumn,

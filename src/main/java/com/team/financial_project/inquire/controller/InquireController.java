@@ -37,22 +37,15 @@ public class InquireController {
         return authentication.getName(); // username을 반환
     }
 
-    //게시글 전체 목록
+    // 게시글 목록 & 검색
     @GetMapping("/list")
-    public String viewInquireList(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
-        return searchInquires(null, null, null, null, page, model);
-    }
+    public String searchInquires(Model model,
+                                 @RequestParam(value = "inqCategory", required = false) String category,
+                                 @RequestParam(value = "keywordType", required = false) String keywordType,
+                                 @RequestParam(value = "keyword", required = false) String keyword,
+                                 @RequestParam(value = "inqCreateAt", required = false) String createAt,
+                                 @RequestParam(value = "page", defaultValue = "1") int page) {
 
-    //게시글 조건 검색
-    @GetMapping("/search")
-    public String searchInquires(
-            @RequestParam(value = "category", required = false) String category,
-            @RequestParam(value = "keywordType", required = false) String keywordType,
-            @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "inqCreateAt", required = false) String createAt,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            Model model
-    ) {
         int pageSize = 10;
         int totalInquires = inquireService.countSearchInquires(category, keywordType, keyword, createAt);
 
@@ -62,14 +55,21 @@ public class InquireController {
             totalPages = 1; // 최소 1페이지로 설정
         }
 
+        // 익명 여부 확인 후 userId 수정
+        List<InquireDTO> list = inquireService.searchInquires(category, keywordType, keyword, createAt, page, pageSize);
+        for(InquireDTO x : list){
+            if(x.getInqAnonym().equals("1")){
+                x.setUserId("익명");
+            }
+        }
+
         // 데이터 추가
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("currentPage", page);
-        model.addAttribute("inquiries", inquireService.searchInquires(category, keywordType, keyword, createAt, page, pageSize));
-
+        model.addAttribute("inquiries", list);
+        model.addAttribute("count", totalInquires);
         return "/inquire/inquire-list";
     }
-
 
     //게시글 상세보기
     @GetMapping("/detail/{inqId}")

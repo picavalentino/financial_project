@@ -32,8 +32,6 @@
             <!--  게시글 상세 폼  -->
             <div class="form-container">
                 <form class="inquire-form" th:action="@{/inquire/insert}" method="get" enctype="multipart/form-data">
-                    <input type="hidden" id="serverInqPwd" th:value="${inquire.inqPwd}">
-                    <input type="hidden" id="isValid" th:value="${isValid}">
                     <table class="inquire-table">
                         <tbody>
                         <tr class="tr-row">
@@ -68,6 +66,46 @@
                         </tr>
                         </tbody>
                     </table>
+                </form>
+            </div>
+            <!-- 댓글 영역 -->
+            <div class="comments-container">
+                <h2 class="comment-title" th:text="${#lists.size(comments)} + '개의 댓글'"></h2>
+                <table class="comment-table">
+                    <thead>
+                    <tr>
+                        <th>작성자</th>
+                        <th>내용</th>
+                        <th>상태</th>
+                        <th>작성일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="comment : ${comments}" th:unless="${comment.userAuthCd == '1' || comment.userAuthCd == '2'}">
+                        <td th:text="${comment.commentAnonym == '1' ? '익명' : comment.userName}"></td>
+                        <td th:text="${comment.commentContent}"></td>
+                        <td></td>
+                        <td th:text="${comment.getFormattedCreateAt()}"></td>
+                    </tr>
+                    <tr th:each="comment : ${comments}" class="admin-comment" th:if="${comment.userAuthCd == '1' || comment.userAuthCd == '2'}">
+                        <td th:text="${comment.commentAnonym == '1' ? '익명' : comment.userName}">관리자</td>
+                        <td th:text="${comment.commentContent}">댓글22</td>
+                        <td><span class="status-label">답변완료</span></td>
+                        <td th:text="${comment.getFormattedCreateAt()}">2024-11-15 11:33</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <form class="comment-form" th:action="@{/inquire/detail/{inqId}/comment(inqId=${inquire.inqId})}" method="post">
+                    <div class="btn-comment">댓글</div>
+                    <textarea name="commentContent" placeholder="댓글을 입력하세요" required></textarea>
+                    <div class="button-box">
+                        <div>
+                            <span>익명</span>
+                            <input type="checkbox" id="commentAnonymCheckbox">
+                            <input type="hidden" name="commentAnonym" id="commentAnonym" value="0">
+                        </div>
+                        <button type="submit" class="btn-submit">입력</button>
+                    </div>
                 </form>
             </div>
         </div>

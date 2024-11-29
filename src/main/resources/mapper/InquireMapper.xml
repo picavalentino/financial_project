@@ -54,7 +54,7 @@
     </select>
 
     <!-- 조건 검색 -->
-    <select id="searchInquiresByParams" resultType="inquireDTO">
+    <select id="searchInquiresAll" resultType="inquireDTO">
         SELECT
         i.inq_id AS inqId,
         COALESCE(u.user_name, '익명') AS userId, -- 필드 이름에 맞춘 별칭 사용
@@ -71,16 +71,18 @@
         <if test="inqCategory != null and inqCategory != ''">
             AND i.inq_category = #{inqCategory}
         </if>
-        <if test="inqTitle != null and inqTitle != ''">
-            <bind name="inqTitlePattern" value="'%' + inqTitle + '%'"></bind>
-            AND i.inq_title LIKE #{inqTitlePattern}
-        </if>
-        <if test="userName != null and userName != ''">
-            <bind name="userNamePattern" value="'%' + userName + '%'"></bind>
-            AND u.user_name LIKE #{userNamePattern}
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <when test="keywordType == 'inqTitle'">
+                    AND i.inq_title LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="keywordType == 'userName'">
+                    AND u.user_name LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+            </choose>
         </if>
         <if test="inqCreateAt != null and inqCreateAt != ''">
-            AND DATE(i.inq_create_at) = #{inqCreateAt}
+            AND i.inq_create_at::date = TO_DATE(#{inqCreateAt}, 'YYYY-MM-DD')
         </if>
     </select>
 
@@ -101,49 +103,59 @@
 
     <select id="searchInquires" resultType="inquireDTO">
         SELECT
-        inq_id AS inqId,
-        user_id AS userId,
-        inq_title AS inqTitle,
-        inq_category AS inqCategory,
-        inq_anonym AS inqAnonym,
-        inq_content AS inqContent,
-        inq_pwd AS inqPwd,
-        inq_reply AS inqReply,
-        inq_attach_file_1 AS inqAttachFile1,
-        inq_attach_file_2 AS inqAttachFile2,
-        inq_attach_file_3 AS inqAttachFile3,
-        inq_attach_file_4 AS inqAttachFile4,
-        inq_attach_file_5 AS inqAttachFile5,
-        inq_status AS inqStatus,
-        inq_create_at AS inqCreateAt,
-        inq_update_at AS inqUpdateAt,
-        inq_check AS inqCheck
-        FROM t_inquire
-        WHERE 1=1 AND inq_status = '1'
+        i.inq_id AS inqId,
+        c.code_nm AS inqCategory,
+        u.user_name AS userId,
+        i.inq_title AS inqTitle,
+        i.inq_create_at AS inqCreateAt,
+        i.inq_reply AS inqReply,
+        i.inq_check AS inqCheck,
+        i.inq_anonym AS inqAnonym
+        FROM t_inquire i
+        JOIN tb_code c ON i.inq_category = c.code_no AND i.inq_category_code_cl = c.code_cl
+        JOIN tb_user u ON i.user_id = u.user_id
+        WHERE inq_status = '1'
         <if test="category != null and category != ''">
-            AND inq_category = #{category}
+            AND i.inq_category = #{category}
         </if>
         <if test="keyword != null and keyword != ''">
-            AND ${keywordType} LIKE CONCAT('%', #{keyword}, '%')
+            <choose>
+                <when test="keywordType == 'inq_title'">
+                    AND i.inq_title LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="keywordType == 'user_name'">
+                    AND u.user_name LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+            </choose>
         </if>
         <if test="createAt != null and createAt != ''">
-            AND DATE(inq_create_at) = #{createAt}
+            AND i.inq_create_at::date = TO_DATE(#{createAt}, 'YYYY-MM-DD')
         </if>
         ORDER BY inq_create_at DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <select id="countSearchInquires" resultType="int">
-        SELECT COUNT(*) FROM t_inquire
-        WHERE 1=1 AND inq_status = '1'
+        SELECT COUNT(*)
+        FROM t_inquire i
+        JOIN tb_code c ON i.inq_category = c.code_no AND i.inq_category_code_cl = c.code_cl
+        JOIN tb_user u ON i.user_id = u.user_id
+        WHERE inq_status = '1'
         <if test="category != null and category != ''">
-            AND inq_category = #{category}
+            AND i.inq_category = #{category}
         </if>
         <if test="keyword != null and keyword != ''">
-            AND ${keywordType} LIKE CONCAT('%', #{keyword}, '%')
+            <choose>
+                <when test="keywordType == 'inq_title'">
+                    AND i.inq_title LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="keywordType == 'user_name'">
+                    AND u.user_name LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+            </choose>
         </if>
         <if test="createAt != null and createAt != ''">
-            AND DATE(inq_create_at) = #{createAt}
+            AND i.inq_create_at::date = TO_DATE(#{createAt}, 'YYYY-MM-DD')
         </if>
     </select>
 
