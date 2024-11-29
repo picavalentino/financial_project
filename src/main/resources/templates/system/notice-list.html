@@ -95,12 +95,15 @@
           </tr>
           </thead>
           <tbody id="result-table-body">
-          <tr th:each="inquire : ${list}" th:onclick="'window.location.href=\'/system/inquire/detail/' + ${inquire.inqId} + '\';'" style="cursor: pointer;">
-            <td>[[ ${inquire.inqId} ]]</td>
+          <tr th:each="inquire : ${list}" style="cursor: pointer;"
+              th:data-inq-category="${inquire.inqCategory}" th:data-inq-id="${inquire.inqId}"
+              th:classappend="${inquire.inqNotice == '1'} ? 'highlight-row' : ''"
+              onclick="handleRowClick(this)">
+            <td id="inqId">[[ ${inquire.inqId} ]]</td>
             <td>[[ ${inquire.inqCategory} ]]</td>
             <td  th:text="${inquire.inqAnonym == 1 ? '익명' : inquire.userId}"></td>
             <td>[[ ${inquire.inqTitle} ]]</td>
-            <td th:text="${inquire.formattedInqCreateAt}"></td>
+            <td th:text="${inquire.getFormattedCreateAt()}"></td>
             <td>[[ ${inquire.inqCheck} ]]</td>
             <td id="td-reply">
               <div th:if="${inquire.inqReply == '1'}" class="reply" id="rep-completed">답변완료</div>
@@ -109,8 +112,8 @@
                    style="cursor: pointer;">답변대기</div>
             </td>
             <td>
-              <button type="button" th:if="${inquire.inqNotice == '2'}" class="btn-notice-register">등록</button>
-              <button type="button" th:if="${inquire.inqNotice == '1'}" class="btn-notice-cancel">해제</button>
+              <button th:data-inq-id="${inquire.inqId}" type="button" th:if="${inquire.inqNotice == '0'}" class="btn-notice-register">등록</button>
+              <button th:data-inq-id="${inquire.inqId}" type="button" th:if="${inquire.inqNotice == '1'}" class="btn-notice-cancel">해제</button>
             </td>
           </tr>
           </tbody>

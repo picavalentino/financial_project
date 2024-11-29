@@ -18,7 +18,7 @@ public interface BookmarkMapper {
     List<Long> findBookmarkedMenuIds(String userId);
 
     @Select("""
-        SELECT b.menu_id, m.menu_view_name, m.menu_url
+        SELECT b.menu_id, m.menu_name, m.menu_url
         FROM tb_bookmark b
         JOIN tb_menu m ON b.menu_id = m.menu_id
         WHERE b.user_id = #{userId}

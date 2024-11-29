@@ -43,6 +43,18 @@ public class MainService {
             user.put("code_nm", codeNm); // 직위 이름 추가
         }
 
+
+
+
+
         return user;
+    }
+
+    public List<Map<String, Object>> getTodayTasks(String userId) {
+        return mainMapper.getTodayTasks(userId);
+    }
+
+    public void updateTaskChecked(Long calendarSn) {
+        mainMapper.updateTaskChecked(calendarSn);
     }
 }

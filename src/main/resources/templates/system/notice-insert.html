@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/css/system/notice-insert.css">
   <link rel="stylesheet" href="/css/buttons/button.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/system/notice-insert.js?v=1" defer></script>
+
 </head>
 <title>GS Bank</title>
 <!-- 전체 적용될 CSS -->
@@ -24,48 +26,55 @@
     <!--  위치  -->
     <div class="location">
       <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-      <a th:href="@{/system/notice}"> / 시스템 관리</a>
-      <a th:href="@{/system/notice}"> / 게시판 관리 </a>
+      <a th:href="@{/system/inquire}"> / 시스템 관리</a>
+      <a th:href="@{/system/inquire}"> / 게시판 관리 </a>
       <a> / 게시판 관리 </a>
     </div>
     <!--  상단 메뉴  -->
     <h1 class="title">신규 공지사항 등록</h1>
     <!--  게시글 등록 폼  -->
     <div class="form-container">
-      <form class="notice-form" th:action="@{/notice/insert}" method="post" enctype="multipart/form-data">
-        <table class="notice-table">
+      <form class="inquire-form" id="notice-form" th:action="@{/system/inquire/insert}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:value="${dto.userId}" name="userId">
+        <input type="hidden" th:value="${dto.inqCategory}" name="inqCategory">
+        <input type="hidden" th:value="${dto.inqAnonym}" name="inqAnonym">
+        <table class="inquire-table">
           <tbody>
+          <tr class="tr-row">
+            <th>카테고리</th>
+            <td><div class="input-like" id="inqCategory">공지사항</div></td>
+            <th>작성자</th>
+            <td><div class="input-like" th:text="${userName}"></div></td>
+          </tr>
           <tr>
             <th>제목</th>
-            <td><input type="text" name="inqTitle" placeholder="제목을 입력하세요"></td>
+            <td colspan="3"><input type="text" name="inqTitle" placeholder="제목을 입력하세요" required></td>
           </tr>
           <tr>
             <th>내용</th>
-            <td>
-              <textarea rows="20" name="inqContent" placeholder="내용을 입력하세요"></textarea>
-            </td>
+            <td colspan="3"><textarea name="inqContent" placeholder="내용을 입력하세요" required></textarea></td>
           </tr>
           <tr>
             <th>첨부파일</th>
-            <td colspan="2">
+            <td colspan="5">
               <div class="list-row">
                 <div class="file-input">
                   <input type="file" name="files" onchange="selectFile(this);" />
                 </div>
                 <div class="file-buttons">
                   <button type="button" onclick="removeFile(this);" class="btn-icon"><i class="bi bi-file-earmark-minus"></i></button>
-                  <button type="button" onclick="addFile();" class="btn-icon"><i class="bi bi-file-earmark-plus"></i></button>
+                  <button type="button" onclick="addFile(this);" class="btn-icon"><i class="bi bi-file-earmark-plus"></i></button>
                 </div>
               </div>
             </td>
           </tr>
           <tr>
             <th>비밀번호</th>
-            <td><input class="td-row" type="text" name="inqPwd" placeholder="비밀번호를 입력하세요"></td>
+            <td><input type="password" name="inqPwd" placeholder="비밀번호를 입력하세요" required></td>
           </tr>
           <tr>
             <th>공지등록</th>
-            <td><input class="td-row" type="checkbox"/></td>
+            <td><input class="td-row" name="inqNotice" id="inqNotice" type="checkbox" checked/></td>
           </tr>
           </tbody>
         </table>
@@ -83,14 +92,6 @@
       </div>
     </div>
   </div>
-  <script th:inline="javascript">
-      $(document).ready(function(){
-          //등록 버튼 클릭
-          $("#btn-register").on("click", function (e){
-            window.location.href="/inquire/insert";
-          });
-      });
-  </script>
 </div>
 </body>
 </html>
