@@ -1,9 +1,12 @@
 package com.team.financial_project.mapper;
 
 import com.team.financial_project.dto.CustomerDTO;
+import com.team.financial_project.dto.CustomerUpdateHistoryDTO;
 import com.team.financial_project.dto.UserDTO;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -43,4 +46,20 @@ public interface CustomerMapper {
 
     // 고객 직업 코드
     List<CustomerDTO> getCustOccpTyCdList();
+
+    // 고객 수정 내역 삽입
+
+    @Insert("""
+        INSERT INTO tb_cust_update_hist (cust_id, user_id, update_detail, cust_update_at) 
+        VALUES (#{custId}, #{userId}, #{updateDetail}, #{custUpdateAt})
+    """)
+    void insertUpdateHistory(CustomerUpdateHistoryDTO history);
+
+    // 고객 수정 내역 조회
+    @Select("""
+        SELECT * FROM tb_cust_update_hist 
+        WHERE cust_id = #{custId} 
+        ORDER BY cust_update_at DESC
+    """)
+    List<CustomerUpdateHistoryDTO> findUpdateHistoryByCustId(@Param("custId") String custId);
 }

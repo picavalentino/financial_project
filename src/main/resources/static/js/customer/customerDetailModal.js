@@ -108,7 +108,149 @@ function selectManager(manager) {
 
 
 // ===================================================================================================
-// 변경 버튼
+// 변경 버튼 [후]
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("customerUpdateForm");
+    const editButton = document.querySelector(".edit-btn");
+    const custId = document.getElementById("custId").value;
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute("content") || "";
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute("content") || "";
+
+    // 초기화
+    initForm();
+
+    // 변경 여부 확인 함수
+    function isFormChanged() {
+        const originalData = new FormData(form);
+        const currentData = new FormData(form);
+
+        for (let [key, value] of originalData.entries()) {
+            if (currentData.get(key) !== value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 폼 초기화 및 변경 감지 리스너 추가
+    function initForm() {
+        form.querySelectorAll("input, select, textarea").forEach((input) => {
+            if (!input.disabled) {
+                input.addEventListener("input", () => {
+                    editButton.disabled = !isFormChanged();
+                });
+            }
+        });
+    }
+
+    // 수정 내역 텍스트 업데이트
+    function updateTextarea(revisions) {
+        const revisionHistory = document.getElementById("revisionHistory");
+        revisionHistory.value = revisions
+            .map(rev => `수정일자: ${rev.timestamp} / 수정자: ${rev.user}\n내용: ${rev.detail}`)
+            .join("\n\n");
+    }
+
+    // 서버에서 수정 내역 로드
+    function loadRevisionHistory() {
+        fetch(`/customer/update/history/${custId}`)
+            .then(response => {
+                if (!response.ok) throw new Error("수정 내역 로드 실패");
+                return response.json();
+            })
+            .then(revisions => updateTextarea(revisions))
+            .catch(error => console.error("수정 내역 로드 중 오류 발생:", error));
+    }
+
+    // 수정 내역 저장
+    function saveRevisionDetail(detail) {
+        const currentTimestamp = new Date().toISOString();
+        const revision = {
+            custId: custId,
+            user: document.querySelector('input[name="staffId"]').value,
+            detail: detail,
+            timestamp: currentTimestamp
+        };
+
+        // 서버로 수정 내역 저장 요청
+        fetch("/customer/update/revision", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken,
+            },
+            body: JSON.stringify(revision)
+        }).then(response => {
+            if (response.ok) {
+                console.log("수정 내역이 성공적으로 저장되었습니다.");
+            } else {
+                console.error("수정 내역 저장 실패");
+            }
+        }).catch(error => console.error("수정 내역 저장 중 오류 발생:", error));
+    }
+
+    // 변경 버튼 클릭 이벤트
+    editButton.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        // 입력 데이터 가져오기
+        const telno = document.querySelector('input[name="custTelno"]').value;
+        const email = document.querySelector('input[name="custEmail"]').value;
+        const addr = document.querySelector('input[name="custAddr"]').value;
+        const custOccpTyCd = document.querySelector('select[name="custOccpTyCd"]')?.value || "미정";
+
+        // 수정 내역 작성
+        const updateDetail = `
+            전화번호: ${telno}
+            이메일: ${email}
+            주소: ${addr}
+            직업 코드: ${custOccpTyCd}
+        `.trim();
+
+        // 수정 내역 저장
+        saveRevisionDetail(updateDetail);
+
+        // 폼 데이터 구성
+        const updatedCustomerData = {
+            custId: custId,
+            custTelno: telno,
+            custEmail: email,
+            custAddr: addr,
+            custOccpTyCd: custOccpTyCd
+        };
+
+        // 서버로 PUT 요청
+        fetch("/customer/update", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken,
+            },
+            body: JSON.stringify(updatedCustomerData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("고객 정보가 성공적으로 수정되었습니다.");
+                    loadRevisionHistory(); // 최신 수정 내역 로드
+                } else {
+                    return response.text().then(errorMessage => {
+                        throw new Error(errorMessage);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("수정 요청 중 오류 발생:", error);
+                alert("수정 요청에 실패했습니다.");
+            });
+    });
+
+    // 초기 수정 내역 로드
+    loadRevisionHistory();
+});
+
+
+// 변경 버튼 [전]
+/*
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('customerUpdateForm');
     const editButton = document.querySelector('.edit-btn');
@@ -259,6 +401,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+*/
 
 // =========================================================================
 // 인쇄

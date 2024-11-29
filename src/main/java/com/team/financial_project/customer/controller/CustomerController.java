@@ -5,11 +5,13 @@ import com.team.financial_project.counsel.dto.TbCounselDTO;
 import com.team.financial_project.counsel.service.CounselService;
 import com.team.financial_project.customer.service.CustomerService;
 import com.team.financial_project.dto.CustomerDTO;
+import com.team.financial_project.dto.CustomerUpdateHistoryDTO;
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.inquire.service.InquireService;
 import com.team.financial_project.main.service.SmsService;
 import com.team.financial_project.management.service.ManagementService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ public class CustomerController {
     private final ManagementService managementService;
     private final CounselService counselService;
     private final InquireService inquireService;
+    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
     public CustomerController(SmsService smsService, CustomerService customerService, ManagementService managementService, InquireService inquireService, CounselService counselService) {
         this.smsService = smsService;
@@ -113,6 +115,9 @@ public class CustomerController {
         String staffId = getAuthenticatedUserId();
         model.addAttribute("staffId",staffId);
 
+        //수정내역 불러오기
+        List<CustomerUpdateHistoryDTO> history = customerService.getUpdateHistoryByCustId(custId);
+
         // 고객 상세 정보 가져오기
         CustomerDTO customer = customerService.getCustomerById(custId);
 
@@ -139,8 +144,36 @@ public class CustomerController {
         return ResponseEntity.ok(managers);
     }
 
-    /* 수정하기 */
+    // 수정하기 [후]
     @PutMapping("/update")
+    @ResponseBody
+    public ResponseEntity<String> updateCustomer(@RequestBody CustomerDTO customerDTO) {
+        try {
+            // 1. 고객 정보 수정
+            customerService.updateCustomer(customerDTO);
+
+            // 2. 수정 내역 생성 및 저장
+            customerService.saveUpdateHistory(customerDTO);
+
+            // 3. 성공 메시지 반환
+            return ResponseEntity.ok("고객 정보가 성공적으로 수정되었습니다.");
+        } catch (IllegalArgumentException e) {
+            // 잘못된 입력 처리
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("잘못된 요청입니다: " + e.getMessage());
+        } catch (Exception e) {
+            // 예외 처리 및 로그 기록
+            log.error("고객 정보 수정 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("고객 정보 수정에 실패했습니다. 오류 메시지: " + e.getMessage());
+        }
+    }
+
+
+
+
+    /* 수정하기 [전]*/
+ /*   @PutMapping("/update")
     @ResponseBody
     public ResponseEntity<String> updateCustomer(@RequestBody CustomerDTO customerDTO) {
         try {
@@ -151,7 +184,8 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("고객 정보 수정에 실패했습니다. 오류 메시지: " + e.getMessage());
         }
-    }
+    }*/
+
     /* ================================================================================================================= */
     /* 찐 메세지 발송 */
     @PostMapping("/sms/send")

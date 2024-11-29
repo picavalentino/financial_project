@@ -230,6 +230,7 @@
         WHERE cust_id = #{custId}
     </update>
 
+
     <!--셀렉트 박스에서 쓸 직업 가져오는 구문-->
     <select id="getCustOccpTyCdList" resultType="com.team.financial_project.dto.CustomerDTO">
         SELECT
@@ -240,4 +241,7 @@
         ORDER BY code_no ASC -- 코드 번호 순으로 정렬
     </select>
     <!-- ============================================================================================================= -->
+    <!-- 고객 정보 수정 내역 -->
+
+
 </mapper>

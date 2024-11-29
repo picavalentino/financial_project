@@ -1,11 +1,14 @@
 package com.team.financial_project.customer.service;
 
 import com.team.financial_project.dto.CustomerDTO;
+import com.team.financial_project.dto.CustomerUpdateHistoryDTO;
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.CustomerMapper;
 import com.team.financial_project.mapper.InquireMapper;
 import com.team.financial_project.mapper.UserMapper;
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -27,6 +33,7 @@ public class CustomerService {
     @Autowired
     private InquireMapper inquireMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
     public CustomerService(CustomerMapper customerMapper, UserMapper userMapper, InquireMapper inquireMapper) {
         this.customerMapper = customerMapper;
@@ -118,16 +125,61 @@ public class CustomerService {
     }
     // ==========================================================================================================
     // 고객정보 수정
-
     public void updateCustomer(CustomerDTO customerDTO) {
-        System.out.println("수정 요청된 고객 정보: " + customerDTO);
-        customerMapper.updateCustomer(customerDTO);
+        try {
+            log.info("수정 요청된 고객 정보: {}", customerDTO);
+            customerMapper.updateCustomer(customerDTO);
+        } catch (Exception e) {
+            log.error("고객 정보 수정 중 오류 발생: {}", e.getMessage());
+            throw new RuntimeException("고객 정보 수정에 실패했습니다.", e);
+        }
     }
 
     public List<CustomerDTO> getCustOccpTyCdList() {
+        log.info("직업 코드 리스트 조회 요청");
         return customerMapper.getCustOccpTyCdList();
     }
 
+    public void saveHistory(CustomerUpdateHistoryDTO history) {
+        customerMapper.insertUpdateHistory(history);
+    }
+
+    public void saveUpdateHistory(CustomerDTO customerDTO) {
+        CustomerUpdateHistoryDTO history = new CustomerUpdateHistoryDTO();
+        history.setCustId(customerDTO.getCustId());
+        history.setUserId(customerDTO.getUsers().getUser_id());
+        history.setUpdateDetail(createUpdateDetail(customerDTO));
+        history.setCustUpdateAt(LocalDateTime.now());
+        saveHistory(history);
+    }
+
+    private String createUpdateDetail(CustomerDTO customerDTO) {
+        StringBuilder detail = new StringBuilder();
+
+        if (!customerDTO.getCustTelno().equals(customerDTO.getPreviousTelno())) {
+            detail.append(String.format("전화번호: %s → %s, ", customerDTO.getPreviousTelno(), customerDTO.getCustTelno()));
+        }
+        if (!customerDTO.getCustEmail().equals(customerDTO.getPreviousEmail())) {
+            detail.append(String.format("이메일: %s → %s, ", customerDTO.getPreviousEmail(), customerDTO.getCustEmail()));
+        }
+        if (!customerDTO.getCustAddr().equals(customerDTO.getPreviousAddr())) {
+            detail.append(String.format("주소: %s → %s, ", customerDTO.getPreviousAddr(), customerDTO.getCustAddr()));
+        }
+        if (!customerDTO.getCustOccpTyCd().equals(customerDTO.getPreviousOccpTyCd())) {
+            detail.append(String.format("직업 코드: %s → %s, ", customerDTO.getPreviousOccpTyCd(), customerDTO.getCustOccpTyCd()));
+        }
+
+        if (detail.length() > 0) {
+            detail.setLength(detail.length() - 2); // 마지막 쉼표 제거
+        }
+
+        return detail.toString();
+    }
+
+    // 특정 고객의 수정 내역 조회
+    public List<CustomerUpdateHistoryDTO> getUpdateHistoryByCustId(String custId) {
+        return customerMapper.findUpdateHistoryByCustId(custId);
+    }
 
 }
 
