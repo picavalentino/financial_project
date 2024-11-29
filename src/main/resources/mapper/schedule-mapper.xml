@@ -55,13 +55,14 @@
         )
 
     </insert>
-    <update id="updateTaskCheckedStatus" parameterType="com.team.financial_project.schedule.dto.ScheduleDTO">
+    <update id="updateTaskCheckedStatus" parameterType="map">
         UPDATE tb_calendar
-        SET task_checked_val = #{task_checked_val}
-        WHERE calendar_sn = #{calendar_sn}
+        SET task_checked_val = #{taskCheckedVal}
+        WHERE calendar_sn = #{calendarSn}
     </update>
     <delete id="deleteSchedule" parameterType="int">
         DELETE FROM tb_calendar
         WHERE calendar_sn = #{calendarSn}
     </delete>
+
 </mapper>

@@ -247,8 +247,6 @@ function renderEvents(events) {
 
                 const dotClass = event.calendar_type === '2' ? 'event-dot-personal' : 'event-dot-team';
 
-                console.log(`Rendering Event: calendar_sn=${event.calendar_sn}, title=${event.calendar_event_title}`);
-
                 const $eventElement = $(`
                     <div class="${eventClass}" data-calendar-sn="${event.calendar_sn}"
                          data-title="${event.calendar_event_title}"
@@ -260,13 +258,26 @@ function renderEvents(events) {
                         }
                     </div>
                 `);
+
+                // task_checked_val이 true인 경우 스타일 강제 적용
+                if (event.task_checked_val) {
+                    if (eventClass.includes('allday')) {
+                        // 종일 이벤트 배경색 설정
+                        $eventElement.css('background-color', '#ababab');
+                    } else {
+                        // 일반 이벤트 dot 색상 설정
+                        const dot = $eventElement.find('.event-dot-team, .event-dot-personal');
+                        if (dot.length) {
+                            dot.css('background-color', '#ababab');
+                        }
+                    }
+                }
+
                 $(this).append($eventElement);
+                console.log(`Rendering Event: calendar_sn=${event.calendar_sn}, task_checked_val=${event.task_checked_val}`);
             });
         }
     });
-
-    // 스타일 업데이트
-    updateCalendarStyles();
 }
 
 
@@ -333,7 +344,7 @@ $('.today-tasks-list').on('change', 'input[type="checkbox"]', function () {
         },
         success: function () {
             console.log('Task status updated successfully.');
-            updateCalendarStyles();
+            updateCalendarStyles(); // 스타일 업데이트 함수 호출 (필요 시 추가)
         },
         error: function (xhr) {
             console.error('Failed to update task status:', xhr.responseText);
@@ -584,7 +595,7 @@ $(document).on('click', '.task_etc', function (event) {
         top: clickY + "px",
         left: clickX + "px",
         position: "absolute",
-        transform: "translate(-80%, 12%)"
+        transform: "translate(-90%, 12%)"
     }).fadeIn();
 });
 
@@ -888,63 +899,70 @@ $(document).ready(function () {
 
     // 오늘의 일정 렌더링
     function renderTodayTasks(events) {
-        const todayDateText = $('#today-date').data('current-date'); // ISO 형식 날짜 가져오기
-        const currentUserId = /*[[${user_id}]]*/ ''; // 현재 로그인된 user_id 가져오기
+    const todayDateText = $('#today-date').data('current-date'); // ISO 형식 날짜 가져오기
+    const currentUserId = /*[[${user_id}]]*/ ''; // 현재 로그인된 user_id 가져오기
 
-        // 오늘의 일정 필터링: 날짜, user_id, calendar_type 조건 추가
-        const todayEvents = events.filter(event => {
-            const eventDate = addNineHoursToUTC(event.calendar_event_bgn_date).toISOString().split('T')[0];
-            return (
-                eventDate === todayDateText &&
-                event.user_id === currentUserId &&
-                (event.calendar_type === '1' || event.calendar_type === '2') // calendar_type이 1 또는 2
-            );
-        });
-   // calendar_is_all_day가 Y인 데이터를 우선적으로 정렬
+    // 오늘의 일정 필터링: 날짜, user_id, calendar_type 조건 추가
+    const todayEvents = events.filter(event => {
+        const eventDate = addNineHoursToUTC(event.calendar_event_bgn_date).toISOString().split('T')[0];
+        return (
+            eventDate === todayDateText &&
+            event.user_id === currentUserId &&
+            (event.calendar_type === '1' || event.calendar_type === '2') // calendar_type이 1 또는 2
+        );
+    });
+
+    // calendar_is_all_day가 Y인 데이터를 우선적으로 정렬
     todayEvents.sort((a, b) => {
         if (a.calendar_is_all_day === 'Y' && b.calendar_is_all_day !== 'Y') return -1;
         if (a.calendar_is_all_day !== 'Y' && b.calendar_is_all_day === 'Y') return 1;
         return 0; // 순서 유지
     });
 
-        const $todayTaskContainer = $('.today_task .today-tasks-list');
-        $todayTaskContainer.empty();
+    const $todayTaskContainer = $('.today_task .today-tasks-list');
+    $todayTaskContainer.empty();
 
-        if (todayEvents.length === 0) {
-            $todayTaskContainer.append('<p class="no-tasks-message">일정이 없습니다.</p>');
-            return;
+    if (todayEvents.length === 0) {
+        $todayTaskContainer.append('<p class="no-tasks-message">일정이 없습니다.</p>');
+        return;
+    }
+
+    todayEvents.forEach(event => {
+        let time = '종일';
+        if (event.calendar_is_all_day !== 'Y') {
+            const localDate = addNineHoursToUTC(event.calendar_event_bgn_date);
+            time = localDate.toTimeString().substring(0, 5); // HH:mm 추출
         }
 
-        todayEvents.forEach(event => {
-            let time = '종일';
-            if (event.calendar_is_all_day !== 'Y') {
-                const localDate = addNineHoursToUTC(event.calendar_event_bgn_date);
-                time = localDate.toTimeString().substring(0, 5); // HH:mm 추출
-            }
+        // task_checked_val이 true인 경우 체크 상태 추가
+        const isChecked = event.task_checked_val ? 'checked' : '';
 
-            const $taskElement = $(`
-               <div class="today-tasks"
-                    data-calendar-sn="${event.calendar_sn}"
-                    data-is-all-day="${event.calendar_is_all_day}"
-                    data-date="${event.calendar_event_bgn_date || ''}"
-                    data-location="${event.calendar_event_location || ''}"
-                    data-detail="${event.calendar_event_detail || ''}">
-                    <label><strong>&middot; ${time}</strong></label>
-                    <button class="delete-task">
-                        <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
-                    </button>
-                    <button class="task_etc"><img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo"></button>
-                    <div id="task_text">
-                        <p>${event.calendar_event_title || '제목 없음'}</p>
-                        <input type="checkbox">
-                    </div>
+        const $taskElement = $(`
+            <div class="today-tasks"
+                data-calendar-sn="${event.calendar_sn}"
+                data-is-all-day="${event.calendar_is_all_day}"
+                data-date="${event.calendar_event_bgn_date || ''}"
+                data-location="${event.calendar_event_location || ''}"
+                data-detail="${event.calendar_event_detail || ''}">
+                <label><strong>&middot; ${time}</strong></label>
+                <button class="delete-task">
+                    <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
+                </button>
+                <button class="task_etc"><img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo"></button>
+                <div id="task_text">
+                    <p>${event.calendar_event_title || '제목 없음'}</p>
+                    <input type="checkbox" ${isChecked}>
                 </div>
-            `);
-            $todayTaskContainer.append($taskElement);
-        });
+            </div>
+        `);
+        $todayTaskContainer.append($taskElement);
+    });
 
-        console.log('Today Tasks Rendered:', $todayTaskContainer);
-    }
+    console.log('Today Tasks Rendered:', $todayTaskContainer);
+
+    // **체크박스 상태를 기반으로 초기 스타일 설정**
+    applyCheckboxStyles();
+}
 
     // 날짜 이동 버튼 처리
     $('#prev-day-btn').on('click', () => {
@@ -979,8 +997,57 @@ $(document).ready(function () {
     }
 
     // 초기화
+
     initializeTodayDate(); // 오늘 날짜로 초기화
     renderTodayTasks(scheduleList); // 초기 일정 렌더링
+    function applyCheckboxStyles() {
+    $('.today-tasks-list input[type="checkbox"]').each(function () {
+        const taskContainer = $(this).closest('.today-tasks');
+        if ($(this).is(':checked')) {
+            taskContainer.css('background-color', '#ababab'); // 체크된 스타일
+        } else {
+            taskContainer.css('background-color', '#f8f9fa'); // 기본 스타일
+        }
+    });
+}
+
+// 체크박스 상태 변경 이벤트 (이벤트 위임 방식)
+$('.today-tasks-list').on('change', 'input[type="checkbox"]', function () {
+    const taskContainer = $(this).closest('.today-tasks');
+    const calendarSn = taskContainer.data('calendar-sn');
+    const taskCheckedVal = $(this).is(':checked');
+
+    console.log(`Checkbox Changed: Calendar SN: ${calendarSn}, Checked: ${taskCheckedVal}`);
+
+    // AJAX 요청으로 상태 업데이트
+    $.ajax({
+        type: 'POST',
+        url: '/schedule/personal/update-task-status',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            calendar_sn: calendarSn,
+            task_checked_val: taskCheckedVal
+        }),
+        beforeSend: function (xhr) {
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success: function () {
+            console.log('Task status updated successfully.');
+            applyCheckboxStyles(); // 변경된 상태 반영
+        },
+        error: function (xhr) {
+            console.error('Failed to update task status:', xhr.responseText);
+        }
+    });
+});
+
+// 페이지 로드 시 초기화
+$(document).ready(function () {
+    renderTodayTasks(/*[[${events}]]*/); // 서버에서 전달된 일정 데이터 사용
+    applyCheckboxStyles(); // 초기 스타일 적용
+});
 });
 
     </script>

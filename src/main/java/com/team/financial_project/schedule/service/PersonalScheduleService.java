@@ -38,15 +38,8 @@ public class PersonalScheduleService {
     }
 
 
-    public boolean updateTaskStatus(ScheduleDTO scheduleDTO) {
-        try {
-            // task_checked_val 업데이트 호출
-            int rowsAffected = scheduleMapper.updateTaskCheckedStatus(scheduleDTO);
-            return rowsAffected > 0; // 업데이트 성공 여부 반환
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void updateTaskStatus(int calendarSn, boolean taskCheckedVal) {
+        scheduleMapper.updateTaskCheckedStatus(calendarSn, taskCheckedVal);
     }
 
     public boolean deleteSchedule(int calendarSn) {

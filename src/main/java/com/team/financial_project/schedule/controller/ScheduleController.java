@@ -68,21 +68,16 @@ public class ScheduleController {
     }
     @PostMapping("/schedule/personal/update-task-status")
     @ResponseBody
-    public ResponseEntity<?> updateTaskStatus(@RequestBody ScheduleDTO scheduleDTO) {
+    public ResponseEntity<String> updateTaskStatus(@RequestBody Map<String, Object> requestData) {
         try {
-            // ScheduleDTO 확인 로그
-            System.out.println("Received ScheduleDTO for update: " + scheduleDTO);
+            int calendarSn = (int) requestData.get("calendar_sn");
+            boolean taskCheckedVal = (boolean) requestData.get("task_checked_val");
 
-            // 서비스 호출
-            boolean isUpdated = personalScheduleService.updateTaskStatus(scheduleDTO);
-            if (isUpdated) {
-                return ResponseEntity.ok("Task status updated successfully!");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update task status.");
-            }
+            personalScheduleService.updateTaskStatus(calendarSn, taskCheckedVal);
+            return ResponseEntity.ok("Task status updated successfully.");
         } catch (Exception e) {
-            e.printStackTrace(); // 예외 로그 출력
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update task status.");
         }
     }
     @PostMapping("/schedule/personal/delete-task")

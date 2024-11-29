@@ -2,6 +2,7 @@ package com.team.financial_project.schedule.mapper;
 
 import com.team.financial_project.schedule.dto.ScheduleDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface ScheduleMapper {
     int insertSchedule(ScheduleDTO scheduleDTO);
 
 
-    int updateTaskCheckedStatus(ScheduleDTO scheduleDTO);
+    void updateTaskCheckedStatus(@Param("calendarSn") int calendarSn, @Param("taskCheckedVal") boolean taskCheckedVal);
 
     int deleteSchedule(int calendarSn);
 }
