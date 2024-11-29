@@ -1,9 +1,12 @@
 package com.team.financial_project.mapper;
 
 import com.team.financial_project.dto.CustomerDTO;
+import com.team.financial_project.dto.CustomerUpdateHistoryDTO;
 import com.team.financial_project.dto.UserDTO;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -24,8 +27,6 @@ public interface CustomerMapper {
     // 검색 조건에 따른 총 고객 수 계산
     int getCustomerCount(@Param("searchType") String searchType,
                          @Param("keyword") String keyword);
-    // ==============================================================================================================
-    // 고객 선택 조회
 
     // ==============================================================================================================
 
@@ -43,4 +44,8 @@ public interface CustomerMapper {
 
     // 고객 직업 코드
     List<CustomerDTO> getCustOccpTyCdList();
+
+    void insertUpdateHistory(CustomerUpdateHistoryDTO history);
+
+    List<CustomerUpdateHistoryDTO> findCustomerHistoryListById(String custId);
 }

@@ -1,20 +1,22 @@
 package com.team.financial_project.customer.service;
 
 import com.team.financial_project.dto.CustomerDTO;
+import com.team.financial_project.dto.CustomerUpdateHistoryDTO;
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.CustomerMapper;
 import com.team.financial_project.mapper.InquireMapper;
 import com.team.financial_project.mapper.UserMapper;
-import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.team.financial_project.dto.UserDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CustomerService {
@@ -28,6 +30,7 @@ public class CustomerService {
     @Autowired
     private InquireMapper inquireMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
     public CustomerService(CustomerMapper customerMapper, UserMapper userMapper, InquireMapper inquireMapper) {
         this.customerMapper = customerMapper;
@@ -117,18 +120,60 @@ public class CustomerService {
         // 고객 정보 저장
         customerMapper.insertCustomer(customerDto);
     }
+
     // ==========================================================================================================
     // 고객정보 수정
-
     public void updateCustomer(CustomerDTO customerDTO) {
-        System.out.println("수정 요청된 고객 정보: " + customerDTO);
-        customerMapper.updateCustomer(customerDTO);
+        try {
+            log.info("수정 요청된 고객 정보: {}", customerDTO);
+            customerMapper.updateCustomer(customerDTO);
+        } catch (Exception e) {
+            log.error("고객 정보 수정 중 오류 발생: {}", e.getMessage());
+            throw new RuntimeException("고객 정보 수정에 실패했습니다.", e);
+        }
     }
 
     public List<CustomerDTO> getCustOccpTyCdList() {
+        log.info("직업 코드 리스트 조회 요청");
         return customerMapper.getCustOccpTyCdList();
     }
 
+    public List<CustomerUpdateHistoryDTO> getCustomerHistoryById(String custId) {
+        return customerMapper.findCustomerHistoryListById(custId);
+    }
 
+
+    public CustomerUpdateHistoryDTO createUpdateHistory(CustomerDTO customerDTO, CustomerDTO existingCustomer, String staffId) {
+        // 기존 데이터 가져오기
+        CustomerDTO originalCustomer = customerMapper.getCustomerById(customerDTO.getCustId());
+
+        // 변경된 항목 기록
+        StringBuilder detail = new StringBuilder();
+        if (!Objects.equals(originalCustomer.getCustTelno(), customerDTO.getCustTelno())) {
+            detail.append(String.format("전화번호: %s → %s, ", originalCustomer.getCustTelno(), customerDTO.getCustTelno()));
+        }
+        if (!Objects.equals(originalCustomer.getCustEmail(), customerDTO.getCustEmail())) {
+            detail.append(String.format("이메일: %s → %s, ", originalCustomer.getCustEmail(), customerDTO.getCustEmail()));
+        }
+        if (!Objects.equals(originalCustomer.getCustAddr(), customerDTO.getCustAddr())) {
+            detail.append(String.format("주소: %s → %s, ", originalCustomer.getCustAddr(), customerDTO.getCustAddr()));
+        }
+        if (!Objects.equals(originalCustomer.getCustOccpTyCd(), customerDTO.getCustOccpTyCd())) {
+            detail.append(String.format("직업 코드: %s → %s, ", originalCustomer.getCustOccpTyCd(), customerDTO.getCustOccpTyCd()));
+        }
+
+        // CustomerUpdateHistoryDTO 객체 생성
+        CustomerUpdateHistoryDTO history = new CustomerUpdateHistoryDTO();
+        history.setCustId(customerDTO.getCustId());
+        history.setUserId(staffId); // 수정자 ID 설정
+        history.setUpdateDetail(detail.length() > 0 ? detail.substring(0, detail.length() - 2) : "변경 사항 없음");
+        history.setCustUpdateAt(LocalDateTime.now());
+
+        return history;
+    }
+
+    public void saveHistory(CustomerUpdateHistoryDTO history) {
+        customerMapper.insertUpdateHistory(history);
+    }
 }
 

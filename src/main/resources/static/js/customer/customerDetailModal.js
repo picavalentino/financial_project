@@ -83,13 +83,23 @@ function selectManager(manager) {
     console.log("선택된 담당자:", manager);
 
     // 부모 페이지의 필드에 선택한 담당자 정보 반영
-    document.querySelector('.searchManager').value = manager.user_name;
-    document.querySelector('input[name="user_id"]').value = manager.user_id;
-    document.querySelector('input[name="user_telno"]').value = manager.user_telno;
+    const userNameInput = document.querySelector('.searchManager');
+    const userIdInput = document.querySelector('input[name="user_id"]');
+    const userTelnoInput = document.querySelector('input[name="user_telno"]');
+    const deptPositionInput = document.querySelector('input[name="user_dept_Position"]');
 
-    var deptPositionInput = document.querySelector('input[name="user_dept_Position"]');
+    if (userNameInput) userNameInput.value = manager.user_name;
+    if (userIdInput) userIdInput.value = manager.user_id;
+    if (userTelnoInput) userTelnoInput.value = manager.user_telno;
     if (deptPositionInput) {
-        deptPositionInput.value = manager.dept_name + ' / ' + manager.position_name;
+        deptPositionInput.value = `${manager.dept_name} / ${manager.position_name}`;
+    }
+
+    // "변경" 버튼 활성화 트리거
+    const editButton = document.querySelector('.edit-btn');
+    if (editButton) {
+        const event = new Event('input'); // 입력 이벤트 트리거
+        userNameInput.dispatchEvent(event);
     }
 
     // 모달창 닫기
@@ -98,124 +108,105 @@ function selectManager(manager) {
 
 // ===================================================================================================
 // 변경 버튼
-// 수정 내역을 저장할 객체
-let customerRevisions = {};
-
-// 현재 시간 형식 함수 (yyyy-MM-dd HH:mm)
-function getCurrentTimestamp() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const date = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${date} ${hours}:${minutes}`;
-}
-
-// textarea를 업데이트하는 함수
-function updateTextarea(custId) {
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('customerUpdateForm');
+    const editButton = document.querySelector('.edit-btn');
     const revisionHistory = document.getElementById('revisionHistory');
-    const revisions = customerRevisions[custId] || [];
-    revisionHistory.value = revisions.join('\n');
-}
-
-// 수정 내역을 저장하는 함수
-function saveToLocalStorage() {
-    localStorage.setItem('customerRevisions', JSON.stringify(customerRevisions));
-}
-
-// 수정 내역을 로드하는 함수
-function loadFromLocalStorage() {
-    const savedData = localStorage.getItem('customerRevisions');
-    if (savedData) {
-        customerRevisions = JSON.parse(savedData);
-    }
-}
-document.addEventListener("DOMContentLoaded", function () {
-    // 수정 내역 로드
-    loadFromLocalStorage();
-
-    // 고객 ID 가져오기
     const custId = document.getElementById("custId").value;
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
 
-    // 고객별 수정 내역 복원
-    updateTextarea(custId);
+    // 수정 내역 업데이트
+    function updateTextarea(revisions) {
+        revisionHistory.value = revisions.map(rev =>
+            `수정일자: ${rev.custUpdateAt}\n수정자: ${rev.userId}\n내용: ${rev.updateDetail}`
+        ).join('\n\n');
+    }
 
-    // 변경 버튼 클릭 이벤트 등록
-    document.querySelector(".edit-btn").addEventListener("click", function (event) {
+    // 수정 내역 로드
+       async function loadRevisionHistory(custId) {
+           try {
+               const response = await fetch(`/customer/detail/${custId}/history`);
+               if (!response.ok) throw new Error('수정 내역 로드 실패');
+               const revisions = await response.json();
+
+               // 수정 내역 업데이트
+               revisionHistory.value = revisions.map(rev =>
+                   `수정일자: ${rev.custUpdateAt}\n수정자: ${rev.userId}\n내용: ${rev.updateDetail}\n ======================================`
+               ).join('\n\n');
+           } catch (error) {
+               console.error('수정 내역 로드 중 오류 발생:', error);
+           }
+       }
+
+    // 폼 변경 여부 확인
+    function isFormChanged() {
+        const currentData = new FormData(form);
+        for (let [key, value] of originalData.entries()) {
+            if (currentData.get(key) !== value) return true;
+        }
+        return false;
+    }
+
+    // 수정 내역 저장
+    async function saveUpdateHistory(updateHistory) {
+        try {
+            const response = await fetch('/customer/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken,
+                },
+                body: JSON.stringify(updateHistory),
+            });
+            if (!response.ok) throw new Error('수정 내역 저장 실패');
+            alert('수정 내역이 성공적으로 저장되었습니다.');
+        } catch (error) {
+            console.error('수정 내역 저장 중 오류 발생:', error);
+        }
+    }
+
+    // 변경 버튼 클릭 이벤트
+    editButton.addEventListener('click', async (event) => {
         event.preventDefault();
 
-
-        // 필드 값 가져오기
-        const telno = document.querySelector('input[name="custTelno"]').value;
-        const email = document.querySelector('input[name="custEmail"]').value;
-        const addr = document.querySelector('input[name="custAddr"]').value;
-        const custOccpTyCdElement = document.querySelector('select[name="custOccpTyCd"]');
-        let custOccpTyCd = custOccpTyCdElement?.value;
-
-        // custOccpTyCd 값이 비어 있거나 null인 경우, 기본값 설정
-        if (!custOccpTyCd) {
-            custOccpTyCd = custOccpTyCdElement?.getAttribute('th:selected') || '미정';
-        }
-
-         // 수정한 사용자 정보 가져오기
-        const staffId = document.querySelector('input[name="staffId"]').value;
-        const userId = document.querySelector('input[name="user_id"]').value;
-
-        // 수정 내역 추가
-        const currentTimestamp = getCurrentTimestamp();
-        const newEntry = `수정일자 : ${currentTimestamp} / by - ${staffId}`;
-
-        // 고객별 수정 내역 관리
-        if (!customerRevisions[custId]) {
-            customerRevisions[custId] = [];
-        }
-        customerRevisions[custId].unshift(newEntry); // 가장 최근 내역을 상단에 추가
-
-        // textarea와 localStorage 업데이트
-        updateTextarea(custId);
-        saveToLocalStorage();
-
-        // 폼 데이터 구성
-        const updatedCustomerData = {
-            custId: custId, // 수정할 고객 ID
-            custTelno: telno,
-            custEmail: email,
-            custOccpTyCd: custOccpTyCd,
-            custAddr: addr,
-            users: { // users 객체로 user_id 포함
-                user_id: userId
+        const updateDetail = [];
+        const fields = ['custTelno', 'custEmail', 'custAddr', 'custOccpTyCd'];
+        fields.forEach(field => {
+            const currentValue = document.querySelector(`input[name="${field}"], select[name="${field}"]`)?.value || '미정';
+            const previousValue = document.querySelector(`input[name="previous${field.charAt(0).toUpperCase() + field.slice(1)}"]`)?.value || '미정';
+            if (currentValue !== previousValue) {
+                updateDetail.push(`${field}: ${previousValue} → ${currentValue}`);
             }
-        };
-         const csrfToken = $('meta[name="_csrf"]').attr('content');
-         const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-
-        // 서버로 PUT 요청 전송
-        fetch(`/customer/update`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken,
-            },
-            body: JSON.stringify(updatedCustomerData)
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('고객 정보가 성공적으로 수정되었습니다.');
-                // 수정 완료 후 상세 페이지로 이동
-                window.location.href = `/customer/detail/${custId}`;
-            } else {
-                return response.text().then((errorMessage) => {
-                    throw new Error(errorMessage);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('수정 요청 중 오류 발생:', error);
-            alert('담당자를 입력해주세요');
         });
+
+        if (updateDetail.length === 0) {
+            alert("변경된 내용이 없습니다.");
+            return;
+        }
+
+        const updateHistory = {
+            custId,
+            userId: document.querySelector('input[name="staffId"]').value,
+            updateDetail: updateDetail.join(", "),
+            custUpdateAt: new Date().toISOString()
+        };
+
+        await saveUpdateHistory(updateHistory);
     });
+
+    // 초기화
+    const originalData = new FormData(form);
+    form.querySelectorAll('input, select, textarea').forEach(input => {
+        if (!input.disabled) {
+            input.addEventListener('input', () => {
+                editButton.disabled = !isFormChanged();
+            });
+        }
+    });
+
+    // 초기 수정 내역 로드
+    loadRevisionHistory(custId);
 });
 
 // =========================================================================

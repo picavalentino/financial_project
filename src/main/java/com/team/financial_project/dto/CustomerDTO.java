@@ -23,6 +23,12 @@ public class CustomerDTO {
     private String custStateCd; // 고객 상태 코드
     private String birthDate; // 생년월일 필드 추가
 
+    // 변경 추적 정보
+    private String previousTelno;   // 이전 전화번호
+    private String previousEmail;   // 이전 이메일
+    private String previousAddr;    // 이전 주소
+    private String previousOccpTyCd; // 이전 직업 코드
+
     private UserDTO users; // 유저 필드 추가
 
 
