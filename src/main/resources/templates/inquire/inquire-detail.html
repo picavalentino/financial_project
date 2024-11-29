@@ -32,6 +32,8 @@
             <!--  게시글 상세 폼  -->
             <div class="form-container">
                 <form class="inquire-form" th:action="@{/inquire/insert}" method="get" enctype="multipart/form-data">
+                    <input type="hidden" id="serverInqPwd" th:value="${inquire.inqPwd}">
+                    <input type="hidden" id="isValid" th:value="${isValid}">
                     <table class="inquire-table">
                         <tbody>
                         <tr class="tr-row">
@@ -68,46 +70,6 @@
                     </table>
                 </form>
             </div>
-            <!-- 댓글 영역 -->
-            <div class="comments-container">
-                <h2 class="comment-title" th:text="${#lists.size(comments)} + '개의 댓글'"></h2>
-                <table class="comment-table">
-                    <thead>
-                    <tr>
-                        <th>작성자</th>
-                        <th>내용</th>
-                        <th>상태</th>
-                        <th>작성일</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="comment : ${comments}" th:unless="${comment.userAuthCd == '1' || comment.userAuthCd == '2'}">
-                        <td th:text="${comment.commentAnonym == '1' ? '익명' : comment.userName}"></td>
-                        <td th:text="${comment.commentContent}"></td>
-                        <td></td>
-                        <td th:text="${comment.getFormattedCreateAt()}"></td>
-                    </tr>
-                    <tr th:each="comment : ${comments}" class="admin-comment" th:if="${comment.userAuthCd == '1' || comment.userAuthCd == '2'}">
-                        <td th:text="${comment.commentAnonym == '1' ? '익명' : comment.userName}">관리자</td>
-                        <td th:text="${comment.commentContent}">댓글22</td>
-                        <td><span class="status-label">답변완료</span></td>
-                        <td th:text="${comment.getFormattedCreateAt()}">2024-11-15 11:33</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <form class="comment-form" th:action="@{/inquire/detail/{inqId}/comment(inqId=${inquire.inqId})}" method="post">
-                    <div class="btn-comment">댓글</div>
-                    <textarea name="commentContent" placeholder="댓글을 입력하세요" required></textarea>
-                    <div class="button-box">
-                        <div>
-                            <span>익명</span>
-                            <input type="checkbox" id="commentAnonymCheckbox">
-                            <input type="hidden" name="commentAnonym" id="commentAnonym" value="0">
-                        </div>
-                        <button type="submit" class="btn-submit">입력</button>
-                    </div>
-                </form>
-            </div>
         </div>
 
         <div class="button-wrap">
@@ -129,6 +91,8 @@
         $(document).ready(function () {
             const csrfToken = $('meta[name="_csrf"]').attr('content');
             const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+            const inqCategory = /*[[${inquire.inqCategory}]]*/ ''; // 카테고리 값
+            const inqId = /*[[${inquire.inqId}]]*/ ''; // 현재 게시글 ID
 
             // commentAnonym 체크박스 상태 변경 이벤트
             $("#commentAnonymCheckbox").on("change", function () {
@@ -144,7 +108,6 @@
             // 수정 버튼 클릭 이벤트
             $("#btn-register").on("click", function () {
                 const password = $("#passwordInput").val();
-                const inqId = /*[[${inquire.inqId}]]*/ ''; // 현재 게시글 ID
 
                 if (!password) {
                     alert("비밀번호를 입력해주세요.");
@@ -160,8 +123,12 @@
                         xhr.setRequestHeader(csrfHeader, csrfToken);
                     },
                     success: function () {
-                        // 비밀번호가 일치하면 수정 페이지로 이동
-                        window.location.href = `/inquire/detail/${inqId}/update`;
+                        // 비밀번호 확인 성공 후 카테고리에 따라 페이지 이동
+                        if (inqCategory === "공지사항") {
+                            window.location.href = `/system/inquire/detail/${inqId}/update`;
+                        } else {
+                            window.location.href = `/inquire/detail/${inqId}/update`;
+                        }
                     },
                     error: function (xhr) {
                         if (xhr.status === 401) {
@@ -173,10 +140,46 @@
                 });
             });
 
+            // 삭제 버튼 클릭
+            $("#btn-delete").on("click", function (e) {
+                e.preventDefault(); // 기본 동작 방지
+                const passwordInput = $("#passwordInput").val();
+                const serverPwd = $("#serverInqPwd").val();
+                const isValid = $("#isValid").val() === 'true'; // 작성자 유효성 확인
 
+                console.log("입력된 비밀번호:", passwordInput);
+                console.log("서버 비밀번호:", serverPwd);
 
-
-
+                if (passwordInput === serverPwd && isValid) {
+                    if (confirm("공지사항을 삭제하시겠습니까?")) {
+                        $.ajax({
+                            url: `/inquire/detail/${inqId}/delete`,
+                            type: "POST",
+                            contentType: "application/x-www-form-urlencoded; charset=UTF-8", // 필수
+                            data: { passwordInput: passwordInput },
+                            beforeSend: function (xhr) {
+                                // CSRF 토큰 설정
+                                xhr.setRequestHeader(csrfHeader, csrfToken);
+                            },
+                            success: function (response) {
+                                alert("공지사항이 삭제되었습니다.");
+                                window.location.href = "/inquire/list"; // 목록 페이지로 이동
+                            },
+                            error: function (xhr) {
+                                if (xhr.status === 403) {
+                                    alert("비밀번호가 일치하지 않습니다.");
+                                } else {
+                                    alert("삭제 중 오류가 발생했습니다.");
+                                }
+                            }
+                        });
+                    }
+                } else if (!isValid) {
+                    alert("작성자만 삭제할 수 있습니다.");
+                } else {
+                    alert("비밀번호가 일치하지 않습니다.");
+                }
+            });
         });
     </script>
 </div>

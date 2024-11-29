@@ -101,12 +101,7 @@ function renderTable(data) {
             row.on('click', function () {
                 const inqCategory = product.inqCategory;
                 const inqId = product.inqId;
-
-                if (inqCategory === '공지사항') {
-                    window.location.href = `/system/inquire/detail/${inqId}`;
-                } else {
-                    window.location.href = `/inquire/detail/${inqId}`;
-                }
+                window.location.href = `/inquire/detail/${inqId}`;
             });
 
             tableBody.append(row);
@@ -126,12 +121,7 @@ function handleRowClick(row) {
         alert("게시글 ID가 유효하지 않습니다.");
         return;
     }
-
-    if (inqCategory === '공지사항') {
-        window.location.href = `/system/inquire/detail/${inqId}`;
-    } else {
-        window.location.href = `/inquire/detail/${inqId}`;
-    }
+    window.location.href = `/inquire/detail/${inqId}`;
 }
 
 // 페이지네이션 렌더링

@@ -119,7 +119,7 @@
         inq_update_at AS inqUpdateAt,
         inq_check AS inqCheck
         FROM t_inquire
-        WHERE 1=1
+        WHERE 1=1 AND inq_status = '1'
         <if test="category != null and category != ''">
             AND inq_category = #{category}
         </if>
@@ -135,7 +135,7 @@
 
     <select id="countSearchInquires" resultType="int">
         SELECT COUNT(*) FROM t_inquire
-        WHERE 1=1
+        WHERE 1=1 AND inq_status = '1'
         <if test="category != null and category != ''">
             AND inq_category = #{category}
         </if>

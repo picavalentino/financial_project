@@ -77,6 +77,13 @@ public class InquireController {
         // inqId로 게시글 DTO 조회
         InquireDTO inquireDTO = inquireService.getInquireById(inqId);
 
+        // 현재 로그인된 사용자 ID 가져오기
+        String loggedInUserId = getAuthenticatedUserId(); // 로그인된 사용자 ID
+        boolean isValid = loggedInUserId.equals(inquireDTO.getUserId()); // 작성자와 로그인된 사용자가 같은지 확인
+
+        // 작성자 확인 결과를 뷰에 전달
+        model.addAttribute("isValid", isValid);
+
         //카테고리 이름 바꾸기
         if(inquireDTO.getInqCategory().equals("1")){
             inquireDTO.setInqCategory("공지사항");
@@ -141,7 +148,6 @@ public class InquireController {
         }else if(inquireDTO.getInqReply().equals("1")){
             replyText="답변 완료";
         }
-
 
         log.info("==============================inquire:"+String.valueOf(inquireDTO));
         log.info("==============================fileNames:"+String.valueOf(fileNames));
@@ -250,24 +256,69 @@ public class InquireController {
         return ResponseEntity.ok().build(); // 200 OK
     }
 
-
+    // 게시글 수정
     @GetMapping("/detail/{inqId}/update")
     public String editInquire(@PathVariable("inqId") Integer inqId, Model model) {
-        // 게시글 조회
+        /// inqId로 게시글 DTO 조회
         InquireDTO inquireDTO = inquireService.getInquireById(inqId);
 
-        // 모델에 데이터 추가
+        //카테고리 이름 바꾸기
+        if(inquireDTO.getInqCategory().equals("1")){
+            inquireDTO.setInqCategory("공지사항");
+        }else if(inquireDTO.getInqCategory().equals("2")){
+            inquireDTO.setInqCategory("시스템 관련 문의");
+        }else if(inquireDTO.getInqCategory().equals("3")){
+            inquireDTO.setInqCategory("기타 건의사항");
+        }
+
+        //작성자 이름 바꾸기
+        if(inquireDTO.getInqAnonym().equals("1")){
+            inquireDTO.setUserId("익명");
+        }else if (inquireDTO.getInqAnonym().equals("0")){
+            inquireDTO.setUserId(inquireService.getUserName(inquireDTO.getUserId()));
+        }
+
+        //작성시간 - 수정했으면 작성시간 변경
+        if(inquireDTO.getInqUpdateAt() != null){
+            inquireDTO.setInqCreateAt(inquireDTO.getInqUpdateAt());
+        }
+
+        //첨부 파일 이름 변경
+        List<String> fileNames = new ArrayList<>();
+        String basePath = "https://codechef.s3.ap-northeast-2.amazonaws.com/";
+        // 각 필드를 수동으로 처리
+        if (inquireDTO.getInqAttachFile1() != null && inquireDTO.getInqAttachFile1().startsWith(basePath)) {
+            fileNames.add(inquireDTO.getInqAttachFile1().substring(basePath.length()));
+        }
+        if (inquireDTO.getInqAttachFile2() != null && inquireDTO.getInqAttachFile2().startsWith(basePath)) {
+            fileNames.add(inquireDTO.getInqAttachFile2().substring(basePath.length()));
+        }
+        if (inquireDTO.getInqAttachFile3() != null && inquireDTO.getInqAttachFile3().startsWith(basePath)) {
+            fileNames.add(inquireDTO.getInqAttachFile3().substring(basePath.length()));
+        }
+        if (inquireDTO.getInqAttachFile4() != null && inquireDTO.getInqAttachFile4().startsWith(basePath)) {
+            fileNames.add(inquireDTO.getInqAttachFile4().substring(basePath.length()));
+        }
+        if (inquireDTO.getInqAttachFile5() != null && inquireDTO.getInqAttachFile5().startsWith(basePath)) {
+            fileNames.add(inquireDTO.getInqAttachFile5().substring(basePath.length()));
+        }
+
+        // 조회한 DTO를 Model에 추가
         model.addAttribute("inquire", inquireDTO);
+        model.addAttribute("fileNames", fileNames);
+
+        if(inquireDTO.getInqCategory().equals("공지사항")){
+            return "/system/inquire-update";
+        }
 
         return "/inquire/inquire-update"; // 수정 페이지로 이동
     }
-
-    //게시글 수정
     @PostMapping("/detail/{inqId}/update")
     public ResponseEntity<?> updateInquire(
             @PathVariable("inqId") Integer inqId,
-            @RequestParam("files") MultipartFile[] files, // 파일 배열
-            @RequestBody InquireDTO updatedInquire) {
+            @RequestParam(value = "files", required = false) MultipartFile[] files,
+            @RequestParam(value = "deletedFiles", required = false) List<String> deletedFiles,
+            @ModelAttribute InquireDTO updatedInquire) throws IOException {
 
         // 기존 데이터 가져오기
         InquireDTO existingInquire = inquireService.getInquireById(inqId);
@@ -277,20 +328,74 @@ public class InquireController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("비밀번호가 일치하지 않습니다.");
         }
 
-        // 제목과 내용만 업데이트
+        // **1. 삭제 요청된 파일 처리**
+        if (deletedFiles != null && !deletedFiles.isEmpty()) {
+            log.info("Deleted Files: {}", deletedFiles);
+            for (String fileName : deletedFiles) {
+                // 파일 이름 비교 (URL에서 파일 이름만 추출)
+                if (existingInquire.getInqAttachFile1() != null
+                        && existingInquire.getInqAttachFile1().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile1: {}", fileName);
+                    existingInquire.setInqAttachFile1(null);
+                } else if (existingInquire.getInqAttachFile2() != null
+                        && existingInquire.getInqAttachFile2().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile2: {}", fileName);
+                    existingInquire.setInqAttachFile2(null);
+                } else if (existingInquire.getInqAttachFile3() != null
+                        && existingInquire.getInqAttachFile3().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile3: {}", fileName);
+                    existingInquire.setInqAttachFile3(null);
+                } else if (existingInquire.getInqAttachFile4() != null
+                        && existingInquire.getInqAttachFile4().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile4: {}", fileName);
+                    existingInquire.setInqAttachFile4(null);
+                } else if (existingInquire.getInqAttachFile5() != null
+                        && existingInquire.getInqAttachFile5().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile5: {}", fileName);
+                    existingInquire.setInqAttachFile5(null);
+                }
+            }
+        }
+
+        // **2. 새로 업로드된 파일 처리**
+        if (files != null) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    String fileUrl = inquireService.uploadFileToS3(file); // S3 업로드 처리
+
+                    // 빈 필드에 새 파일 추가
+                    if (existingInquire.getInqAttachFile1() == null) {
+                        existingInquire.setInqAttachFile1(fileUrl);
+                    } else if (existingInquire.getInqAttachFile2() == null) {
+                        existingInquire.setInqAttachFile2(fileUrl);
+                    } else if (existingInquire.getInqAttachFile3() == null) {
+                        existingInquire.setInqAttachFile3(fileUrl);
+                    } else if (existingInquire.getInqAttachFile4() == null) {
+                        existingInquire.setInqAttachFile4(fileUrl);
+                    } else if (existingInquire.getInqAttachFile5() == null) {
+                        existingInquire.setInqAttachFile5(fileUrl);
+                    }
+                }
+            }
+        }
+
+        // **3. 제목과 내용 업데이트**
         existingInquire.setInqTitle(updatedInquire.getInqTitle());
         existingInquire.setInqContent(updatedInquire.getInqContent());
-        log.info("### updated inquire: "+existingInquire);
+
+        // **4. 변경사항 저장**
+        log.info("Updated Inquire DTO: {}", existingInquire);
         inquireService.updateInquire(existingInquire);
+
         return ResponseEntity.ok("수정 완료");
     }
 
     //게시글 삭제
     @PostMapping("/detail/{inqId}/delete")
-    public ResponseEntity<?> deleteInquire(@PathVariable Integer inqId, @RequestParam String inqPwd) {
+    public ResponseEntity<?> deleteInquire(@PathVariable Integer inqId, @RequestParam String passwordInput) {
         InquireDTO inquire = inquireService.getInquireById(inqId);
 
-        if (!inqPwd.equals(inquire.getInqPwd())) {
+        if (!passwordInput.equals(inquire.getInqPwd())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("비밀번호가 일치하지 않습니다.");
         }
         inquireService.deleteInquire(inqId);

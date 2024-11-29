@@ -5,6 +5,7 @@ import com.team.financial_project.dto.InquireDTO;
 import com.team.financial_project.main.service.S3Service;
 import com.team.financial_project.mapper.InquireMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -71,7 +72,9 @@ public class InquireService {
         inquireMapper.insertComment(commentDTO);
     }
 
+    @Transactional
     public void updateInquire(InquireDTO inquireDTO) {
         inquireMapper.updateInquire(inquireDTO);
     }
+
 }

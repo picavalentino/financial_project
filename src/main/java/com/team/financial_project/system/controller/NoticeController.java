@@ -265,13 +265,13 @@ public class NoticeController {
 
     // 공지 게시글 수정
     @GetMapping("/detail/{inqId}/update")
-    public String updateNoticeView(@PathVariable("inqId") Integer inqId, Model model){
+    public String updateNoticeView(@PathVariable("inqId") Integer inqId, Model model) {
         InquireDTO dto = noticeService.findById(inqId);
-        //첨부 파일 이름 변경
+
         List<String> fileNames = new ArrayList<>();
         String basePath = "https://codechef.s3.ap-northeast-2.amazonaws.com/";
 
-        // 각 필드를 수동으로 처리
+        // 각 필드를 수동으로 처리하여 파일 이름만 추출
         if (dto.getInqAttachFile1() != null && dto.getInqAttachFile1().startsWith(basePath)) {
             fileNames.add(dto.getInqAttachFile1().substring(basePath.length()));
         }
@@ -287,15 +287,17 @@ public class NoticeController {
         if (dto.getInqAttachFile5() != null && dto.getInqAttachFile5().startsWith(basePath)) {
             fileNames.add(dto.getInqAttachFile5().substring(basePath.length()));
         }
-        log.info("Attach Files: {}", fileNames);
+
+        // 모델에 파일 정보와 게시글 데이터를 추가
         model.addAttribute("inquire", dto);
-        model.addAttribute("fileNames", fileNames);
+        model.addAttribute("fileNames", fileNames); // URL과 파일 이름 리스트
         return "system/notice-update";
     }
     @PostMapping("/detail/{inqId}/update")
-    public ResponseEntity<?> updateInquire(
+    public ResponseEntity<?> updateNotice(
             @PathVariable("inqId") Integer inqId,
-            @RequestParam(value = "files", required = false) MultipartFile[] files, // 파일 배열
+            @RequestParam(value = "files", required = false) MultipartFile[] files,
+            @RequestParam(value = "deletedFiles", required = false) List<String> deletedFiles,
             @ModelAttribute InquireDTO updatedInquire) throws IOException {
 
         // 기존 데이터 가져오기
@@ -306,31 +308,42 @@ public class NoticeController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("비밀번호가 일치하지 않습니다.");
         }
 
-        // 삭제 요청된 파일 필드 처리
-        if (updatedInquire.getInqAttachFile1() == null) {
-            existingInquire.setInqAttachFile1(null);
-        }
-        if (updatedInquire.getInqAttachFile2() == null) {
-            existingInquire.setInqAttachFile2(null);
-        }
-        if (updatedInquire.getInqAttachFile3() == null) {
-            existingInquire.setInqAttachFile3(null);
-        }
-        if (updatedInquire.getInqAttachFile4() == null) {
-            existingInquire.setInqAttachFile4(null);
-        }
-        if (updatedInquire.getInqAttachFile5() == null) {
-            existingInquire.setInqAttachFile5(null);
+        // **1. 삭제 요청된 파일 처리**
+        if (deletedFiles != null && !deletedFiles.isEmpty()) {
+            log.info("Deleted Files: {}", deletedFiles);
+            for (String fileName : deletedFiles) {
+                // 파일 이름 비교 (URL에서 파일 이름만 추출)
+                if (existingInquire.getInqAttachFile1() != null
+                        && existingInquire.getInqAttachFile1().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile1: {}", fileName);
+                    existingInquire.setInqAttachFile1(null);
+                } else if (existingInquire.getInqAttachFile2() != null
+                        && existingInquire.getInqAttachFile2().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile2: {}", fileName);
+                    existingInquire.setInqAttachFile2(null);
+                } else if (existingInquire.getInqAttachFile3() != null
+                        && existingInquire.getInqAttachFile3().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile3: {}", fileName);
+                    existingInquire.setInqAttachFile3(null);
+                } else if (existingInquire.getInqAttachFile4() != null
+                        && existingInquire.getInqAttachFile4().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile4: {}", fileName);
+                    existingInquire.setInqAttachFile4(null);
+                } else if (existingInquire.getInqAttachFile5() != null
+                        && existingInquire.getInqAttachFile5().endsWith(fileName)) {
+                    log.info("Deleting file from field inqAttachFile5: {}", fileName);
+                    existingInquire.setInqAttachFile5(null);
+                }
+            }
         }
 
-        // 파일 업로드 처리
+        // **2. 새로 업로드된 파일 처리**
         if (files != null) {
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
-                    // S3 업로드 서비스 호출
-                    String fileUrl = inquireService.uploadFileToS3(file);
+                    String fileUrl = inquireService.uploadFileToS3(file); // S3 업로드 처리
 
-                    // 업로드된 파일을 빈 필드에 설정
+                    // 빈 필드에 새 파일 추가
                     if (existingInquire.getInqAttachFile1() == null) {
                         existingInquire.setInqAttachFile1(fileUrl);
                     } else if (existingInquire.getInqAttachFile2() == null) {
@@ -346,12 +359,14 @@ public class NoticeController {
             }
         }
 
-        // 제목과 내용 업데이트
+        // **3. 제목과 내용 업데이트**
         existingInquire.setInqTitle(updatedInquire.getInqTitle());
         existingInquire.setInqContent(updatedInquire.getInqContent());
 
-        // 변경사항 저장
+        // **4. 변경사항 저장**
+        log.info("Updated Inquire DTO: {}", existingInquire);
         inquireService.updateInquire(existingInquire);
+
         return ResponseEntity.ok("수정 완료");
     }
 
