@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @ToString
 public class DsgnDetailDto {
     private String effectiveDsgnDate; // 설계일자
+    private String dsgnDsTyCd; // 설계번호
     private Long prodSn; // 상품번호
     private String prodCd; // 상품코드
     private String prodNm; // 상품이름
