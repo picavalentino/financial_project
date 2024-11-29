@@ -1,0 +1,174 @@
+.detail-container{
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    align-items: center;
+    width: 70%;
+    background-color: white;
+    border-radius: 15px;
+    overflow-x: hidden; /* 가로 오버플로우 숨기기 */
+}
+
+.form-container{
+    padding: 10px;
+    margin: auto;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.inquire-table {
+    padding: 10px;
+    width: 100%;
+    margin: auto;
+    border-collapse: separate; /* 행 간 간격 유지 */
+    border-spacing: 3px; /* 테이블 행 간격 추가 */
+    max-width: 100%; /* 셀 너비 제한 */
+}
+
+.inquire-table th {
+    text-align: left;
+    padding: 10px 15px;
+    font-size: 14px;
+    min-width: 80px;
+}
+
+.inquire-table td {
+    padding: 10px 15px;
+    vertical-align: middle;
+    max-width: 100%; /* 셀 너비를 부모에 맞춤 */
+    max-width: 100%; /* 셀 너비 제한 */
+}
+
+/* 입력 필드 */
+.inquire-table input,
+.inquire-table select,
+.inquire-table textarea {
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    resize: none; /* 텍스트 영역 크기 조정 비활성화 */
+    max-width: 100%; /* 셀 너비 제한 */
+}
+
+/* 내용 텍스트 필드 넓이 확장 */
+.inquire-table input[name="inqContent"],
+.inquire-table textarea[name="inqContent"] {
+    height: 200px; /* 높이를 늘려 더 많은 텍스트 작성 가능 */
+    max-height: 600px;
+}
+
+#inqPwd{
+    max-width: 200px;
+}
+
+/* input 스타일을 div에 적용 */
+.input-like {
+    display: block;
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    max-width: 100%; /* 셀 너비 제한 */
+}
+
+.list-row{
+    display: flex;
+    flex-direction: row;
+}
+/* 파일 입력 스타일 */
+#file-container{
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    margin-top: 10px;
+}
+
+/* 첨부파일 링크 컨테이너 */
+.td-container{
+    gap: 5px;
+}
+/* 첨부파일 목록 세로 정렬 */
+.file-links-vertical {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    gap: 10px; /* 항목 간 간격 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    width: 100%; /* 부모 요소에 맞춤 */
+}
+
+/* 첨부파일 링크 스타일 */
+.file-links-vertical a {
+    text-decoration: none;
+    color: #000000;
+    padding: 5px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 12px;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+    word-wrap: break-word; /* 긴 링크 줄 바꿈 */
+    max-width: 100%; /* 부모 요소에 맞춤 */
+}
+
+.file-links-vertical a:hover {
+    background-color: #ffffff;
+}
+
+/* 닫기 버튼 스타일 */
+.file-links-vertical .close {
+    color: #aaa;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 10px; /* 링크와 버튼 간 간격 */
+}
+
+.file-links-vertical .close:hover,
+.file-links-vertical .close:focus {
+    color: #000;
+}
+
+.file-input {
+    margin-right: 10px;
+    max-width: 400px;
+}
+
+/* 파일 추가 및 삭제 버튼 */
+.file-buttons{
+    gap: 0px;
+}
+.btn-icon {
+    background-color: #ffffff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 0px;
+    padding: 3px;
+}
+.btn-icon i{
+    color: #000000;
+}
+.btn-icon:hover {
+    background-color: #000000;
+}
+.btn-icon:hover i{
+    color: white;
+}
+
+.button-wrap {
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 가로 방향 중앙 정렬 */
+    align-items: center; /* 세로 방향 중앙 정렬 */
+    gap: 10px; /* 버튼 간 간격 조절 */
+    margin-top: 10px; /* 필요 시 위아래 여백 추가 */
+}

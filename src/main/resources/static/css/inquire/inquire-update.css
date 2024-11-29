@@ -78,8 +78,61 @@ inquire-form{
 }
 
 /* 파일 입력 스타일 */
+#file-container{
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    margin-top: 10px;
+}
+
+/* 첨부파일 링크 컨테이너 */
+.td-container{
+    gap: 5px;
+}
+/* 첨부파일 목록 세로 정렬 */
+.file-links-vertical {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    gap: 10px; /* 항목 간 간격 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    width: 100%; /* 부모 요소에 맞춤 */
+}
+
+/* 첨부파일 링크 스타일 */
+.file-links-vertical a {
+    text-decoration: none;
+    color: #000000;
+    padding: 5px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 12px;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+    word-wrap: break-word; /* 긴 링크 줄 바꿈 */
+    max-width: 100%; /* 부모 요소에 맞춤 */
+}
+
+.file-links-vertical a:hover {
+    background-color: #ffffff;
+}
+
+/* 닫기 버튼 스타일 */
+.file-links-vertical .close {
+    color: #aaa;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 10px; /* 링크와 버튼 간 간격 */
+}
+
+.file-links-vertical .close:hover,
+.file-links-vertical .close:focus {
+    color: #000;
+}
+
 .file-input {
     margin-right: 10px;
+    max-width: 400px;
 }
 
 /* 파일 추가 및 삭제 버튼 */
