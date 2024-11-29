@@ -12,9 +12,8 @@ spring:
     password: ${rds.password}
   data:
     redis:
-      host: financialproject-cache-igbva6.serverless.apn2.cache.amazonaws.com
+      host: financialproject-igbva6.serverless.apn2.cache.amazonaws.com
       port: 6379
-      password: sun1234
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
