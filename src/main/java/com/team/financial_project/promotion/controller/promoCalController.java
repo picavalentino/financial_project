@@ -48,7 +48,7 @@ public class promoCalController {
         // 페이지에 출력하기 위한 진행상태 조회
         List<CodeDto> progressStatusList = promotionService.getCodeListByCl(codeCl);
         model.addAttribute("progressStatusList", progressStatusList);
-        return "/promotion/promotionCalAcml";
+        return "promotion/promotionCalAcml";
     }
 
     // 예금 페이지
@@ -59,7 +59,7 @@ public class promoCalController {
         // 페이지에 출력하기 위한 진행상태 조회
         List<CodeDto> progressStatusList = promotionService.getCodeListByCl(codeCl);
         model.addAttribute("progressStatusList", progressStatusList);
-        return "/promotion/promotionCalDpst";
+        return "promotion/promotionCalDpst";
     }
 
     // 대출 페이지
@@ -70,7 +70,7 @@ public class promoCalController {
         // 페이지에 출력하기 위한 진행상태 조회
         List<CodeDto> progressStatusList = promotionService.getCodeListByCl(codeCl);
         model.addAttribute("progressStatusList", progressStatusList);
-        return "/promotion/promotionCalLoan";
+        return "promotion/promotionCalLoan";
     }
 
     // 설계 디테일 페이지 이동
@@ -87,25 +87,25 @@ public class promoCalController {
                     System.out.println("Result from findSavgDetails: " + dsgnDetailDto);
                     model.addAttribute("savgInfo", dsgnDetailDto);
                     model.addAttribute("dsgnSn", dsgnSn);
-                    return "/promotion/promotionDetailSavg";
+                    return "promotion/promotionDetailSavg";
                 case "2":
                     DsgnDetailDto detailDto = promoCalService.findAcmlDetails(dsgnSn);
                     model.addAttribute("savgInfo",detailDto);
                     model.addAttribute("dsgnSn", dsgnSn);
-                    return "/promotion/promotionDetailAcml";
+                    return "promotion/promotionDetailAcml";
                 case "3":
                     DsgnDetailDto detailDtos = promoCalService.findDpstDetails(dsgnSn);
                     model.addAttribute("savgInfo",detailDtos);
                     model.addAttribute("dsgnSn", dsgnSn);
-                    return "/promotion/promotionDetailDpst";
+                    return "promotion/promotionDetailDpst";
                 case "4":
                     DsgnDetailDto dsgnDetailDtos = promoCalService.findLoanDetails(dsgnSn);
                     model.addAttribute("savgInfo",dsgnDetailDtos);
                     model.addAttribute("dsgnSn", dsgnSn);
-                    return "/promotion/promotionDetailLoan";
+                    return "promotion/promotionDetailLoan";
                 default:
                     model.addAttribute("errorMessage", "잘못된 설계유형코드입니다.");
-                    return "/promotion/list";
+                    return "promotion/list";
             }
         } catch (Exception e) {
             model.addAttribute("errorMessage", "처리 중 오류가 발생했습니다: " + e.getMessage());

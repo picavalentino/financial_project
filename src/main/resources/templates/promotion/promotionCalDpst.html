@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
 <!--security 적용 후 아래 코드로 변경해주세요-->
-<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}"
+      xmlns:sec="www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>GS Bank</title>
@@ -364,6 +365,10 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
+        // CSRF 토큰 값 가져오기
+        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
         document.querySelector('.btn-print').addEventListener('click', function () {
                     window.print();
                 });

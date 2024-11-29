@@ -97,7 +97,7 @@ public class PromotionController {
         model.addAttribute("sortColumn", sortColumn); // 현재 정렬 기준 컬럼
         model.addAttribute("sortDirection", sortDirection); // 현재 정렬 방향
 
-        return "/promotion/promotionList"; // HTML 템플릿 반환
+        return "promotion/promotionList"; // HTML 템플릿 반환
     }
 
     // 금융계산기 페이지
