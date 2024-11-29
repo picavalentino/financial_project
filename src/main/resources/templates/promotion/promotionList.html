@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}"
+      xmlns:sec="www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>GS Bank</title>
+    <!-- 전체 적용될 CSS -->
+    <th:block layout:fragment="css"></th:block>
+    <!-- 전체 적용될 스크립트 -->
+    <th:block layout:fragment="script"></th:block>
+    <!-- 페이지별 상품 설계 조회 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/promotion/button.css}">
+    <link rel="stylesheet" th:href="@{/css/promotion/common.css}">
+    <link rel="stylesheet" th:href="@{/css/promotion/promotionList.css}">
+</head>
+<body>
+<div layout:fragment="content" class="content">
+    <div class="main-content">
+        <!-- 페이지 위치 & 제목 -->
+        <section class="page-location">
+            <div class="page-breadcrumb">
+                <span class="home-icon"><i class="bi bi-house-door-fill"></i></span>
+                <a href="/main">Home</a> &gt;
+                <a href="/promotion/list">프로모션관리</a> &gt;
+                <span>상품설계조회</span>
+            </div>
+            <h1 class="page-title">상품설계조회</h1>
+        </section>
+
+        <!-- 검색 영역 -->
+        <div class="search-controls-area">
+            <!-- 첫 번째 줄 -->
+            <div class="search-row">
+                <div class="search-item">
+                    <label for="custNm">고객명</label>
+                    <input type="text" id="custNm" name="custNm">
+                </div>
+                <div class="search-item">
+                    <label for="userNm">담당자</label>
+                    <input type="text" id="userNm" name="userNm">
+                </div>
+                <div class="search-item">
+                    <label></label>
+                </div>
+                <div class="search-buttons">
+                    <button class="btn btn-search" onclick="filterResults()">
+                        <i class="icon bi bi-search"></i> 검색
+                    </button>
+                    <button class="btn btn-search-all" onclick="resetFilters()">
+                        <i class="icon bi bi-search"></i> 전체
+                    </button>
+                </div>
+            </div>
+
+            <!-- 두 번째 줄 -->
+            <div class="search-row">
+                <div class="search-item">
+                    <label for="prgStcd">진행상태</label>
+                    <select id="prgStcd" name="prgStcd" onchange="filterResults()">
+                        <option value="">전체</option>
+                        <option th:each="status : ${progressStatusList}"
+                                th:value="${status.codNo}"
+                                th:text="${status.codNm}"></option>
+                    </select>
+                </div>
+                <div class="search-item">
+                    <label for="dsTyCd">상품유형</label>
+                    <select id="dsTyCd" name="dsTyCd" onchange="filterResults()">
+                        <option value="">전체</option>
+                        <option th:each="type : ${productTypeList}"
+                                th:value="${type.codNo}"
+                                th:text="${type.codNm}"></option>
+                    </select>
+                </div>
+                <div class="search-item">
+                    <label for="prodNm">상품명</label>
+                    <input type="text" id="prodNm" name="prodNm">
+                </div>
+                <div class="search-buttons">
+                    <button class="btn btn-print">
+                        <i class="icon bi bi-printer"></i> 인쇄
+                    </button>
+                    <button class="btn btn-register" onclick="location.href='/promotion/cal'">
+                        <i class="icon bi bi-plus-circle-fill"></i> 등록
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 테이블 -->
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th onclick="sortTable('custNm')" class="sortable">
+                    고객명 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('userNm')" class="sortable">
+                    담당자 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('dsTyCd')" class="sortable">
+                    상품유형 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('prodNm')" class="sortable">
+                    상품명 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('prgStcd')" class="sortable">
+                    진행상태 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th onclick="sortTable('mtrDt')" class="sortable">
+                    만기일자 <i class="bi bi-chevron-expand"></i>
+                </th>
+                <th>만기금액(잔액)</th>
+            </tr>
+            </thead>
+            <tbody id="result-table-body">
+            <tr th:each="productDesign : ${PromotionList}"
+                th:attr="data-dsgn-sn=${productDesign.dsgnSn}"
+                onclick="handleRowClick(this, event)">
+                <td>
+                    <input type="checkbox" class="row-checkbox">
+                </td>
+                <td th:text="${productDesign.custNm}"></td>
+                <td th:text="${productDesign.userNm}"></td>
+                <td>
+                    <span th:if="${productDesign.dsTyCd == '1'}">적금설계</span>
+                    <span th:if="${productDesign.dsTyCd == '2'}">목돈마련설계</span>
+                    <span th:if="${productDesign.dsTyCd == '3'}">예금설계</span>
+                    <span th:if="${productDesign.dsTyCd == '4'}">대출설계</span>
+                </td>
+                <td th:text="${productDesign.prodNm}"></td>
+                <td>
+                    <span th:if="${productDesign.prgStcd == '0'}">제안중</span>
+                    <span th:if="${productDesign.prgStcd == '1'}">추가상담필요</span>
+                    <span th:if="${productDesign.prgStcd == '2'}">가입대기</span>
+                    <span th:if="${productDesign.prgStcd == '3'}">가입완료</span>
+                    <span th:if="${productDesign.prgStcd == '4'}">만기예정</span>
+                    <span th:if="${productDesign.prgStcd == '5'}">취소/보류</span>
+                    <span th:if="${productDesign.prgStcd == '9'}">해지</span>
+                </td>
+                <td th:text="${productDesign.mtrDate}"></td>
+                <td th:text="${productDesign.mtrAmt}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 페이지네이션 -->
+        <div id="paginationControls" class="pagination-container">
+            <div class="pagination">
+                <!-- 이전 버튼 -->
+                <button class="pagination-prev pagination-button" th:if="${currentPage > 1}"
+                        th:onclick="'location.href=\'' + @{/promotion/list(page=${currentPage - 1}, size=${10})} + '\''">&lt;</button>
+                <button class="pagination-prev pagination-button" th:if="${currentPage == 1}" disabled>&lt;</button>
+
+                <!-- 페이지 번호 -->
+                <a th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
+                   th:href="@{/promotion/list(page=${pageNum}, size=${10})}"
+                   th:classappend="${pageNum == currentPage} ? 'pagination-active' : ''"
+                   th:text="${pageNum}" class="pagination-number"></a>
+
+                <!-- 다음 버튼 -->
+                <button class="pagination-next pagination-button" th:if="${currentPage < totalPages}"
+                        th:onclick="'location.href=\'' + @{/promotion/list(page=${currentPage + 1}, size=${10})} + '\''">&gt;</button>
+                <button class="pagination-next pagination-button" th:if="${currentPage == totalPages}" disabled>&gt;</button>
+            </div>
+            <span class="pagination-info"
+                  th:text="'Page ' + ${currentPage} + ' of ' + ${totalPages}"></span>
+        </div>
+    </div>
+
+    <!-- 자바스크립트 -->
+    <script th:inline="javascript">
+        let currentSortColumn = null; // 현재 정렬 기준
+        let sortDirection = 'asc';   // 기본 정렬 방향 (오름차순)
+
+        // 테이블 정렬
+        function sortTable(column) {
+            // 정렬 기준이 변경되었는지 확인
+            if (currentSortColumn === column) {
+                // 동일 기준일 경우 방향 전환 (오름차순 ↔ 내림차순)
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                // 새로운 기준으로 정렬 초기화 (오름차순 시작)
+                currentSortColumn = column;
+                sortDirection = 'asc';
+            }
+            // 정렬 기준 및 방향을 적용하여 데이터 재조회
+            filterResults(1); // 첫 페이지부터 시작
+        }
+
+        // 전체검색 (필터 및 정렬 상태 초기화)
+        function resetFilters(page = 1) { // 기본값으로 1페이지를 설정
+            // 필터 조건 초기화
+            $('#prgStcd').val(''); // 진행 상태 필터 초기화
+            $('#dsTyCd').val(''); // 상품 유형 필터 초기화
+            $('input[name="custNm"]').val(''); // 고객명 입력 필터 초기화
+            $('input[name="userNm"]').val(''); // 담당자 입력 필터 초기화
+            $('input[name="prodNm"]').val(''); // 상품명 입력 필터 초기화
+
+            currentSortColumn = null; // 정렬 상태 초기화
+            sortDirection = 'asc'; // 기본 정렬 방향을 오름차순으로 설정
+
+            filterResults(page); // 초기화된 필터와 정렬 상태를 기준으로 데이터 재조회
+        }
+
+        // 조건검색
+        function filterResults(page = 1) {
+            const prgStcd = $('#prgStcd').val(); // 진행 상태 선택값 가져오기
+            const dsTyCd = $('#dsTyCd').val(); // 상품 유형 선택값 가져오기
+            const custNm = $('input[name="custNm"]').val(); // 고객명 입력값
+            const userNm = $('input[name="userNm"]').val(); // 담당자 입력값
+            const prodNm = $('input[name="prodNm"]').val(); // 상품명 입력값
+
+            // Ajax 요청
+            $.ajax({
+                url: '/promotion/list',
+                method: 'GET',
+                data: {
+                    prgStcd: prgStcd, // 진행 상태 필터 값
+                    dsTyCd: dsTyCd, // 상품 유형 필터 값
+                    custNm: custNm, // 고객명 필터 값
+                    userNm: userNm, // 담당자 필터 값
+                    prodNm: prodNm, // 상품명 필터 값
+                    page: page, // 페이지 번호
+                    size: 10, // 페이지당 데이터 개수
+                    sortColumn: currentSortColumn, // 정렬 기준
+                    sortDirection: sortDirection, // 정렬 방향
+                    ajax: true // AJAX 요청임을 명시
+                },
+                success: function(response) {
+
+                    console.log('Response:', response); // 응답 데이터 확인
+
+                    // 기존 테이블 데이터를 초기화
+                    const tableBody = $('#result-table-body');
+                    tableBody.empty();
+
+                    // 응답 데이터를 기반으로 새로운 테이블 데이터 렌더링
+                    if (response.PromotionList && response.PromotionList.length > 0) {
+                        response.PromotionList.forEach(productDesign => {
+
+                            console.log('Product Design:', productDesign); // 데이터 확인
+
+                            const row = `
+                                <tr data-dsgn-sn="${productDesign.dsgnSn}" onclick="handleRowClick(this, event)">
+                                    <td><input type="checkbox" class="row-checkbox"></td>
+                                    <td>${productDesign.custNm}</td>
+                                    <td>${productDesign.userNm}</td>
+                                    <td>${getProductType(productDesign.dsTyCd)}</td>
+                                    <td>${productDesign.prodNm}</td>
+                                    <td>${getProgressStatus(productDesign.prgStcd)}</td>
+                                    <td>${productDesign.mtrDate}</td>
+                                    <td>${productDesign.mtrAmt}</td>
+                                </tr>
+                            `;
+                            tableBody.append(row); // 테이블에 행 추가
+                        });
+                    } else {
+                        console.log('No data available.'); // 데이터가 없을 때
+                        tableBody.append('<tr><td colspan="8">데이터가 없습니다.</td></tr>');
+                    }
+
+                    // 페이지네이션 갱신
+                    updatePagination(
+                        response.totalPages,
+                        response.currentPage,
+                        response.startPage,
+                        response.endPage);
+
+                },
+                error: function(error) {
+                    console.error('Error fetching filtered results:', error);
+                }
+            });
+        }
+
+        // 상품 유형 코드 → 이름 변환
+        function getProductType(dsTyCd) {
+            const types = {
+                '1': '적금설계',
+                '2': '목돈마련설계',
+                '3': '예금설계',
+                '4': '대출설계'
+            };
+            return types[dsTyCd] || '알 수 없음'; // 일치하는 코드가 없을 경우 '알 수 없음' 반환
+        }
+
+        // 진행 상태 코드 → 이름 변환
+        function getProgressStatus(prgStcd) {
+            const statuses = {
+                '0': '제안중',
+                '1': '추가상담필요',
+                '2': '가입대기',
+                '3': '가입완료',
+                '4': '만기예정',
+                '5': '취소/보류',
+                '9': '해지'
+            };
+            return statuses[prgStcd] || '알 수 없음';
+        }
+
+        // 페이지네이션 업데이트
+        function updatePagination(totalPages, currentPage, startPage, endPage) {
+            const paginationControls = $('#paginationControls');
+            paginationControls.empty(); // 기존 페이지네이션 요소 초기화
+
+            // 새로운 페이지네이션 요소 생성
+            const paginationDiv = $('<div class="pagination"></div>');
+            paginationControls.append(paginationDiv);
+
+            // 이전 페이지 버튼
+            if (currentPage > 1) {
+                paginationDiv.append(`<button class="pagination-prev pagination-button" onclick="filterResults(${currentPage - 1})">&lt;</button>`);
+            } else {
+                paginationDiv.append(`<button class="pagination-prev pagination-button" disabled>&lt;</button>`);
+            }
+
+            // 페이지 번호
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    paginationDiv.append(`<a href="#" class="pagination-number pagination-active" disabled>${i}</button>`);
+                } else {
+                    paginationDiv.append(`<a href="#" class="pagination-number" onclick="filterResults(${i})">${i}</a>`);
+                }
+            }
+
+            // 다음 페이지 버튼
+            if (currentPage < totalPages) {
+                paginationDiv.append(`<button class="pagination-number" onclick="filterResults(${currentPage + 1})">&gt;</a>`);
+            } else {
+                paginationDiv.append(`<button class="pagination-next pagination-button">&gt;</button>`);
+            }
+        }
+
+        // 테이블 행 클릭 시 금융계산기 페이지로 이동
+        function handleRowClick(row, event) {
+            // 클릭된 요소가 체크박스인 경우, 이벤트 처리 중단
+            if (event.target.closest('td').querySelector('input[type="checkbox"]')) {
+                event.stopPropagation();
+                return;
+            }
+
+            // 클릭한 행의 data-dsgn-sn 값 가져오기
+            const dsgnSn = row.getAttribute('data-dsgn-sn');
+
+            // 금융계산기 페이지로 이동
+            if (dsgnSn) {
+                window.location.href = `/promotion/cal/detail?dsgnSn=${dsgnSn}`;
+            } else {
+                console.error('설계번호가 없습니다.');
+            }
+        }
+
+        // 전체 선택 및 개별 체크박스 동기화
+        $(document).ready(() => {
+            const selectAllCheckbox = $('#selectAll');
+
+            // 상단 체크박스 클릭 시
+            selectAllCheckbox.on('change', function () {
+                const isChecked = this.checked;
+                $('#result-table-body .row-checkbox').prop('checked', isChecked);
+            });
+
+            // 개별 체크박스 클릭 시
+            $(document).on('change', '#result-table-body .row-checkbox', function () {
+                const allChecked = $('#result-table-body .row-checkbox').length === $('#result-table-body .row-checkbox:checked').length;
+                selectAllCheckbox.prop('checked', allChecked);
+            });
+        });
+
+        // 인쇄
+        function printCheckedRows() {
+            // 체크된 행의 데이터 수집
+            const checkedRows = [];
+            $('#result-table-body .row-checkbox:checked').each(function () {
+                const row = $(this).closest('tr'); // 체크박스의 부모 행
+                const rowData = {
+                    custNm: row.find('td:nth-child(2)').text(),
+                    userNm: row.find('td:nth-child(3)').text(),
+                    dsTyCd: row.find('td:nth-child(4)').text(),
+                    prodNm: row.find('td:nth-child(5)').text(),
+                    prgStcd: row.find('td:nth-child(6)').text(),
+                    mtrDt: row.find('td:nth-child(7)').text(),
+                    mtrAmt: row.find('td:nth-child(8)').text()
+                };
+                checkedRows.push(rowData);
+            });
+
+            if (checkedRows.length === 0) {
+                alert('인쇄할 데이터를 선택하세요.');
+                return;
+            }
+
+            // 인쇄 데이터 확인용 로그
+            console.log('Checked Rows:', checkedRows);
+
+            // 인쇄용 HTML 생성
+            const printContent = generatePrintContent(checkedRows);
+
+            // 새 창에 인쇄 데이터 표시
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }
+
+        function generatePrintContent(rows) {
+            let content = `
+                <html>
+                <head>
+                    <title>인쇄</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 20px 0;
+                        }
+                        th, td {
+                            border: 1px solid #ccc;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f4f4f4;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>상품 설계 조회</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>고객명</th>
+                                <th>담당자</th>
+                                <th>상품유형</th>
+                                <th>상품명</th>
+                                <th>진행상태</th>
+                                <th>만기일자</th>
+                                <th>만기금액(잔액)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            rows.forEach(row => {
+                content += `
+                    <tr>
+                        <td>${row.custNm}</td>
+                        <td>${row.userNm}</td>
+                        <td>${row.dsTyCd}</td>
+                        <td>${row.prodNm}</td>
+                        <td>${row.prgStcd}</td>
+                        <td>${row.mtrDt}</td>
+                        <td>${row.mtrAmt}</td>
+                    </tr>
+                `;
+            });
+
+            content += `
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            return content;
+        }
+
+        // 인쇄 버튼 이벤트
+        $(document).on('click', '.btn-print', printCheckedRows);
+
+        // 페이지 로드 시 오류 메시지를 alert로 표시
+        window.onload = function() {
+            const errorMessage = /*[[${errorMessage != null}]]*/ false ? '[[${errorMessage}]]' : null;
+            if (errorMessage) {
+                alert(errorMessage);
+            }
+        };
+    </script>
+</div>
+</body>
+</html>
