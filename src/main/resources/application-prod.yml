@@ -12,7 +12,7 @@ spring:
     password: ${rds.password}
   data:
     redis:
-      host: financialproject-igbva6.serverless.apn2.cache.amazonaws.com
+      host: clustercfg.financialproject.igbva6.apn2.cache.amazonaws.com
       port: 6379
 
 mybatis:
