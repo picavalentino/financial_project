@@ -30,8 +30,6 @@ public class InquireDTO {
     private String inqStatus;
     private LocalDateTime inqCreateAt;
     private LocalDateTime inqUpdateAt;
-    private Integer inqCheck;
-    private String inqNotice;
     // 특정 포맷 지정
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
