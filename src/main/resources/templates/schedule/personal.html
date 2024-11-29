@@ -99,7 +99,7 @@
         <div class="card-header">
             <h2 class="event-title"></h2>
             <div class="card-actions">
-                <button><img id="profile_img" th:src="@{/css/schedule/img/delete.png}" alt="Delete"></button>
+                <button class="delete-btn"><img id="delete_btn" th:src="@{/css/schedule/img/delete.png}" alt="Delete"></button>
                 <button><img id="email_img" th:src="@{/css/schedule/img/email.png}" alt="Mail"></button>
             </div>
         </div>
@@ -515,7 +515,8 @@ $(window).on('click', function (event) {
 $('.calendar-body').on('click', '.event-bar-team, .event-bar-personal, .event-bar-team-allday, .event-bar-personal-allday', function (event) {
     // 이벤트 전파 방지
     event.stopPropagation();
-
+  const calendarSn = $(this).data('calendar-sn');
+    $('.event-card').data('calendar-sn', calendarSn);
     // 클릭된 이벤트 데이터 추출
     const $target = $(event.currentTarget);
     const title = $target.data('title') || '제목 없음';
@@ -571,6 +572,7 @@ $(document).on('click', '.task_etc', function (event) {
     const detail = $taskContainer.data('detail') || '세부 정보 없음';
 
     console.log(`Task Data: Title=${title}, Calendar SN=${calendarSn}, Date=${date}, Location=${location}, AllDay=${isAllDay}`);
+     $('.event-card').data('calendar-sn', calendarSn);
 
     // 시간 변환 (UTC -> 로컬 시간, 종일 제외)
     let formattedDate = date || '시간 없음';
@@ -1048,6 +1050,57 @@ $(document).ready(function () {
     renderTodayTasks(/*[[${events}]]*/); // 서버에서 전달된 일정 데이터 사용
     applyCheckboxStyles(); // 초기 스타일 적용
 });
+
+$(document).on('click', '#delete_btn', function (event) {
+    event.stopPropagation(); // 이벤트 전파 방지
+
+    // 모달에서 삭제할 데이터 식별자(calendar_sn) 가져오기
+    const $eventModal = $('.event-card');
+    const calendarSn = $eventModal.data('calendar-sn');
+
+    if (!calendarSn) {
+        console.error('Calendar SN is missing!');
+        return;
+    }
+
+    // 삭제 확인
+    const confirmDelete = confirm('정말로 이 일정을 삭제하시겠습니까?');
+    if (!confirmDelete) return;
+
+    console.log(`Deleting Event: Calendar SN=${calendarSn}`);
+
+    // AJAX 요청으로 데이터 삭제
+    $.ajax({
+        type: 'POST',
+        url: '/schedule/personal/delete-task', // 삭제 API 엔드포인트
+        contentType: 'application/json',
+        data: JSON.stringify({ calendar_sn: calendarSn }),
+        beforeSend: function (xhr) {
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success: function () {
+            console.log('Event deleted successfully.');
+
+            // 모달 닫기
+            $eventModal.fadeOut();
+
+            // 캘린더와 할 일 리스트에서 해당 항목 제거
+            $(`.event-bar-team[data-calendar-sn="${calendarSn}"],
+               .event-bar-personal[data-calendar-sn="${calendarSn}"],
+               .event-bar-team-allday[data-calendar-sn="${calendarSn}"],
+               .event-bar-personal-allday[data-calendar-sn="${calendarSn}"]`).remove();
+
+            $(`.today-tasks[data-calendar-sn="${calendarSn}"]`).remove();
+        },
+        error: function (xhr) {
+            console.error('Failed to delete event:', xhr.responseText);
+            alert('일정 삭제에 실패했습니다.');
+        }
+    });
+});
+
 });
 
     </script>
