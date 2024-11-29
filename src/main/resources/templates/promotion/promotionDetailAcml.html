@@ -145,7 +145,7 @@
                                 <!-- 상품설계번호 -->
                                 <input type="hidden" id="prodSn" name="prodSn" th:value="${savgInfo.prodSn}">
                                 <!-- 설계유형코드 -->
-                                <input type="hidden" id="prodDsTyCd" name="prodDsTyCd">
+                                <input type="hidden" id="prodDsTyCd" th:value="${savgInfo.dsgnDsTyCd}" name="prodDsTyCd">
                                 <!-- 상품코드 -->
                                 <input type="text" id="prodCd" name="prodCd" th:value="${savgInfo.prodCd}" disabled>
                                 <!-- 상품명 -->

@@ -371,6 +371,7 @@
         WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
             ELSE dsgn_data.dsgn_create_at
         END AS effectiveDsgnDate,
+        dsgn_data.dsgn_ds_ty_cd AS dsgnDsTyCd,
         dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
         prod_data.prod_nm AS prodNm,
@@ -459,6 +460,7 @@
         WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
         ELSE dsgn_data.dsgn_create_at
         END AS effectiveDsgnDate,
+        dsgn_data.dsgn_ds_ty_cd AS dsgnDsTyCd,
         dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
         prod_data.prod_nm AS prodNm,
@@ -547,6 +549,7 @@
         WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
         ELSE dsgn_data.dsgn_create_at
         END AS effectiveDsgnDate,
+        dsgn_data.dsgn_ds_ty_cd AS dsgnDsTyCd,
         dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
         prod_data.prod_nm AS prodNm,
@@ -628,6 +631,7 @@
         WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
         ELSE dsgn_data.dsgn_create_at
         END AS effectiveDsgnDate,
+        dsgn_data.dsgn_ds_ty_cd AS dsgnDsTyCd,
         dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
         prod_data.prod_nm AS prodNm,
