@@ -51,6 +51,7 @@ public class SmsService {
             log.info("###########Redis 연결 상태 : "+ ping);
             return ping;
         } catch (Exception e) {
+            e.getMessage();
             log.info("###########Redis 연결 상태 : 연결 오류");
             return false;
         }
