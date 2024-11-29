@@ -12,10 +12,9 @@ spring:
     password: ${rds.password}
   data:
     redis:
-      host: clustercfg.financialproject.igbva6.apn2.cache.amazonaws.com
+      host: ${REDIS.HOST}
       port: 6379
-    lettuce:
-      ssl: true
+      password: ${REDIS.PW}
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
