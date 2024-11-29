@@ -3,6 +3,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.financial_project.mapper.CustomerMapper">
 
+    <select id="findManagersByName" parameterType="String" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        usr.user_id,
+        usr.user_name,
+        usr.user_telno,
+        codeUserPosit.code_nm AS position_name, -- 담당자 직책 매핑
+        codeUserDept.code_nm AS dept_name -- 담당자 부서 매핑
+        FROM tb_user usr
+        LEFT JOIN tb_code AS codeUserPosit
+        ON codeUserPosit.code_cl = usr.user_jbps_ty_cd_code_cl
+        AND codeUserPosit.code_no = usr.user_jbps_ty_cd
+        LEFT JOIN tb_code AS codeUserDept
+        ON codeUserDept.code_cl = usr.user_dept_cd_code_cl
+        AND codeUserDept.code_no = usr.user_dept_cd
+        WHERE usr.user_name LIKE CONCAT('%', #{name}, '%')
+    </select>
 
     <resultMap id="CustomerUserMap" type="com.team.financial_project.dto.CustomerDTO">
         <id property="custId" column="custId"/>

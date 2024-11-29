@@ -147,7 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
 
 
-
         // 필드 값 가져오기
         const telno = document.querySelector('input[name="custTelno"]').value;
         const email = document.querySelector('input[name="custEmail"]').value;
