@@ -52,6 +52,17 @@
         JOIN tb_code c
         ON a.auth_id = c.code_id
     </select>
-
-
+    <select id="getMenuList" resultType="com.team.financial_project.dto.AuthSystemDTO">
+        SELECT
+        t.menu_id,
+        t.menu_category,
+        t.menu_url,
+        t.menu_name,
+        c.code_nm AS auth_name
+        FROM tb_auth_menu a
+        JOIN tb_menu t
+        ON a.menu_id = t.menu_id
+        JOIN tb_code c
+        ON a.auth_id = c.code_id
+    </select>
 </mapper>

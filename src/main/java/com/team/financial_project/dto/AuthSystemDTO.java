@@ -7,6 +7,7 @@ public class AuthSystemDTO {
     private int tb_id;
     private int auth_id;
     private int menu_id;
+    private String menu_category;
     private String auth_name;
     private String menu_name;
     private String menu_url;

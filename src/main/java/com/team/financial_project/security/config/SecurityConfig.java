@@ -28,15 +28,17 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         MultiValueMap<String, String> menuList = authMenuAccessService.getAllAuthMenu();
-        http.authorizeHttpRequests((auth)-> auth.requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/login/**", "/register/**").permitAll()
-                .requestMatchers("/api/**").permitAll()
-        );
         http.authorizeHttpRequests((auth)->
                 menuList.forEach((url, roles)->
-                    auth.requestMatchers(url).hasAnyRole(roles.toArray(new String[0]))
+                        auth.requestMatchers(url + "/**").hasAnyRole(roles.toArray(new String[0]))
                 )
         );
+        http.authorizeHttpRequests((auth)-> auth.requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/login/**", "/register/**").permitAll()
+                .requestMatchers("/api/**", "/sidebar/**").permitAll()
+                .anyRequest().authenticated()
+        );
+
         http.formLogin((auth)-> auth.loginPage("/login").loginProcessingUrl("/loginProc")
                 .usernameParameter("user_id").passwordParameter("user_pw")
                 .defaultSuccessUrl("/main", true)

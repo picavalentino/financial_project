@@ -19,4 +19,6 @@ public interface AuthSystemMapper {
 
     // security 권한 설정에 사용할 전체 리스트
     List<AuthSystemDTO> getAllAuthMenu();
+
+    List<AuthSystemDTO> getMenuList();
 }

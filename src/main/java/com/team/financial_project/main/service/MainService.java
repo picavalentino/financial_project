@@ -32,17 +32,4 @@ public class MainService {
         System.out.println("Service received userId: " + userId);
         return mainMapper.getSalesStatistics(userId);
     }
-
-    public Map<String, String> getUserInfo(String userId) {
-        // 사용자 정보와 직위 코드 가져오기
-        Map<String, String> user = mainMapper.findUserById(userId);
-
-        if (user != null) {
-            // 직위 코드로 직위 이름 가져오기
-            String codeNm = mainMapper.findCodeNameByCodeClAndCodeNo("201", user.get("user_jbps_ty_cd"));
-            user.put("code_nm", codeNm); // 직위 이름 추가
-        }
-
-        return user;
-    }
 }

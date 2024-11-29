@@ -41,4 +41,10 @@ coolsms:
     secret: ${SMS.API.SECRET}
   sender: ${SMS.PHONE}
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
 
