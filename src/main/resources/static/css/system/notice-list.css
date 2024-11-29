@@ -102,6 +102,9 @@
   color: #495057;
   font-weight: bold;
 }
+.highlight-row {
+    background-color: #ADD8E6; /* 하늘색 */
+  }
 
 #td-reply{
     display: flex;

@@ -37,12 +37,14 @@ function resetFilters(page = 1) {
 
 // 조건 검색 및 정렬
 function filterResults(page = 1) {
+    console.log("AJAX 요청: 페이지 번호 =", page); // 페이지 번호 확인
+
     const data = {
         inqCategory: $('#inqCategory').val(),
         keywordType: $('#keywordType').val(),
         keyword: $('input[name="keyword"]').val(),
-        inqCreateAt: $('input[name="inqCreateAt"]').val(), // 이름 유지
-        page,
+        inqCreateAt: $('input[name="inqCreateAt"]').val(),
+        page, // 이 값을 AJAX 요청에 포함
         size: 8,
         sortColumn: currentSortColumn,
         sortDirection,
@@ -54,12 +56,13 @@ function filterResults(page = 1) {
         method: 'GET',
         data: data,
         success: function (response) {
+            console.log("서버 응답:", response); // 응답 확인
             renderTable(response.list);
-            updatePagination(response.totalPages, response.currentPage);
+            updatePagination(response.totalPages, response.currentPage); // 페이지네이션 업데이트
             updateProductSize(response.totalItems);
         },
         error: function (error) {
-            console.error('Error fetching filtered results:', error);
+            console.error('AJAX 요청 오류:', error); // 에러 로그
         }
     });
 }
@@ -68,7 +71,6 @@ function updateProductSize(size) {
     $('.product-size span').text(size);
 }
 
-// 테이블 렌더링
 function renderTable(data) {
     console.log('Rendering data:', data);
     const tableBody = $('#result-table-body');
@@ -81,12 +83,28 @@ function renderTable(data) {
                 ? `<div class="reply" id="rep-completed">답변완료</div>`
                 : `<div class="reply" id="rep-wait" style="cursor: pointer;" onclick="window.location.href='/inquire/detail/${product.inqId}'">답변대기</div>`;
 
+            // 날짜 형식 변환 함수
+            const formatDate = (dateString) => {
+                if (!dateString) return null;
+                const date = new Date(dateString);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // 월(0-11이므로 +1)
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const seconds = String(date.getSeconds()).padStart(2, '0');
+                return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            };
+
+            const formattedCreateAt = formatDate(product.inqCreateAt);
+            const formattedUpdateAt = formatDate(product.inqUpdateAt);
+
             const row = $(`<tr class="table-row" style="cursor: pointer;"></tr>`);
             row.append(`<td>${product.inqId || 'N/A'}</td>`);
             row.append(`<td>${product.inqCategory || 'N/A'}</td>`);
             row.append(`<td>${product.inqAnonym == 1 ? '익명' : product.userId}</td>`);
             row.append(`<td>${product.inqTitle}</td>`);
-            row.append(`<td>${product.formattedInqCreateAt}</td>`);
+            row.append(`<td>${formattedCreateAt || 'N/A'}</td>`);
             row.append(`<td>${product.inqCheck}</td>`);
             row.append(`<td id="td-reply">${replyHtml}</td>`);
             row.append(`
@@ -128,16 +146,33 @@ function handleRowClick(row) {
 function updatePagination(totalPages, currentPage) {
     const paginationContainer = $('.pagination-container');
     paginationContainer.empty();
+
+    // 이전 버튼
+    if (currentPage > 1) {
+        paginationContainer.append(
+            `<button class="pagination-prev" data-page="${currentPage - 1}">&lt;</button>`
+        );
+    }
+    // 페이지 번호 버튼
     for (let i = 1; i <= totalPages; i++) {
         const activeClass = i === currentPage ? 'pagination-active' : '';
-        const pageItem = `<button class="pagination-button ${activeClass}" data-page="${i}">${i}</button>`;
-        paginationContainer.append(pageItem);
+        paginationContainer.append(
+            `<a class="pagination-number ${activeClass}" data-page="${i}">${i}</a>`
+        );
     }
-    $('.pagination-button').on('click', function () {
+    // 다음 버튼
+    if (currentPage < totalPages) {
+        paginationContainer.append(
+            `<button class="pagination-next" data-page="${currentPage + 1}">&gt;</button>`
+        );
+    }
+    // 이벤트 바인딩
+    $('.pagination-number, .pagination-prev, .pagination-next').off('click').on('click', function () {
         const page = $(this).data('page');
-        filterResults(page);
+        filterResults(page); // AJAX 요청
     });
 }
+
 
 // Document Ready
 $(document).ready(function () {

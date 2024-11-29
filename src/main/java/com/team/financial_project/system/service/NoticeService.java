@@ -72,16 +72,15 @@ public class NoticeService {
         }
         applyMappingsToInquires(list);
 
-        // 정렬 로직
+        // 정렬 로직: 기본적으로 inqNotice = '1'이 우선 정렬
+        Comparator<InquireDTO> comparator = Comparator.comparing((InquireDTO inquire) -> "1".equals(inquire.getInqNotice()) ? 0 : 1);
         if (sortColumn != null && sortDirection != null) {
-            Comparator<InquireDTO> comparator = getComparator(sortColumn);
-            if ("desc".equalsIgnoreCase(sortDirection) && comparator != null) {
-                comparator = comparator.reversed();
-            }
-            if (comparator != null) {
-                list.sort(comparator);
+            Comparator<InquireDTO> secondaryComparator = getComparator(sortColumn, sortDirection);
+            if (secondaryComparator != null) {
+                comparator = comparator.thenComparing(secondaryComparator);
             }
         }
+        list.sort(comparator);
 
         // 페이징 처리
         int totalItems = list.size();
@@ -98,26 +97,47 @@ public class NoticeService {
         return result;
     }
 
-    private Comparator<InquireDTO> getComparator(String sortColumn) {
+    private Comparator<InquireDTO> getComparator(String sortColumn, String sortDirection) {
+        if (sortColumn == null || sortColumn.isEmpty()) {
+            return null; // 기본 정렬
+        }
+
+        Comparator<InquireDTO> comparator;
         switch (sortColumn) {
             case "inqId":
-                return Comparator.comparing(InquireDTO::getInqId);
+                comparator = Comparator.comparing(InquireDTO::getInqId);
+                break;
             case "inqCategory":
-                return Comparator.comparing(InquireDTO::getInqCategory);
+                comparator = Comparator.comparing(InquireDTO::getInqCategory);
+                break;
             case "userId":
-                return Comparator.comparing(InquireDTO::getUserId);
+                comparator = Comparator.comparing(InquireDTO::getUserId);
+                break;
             case "inqTitle":
-                return Comparator.comparing(InquireDTO::getInqTitle);
+                comparator = Comparator.comparing(InquireDTO::getInqTitle);
+                break;
             case "inqCreateAt":
-                return Comparator.comparing(InquireDTO::getInqCreateAt);
+                comparator = Comparator.comparing(InquireDTO::getInqCreateAt);
+                break;
             case "inqCheck":
-                return Comparator.comparing(InquireDTO::getInqCheck);
+                comparator = Comparator.comparing(InquireDTO::getInqCheck);
+                break;
             case "inqReply":
-                return Comparator.comparing(InquireDTO::getInqReply);
+                comparator = Comparator.comparing(InquireDTO::getInqReply);
+                break;
             case "inqNotice":
-                return Comparator.comparing(InquireDTO::getInqNotice);
+                comparator = Comparator.comparing(InquireDTO::getInqNotice);
+                break;
             default:
-                return Comparator.comparing(InquireDTO::getInqId);
+                comparator = Comparator.comparing(InquireDTO::getInqId); // 기본 정렬
         }
+
+        // Reverse order if descending
+        if ("desc".equalsIgnoreCase(sortDirection)) {
+            comparator = comparator.reversed();
+        }
+
+        return comparator;
     }
+
 }

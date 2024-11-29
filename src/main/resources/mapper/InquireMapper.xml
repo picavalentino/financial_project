@@ -57,7 +57,7 @@
     <select id="searchInquiresAll" resultType="inquireDTO">
         SELECT
         i.inq_id AS inqId,
-        COALESCE(u.user_name, '익명') AS userId, -- 필드 이름에 맞춘 별칭 사용
+        COALESCE(u.user_name, '익명') AS userId,
         i.inq_title AS inqTitle,
         i.inq_category AS inqCategory,
         i.inq_anonym AS inqAnonym,
@@ -67,7 +67,7 @@
         i.inq_create_at AS inqCreateAt
         FROM t_inquire i
         LEFT JOIN tb_user u ON u.user_id = i.user_id
-        WHERE 1=1 AND i.inq_status = '1'
+        WHERE 1=1
         <if test="inqCategory != null and inqCategory != ''">
             AND i.inq_category = #{inqCategory}
         </if>
@@ -84,6 +84,7 @@
         <if test="inqCreateAt != null and inqCreateAt != ''">
             AND i.inq_create_at::date = TO_DATE(#{inqCreateAt}, 'YYYY-MM-DD')
         </if>
+        ORDER BY CAST(i.inq_notice AS INTEGER) DESC, i.inq_create_at DESC
     </select>
 
     <!-- 게시글 등록 -->
@@ -110,7 +111,8 @@
         i.inq_create_at AS inqCreateAt,
         i.inq_reply AS inqReply,
         i.inq_check AS inqCheck,
-        i.inq_anonym AS inqAnonym
+        i.inq_anonym AS inqAnonym,
+        i.inq_notice AS inqNotice
         FROM t_inquire i
         JOIN tb_code c ON i.inq_category = c.code_no AND i.inq_category_code_cl = c.code_cl
         JOIN tb_user u ON i.user_id = u.user_id
@@ -131,7 +133,7 @@
         <if test="createAt != null and createAt != ''">
             AND i.inq_create_at::date = TO_DATE(#{createAt}, 'YYYY-MM-DD')
         </if>
-        ORDER BY inq_create_at DESC
+        ORDER BY CAST(i.inq_notice AS INTEGER) DESC, i.inq_create_at DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
 

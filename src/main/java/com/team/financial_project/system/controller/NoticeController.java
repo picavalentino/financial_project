@@ -51,36 +51,67 @@ public class NoticeController {
             @RequestParam(value = "ajax", required = false, defaultValue = "false") boolean ajax,
             Model model, HttpServletRequest request
     ) {
-        System.out.println("### search conditions: inqCategory=" + inqCategory + ", keyword=" + keyword +
-                ", keywordType=" + keywordType + ", inqCreateAt=" + inqCreateAt);
+        // 요청 파라미터 확인 로그
+        System.out.println("### 요청 파라미터 확인 ###");
+        System.out.println("page=" + page + ", size=" + size);
+        System.out.println("inqCategory=" + inqCategory + ", keywordType=" + keywordType);
+        System.out.println("keyword=" + keyword + ", inqCreateAt=" + inqCreateAt);
+        System.out.println("sortColumn=" + sortColumn + ", sortDirection=" + sortDirection);
+        System.out.println("ajax=" + ajax);
 
-        // 서비스 계층으로 개별 파라미터 전달
-        Map<String, Object> result = noticeService.getNotices(
-                inqCategory, keywordType, keyword, inqCreateAt, page, size, sortColumn, sortDirection
-        );
+        try {
+            // 서비스 호출 및 데이터 처리
+            Map<String, Object> result = noticeService.getNotices(
+                    inqCategory, keywordType, keyword, inqCreateAt, page, size, sortColumn, sortDirection
+            );
 
-        // 결과에서 필요한 데이터 추출
-        List<InquireDTO> paginatedList = (List<InquireDTO>) result.get("list");
-        int totalPages = (int) result.get("totalPages");
-        int totalItems = (int) result.get("totalItems");
+            // 반환된 데이터 검증
+            if (result == null || result.isEmpty()) {
+                System.err.println("### 서비스 반환 데이터가 비어 있습니다. ###");
+                if (ajax) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(Map.of("error", "No data found"));
+                }
+                model.addAttribute("error", "No data found");
+                return "system/notice-list";
+            }
 
-        // AJAX 요청 처리
-        if (ajax) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("list", paginatedList);
-            response.put("totalPages", totalPages);
-            response.put("currentPage", page);
-            response.put("totalItems", totalItems);
-            return ResponseEntity.ok(response);
+            // 결과 데이터 추출
+            List<InquireDTO> paginatedList = (List<InquireDTO>) result.getOrDefault("list", List.of());
+            int totalPages = (int) result.getOrDefault("totalPages", 0);
+            int totalItems = (int) result.getOrDefault("totalItems", 0);
+
+            // AJAX 요청 처리
+            if (ajax) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("list", paginatedList);
+                response.put("totalPages", totalPages);
+                response.put("currentPage", page);
+                response.put("totalItems", totalItems);
+
+                System.out.println("### AJAX 응답 데이터: " + response);
+                return ResponseEntity.ok(response);
+            }
+
+            // 일반 요청 처리
+            model.addAttribute("list", paginatedList);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("totalItems", totalItems);
+            model.addAttribute("requestURI", request.getRequestURI());
+            return "system/notice-list";
+        } catch (Exception e) {
+            System.err.println("### 예외 발생 ###");
+            e.printStackTrace();
+
+            if (ajax) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("error", "An error occurred while processing the request."));
+            }
+
+            model.addAttribute("error", "An error occurred while processing the request.");
+            return "system/notice-list";
         }
-
-        // 모델에 데이터 추가
-        model.addAttribute("list", paginatedList);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("totalItems", totalItems);
-        model.addAttribute("requestURI", request.getRequestURI());
-        return "system/notice-list";
     }
 
     /* 게시글 상세 */

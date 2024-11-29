@@ -118,6 +118,10 @@
   background-color: #e9ecef;
 }
 
+.highlight-row {
+    background-color: #ADD8E6; /* 하늘색 */
+}
+
 /* 페이지네이션 */
 .pagination-container {
     display: flex;
