@@ -83,21 +83,63 @@ function selectManager(manager) {
     console.log("선택된 담당자:", manager);
 
     // 부모 페이지의 필드에 선택한 담당자 정보 반영
-    document.querySelector('.searchManager').value = manager.user_name;
-    document.querySelector('input[name="user_id"]').value = manager.user_id;
-    document.querySelector('input[name="user_telno"]').value = manager.user_telno;
+    const userNameInput = document.querySelector('.searchManager');
+    const userIdInput = document.querySelector('input[name="user_id"]');
+    const userTelnoInput = document.querySelector('input[name="user_telno"]');
+    const deptPositionInput = document.querySelector('input[name="user_dept_Position"]');
 
-    var deptPositionInput = document.querySelector('input[name="user_dept_Position"]');
+    if (userNameInput) userNameInput.value = manager.user_name;
+    if (userIdInput) userIdInput.value = manager.user_id;
+    if (userTelnoInput) userTelnoInput.value = manager.user_telno;
     if (deptPositionInput) {
-        deptPositionInput.value = manager.dept_name + ' / ' + manager.position_name;
+        deptPositionInput.value = `${manager.dept_name} / ${manager.position_name}`;
+    }
+
+    // "변경" 버튼 활성화 트리거
+    const editButton = document.querySelector('.edit-btn');
+    if (editButton) {
+        const event = new Event('input'); // 입력 이벤트 트리거
+        userNameInput.dispatchEvent(event);
     }
 
     // 모달창 닫기
     closeModal('searchModal');
 }
 
+
 // ===================================================================================================
 // 변경 버튼
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('customerUpdateForm');
+    const editButton = document.querySelector('.edit-btn');
+    const originalData = new FormData(form);
+
+    // 변경 여부 확인 함수
+    function isFormChanged() {
+        const currentData = new FormData(form);
+        for (let [key, value] of originalData.entries()) {
+            if (currentData.get(key) !== value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 입력값 변경 시 버튼 상태 업데이트
+    function addChangeListeners() {
+        form.querySelectorAll('input, select, textarea').forEach((input) => {
+            if (!input.disabled) { // 비활성화된 필드 제외
+                input.addEventListener('input', () => {
+                    editButton.disabled = !isFormChanged(); // 변경 여부에 따라 버튼 활성화/비활성화
+                });
+            }
+        });
+    }
+
+    // 초기화
+    addChangeListeners();
+});
+
 // 수정 내역을 저장할 객체
 let customerRevisions = {};
 

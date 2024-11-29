@@ -43,19 +43,18 @@
                             <label>고객ID<input type="text" id="custId" th:value="${customer.custId}" disabled> </label>
                             <label>고객명 <input type="text" th:value="${customer.custNm}" disabled></label>
                             <label>주민번호 <input type="text" th:value="${customer.custRrn}" disabled></label>
-                            <label>연락처 <input type="text" th:value="${customer.custTelno}" name="custTelno"></label>
-                            <label>이메일 <input type="text" th:value="${customer.custEmail}" name="custEmail"></label>
+
+                            <label>활동 상태 <input type="text" th:value="${customer.custStateCd}" disabled></label>
+                            <label>가입 일자 <input type="text"
+                                                th:value="${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')}"
+                                                disabled></label>
                         </div>
                         <div class="customerRight">
                             <label>주소
                                 <input type="text" class="wide-input" th:value="${customer.custAddr}" name="custAddr">
                             </label>
-                            <label>활동 상태 <input type="text" th:value="${customer.custStateCd}" disabled></label>
-                            <label>가입 일자 <input type="text"
-                                                th:value="${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')}"
-                                                disabled></label>
-                            <label>상품 설계 <input type="button" value="페이지로 이동" class="go-promotion-btn"
-                                                onclick="goPromotion()"></label>
+                            <label>연락처 <input type="text" th:value="${customer.custTelno}" name="custTelno"></label>
+                            <label>이메일 <input type="text" th:value="${customer.custEmail}" name="custEmail"></label>
                             <label>직업
                                 <select name="custOccpTyCd" class="custOccpTyCd">
                                     <option th:text="${customer.custOccpTyCd_name}" disabled>직업 선택</option>
@@ -66,6 +65,8 @@
                                     </th:block>
                                 </select>
                             </label>
+                            <label>상품 설계 <input type="button" value="페이지로 이동" class="go-promotion-btn"
+                                                onclick="goPromotion()"></label>
                         </div>
                     </div>
                     <!-- ===================================================================================== -->
@@ -75,8 +76,7 @@
                             <div class="staffLeft">
                                 <label>담당자
                                     <input class="searchManager" type="text" name="user_name"
-                                           th:value="${customer.users != null ? customer.users.user_name : '없음'}"
-                                           disabled>
+                                           th:value="${customer.users != null ? customer.users.user_name : '없음'}">
                                     <button id="openSearchModalBtn" class="search-btn" type="button"
                                             onclick="openSearchModal()">🔍
                                     </button>
@@ -118,14 +118,22 @@
                     </textarea>
                 </div>
                 <!-- 숨겨진 필드: 최신 상담 데이터 전달 -->
-                <input type="hidden" id="latestCounselUserName" th:value="${latestCounsel != null ? latestCounsel.user_name : ''}">
-                <input type="hidden" id="latestCounselDeptName" th:value="${latestCounsel != null ? latestCounsel.user_dept_nm : ''}">
-                <input type="hidden" id="latestCounselCreateDate" th:value="${latestCounsel != null ? #temporals.format(latestCounsel.counsel_create_at, 'yyyy-MM-dd HH:mm') : ''}">
-                <input type="hidden" id="latestCounselUpdateDate" th:value="${latestCounsel != null && latestCounsel.counsel_update_at != null ? #temporals.format(latestCounsel.counsel_update_at, 'yyyy-MM-dd HH:mm') : ''}">
-                <input type="hidden" id="latestCounselCategory" th:value="${latestCounsel != null ? latestCounsel.counsel_category : ''}">
-                <input type="hidden" id="latestCounselCategoryName" th:value="${latestCounsel != null ? latestCounsel.counsel_category_nm : ''}">
-                <input type="hidden" id="latestCounselContent" th:value="${latestCounsel != null ? latestCounsel.counsel_content : ''}">
-                <input type="hidden" id="latestCounselId" th:value="${latestCounsel != null ? latestCounsel.counsel_id : ''}">
+                <input type="hidden" id="latestCounselUserName"
+                       th:value="${latestCounsel != null ? latestCounsel.user_name : ''}">
+                <input type="hidden" id="latestCounselDeptName"
+                       th:value="${latestCounsel != null ? latestCounsel.user_dept_nm : ''}">
+                <input type="hidden" id="latestCounselCreateDate"
+                       th:value="${latestCounsel != null ? #temporals.format(latestCounsel.counsel_create_at, 'yyyy-MM-dd HH:mm') : ''}">
+                <input type="hidden" id="latestCounselUpdateDate"
+                       th:value="${latestCounsel != null && latestCounsel.counsel_update_at != null ? #temporals.format(latestCounsel.counsel_update_at, 'yyyy-MM-dd HH:mm') : ''}">
+                <input type="hidden" id="latestCounselCategory"
+                       th:value="${latestCounsel != null ? latestCounsel.counsel_category : ''}">
+                <input type="hidden" id="latestCounselCategoryName"
+                       th:value="${latestCounsel != null ? latestCounsel.counsel_category_nm : ''}">
+                <input type="hidden" id="latestCounselContent"
+                       th:value="${latestCounsel != null ? latestCounsel.counsel_content : ''}">
+                <input type="hidden" id="latestCounselId"
+                       th:value="${latestCounsel != null ? latestCounsel.counsel_id : ''}">
 
                 <div class="revision">
                     <h2>최근 수정내역</h2>
@@ -137,7 +145,7 @@
     <!-- ===================================================================================== -->
     <div class="buttons">
         <button class="btn-print" onclick="DetailPrint()"><span class="icon">🖨️</span> 인쇄</button>
-        <button class="edit-btn">변경</button>
+        <button class="edit-btn" disabled>변경</button>
         <input type="hidden" name="staffId" th:value="${staffId}">
         <button class="list-btn" onclick="goList()">목록</button>
     </div>
@@ -277,12 +285,12 @@
                             <div class="modal-input-group">
                                 <label>작성부서</label>
                                 <input type="text" id="writer_user_dept_nm" readonly>
-                                <input type="hidden" id="writer_user_dept_cd" name="user_dept_cd" >
+                                <input type="hidden" id="writer_user_dept_cd" name="user_dept_cd">
                             </div>
                         </div>
                         <div class="modal-input-row-textarea">
                             <label>상담내용</label>
-                            <textarea id="insert_counsel_content" name="counsel_content" ></textarea>
+                            <textarea id="insert_counsel_content" name="counsel_content"></textarea>
                         </div>
                     </div>
                     <div class="modal-bottom-button-group">
@@ -331,7 +339,7 @@
                         </div>
                         <div class="modal-input-row-textarea">
                             <label>상담내용</label>
-                            <textarea id="update_counsel_content" name="update_counsel_content" ></textarea>
+                            <textarea id="update_counsel_content" name="update_counsel_content"></textarea>
                         </div>
                     </div>
                     <div class="modal-bottom-button-group">
