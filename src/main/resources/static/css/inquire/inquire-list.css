@@ -110,16 +110,18 @@
   font-weight: bold;
 }
 
-.table-inquire tbody tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
-
-.table-inquire tbody tr:hover {
-  background-color: #e9ecef;
-}
-
+/* highlight-row 스타일 */
 .highlight-row {
-    background-color: #ADD8E6; /* 하늘색 */
+  background-color: #cddee3 !important; /* 하늘색 */
+}
+
+/* 번갈아가며 배경색 적용 (highlight-row 제외) */
+.table-inquire tbody tr:nth-child(even):not(.highlight-row) {
+  background-color: #f8f9fa; /* 연한 회색 */
+}
+
+.table-inquire tbody tr:hover:not(.highlight-row) {
+  background-color: #e9ecef; /* 마우스오버 시 색상 */
 }
 
 /* 페이지네이션 */

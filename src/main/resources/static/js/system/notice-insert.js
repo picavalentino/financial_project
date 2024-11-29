@@ -128,7 +128,7 @@ $(document).ready(function(){
         // 유효성 검사
         if (!validateForm()) return;
 
-        const formElement = document.querySelector(".notice-form");
+        const formElement = document.getElementById("notice-form");
         const formData = new FormData(formElement); // 폼 데이터를 가져옵니다.
 
         // 체크박스 값을 변환하여 추가

@@ -97,6 +97,7 @@
           <tbody id="result-table-body">
           <tr th:each="inquire : ${list}" style="cursor: pointer;"
               th:data-inq-category="${inquire.inqCategory}" th:data-inq-id="${inquire.inqId}"
+              th:classappend="${inquire.inqNotice == '1'} ? 'highlight-row' : ''"
               onclick="handleRowClick(this)">
             <td id="inqId">[[ ${inquire.inqId} ]]</td>
             <td>[[ ${inquire.inqCategory} ]]</td>

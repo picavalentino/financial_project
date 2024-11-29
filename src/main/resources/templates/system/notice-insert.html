@@ -34,13 +34,16 @@
     <!--  게시글 등록 폼  -->
     <div class="form-container">
       <form class="inquire-form" id="notice-form" th:action="@{/system/inquire/insert}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:value="${dto.userId}" name="userId">
+        <input type="hidden" th:value="${dto.inqCategory}" name="inqCategory">
+        <input type="hidden" th:value="${dto.inqAnonym}" name="inqAnonym">
         <table class="inquire-table">
           <tbody>
           <tr class="tr-row">
             <th>카테고리</th>
             <td><div class="input-like" id="inqCategory">공지사항</div></td>
             <th>작성자</th>
-            <td><div class="input-like" th:text="${dto.userId}"></div></td>
+            <td><div class="input-like" th:text="${userName}"></div></td>
           </tr>
           <tr>
             <th>제목</th>

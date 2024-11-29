@@ -56,8 +56,8 @@ public class NoticeService {
         return dto;
     }
 
-    public void updateNoticeStatus(Integer inqId, int i) {
-        inquireMapper.updateNoticeStatus(inqId, i);
+    public void updateNoticeStatus(Integer inqId, String status) {
+        inquireMapper.updateNoticeStatus(inqId, status);
     }
 
     public Map<String, Object> getNotices(String inqCategory, String keywordType, String keyword,

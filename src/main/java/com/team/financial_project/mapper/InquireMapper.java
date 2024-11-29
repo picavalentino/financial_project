@@ -40,7 +40,7 @@ public interface InquireMapper {
 
     void insertInquire(InquireDTO inquireDTO);
 
-    void updateNoticeStatus(Integer inqId, int i);
+    void updateNoticeStatus(@Param("inqId") Integer inqId, @Param("status") String status);
 
     void deleteInquire(Integer inqId);
 

@@ -100,6 +100,10 @@ function renderTable(data) {
             const formattedUpdateAt = formatDate(product.inqUpdateAt);
 
             const row = $(`<tr class="table-row" style="cursor: pointer;"></tr>`);
+            // 공지사항 여부에 따른 클래스 추가
+            if (product.inqNotice == '1') {
+                row.addClass('highlight-row');
+            }
             row.append(`<td>${product.inqId || 'N/A'}</td>`);
             row.append(`<td>${product.inqCategory || 'N/A'}</td>`);
             row.append(`<td>${product.inqAnonym == 1 ? '익명' : product.userId}</td>`);

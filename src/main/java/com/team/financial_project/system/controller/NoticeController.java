@@ -164,13 +164,13 @@ public class NoticeController {
     /* 공지사항 상태 변경 - 고정 */
     @PostMapping("/notice-register/{inqId}")
     public ResponseEntity<String> registerNotice(@PathVariable("inqId") Integer inqId) {
-        noticeService.updateNoticeStatus(inqId, 1); // 1: 공지 등록
+        noticeService.updateNoticeStatus(inqId, "1"); // 1: 공지 등록
         return ResponseEntity.ok("공지 등록 완료");
     }
     /* 공지사항 상태 변경 - 고정 해제 */
     @PostMapping("/notice-cancel/{inqId}")
     public ResponseEntity<String> cancelNotice(@PathVariable("inqId") Integer inqId) {
-        noticeService.updateNoticeStatus(inqId, 2); // 2: 공지 해제
+        noticeService.updateNoticeStatus(inqId, "0"); // 2: 공지 해제
         return ResponseEntity.ok("공지 해제 완료");
     }
 
@@ -180,7 +180,10 @@ public class NoticeController {
         InquireDTO dto = new InquireDTO();
         dto.setUserId(getAuthenticatedUserName());
         dto.setInqAnonym("0");
+        dto.setInqCategory("1");
+        String userName = inquireService.getUserName(dto.getUserId());
         model.addAttribute("dto", dto);
+        model.addAttribute("userName", userName);
         return "system/notice-insert";
     }
     @PostMapping("insert")
