@@ -1,0 +1,293 @@
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.customerInfo {
+    display : flex;
+    padding: 10px;
+    width: 80%;
+}
+
+.location h2 {
+    margin-bottom: 20px;
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.customerInfo h2{
+    color: #ffffff;
+    background-color: #343a40;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 20px;
+    width : 200px;
+    text-align:center;
+}
+/* ======================================================================================================= */
+/* 브레드크럼 스타일 */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #888888; /* 텍스트 색상 */
+    gap: 5px; /* 아이콘과 텍스트 사이 간격 */
+}
+
+.breadcrumb .icon {
+    font-size: 16px; /* 홈 아이콘 크기 */
+    color: #888888;
+    margin-right: 5px; /* 아이콘과 텍스트 간격 */
+}
+
+.breadcrumb a {
+    color: #888888;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb span {
+    color: #888888;
+}
+
+/* ======================================================================================================= */
+/* 화면 분할 */
+
+.leftSide, rightSide{
+    display: flex;
+    flex-direction: column;
+}
+
+/* ======================================================================================================= */
+/* 고객 정보 / 담당자 정보 */
+.customer{
+    display: flex;
+    width : 100%;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+.customerLeft , .customerRight
+,.staffLeft , .staffRight {
+    display: flex;
+    grid-template-columns: 1fr 1fr; /* 두 열로 나눔 */
+    gap: 20px 20px; /* 행과 열 간격 설정 */
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+}
+
+.staff{
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    width : 100%;
+    border-radius: 8px;
+}
+
+.staffContainer {
+   display: flex;
+}
+
+/* ======================================================================================================= */
+/* 상담 / 수정내역 정보 */
+.consult-bar {
+    display: flex;
+    border-radius: 8px;
+}
+
+.rightSide {
+    margin-left:20px;
+    width : 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* 개별 상담 영역 */
+.consultation, .revision {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.consultation {
+    height : 305px;
+}
+
+.revision {
+    height : 210px;
+}
+
+/* ======================================================================================================= */
+/* 버튼 */
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+    margin-left:auto;
+    margin-right:145px;
+}
+
+/* 공통 버튼 스타일 */
+button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* 인쇄 버튼 */
+.btn-print {
+    background-color: #292D32;
+}
+
+.btn-print .icon {
+    background-color: #8E98A8;
+}
+
+.btn-print:hover {
+    background-color: #1d1f22;
+}
+
+.edit-btn {
+    background-color: #5AA4B8;
+}
+
+.edit-btn:hover {
+    background-color: #4a92a5;
+}
+
+.list-btn {
+    background-color: #343a40;
+}
+
+.list-btn:hover {
+    background-color: #2c3137;
+}
+
+.consult-btn {
+    background-color: #00042a;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left:auto;
+    margin-bottom:8px;
+    padding:13px;
+}
+
+.consult-btn:hover {
+    background-color: #02065b;
+}
+/* ======================================================================================================= */
+/* 기타 */
+
+.leftSide label{
+    width: 370px;
+    display: flex;
+    font-size: 14px;
+    color: #555;
+    flex-direction: row;
+}
+
+.searchManager {
+    max-width: 59%;
+    background-color : #ffffff;
+}
+
+select {
+background-color : #ffffff;
+}
+
+input {
+/*background-color: #e9e9e9;*/
+}
+
+input[disabled] {
+background-color: #F5F5F5;
+}
+
+input[readonly] {
+    background-color: #F5F5F5;
+}
+
+select, input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #555;
+    width: 70%;
+    /* 입력 필드가 레이블 너비에 맞춰짐 */
+    margin-left: auto;
+}
+
+/* 텍스트 영역 스타일 */
+.consultation textarea {
+    margin-top:10px;
+    width: 100%;
+    height: 210px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e3e3e3;
+    font-size: 14px;
+    color: #555;
+    resize: none;
+    overflow-y: auto; /* 스크롤바 설정 */
+}
+
+.revision textarea {
+    margin-top:10px;
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e3e3e3;
+    font-size: 14px;
+    color: #555;
+    resize: none;
+    overflow-y: auto; /* 스크롤바 설정 */
+}
+
+/* ======================================================================================================= */
+/* 인쇄 */
+@media print {
+    body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 화면 전체 높이로 설정 */
+    }
+
+    #leftSide {
+    width: 100%; /* 너비를 화면 전체로 */
+    height: auto;
+    margin: auto;
+    }
+
+    /* 숨기고 싶은 다른 요소 */
+    button {
+    display: none;
+    }
+}
+
+
+
+

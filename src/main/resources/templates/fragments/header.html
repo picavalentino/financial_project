@@ -18,7 +18,7 @@
                     <div class="bookmark-item d-flex align-items-center">
                         <a href="#" class="d-flex align-items-center">
                             <img src="/images/common/pin_ok_white.png" alt="북마크" class="bookmark-icon">
-                            <span>고객확인</span>
+                            <span></span>
                         </a>
                         <a href="#" class="ml-auto">
                             <img src="/images/common/close.png" alt="삭제" class="img-close">
@@ -28,10 +28,10 @@
             </div>
 
             <!-- 로그인 / 로그아웃 -->
-            <form class="d-flex log" th:action="@{/logout}" method="post">
+            <div class="d-flex log">
                 <a th:href="@{/mypage}" class="btn">MyPage</a>
-                <button class="btn">Logout</button>
-            </form>
+                <button class="btn" id="btn-logout">Logout</button>
+            </div>
 
             <!-- 토글 버튼 (헤더 위에 고정시키기) -->
             <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
@@ -193,6 +193,8 @@
     </div>
 
     <script>
+        const csrfToken = $('meta[name="_csrf"]').attr('content');
+        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
         $(window).on('resize', function () {
             // 화면의 너비가 768px 이상이면
             if ($(window).width() >= 768) {
@@ -252,8 +254,6 @@
 
         // 북마크 삭제
         function deleteBookmark(menuId) {
-            const csrfToken = $('meta[name="_csrf"]').attr('content');
-            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
             fetch(`/bookmark/delete?menuId=${menuId}`, {
                 method: 'DELETE',
                 headers: {
@@ -274,7 +274,25 @@
         // 페이지 로드 시 북마크 목록 로드
         document.addEventListener('DOMContentLoaded', loadBookmarks);
 
-
+        // 로그아웃
+        $("#btn-logout").on("click", function () {
+            $.ajax({
+                url: '/logout',
+                type: 'POST',
+                contentType: 'application/json',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    alert(response.message);
+                    window.location.href = '/login';
+                },
+                error: function (error) {
+                    console.error("로그아웃 실패:", error);
+                    alert("로그아웃 중 문제가 발생했습니다.");
+                }
+            });
+        })
     </script>
 
 </div>

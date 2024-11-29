@@ -110,7 +110,6 @@ public class ProductController {
         // 정렬
         if (sortColumn != null && sortDirection != null) {
             Comparator<ProductDTO> comparator = null;
-
             switch (sortColumn) {
                 case "prodNm": // 상품명 기준 정렬 (String)
                     comparator = Comparator.comparing(ProductDTO::getProdNm);

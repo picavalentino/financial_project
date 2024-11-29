@@ -38,7 +38,6 @@ function resetFilters(page = 1) {
     filterResults(page);
 }
 
-
 // 조건 검색 및 정렬
 function filterResults(page = 1) {
     const data = {

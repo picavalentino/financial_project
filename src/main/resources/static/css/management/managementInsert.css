@@ -23,15 +23,17 @@
 }
 
 .condition input, .condition select {
-    padding: 10px;
+    padding: 5px; /* padding 값을 줄입니다 */
     font-size: 14px;
     border: 1px solid #ced4da;
     border-radius: 5px;
-    height: 38px;
+    height: 38px; /* height를 자동으로 설정 */
     width: 100%;
     box-sizing: border-box;
     text-align: center;
     background-color: white;
+    line-height: normal; /* 글씨 높이를 정상화 */
+    appearance: none; /* 브라우저 기본 스타일 제거 (필요 시) */
 }
 
 /* 하위 콘텐츠 */
