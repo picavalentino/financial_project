@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -122,70 +123,54 @@ public class CustomerService {
     }
 
     // ==========================================================================================================
-    // 고객정보 수정
-    public void updateCustomer(CustomerDTO customerDTO) {
-        try {
-            log.info("수정 요청된 고객 정보: {}", customerDTO);
-            customerMapper.updateCustomer(customerDTO);
-        } catch (Exception e) {
-            log.error("고객 정보 수정 중 오류 발생: {}", e.getMessage());
-            throw new RuntimeException("고객 정보 수정에 실패했습니다.", e);
-        }
-    }
-
     public List<CustomerDTO> getCustOccpTyCdList() {
         log.info("직업 코드 리스트 조회 요청");
         return customerMapper.getCustOccpTyCdList();
     }
 
-    public List<CustomerUpdateHistoryDTO> getCustomerHistoryById(String custId) {
-        return customerMapper.findCustomerHistoryListById(custId);
-    }
-
-
-    public CustomerUpdateHistoryDTO createUpdateHistory(CustomerDTO customerDTO, CustomerDTO existingCustomer, String staffId) {
-        // 기존 데이터 가져오기
+    // 고객정보 수정
+    @Transactional
+    public void updateCustomer(CustomerDTO customerDTO, String staffId) {
+        // 기존 고객 정보 가져오기
         CustomerDTO originalCustomer = customerMapper.getCustomerById(customerDTO.getCustId());
 
-        // 변경된 항목 기록
-        String updateDetail = generateChangeDetails(originalCustomer, customerDTO);
+        // 고객 정보 업데이트
+        customerMapper.updateCustomer(customerDTO);
 
-        // CustomerUpdateHistoryDTO 객체 생성
-        CustomerUpdateHistoryDTO history = new CustomerUpdateHistoryDTO();
-        history.setCustId(customerDTO.getCustId());
-        history.setUserId(staffId); // 수정자 ID 설정
-        history.setUpdateDetail(updateDetail); // 변경된 항목만 설정
-        history.setCustUpdateAt(LocalDateTime.now()); // 수정 시각 설정
-
-        return history;
+        // 수정 내역 생성 및 저장
+        createAndSaveHistory(originalCustomer, customerDTO, staffId);
     }
+    @Transactional
+    public List<CustomerUpdateHistoryDTO> createAndSaveHistory(CustomerDTO original, CustomerDTO updated, String staffId) {
+        List<CustomerUpdateHistoryDTO> historyList = new ArrayList<>();
 
-    // 변경 사항 기록 생성
-    private String generateChangeDetails(CustomerDTO original, CustomerDTO updated) {
-        StringBuilder detail = new StringBuilder();
+        compareAndAddHistory(historyList, "전화번호", original.getCustTelno(), updated.getCustTelno(), updated.getCustId(), staffId);
+        compareAndAddHistory(historyList, "이메일", original.getCustEmail(), updated.getCustEmail(), updated.getCustId(), staffId);
+        compareAndAddHistory(historyList, "주소", original.getCustAddr(), updated.getCustAddr(), updated.getCustId(), staffId);
+        compareAndAddHistory(historyList, "직업 코드", original.getCustOccpTyCd(), updated.getCustOccpTyCd(), updated.getCustId(), staffId);
 
-        // 변경된 필드만 기록
-        compareAndAppend(detail, "전화번호", original.getCustTelno(), updated.getCustTelno());
-        compareAndAppend(detail, "이메일", original.getCustEmail(), updated.getCustEmail());
-        compareAndAppend(detail, "주소", original.getCustAddr(), updated.getCustAddr());
-        compareAndAppend(detail, "직업 코드", original.getCustOccpTyCd(), updated.getCustOccpTyCd());
+        if (!historyList.isEmpty()) {
+            customerMapper.insertHistoryById(historyList);
+        }
 
-        // 결과 반환 (불필요한 쉼표 제거)
-        return detail.length() > 0 ? detail.substring(0, detail.length() - 2) : ""; // 마지막 쉼표 제거
+        return historyList;
     }
-
-    // 개별 필드 비교 및 변경 사항 기록
-    private void compareAndAppend(StringBuilder detail, String fieldName, String originalValue, String updatedValue) {
+    @Transactional
+    private void compareAndAddHistory(List<CustomerUpdateHistoryDTO> historyList, String fieldName, String originalValue, String updatedValue, String custId, String staffId) {
         if (!Objects.equals(originalValue, updatedValue)) {
-            detail.append(String.format("%s: %s → %s, ",
-                    fieldName,
+            CustomerUpdateHistoryDTO history = new CustomerUpdateHistoryDTO();
+            history.setCustId(custId);
+            history.setUserId(staffId);
+            history.setUpdateDetail(String.format("%s: %s → %s", fieldName,
                     originalValue != null ? originalValue : "null",
                     updatedValue != null ? updatedValue : "null"));
+            history.setCustUpdateAt(LocalDateTime.now());
+            historyList.add(history);
         }
     }
-
-    public void saveHistory(CustomerUpdateHistoryDTO history) {
-        customerMapper.insertUpdateHistory(history);
+    @Transactional
+    public List<CustomerUpdateHistoryDTO> getCustomerHistoryById(String custId) {
+        return customerMapper.findCustomerHistoryListById(custId);
     }
 }
 

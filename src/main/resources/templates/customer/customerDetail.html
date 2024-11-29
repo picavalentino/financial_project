@@ -137,7 +137,7 @@
 
                 <div class="revision">
                     <h2>최근 수정내역</h2>
-                    <textarea id="revisionHistory" rows="10" cols="50" disabled></textarea>
+                    <textarea id="revisionHistory" rows="10" cols="50" disabled th:text="${#strings.arrayJoin(history, '\n')}"></textarea>
                 </div>
             </section>
         </section>

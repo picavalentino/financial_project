@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 초기화
     const form = document.getElementById('customerUpdateForm');
     const editButton = document.querySelector('.edit-btn');
-    const revisionHistory = document.getElementById('revisionHistory');
     const custId = document.getElementById("custId").value;
     const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
@@ -119,26 +118,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // 초기 데이터 저장
     const originalData = new FormData(form);
 
-    // 수정 내역 로드
-    loadRevisionHistory(custId);
-
     // 변경 버튼 이벤트 등록
     editButton.addEventListener('click', async (event) => {
         event.preventDefault();
 
         // 변경된 필드 확인
-        const updateDetail = getChangedFields(form);
-        if (updateDetail.length === 0) {
+        const updatedCustomerData = getUpdatedCustomerData(form, custId);
+        if (!isFormChanged(originalData, form)) {
             alert("변경된 내용이 없습니다.");
             return;
         }
 
-        // 수정 내역 저장
-        const updateHistory = createUpdateHistory(custId, updateDetail);
-        await saveUpdateHistory(updateHistory);
-
         // 고객 정보 업데이트
-        const updatedCustomerData = getUpdatedCustomerData(form, custId);
         await sendUpdateRequest(updatedCustomerData);
     });
 
@@ -150,25 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-
-    // 함수: 수정 내역 로드
-    async function loadRevisionHistory(custId) {
-        try {
-            const response = await fetch(`/customer/detail/${custId}/history`);
-            if (!response.ok) throw new Error('수정 내역 로드 실패');
-            const revisions = await response.json();
-            updateTextarea(revisions);
-        } catch (error) {
-            console.error('수정 내역 로드 중 오류 발생:', error);
-        }
-    }
-
-    // 함수: 수정 내역 화면에 업데이트
-    function updateTextarea(revisions) {
-        revisionHistory.value = revisions.map(rev =>
-            `수정일자: ${rev.custUpdateAt}\n수정ID: ${rev.userId}\n내용: ${rev.updateDetail}\n======================================`
-        ).join('\n\n');
-    }
 
     // 함수: 폼 변경 여부 확인
     function isFormChanged(originalData, form) {
@@ -182,104 +154,69 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 함수: 수정된 고객 데이터 가져오기
-        function getUpdatedCustomerData(form, custId) {
-            return {
-                custId,
-                custTelno: form.querySelector('input[name="custTelno"]').value,
-                custEmail: form.querySelector('input[name="custEmail"]').value,
-                custOccpTyCd: form.querySelector('select[name="custOccpTyCd"]')?.value || '미정',
-                custAddr: form.querySelector('input[name="custAddr"]').value,
-                users: {
-                    user_id: form.querySelector('input[name="user_id"]').value,
+    function getUpdatedCustomerData(form, custId) {
+        return {
+            custId,
+            custTelno: form.querySelector('input[name="custTelno"]').value,
+            custEmail: form.querySelector('input[name="custEmail"]').value,
+            custOccpTyCd: form.querySelector('select[name="custOccpTyCd"]')?.value || '미정',
+            custAddr: form.querySelector('input[name="custAddr"]').value,
+            users: {
+                user_id: form.querySelector('input[name="user_id"]').value,
+            },
+        };
+    }
+
+    // 함수: 고객 정보 업데이트 요청
+    async function sendUpdateRequest(updatedCustomerData) {
+        try {
+            const response = await fetch(`/customer/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken,
                 },
-            };
+                body: JSON.stringify(updatedCustomerData),
+            });
+
+          if (response.ok) {
+                      const result = await response.json(); // 서버에서 반환된 데이터를 받음
+                      console.log("수정 내역:", result.updateHistory); // 디버깅용 출력
+                      alert('고객 정보가 성공적으로 수정되었습니다!');
+                      window.location.href = `/customer/detail/${updatedCustomerData.custId}`;
+                  } else {
+                      const errorMessage = await response.text();
+                      throw new Error(errorMessage);
+                  }
+        } catch (error) {
+            console.error('수정 요청 중 오류 발생:', error);
+            alert('담당자를 입력해주세요');
         }
-
-        // 함수: 고객 정보 업데이트 요청
-        async function sendUpdateRequest(updatedCustomerData) {
-            try {
-                const response = await fetch(`/customer/update`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        [csrfHeader]: csrfToken,
-                    },
-                    body: JSON.stringify(updatedCustomerData),
-                });
-
-                if (response.ok) {
-                    alert('고객 정보가 성공적으로 수정되었습니다!!');
-                    window.location.href = `/customer/detail/${updatedCustomerData.custId}`;
-                } else {
-                    const errorMessage = await response.text();
-                    throw new Error(errorMessage);
-                }
-            } catch (error) {
-                console.error('수정 요청 중 오류 발생:', error);
-                alert('담당자를 입력해주세요');
-            }
-        }
-
-    // 함수: 변경된 필드 가져오기
-    function getChangedFields(form) {
-        const fields = ['custTelno', 'custEmail', 'custAddr', 'custOccpTyCd'];
-        const changes = [];
-
-        fields.forEach(field => {
-            const currentValue = form.querySelector(`input[name="${field}"], select[name="${field}"]`)?.value || '미정';
-            const previousValue = form.querySelector(`input[name="previous${field.charAt(0).toUpperCase() + field.slice(1)}"]`)?.value || '미정';
-            if (currentValue !== previousValue) {
-                changes.push(`${field}: ${previousValue} → ${currentValue}`);
-            }
-        });
-
-        return changes;
     }
-
-    // 함수: 수정 내역 객체 생성
-   function createUpdateHistory(custId, updateDetail) {
-       return {
-           custId,
-           userId: document.querySelector('input[name="staffId"]').value,
-           updateDetail: updateDetail.join(", "),
-           custUpdateAt: new Date().toISOString(),
-       };
-   }
-    // 수정 내역 포맷팅
-    function formatRevisionHistory(updateHistory) {
-        return `수정 일시 :  ${new Date(updateHistory.custUpdateAt).toLocaleString()},\n수정 ID : ${updateHistory.userId} , \n ${updateHistory.updateDetail}`;
-    }
-
-    // 함수: 수정 내역 저장
-   async function saveUpdateHistory(updateHistory) {
-       try {
-           const response = await fetch('/customer/update', {
-               method: 'PUT',
-               headers: {
-                   'Content-Type': 'application/json',
-                   [csrfHeader]: csrfToken,
-               },
-               body: JSON.stringify(updateHistory),
-           });
-
-           if (!response.ok) throw new Error('수정 내역 저장 실패');
-
-           // 포맷된 내역을 추가로 업데이트
-           const formattedHistory = formatRevisionHistory(updateHistory);
-           appendRevisionHistory(formattedHistory);
-
-           alert('수정 내역이 성공적으로 저장되었습니다.');
-       } catch (error) {
-           console.error('수정 내역 저장 중 오류 발생:', error);
-       }
-   }
-
-   // 수정 내역을 화면에 추가
-   function appendRevisionHistory(formattedHistory) {
-       const revisionHistory = document.getElementById('revisionHistory');
-       revisionHistory.value = `${formattedHistory}\n${revisionHistory.value}`; // 최신 내역이 상단에 추가
-   }
 });
+
+// 서버에서 수정 내역 데이터를 로드하고 textarea에 추가
+async function loadRevisionHistory(custId) {
+    try {
+        const response = await fetch(`/customer/detail/${custId}/history`);
+        if (!response.ok) throw new Error('수정 내역 로드 실패');
+        const revisions = await response.json();
+
+        // 수정 내역을 textarea에 추가
+        const formattedRevisions = revisions.map(rev => {
+            return `수정 일시: ${new Date(rev.custUpdateAt).toLocaleString()}\n수정 ID: ${rev.userId}\n내용: ${rev.updateDetail}\n======================================`;
+        }).join('\n\n');
+
+        document.getElementById('revisionHistory').value = formattedRevisions;
+    } catch (error) {
+        console.error('수정 내역 로드 중 오류 발생:', error);
+        document.getElementById('revisionHistory').value = '수정 내역을 불러오는 중 오류가 발생했습니다.';
+    }
+}
+
+if (revisions.length === 0) {
+    document.getElementById('revisionHistory').value = '수정 내역이 없습니다.';
+}
 
 // =========================================================================
 // 인쇄

@@ -242,12 +242,12 @@
     </select>
     <!-- ============================================================================================================= -->
 
-    <!-- 고객 정보 수정 내역 -->
-    <insert id="insertUpdateHistory" parameterType="com.team.financial_project.dto.CustomerUpdateHistoryDTO">
-        INSERT INTO tb_cust_update_hist
-        (cust_id, cust_update_at, user_id, update_detail)
+    <insert id="insertHistoryById" parameterType="list">
+        INSERT INTO tb_cust_update_hist (cust_id, user_id, update_detail, cust_update_at)
         VALUES
-        (#{custId}, #{custUpdateAt}, #{userId}, #{updateDetail})
+        <foreach collection="list" item="history" separator=",">
+            (#{history.custId}, #{history.userId}, #{history.updateDetail}, #{history.custUpdateAt})
+        </foreach>
     </insert>
 
     <select id="findCustomerHistoryListById" resultType="com.team.financial_project.dto.CustomerUpdateHistoryDTO">

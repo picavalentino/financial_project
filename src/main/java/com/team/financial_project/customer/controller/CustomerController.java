@@ -20,10 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/customer")
@@ -102,7 +99,8 @@ public class CustomerController {
         try {
             // 고객 등록 로직 수행
             customerService.insertCustomer(customerDTO);
-            return ResponseEntity.ok().body(Map.of("success", true, "message", "고객이 성공적으로 등록되었습니다."));
+
+                        return ResponseEntity.ok().body(Map.of("success", true, "message", "고객이 성공적으로 등록되었습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "고객 등록에 실패했습니다: " + e.getMessage()));
         }
@@ -115,25 +113,6 @@ public class CustomerController {
     public ResponseEntity<List<UserDTO>> searchManagers(@PathVariable("custId") String custId, @RequestParam("name") String name) {
         List<UserDTO> managers = customerService.getManagersByName(name);
         return ResponseEntity.ok(managers);
-    }
-
-    @GetMapping("/detail/{custId}/history")
-    @ResponseBody
-    public ResponseEntity<List<CustomerUpdateHistoryDTO>> getCustomerUpdateHistory(@PathVariable("custId") String custId) {
-        try {
-            List<CustomerUpdateHistoryDTO> historyList = customerService.getCustomerHistoryById(custId);
-
-            // 수정 내역이 없는 경우 빈 리스트 반환
-            if (historyList == null || historyList.isEmpty()) {
-                return ResponseEntity.ok(Collections.emptyList());
-            }
-
-            return ResponseEntity.ok(historyList);
-        } catch (Exception e) {
-            log.error("수정 내역 조회 중 오류 발생: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.emptyList());
-        }
     }
 
     @GetMapping("/detail/{custId}")
@@ -169,31 +148,27 @@ public class CustomerController {
     /* 수정하기 */
     @PutMapping("/update")
     @ResponseBody
-    public ResponseEntity<String> updateCustomer(@RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<Map<String, Object>> updateCustomer(@RequestBody CustomerDTO customerDTO) {
         try {
             // 인증된 사용자 ID 가져오기
             String staffId = getAuthenticatedUserId();
 
             // 고객 정보 업데이트
-            customerService.updateCustomer(customerDTO);
+            customerService.updateCustomer(customerDTO, staffId);
 
-            // 기존 고객 정보 가져오기 (이전 상태 확인용)
-            CustomerDTO existingCustomer = customerService.getCustomerById(customerDTO.getCustId());
+            // 고객 수정 내역 생성 및 저장
+            List<CustomerUpdateHistoryDTO> historyList = customerService.createAndSaveHistory(customerDTO,customerDTO, staffId);
 
-            // 수정 내역 생성
-            CustomerUpdateHistoryDTO history = customerService.createUpdateHistory(customerDTO, existingCustomer, staffId);
+            // 응답 데이터 생성
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "고객 정보가 성공적으로 수정되었습니다.");
+            response.put("updateHistory", historyList);
 
-            // 수정 내역 저장
-            customerService.saveHistory(history);
-
-            return ResponseEntity.ok("고객 정보가 성공적으로 수정되었습니다.");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            // 에러 로그 기록
             log.error("고객 정보 수정 중 오류 발생: {}", e.getMessage(), e);
-
-            // 사용자에게 안전한 메시지 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("고객 정보 수정 중 오류가 발생했습니다. 관리자에게 문의하세요.");
+                    .body(Map.of("message", "고객 정보 수정 중 오류가 발생했습니다."));
         }
     }
 
