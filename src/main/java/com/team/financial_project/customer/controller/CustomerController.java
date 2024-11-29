@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -140,7 +141,7 @@ public class CustomerController {
 
         // 로그인된 사용자 ID 설정
         String staffId = getAuthenticatedUserId();
-        model.addAttribute("staffId",staffId);
+        model.addAttribute("staffId", staffId);
 
         // 고객 정보 수정 목록 가져오기
         List<CustomerUpdateHistoryDTO> history = customerService.getCustomerHistoryById(custId);
@@ -157,8 +158,8 @@ public class CustomerController {
         // 페이지에 출력하기 위한 코드 리스트 조회
         List<CodeDTO> counselCategories = counselService.getCodeListByCl("700");
 
-        model.addAttribute("history",history);
-        model.addAttribute("custOccpTyCdList",custOccpTyCdList);
+        model.addAttribute("history", history);
+        model.addAttribute("custOccpTyCdList", custOccpTyCdList);
         model.addAttribute("customer", customer);
         model.addAttribute("latestCounsel", latestCounsel);
         model.addAttribute("counselCategories", counselCategories);
@@ -166,16 +167,17 @@ public class CustomerController {
     }
 
     /* 수정하기 */
-    @PostMapping("/update")
+    @PutMapping("/update")
     @ResponseBody
     public ResponseEntity<String> updateCustomer(@RequestBody CustomerDTO customerDTO) {
         try {
+            // 인증된 사용자 ID 가져오기
             String staffId = getAuthenticatedUserId();
 
             // 고객 정보 업데이트
             customerService.updateCustomer(customerDTO);
 
-            // 기존 데이터 가져오기 (수정 내역 생성을 위해 필요)
+            // 기존 고객 정보 가져오기 (이전 상태 확인용)
             CustomerDTO existingCustomer = customerService.getCustomerById(customerDTO.getCustId());
 
             // 수정 내역 생성
@@ -186,11 +188,15 @@ public class CustomerController {
 
             return ResponseEntity.ok("고객 정보가 성공적으로 수정되었습니다.");
         } catch (Exception e) {
-            e.printStackTrace();
+            // 에러 로그 기록
+            log.error("고객 정보 수정 중 오류 발생: {}", e.getMessage(), e);
+
+            // 사용자에게 안전한 메시지 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("고객 정보 수정에 실패했습니다. 오류 메시지: " + e.getMessage());
+                    .body("고객 정보 수정 중 오류가 발생했습니다. 관리자에게 문의하세요.");
         }
     }
+
 
     /* ================================================================================================================= */
     /* 찐 메세지 발송 */

@@ -148,28 +148,40 @@ public class CustomerService {
         CustomerDTO originalCustomer = customerMapper.getCustomerById(customerDTO.getCustId());
 
         // 변경된 항목 기록
-        StringBuilder detail = new StringBuilder();
-        if (!Objects.equals(originalCustomer.getCustTelno(), customerDTO.getCustTelno())) {
-            detail.append(String.format("전화번호: %s → %s, ", originalCustomer.getCustTelno(), customerDTO.getCustTelno()));
-        }
-        if (!Objects.equals(originalCustomer.getCustEmail(), customerDTO.getCustEmail())) {
-            detail.append(String.format("이메일: %s → %s, ", originalCustomer.getCustEmail(), customerDTO.getCustEmail()));
-        }
-        if (!Objects.equals(originalCustomer.getCustAddr(), customerDTO.getCustAddr())) {
-            detail.append(String.format("주소: %s → %s, ", originalCustomer.getCustAddr(), customerDTO.getCustAddr()));
-        }
-        if (!Objects.equals(originalCustomer.getCustOccpTyCd(), customerDTO.getCustOccpTyCd())) {
-            detail.append(String.format("직업 코드: %s → %s, ", originalCustomer.getCustOccpTyCd(), customerDTO.getCustOccpTyCd()));
-        }
+        String updateDetail = generateChangeDetails(originalCustomer, customerDTO);
 
         // CustomerUpdateHistoryDTO 객체 생성
         CustomerUpdateHistoryDTO history = new CustomerUpdateHistoryDTO();
         history.setCustId(customerDTO.getCustId());
         history.setUserId(staffId); // 수정자 ID 설정
-        history.setUpdateDetail(detail.length() > 0 ? detail.substring(0, detail.length() - 2) : "변경 사항 없음");
-        history.setCustUpdateAt(LocalDateTime.now());
+        history.setUpdateDetail(updateDetail); // 변경된 항목만 설정
+        history.setCustUpdateAt(LocalDateTime.now()); // 수정 시각 설정
 
         return history;
+    }
+
+    // 변경 사항 기록 생성
+    private String generateChangeDetails(CustomerDTO original, CustomerDTO updated) {
+        StringBuilder detail = new StringBuilder();
+
+        // 변경된 필드만 기록
+        compareAndAppend(detail, "전화번호", original.getCustTelno(), updated.getCustTelno());
+        compareAndAppend(detail, "이메일", original.getCustEmail(), updated.getCustEmail());
+        compareAndAppend(detail, "주소", original.getCustAddr(), updated.getCustAddr());
+        compareAndAppend(detail, "직업 코드", original.getCustOccpTyCd(), updated.getCustOccpTyCd());
+
+        // 결과 반환 (불필요한 쉼표 제거)
+        return detail.length() > 0 ? detail.substring(0, detail.length() - 2) : ""; // 마지막 쉼표 제거
+    }
+
+    // 개별 필드 비교 및 변경 사항 기록
+    private void compareAndAppend(StringBuilder detail, String fieldName, String originalValue, String updatedValue) {
+        if (!Objects.equals(originalValue, updatedValue)) {
+            detail.append(String.format("%s: %s → %s, ",
+                    fieldName,
+                    originalValue != null ? originalValue : "null",
+                    updatedValue != null ? updatedValue : "null"));
+        }
     }
 
     public void saveHistory(CustomerUpdateHistoryDTO history) {
