@@ -2,7 +2,11 @@ package com.team.financial_project.schedule.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team.financial_project.mypage.dto.MypageDTO;
+import com.team.financial_project.schedule.dto.CustomerBirthdayDTO;
+import com.team.financial_project.schedule.dto.CustomerMtrDtDTO;
+import com.team.financial_project.schedule.dto.CustomerScheduleDTO;
 import com.team.financial_project.schedule.dto.ScheduleDTO;
+import com.team.financial_project.schedule.service.CustomerScheduleService;
 import com.team.financial_project.schedule.service.PersonalScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +28,12 @@ public class ScheduleController {
     @Autowired
     private PersonalScheduleService personalScheduleService;
 
+    @Autowired
+    private CustomerScheduleService customerScheduleService;
 
 
 
+    //개인 캘린더에유
     @GetMapping("/schedule/personal")
     public String schedulePersonal(Model model) {
         // 현재 사용자 ID 가져오기
@@ -99,25 +107,44 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete task: " + e.getMessage());
         }
     }
-
     @GetMapping("/schedule/customer")
-    public String scheduleCustomer(Model model){
-        // 현재 사용자 ID 가져오기
-        String userId = getAuthenticatedUserId();
-        List<ScheduleDTO> customerScheduleList = personalScheduleService.getEventsByUserId(userId);
-        if (customerScheduleList == null) {
-            throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+    public String scheduleCustomer(Model model) {
+        String user_id = getAuthenticatedUserId();
+
+        try {
+            List<CustomerScheduleDTO> customerScheduleList = customerScheduleService.getEventsByUserId(user_id);
+
+            // 디버깅 출력
+            System.out.println("Fetched CustomerScheduleList: " + customerScheduleList);
+
+            // 모델에 데이터 추가
+            model.addAttribute("user_id", user_id);
+            model.addAttribute("customerScheduleList", customerScheduleList);
+
+        } catch (Exception e) {
+            System.err.println("Error fetching schedule data: " + e.getMessage());
+            model.addAttribute("errorMessage", "데이터를 로드하는 중 문제가 발생했습니다.");
         }
-        // 3. 모델에 데이터 추가
-        model.addAttribute("userId", userId);
-        model.addAttribute("customerScheduleList", customerScheduleList);
-
-        System.out.println("DTO 데이터: " + customerScheduleList);
-
 
         return "schedule/customer";
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // 공통 사용 하는 녀석
     // 인증된 사용자 ID를 가져오는 메서드
     private String getAuthenticatedUserId() {
         // Spring Security에서 인증된 사용자 정보 가져오기
