@@ -14,7 +14,6 @@ spring:
     redis:
       host: financialproject-igbva6.serverless.apn2.cache.amazonaws.com
       port: 6379
-      ssl: false
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
