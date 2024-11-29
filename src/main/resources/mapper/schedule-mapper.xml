@@ -41,7 +41,7 @@
         calendar_type,
         calendar_event_detail,
         calendar_is_all_day,
-        task_checked_val,
+        task_checked_val
         ) VALUES (
         #{user_id},
         #{calendar_event_bgn_date},

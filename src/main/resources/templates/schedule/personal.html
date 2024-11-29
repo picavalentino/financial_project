@@ -51,13 +51,17 @@
         <!-- 오늘의 할 일 -->
         <div class="today_task">
             <h3>
+
+                <button id="prev-day-btn">&lt; </button>
                 <img th:src="@{/css/schedule/img/task_img.png}" alt="Task">
-                오늘의 할 일
+                <span id="today-date"></span>
+                <button id="next-day-btn">&gt;</button>
             </h3>
             <div class="today-tasks-list">
                 <!-- JavaScript로 Today Tasks 생성 -->
             </div>
         </div>
+
     </div>
 
     <!-- 일정 등록 모달 -->
@@ -147,6 +151,10 @@ function generateCalendar() {
     const lastDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
     const prevLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
 
+    const today = new Date(); // 오늘 날짜 객체 생성
+    const todayDate = today.getDate();
+    const isCurrentMonth = currentDate.getFullYear() === today.getFullYear() && currentDate.getMonth() === today.getMonth();
+
     $('.calendar-body').html(''); // 캘린더 내용 초기화
     let date = 1;
     let isLastDateDisplayed = false;
@@ -166,6 +174,25 @@ function generateCalendar() {
                 cell.style.backgroundColor = '#f0f0f0';
             } else if (date <= lastDate) {
                 cell.innerHTML = `<div class="calendar-date">${date}</div>`;
+
+                // 오늘 날짜 강조
+                   if (isCurrentMonth && date === todayDate) {
+                    const calendarDateDiv = cell.querySelector('.calendar-date');
+                    calendarDateDiv.style.backgroundColor = '#CC0000';
+                    calendarDateDiv.style.color = '#ffffff';
+                    calendarDateDiv.style.width = '30px';
+                    calendarDateDiv.style.height = '30px';
+                    calendarDateDiv.style.display = 'flex';
+                    calendarDateDiv.style.marginLeft = '-5px';
+                    calendarDateDiv.style.justifyContent = 'center';
+                    calendarDateDiv.style.alignItems = 'center';
+                    calendarDateDiv.style.borderRadius = '50%';
+                    calendarDateDiv.style.paddingRight = '5px';
+                    calendarDateDiv.style.paddingLeft = '5px';
+                    calendarDateDiv.style.marginTop = '-5px';
+
+                }
+
 
                 if (date === lastDate) {
                     isLastDateDisplayed = true;
@@ -205,8 +232,15 @@ function renderEvents(events) {
                 (event.calendar_type === '1' || event.calendar_type === '2')
             );
 
+            // 종일 이벤트와 일반 이벤트를 분리
+            const allDayEvents = dayEvents.filter(event => event.calendar_is_all_day === 'Y');
+            const timedEvents = dayEvents.filter(event => event.calendar_is_all_day !== 'Y');
+
+            // 이벤트 렌더링 순서: 종일 이벤트 먼저, 일반 이벤트 다음
+            const eventsToRender = [...allDayEvents, ...timedEvents];
+
             // 이벤트 추가
-            dayEvents.forEach(event => {
+            eventsToRender.forEach(event => {
                 const eventClass = event.calendar_is_all_day === 'Y'
                     ? (event.calendar_type === '1' ? 'event-bar-team-allday' : 'event-bar-personal-allday')
                     : (event.calendar_type === '1' ? 'event-bar-team' : 'event-bar-personal');
@@ -220,7 +254,10 @@ function renderEvents(events) {
                          data-title="${event.calendar_event_title}"
                          data-date="${event.calendar_event_bgn_date}"
                          data-location="${event.calendar_event_location || ''}">
-                        <span class="${dotClass}"></span>${event.calendar_event_title}
+                        ${event.calendar_is_all_day === 'Y'
+                            ? `${event.calendar_event_title || '제목 없음'}`
+                            : `<span class="${dotClass}"></span>${event.calendar_event_title || '제목 없음'}`
+                        }
                     </div>
                 `);
                 $(this).append($eventElement);
@@ -231,6 +268,7 @@ function renderEvents(events) {
     // 스타일 업데이트
     updateCalendarStyles();
 }
+
 
 
 function updateCalendarStyles() {
@@ -444,7 +482,7 @@ $('#schedule_all_btn').on('click', function () {
         top: clickY + 'px',
         left: clickX + 'px',
         position: 'absolute',
-        transform: 'translate(-50%, 5%)'
+        transform: 'translate(-50%, -50%)'
     }).fadeIn();
 });
 
@@ -517,14 +555,14 @@ $(document).on('click', '.task_etc', function (event) {
     const title = $taskContainer.find('#task_text p').text() || '제목 없음';
     const calendarSn = $taskContainer.data('calendar-sn') || 'N/A';
     const isAllDay = $taskContainer.data('is-all-day') === 'Y'; // 종일 여부
-    const date = $taskContainer.data('date') || '시간 없음';
+    const date = $taskContainer.data('date');
     const location = $taskContainer.data('location') || '위치 없음';
     const detail = $taskContainer.data('detail') || '세부 정보 없음';
 
     console.log(`Task Data: Title=${title}, Calendar SN=${calendarSn}, Date=${date}, Location=${location}, AllDay=${isAllDay}`);
 
     // 시간 변환 (UTC -> 로컬 시간, 종일 제외)
-    let formattedDate = date;
+    let formattedDate = date || '시간 없음';
     if (date && !isAllDay) {
         const originalDate = new Date(date);
         originalDate.setHours(originalDate.getHours() + 9); // 9시간 추가
@@ -539,15 +577,15 @@ $(document).on('click', '.task_etc', function (event) {
     $eventModal.find('.event-memo').text(detail);
 
     // 모달 위치 설정
-      const clickX = event.pageX; // 클릭한 X 좌표
-                const clickY = event.pageY; // 클릭한 Y 좌표
-                $eventModal.css({
-                    display: "block",
-                    top: clickY + "px",
-                    left: clickX + "px",
-                    position: "absolute",
-                    transform: "translate(-80%, 12%)"
-                }).fadeIn();
+    const clickX = event.pageX; // 클릭한 X 좌표
+    const clickY = event.pageY; // 클릭한 Y 좌표
+    $eventModal.css({
+        display: "block",
+        top: clickY + "px",
+        left: clickX + "px",
+        position: "absolute",
+        transform: "translate(-80%, 12%)"
+    }).fadeIn();
 });
 
 // 모달 닫기 이벤트
@@ -709,9 +747,14 @@ function renderTodayTasks(events) {
     const todayFormatted = formatDate(new Date());
     const currentUserId = /*[[${user_id}]]*/ ''; // 현재 로그인된 user_id 가져오기
 
+    // 오늘의 일정 필터링: 날짜, user_id, calendar_type 조건 추가
     const todayEvents = events.filter(event => {
         const eventDate = addNineHoursToUTC(event.calendar_event_bgn_date).toISOString().split('T')[0];
-        return eventDate === todayFormatted && event.user_id === currentUserId;
+        return (
+            eventDate === todayFormatted &&
+            event.user_id === currentUserId &&
+            (event.calendar_type === '1' || event.calendar_type === '2') // calendar_type이 1 또는 2
+        );
     });
 
     const $todayTaskContainer = $('.today_task .today-tasks-list');
@@ -730,11 +773,16 @@ function renderTodayTasks(events) {
         }
 
         const $taskElement = $(`
-            <div class="today-tasks" data-calendar-sn="${event.calendar_sn}">
+           <div class="today-tasks"
+                data-calendar-sn="${event.calendar_sn}"
+                data-is-all-day="${event.calendar_is_all_day}"
+                data-date="${event.calendar_event_bgn_date || ''}"
+                data-location="${event.calendar_event_location || ''}"
+                data-detail="${event.calendar_event_detail || ''}">
                 <label><strong>&middot; ${time}</strong></label>
-               <button class="delete-task">
-        <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
-    </button>
+                <button class="delete-task">
+                    <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
+                </button>
                 <button class="task_etc"><img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo"></button>
                 <div id="task_text">
                     <p>${event.calendar_event_title || '제목 없음'}</p>
@@ -820,6 +868,120 @@ $(document).on('click', '.delete-task', function (event) {
     });
 });
         });
+$(document).ready(function () {
+    const scheduleList = /*[[${personalScheduleList}]]*/ []; // 서버에서 전달받은 일정 데이터
+
+    // 오늘 날짜를 기반으로 #today-date를 동적으로 생성
+    function initializeTodayDate() {
+        const today = new Date();
+        updateTodayDate(today); // 오늘 날짜로 초기화
+    }
+
+   // #today-date 업데이트 함수
+    function updateTodayDate(date) {
+    const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토']; // 요일 배열
+    const dayOfWeek = daysOfWeek[date.getDay()]; // 현재 날짜의 요일 가져오기
+
+    const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}월 ${String(date.getDate()).padStart(2, '0')}일 (${dayOfWeek})`;
+    $('#today-date').text(formattedDate).data('current-date', date.toISOString().split('T')[0]); // 날짜와 ISO 포맷 저장
+}
+
+    // 오늘의 일정 렌더링
+    function renderTodayTasks(events) {
+        const todayDateText = $('#today-date').data('current-date'); // ISO 형식 날짜 가져오기
+        const currentUserId = /*[[${user_id}]]*/ ''; // 현재 로그인된 user_id 가져오기
+
+        // 오늘의 일정 필터링: 날짜, user_id, calendar_type 조건 추가
+        const todayEvents = events.filter(event => {
+            const eventDate = addNineHoursToUTC(event.calendar_event_bgn_date).toISOString().split('T')[0];
+            return (
+                eventDate === todayDateText &&
+                event.user_id === currentUserId &&
+                (event.calendar_type === '1' || event.calendar_type === '2') // calendar_type이 1 또는 2
+            );
+        });
+   // calendar_is_all_day가 Y인 데이터를 우선적으로 정렬
+    todayEvents.sort((a, b) => {
+        if (a.calendar_is_all_day === 'Y' && b.calendar_is_all_day !== 'Y') return -1;
+        if (a.calendar_is_all_day !== 'Y' && b.calendar_is_all_day === 'Y') return 1;
+        return 0; // 순서 유지
+    });
+
+        const $todayTaskContainer = $('.today_task .today-tasks-list');
+        $todayTaskContainer.empty();
+
+        if (todayEvents.length === 0) {
+            $todayTaskContainer.append('<p class="no-tasks-message">일정이 없습니다.</p>');
+            return;
+        }
+
+        todayEvents.forEach(event => {
+            let time = '종일';
+            if (event.calendar_is_all_day !== 'Y') {
+                const localDate = addNineHoursToUTC(event.calendar_event_bgn_date);
+                time = localDate.toTimeString().substring(0, 5); // HH:mm 추출
+            }
+
+            const $taskElement = $(`
+               <div class="today-tasks"
+                    data-calendar-sn="${event.calendar_sn}"
+                    data-is-all-day="${event.calendar_is_all_day}"
+                    data-date="${event.calendar_event_bgn_date || ''}"
+                    data-location="${event.calendar_event_location || ''}"
+                    data-detail="${event.calendar_event_detail || ''}">
+                    <label><strong>&middot; ${time}</strong></label>
+                    <button class="delete-task">
+                        <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
+                    </button>
+                    <button class="task_etc"><img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo"></button>
+                    <div id="task_text">
+                        <p>${event.calendar_event_title || '제목 없음'}</p>
+                        <input type="checkbox">
+                    </div>
+                </div>
+            `);
+            $todayTaskContainer.append($taskElement);
+        });
+
+        console.log('Today Tasks Rendered:', $todayTaskContainer);
+    }
+
+    // 날짜 이동 버튼 처리
+    $('#prev-day-btn').on('click', () => {
+        const currentDate = new Date($('#today-date').data('current-date')); // data로 저장된 현재 날짜 가져오기
+        currentDate.setDate(currentDate.getDate() - 1); // 하루 전으로 이동
+
+        updateTodayDate(currentDate); // #today-date 업데이트
+        renderTodayTasks(scheduleList); // 이동 후 일정 렌더링
+    });
+
+    $('#next-day-btn').on('click', () => {
+        const currentDate = new Date($('#today-date').data('current-date')); // data로 저장된 현재 날짜 가져오기
+        currentDate.setDate(currentDate.getDate() + 1); // 하루 후로 이동
+
+        updateTodayDate(currentDate); // #today-date 업데이트
+        renderTodayTasks(scheduleList); // 이동 후 일정 렌더링
+    });
+
+    // UTC 날짜에 9시간 더하기
+    function addNineHoursToUTC(utcDate) {
+        const date = new Date(utcDate); // UTC 시간 기준으로 생성
+        date.setHours(date.getHours() + 9); // 9시간 추가
+        return date;
+    }
+
+    // 날짜 포맷팅 함수
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // 초기화
+    initializeTodayDate(); // 오늘 날짜로 초기화
+    renderTodayTasks(scheduleList); // 초기 일정 렌더링
+});
 
     </script>
 
