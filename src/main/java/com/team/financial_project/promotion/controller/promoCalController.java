@@ -75,7 +75,9 @@ public class promoCalController {
 
     // 설계 디테일 페이지 이동
     @GetMapping("/cal/detail")
-    public String moveDetailPage(@RequestParam("dsgnSn") Long dsgnSn, Model model) {
+    public String moveDetailPage(@RequestParam("dsgnSn") Long dsgnSn,
+                                 @RequestParam(value = "codeCl", defaultValue = "430") String codeCl,
+                                 Model model) {
         try {
             String dsTyCd = promoCalService.findDsTyCd(dsgnSn);
             System.out.println("===========" + dsTyCd);
@@ -84,22 +86,30 @@ public class promoCalController {
             switch (dsTyCd) {
                 case "1":
                     DsgnDetailDto dsgnDetailDto = promoCalService.findSavgDetails(dsgnSn);
+                    List<CodeDto> progressStatusList1 = promotionService.getCodeListByCl(codeCl);
+                    model.addAttribute("progressStatusList", progressStatusList1);
                     System.out.println("Result from findSavgDetails: " + dsgnDetailDto);
                     model.addAttribute("savgInfo", dsgnDetailDto);
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "promotion/promotionDetailSavg";
                 case "2":
                     DsgnDetailDto detailDto = promoCalService.findAcmlDetails(dsgnSn);
+                    List<CodeDto> progressStatusList2 = promotionService.getCodeListByCl(codeCl);
+                    model.addAttribute("progressStatusList", progressStatusList2);
                     model.addAttribute("savgInfo",detailDto);
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "promotion/promotionDetailAcml";
                 case "3":
                     DsgnDetailDto detailDtos = promoCalService.findDpstDetails(dsgnSn);
+                    List<CodeDto> progressStatusList3= promotionService.getCodeListByCl(codeCl);
+                    model.addAttribute("progressStatusList", progressStatusList3);
                     model.addAttribute("savgInfo",detailDtos);
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "promotion/promotionDetailDpst";
                 case "4":
                     DsgnDetailDto dsgnDetailDtos = promoCalService.findLoanDetails(dsgnSn);
+                    List<CodeDto> progressStatusList4 = promotionService.getCodeListByCl(codeCl);
+                    model.addAttribute("progressStatusList", progressStatusList4);
                     model.addAttribute("savgInfo",dsgnDetailDtos);
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "promotion/promotionDetailLoan";
@@ -213,6 +223,53 @@ public class promoCalController {
         return ResponseEntity.ok("저장이 완료되었습니다.");
     }
 
+    // 목돈저축 설계수정
+    @PostMapping("/cal/acml/update")
+    @ResponseBody
+    public ResponseEntity<String> updateAcml(@RequestBody SavingsSaveDto savingsSaveDto) {
+        System.out.println("Received DTO: " + savingsSaveDto);
+
+        // 서비스 호출
+        promoCalService.updateAcml(savingsSaveDto);
+
+        return ResponseEntity.ok("저장이 완료되었습니다.");
+    }
+
+    // 예금저축 설계수정
+    @PostMapping("/cal/dpst/update")
+    @ResponseBody
+    public ResponseEntity<String> updateDpst(@RequestBody SavingsSaveDto savingsSaveDto) {
+        System.out.println("Received DTO: " + savingsSaveDto);
+
+        // 서비스 호출
+        promoCalService.updateDpst(savingsSaveDto);
+
+        return ResponseEntity.ok("저장이 완료되었습니다.");
+    }
+
+    // 예금저축 설계수정
+    @PostMapping("/cal/savg/update")
+    @ResponseBody
+    public ResponseEntity<String> updateSavg(@RequestBody SavingsSaveDto savingsSaveDto) {
+        System.out.println("Received DTO: " + savingsSaveDto);
+
+        // 서비스 호출
+        promoCalService.updateSavg(savingsSaveDto);
+
+        return ResponseEntity.ok("저장이 완료되었습니다.");
+    }
+
+    // 대출 설계수정
+    @PostMapping("/cal/loan/update")
+    @ResponseBody
+    public ResponseEntity<String> updateLoan(@RequestBody SavingsSaveDto savingsSaveDto) {
+        System.out.println("Received DTO: " + savingsSaveDto);
+
+        // 서비스 호출
+        promoCalService.updateLoan(savingsSaveDto);
+
+        return ResponseEntity.ok("저장이 완료되었습니다.");
+    }
 
 }
 

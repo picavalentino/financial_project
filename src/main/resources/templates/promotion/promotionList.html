@@ -173,10 +173,6 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
-        // CSRF 토큰 값 가져오기
-        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
-
         let currentSortColumn = null; // 현재 정렬 기준
         let sortDirection = 'asc';   // 기본 정렬 방향 (오름차순)
 

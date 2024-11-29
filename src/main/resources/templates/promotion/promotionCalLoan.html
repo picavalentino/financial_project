@@ -290,9 +290,9 @@
                 <button class="btn btn-register">
                     <i class="icon bi bi-plus-circle-fill"></i> 저장
                 </button>
-                <button class="btn btn-mail">
-                    <i class="icon bi bi-printer"></i> 발송
-                </button>
+<!--                <button class="btn btn-mail">-->
+<!--                    <i class="icon bi bi-printer"></i> 발송-->
+<!--                </button>-->
                 <button class="btn btn-print">
                     <i class="icon bi bi-envelope"></i> 인쇄
                 </button>
@@ -364,10 +364,6 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
-        // CSRF 토큰 값 가져오기
-        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
-
         document.querySelector('.btn-print').addEventListener('click', function () {
                     window.print();
                 });
@@ -838,7 +834,9 @@
             // 서버 요청
             fetch(url, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json',
+                 'X-CSRF-Token': csrfToken,
+                 },
                 body: JSON.stringify(requestData),
             })
                 .then((response) => {
@@ -970,6 +968,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken,
                 },
                 body: JSON.stringify(savingsSaveDto), // DTO 형태로 JSON 변환
             })

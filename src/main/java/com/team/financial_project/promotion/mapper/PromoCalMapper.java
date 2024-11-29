@@ -32,11 +32,12 @@ public interface PromoCalMapper {
 
     void insertProdDsgnDpst(SavingsSaveDto savingsSaveDto);
 
-    // 대출 설계 저
+    // 대출 설계 저장
     void insertLoanCustprodDsgn(SavingsSaveDto savingsSaveDto);
 
     void insertProdDsgnLoan(SavingsSaveDto savingsSaveDto);
 
+    // 상세페이지 출력
     DsgnDetailDto findSavgDetails(Long dsgnSn);
 
     DsgnDetailDto findAcmlDetails(Long dsgnSn);
@@ -44,4 +45,24 @@ public interface PromoCalMapper {
     DsgnDetailDto findDpstDetails(Long dsgnSn);
 
     DsgnDetailDto findLoanDetails(Long dsgnSn);
+
+    // 목돈 적금 업데이트
+    void updateCustprodDsgn(SavingsSaveDto savingsSaveDto);
+
+    void updateProdDsgnAcml(SavingsSaveDto savingsSaveDto);
+
+    // 예금 업데이트
+    void updateDpstCustprodDsgn(SavingsSaveDto savingsSaveDto);
+
+    void updateProdDsgnDpst(SavingsSaveDto savingsSaveDto);
+
+    // 적금 업데이트
+    void updateSavgCustprodDsgn(SavingsSaveDto savingsSaveDto);
+
+    void updateProdDsgnSavg(SavingsSaveDto savingsSaveDto);
+
+    // 대출 업데이트
+    void updateLoanCustprodDsgn(SavingsSaveDto savingsSaveDto);
+
+    void updateProdDsgnLoan(SavingsSaveDto savingsSaveDto);
 }

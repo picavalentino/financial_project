@@ -1,0 +1,311 @@
+@font-face {
+    font-family: "Pretendard";
+    src: url("../fonts/Pretendard-Medium.otf");
+}
+@media (max-width: 768px) {
+    body{
+        overflow: auto;
+    }
+    .register-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .left-logo {
+        width: 100%;
+        padding: 40px;
+        border-radius: 0;
+        min-width: 500px;
+        height: 100px;
+    }
+    .left-logo img {
+        width: 210px;
+    }
+    .right{
+        padding: 40px 0;
+    }
+}
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ecececa3;
+    border-radius: 10px;
+}
+
+.register-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.left-logo {
+    background-color: #010535;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.left-logo img {
+    max-width: 50%;
+    height: auto;
+}
+
+.right{
+    min-width: 500px;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register{
+    min-width: 400px;
+    width: 70%;
+    height: auto;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title .text {
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.title img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.input-container label {
+    display: block;
+    color: #4a4a4a;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgb(141, 141, 141);
+    font-size: small;
+}
+
+.employee-info {
+    display: flex;
+    margin-bottom: 15px;
+    justify-content: space-between;
+}
+.left-info{
+    width: 45%;
+}
+.left-info label{
+    display: block;
+    color: #525252;
+}
+.left-info p{
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    color: #525252;
+    border-bottom: 2px solid #525252;
+}
+
+.right-img{
+    width: 50%;
+}
+.right-img img{
+    width: 100%;
+    border-radius: 20px;
+    max-height: 215px;
+    border: 1.5px solid #5252528c;
+}
+.msg{
+    display: none;
+    color: rgb(172, 35, 35);
+    font-size: smaller;
+    margin-left: 10px;
+}
+.user_telno{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.user_telno input{
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgb(103, 103, 103);
+    font-size: small;
+}
+.user_telno select{
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgb(103, 103, 103);
+    font-size: small;
+    color: #696969;
+}
+
+.img-btns{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+.img-btns button{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    height: 25px;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    color: white;
+    padding: 0;
+    gap: 2px;
+}
+.img-btns button .icon i{
+    display: flex;
+    font-size: 14px;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+}
+.icon {
+    border-radius: 8px;
+    display: flex;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+}
+/* 등록 버튼 */
+.btn-photoReg {
+    width: 100px;
+    background-color: #5ba1aa;
+}
+
+.btn-photoReg .icon {
+    background-color: #4a8b92;
+}
+
+.btn-photoReg:hover {
+    background-color: #4a8b92;
+}
+/* 초기화 버튼 */
+.btn-reset {
+    background-color: #5a5a5a;
+    width: 85px;
+}
+
+.btn-reset .icon {
+    background-color: #4d4d4d;
+}
+
+.btn-reset:hover {
+    background-color: #4d4d4d;
+}
+#btn-show{
+    display: none;
+}
+.btn-certify{
+    display: flex;
+    margin-left: auto;
+    background-color: #a17777;
+    color: #ffffff;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+.btn-certify:disabled{
+    background-color: rgb(140 140 140);
+    cursor: default;
+}
+.btn-certify:enabled:hover{
+    background-color: #8d5050;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.btn-register{
+    font-size: large;
+    padding: 10px 0px;
+    background-color: #71A4AD;
+    border-radius: 25px;
+    border: none;
+    width: 100%;
+    color: #ffffff;
+    font-weight: bold;
+}
+.btn-register:disabled{
+    background-color: rgb(140 140 140);
+    cursor: not-allowed;
+}
+.btn-register:enabled:hover{
+    background-color: #567d84;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 드롭다운 */
+.id-container{
+    position: relative;
+}
+.dropdown {
+    display: none;
+    position: absolute;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 999; /* 다른 요소 위에 표시되도록 설정 */
+    padding: 0;
+    margin: 0 5px;
+    width: 97%;
+}
+.dropdown span{
+    font-size: small;
+    color: #878787;
+    margin-left: 20px;
+    justify-content: center;
+}
+
+.dropdown .dropdown-item {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0; /* 항목 구분선 */
+}
+
+.dropdown .dropdown-item:last-child {
+    border-bottom: none; /* 마지막 항목은 구분선 제거 */
+}
+
+.dropdown .dropdown-item:hover {
+    background-color: #f8f8f8; /* 항목에 마우스를 올렸을 때 배경색 변경 */
+}
+/* 인풋박스 포커스 */
+input:focus,
+select:focus{
+    outline: 1.3px solid #656565 !important;
+}

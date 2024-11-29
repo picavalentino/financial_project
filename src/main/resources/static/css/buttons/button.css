@@ -1,0 +1,143 @@
+.button-wrap {
+    display: flex; /* 버튼 그룹을 중앙 정렬하기 위해 Flexbox 사용 */
+    align-items: center;
+    margin: 15px; /* 상단 여백 */
+    gap: 10px;
+}
+/* 버튼 */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  width: 85px;
+  height: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  color: white;
+  padding: 0px;
+  padding-left: 5px;
+}
+/* 아이콘 컨테이너 */
+.icon-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 30px;
+    margin: 0px;
+    margin-left: -7px;
+    margin-right: 12px;
+}
+/* 아이콘 설정 */
+.btn i.icon {
+  font-size: 18px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: inline-block; /* 아이콘이 컨테이너에서 정렬되도록 설정 */
+  padding: 2px;
+}
+.icon{
+    margin: auto;
+}
+
+/* 버튼 개별 스타일 */
+/* 등록 버튼 */
+#btn-register {
+  background-color: #5ba1aa;
+}
+
+#btn-register .icon {
+  background-color: #4a8b92;
+}
+
+#btn-register:hover {
+  background-color: #4a8b92;
+  transform: scale(1.05);
+}
+/* 초기화 버튼 */
+#btn-reset {
+  background-color: #5a5a5a;
+  width: 90px;
+}
+
+#btn-reset .icon {
+  background-color: #4d4d4d;
+}
+
+#btn-reset:hover {
+  background-color: #4d4d4d;
+  transform: scale(1.05);
+}
+/* 목록 버튼 */
+#btn-list {
+  background-color: #1b1f44;
+}
+
+#btn-list .icon {
+  background-color: #151835;
+}
+
+#btn-list:hover {
+  background-color: #151835;
+  transform: scale(1.05);
+}
+/* 검색 버튼 */
+#btn-search {
+    background-color: #1b1f44; /* 진한 파란색 */
+}
+
+#btn-search .icon {
+    background-color: #0f132e; /* 더 진한 파란색 */
+}
+
+#btn-search:hover {
+    background-color: #13183c;
+}
+
+/* 전체 버튼 */
+#btn-search-all {
+    background-color: #13183c; /* 다소 진한 파란색 */
+}
+
+#btn-search-all .icon {
+    background-color: #0f132e; /* 진한 파란색 */
+}
+
+#btn-search-all:hover {
+    background-color: #0b0f28;
+}
+
+/* 인쇄 버튼 */
+#btn-print {
+    background-color: #292D32; /* 청록색 */
+}
+
+#btn-print .icon {
+    background-color: #8E98A8; /* 진한 청록색 */
+}
+
+#btn-print:hover {
+    background-color: #1d1f22;
+}
+/* 삭제 버튼 */
+#btn-delete {
+    background-color: #FF6767; /* 청록색 */
+}
+
+#btn-delete .icon {
+    background-color: #BD3232; /* 진한 청록색 */
+}
+
+#btn-delete:hover {
+    background-color: #bd4c4c;
+}
+/* 버튼 활성화 효과 */
+.btn:active {
+  box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
+}

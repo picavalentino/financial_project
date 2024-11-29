@@ -143,7 +143,7 @@
                             <!-- 상품선택 -->
                             <div class="input-with-button">
                                 <!-- 상품설계번호 -->
-                                <input type="hidden" id="prodSn" name="prodSn">
+                                <input type="hidden" id="prodSn" name="prodSn" th:value="${savgInfo.prodSn}">
                                 <!-- 설계유형코드 -->
                                 <input type="hidden" id="prodDsTyCd" name="prodDsTyCd">
                                 <!-- 상품코드 -->
@@ -157,7 +157,7 @@
                             <!-- 표시용 -->
                             <input type="text" id="prodPayTy" name="prodPayTy" th:value="${savgInfo.payTerm}" disabled>
                             <!-- 저장용 -->
-                            <input type="hidden" id="prodPayTyCd" name="prodPayTyCd">
+                            <input type="hidden" id="prodPayTyCd" th:value="${savgInfo.savgPayTyCd}" name="prodPayTyCd">
 
                             <!-- 시작일자 -->
 <!--                            <input type="date" id="savgStrtDt" name="savgStrtDt">-->
@@ -207,7 +207,7 @@
                             <!-- 계산용 -->
                             <input type="hidden" id="prodIntTaxRate" th:value="${savgInfo.newSavgTaxRate}" name="prodIntTaxRate">
                             <!-- 저장용 -->
-                            <input type="hidden" id="savgIntTaxTyCd" th:value="${savgInfo.newSavgTaxRate}" name="savgIntTaxTyCd">
+                            <input type="hidden" id="savgIntTaxTyCd" th:value="${savgInfo.savgIntTaxTyCd}" name="savgIntTaxTyCd">
 
                             <!-- 설계일자 -->
                             <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" th:value="${savgInfo.effectiveDsgnDate}" disabled>
@@ -285,9 +285,9 @@
                 <button class="btn btn-register">
                     <i class="icon bi bi-plus-circle-fill"></i> 저장
                 </button>
-                <button class="btn btn-mail">
-                    <i class="icon bi bi-printer"></i> 발송
-                </button>
+<!--                <button class="btn btn-mail">-->
+<!--                    <i class="icon bi bi-printer"></i> 발송-->
+<!--                </button>-->
                 <button class="btn btn-print">
                     <i class="icon bi bi-envelope"></i> 인쇄
                 </button>
@@ -369,10 +369,6 @@
 
     <!-- 자바스크립트 -->
     <script th:inline="javascript">
-        // CSRF 토큰 값 가져오기
-        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
-
         window.addEventListener('DOMContentLoaded', () => {
                const button = document.querySelector('.btn-int-cal'); // 버튼 선택
                 if (button) {
@@ -394,11 +390,11 @@
            }
 
            // 날짜 필드 설정 (오늘 날짜)
-<!--           const dsgnCreateAt = document.getElementById('dsgnCreateAt');-->
+           const dsgnCreateAt = document.getElementById('dsgnCreateAt');
            const dsgnUpdateAt = document.getElementById('dsgnUpdateAt');
            const savgStrtDt = document.getElementById('savgStrtDt'); // 시작일자
 
-           if (dsgnCreateAt) dsgnCreateAt.value = getTodayDate();
+<!--           if (dsgnCreateAt) dsgnCreateAt.value = getTodayDate();-->
            if (dsgnUpdateAt) dsgnUpdateAt.value = getTodayDate();
 
            // 시작일자 기본값과 최소값 설정
@@ -852,7 +848,9 @@
            // 서버 요청
            fetch('/promotion/cal/savg/calculate', {
                method: 'POST',
-               headers: { 'Content-Type': 'application/json' },
+               headers: { 'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
+                },
                body: JSON.stringify(requestData),
            })
                .then((response) => {
@@ -909,10 +907,10 @@
 
            // 상품 선택 확인
            const prodSn = document.getElementById('prodSn').value.trim();
-           if (!prodSn) {
-               alert('상품 조회 후 저장이 가능합니다.');
-               return;
-           }
+<!--           if (!prodSn) {-->
+<!--               alert('상품 조회 후 저장이 가능합니다.');-->
+<!--               return;-->
+<!--           }-->
 
            // 현재 설계 유형 확인
            const calculationType = document.querySelector('input[name="calculationType"]:checked').value;
@@ -924,10 +922,10 @@
            // userId와 custId 값 확인
            const userId = document.getElementById('userId').value.trim();
            const custId = document.getElementById('custId').value.trim();
-           if (!userId || !custId) {
-               alert('고객 조회 후 저장이 가능합니다.');
-               return;
-           }
+<!--           if (!userId || !custId) {-->
+<!--               alert('고객 조회 후 저장이 가능합니다.');-->
+<!--               return;-->
+<!--           }-->
 
            // 이자 계산 확인
            const savgTotDpstInt = document.getElementById('savgTotDpstInt').value.trim();
@@ -945,6 +943,7 @@
 
            // 유효성 검사가 통과되면 데이터 수집 및 저장
            const savingsSaveDto = {
+               dsgnSno: document.getElementById('dsgnSn').value, // 설계번호
                prodSn: prodSn, // 상품번호
                custId: custId, // 고객ID
                userId: userId, // 담당자ID
@@ -964,15 +963,16 @@
                savgIntTaxAmt: parseInt(document.getElementById('savgIntTaxAmt').value.replace(/,/g, ''), 10), // 이자과세금액
                savgAtxRcveAmt: parseInt(document.getElementById('savgAtxRcveAmt').value.replace(/,/g, ''), 10), // 세후수령액
            };
-
+                console.log(dsgnUpdateAt);
 <!--            // 데이터 확인 로그-->
 <!--            console.log('Collected Data:', data);-->
 
            // 서버로 POST 요청 전송
-           fetch('/promotion/cal/acml/insert', {
+           fetch('/promotion/cal/acml/update', {
                method: 'POST',
                headers: {
                    'Content-Type': 'application/json',
+                   'X-CSRF-Token': csrfToken,
                },
                body: JSON.stringify(savingsSaveDto), // DTO 형태로 JSON 변환
            })

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class SavingsSaveDto {
     private Integer dsgnSn; // 자동 생성될 DSGN_SN 값
+    private Integer dsgnSno; // 업데이트 비교용 DSGN_SN 값
 
     // TB_CUSTPROD_DSGN 관련 필드
     private Integer prodSn;

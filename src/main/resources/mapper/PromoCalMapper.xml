@@ -157,6 +157,7 @@
         #{savgIntTaxAmt}, #{savgAtxRcveAmt}
         )
     </insert>
+
     <insert id="insertDpstCustprodDsgn" useGeneratedKeys="true" keyProperty="dsgnSn">
         INSERT INTO TB_CUSTPROD_DSGN (
         PROD_SN, CUST_ID, USER_ID, DSGN_CREATE_AT, DSGN_UPDATE_AT,
@@ -179,6 +180,7 @@
         #{savgIntTaxAmt}, #{savgAtxRcveAmt}
         )
     </insert>
+
     <insert id="insertLoanCustprodDsgn" useGeneratedKeys="true" keyProperty="dsgnSn">
         INSERT INTO TB_CUSTPROD_DSGN (
         PROD_SN, CUST_ID, USER_ID, DSGN_CREATE_AT, DSGN_UPDATE_AT,
@@ -199,6 +201,117 @@
         #{savgTotDpstInt}, #{savgAtxRcveAmt}
         )
     </insert>
+
+    <update id="updateCustprodDsgn">
+        UPDATE TB_CUSTPROD_DSGN
+        SET
+        PROD_SN = #{prodSn},
+        DSGN_UPDATE_AT = #{dsgnUpdateAt},
+        DSGN_DS_TY_CD = #{prodDsTyCd},
+        DSGN_PRG_STCD = #{dsgnPrgStcd}
+        WHERE
+        DSGN_SN = #{dsgnSno} <!-- 기존 데이터를 식별하는 조건 -->
+    </update>
+    <update id="updateProdDsgnAcml">
+        UPDATE TB_PROD_DSGN_ACML
+        SET
+        ACML_PAY_TY_CD = #{prodPayTyCd},
+        ACML_GOAL_AMT = #{savgCircleAmt},
+        ACML_GOAL_PRD = #{savgGoalPrd},
+        ACML_STRT_DT = #{savgStrtDt},
+        ACML_MTR_DT = #{savgMtrDt},
+        ACML_APLY_RATE = #{savgAplyRate},
+        ACML_INT_TAX_TY_CD = #{savgIntTaxTyCd},
+        ACML_CIRCLE_AMT = #{savgCircleAmt},
+        ACML_TOT_DPST_AMT = #{savgTotDpstAmt},
+        ACML_TOT_DPST_INT = #{savgTotDpstInt},
+        ACML_INT_TAX_AMT = #{savgIntTaxAmt},
+        ACML_ATX_RCVE_AMT = #{savgAtxRcveAmt}
+        WHERE
+        DSGN_SN = #{dsgnSno} <!-- 기존 데이터를 식별하는 조건 -->
+    </update>
+
+    <update id="updateDpstCustprodDsgn">
+        UPDATE TB_CUSTPROD_DSGN
+        SET
+        PROD_SN = #{prodSn},
+        DSGN_UPDATE_AT = #{dsgnUpdateAt},
+        DSGN_DS_TY_CD = #{prodDsTyCd},
+        DSGN_PRG_STCD = #{dsgnPrgStcd}
+        WHERE
+        DSGN_SN = #{dsgnSno} <!-- 기존 데이터를 식별하는 조건 -->
+    </update>
+    <update id="updateProdDsgnDpst">
+        UPDATE TB_PROD_DSGN_DPST
+        SET
+        DPST_PAY_TY_CD = #{prodPayTyCd},
+        DPST_AMT = #{savgCircleAmt},
+        DPST_PRD = #{savgGoalPrd},
+        DPST_STRT_DT = #{savgStrtDt},
+        DPST_MTR_DT = #{savgMtrDt},
+        DPST_APLY_RATE = #{savgAplyRate},
+        DPST_INT_TAX_TY_CD = #{savgIntTaxTyCd},
+        DPST_TOT_AMT = #{savgTotDpstAmt},
+        DPST_TOT_INT = #{savgTotDpstInt},
+        DPST_INT_TAX_AMT = #{savgIntTaxAmt},
+        DPST_ATX_RCVE_AMT = #{savgAtxRcveAmt}
+        WHERE
+        DSGN_SN = #{dsgnSno} <!-- 기존 데이터를 식별하는 조건 -->
+    </update>
+
+    <update id="updateSavgCustprodDsgn">
+        UPDATE TB_CUSTPROD_DSGN
+        SET
+        PROD_SN = #{prodSn},
+        DSGN_UPDATE_AT = #{dsgnUpdateAt},
+        DSGN_DS_TY_CD = #{prodDsTyCd},
+        DSGN_PRG_STCD = #{dsgnPrgStcd}
+        WHERE
+        DSGN_SN = #{dsgnSno} <!-- 기존 데이터를 식별하는 조건 -->
+    </update>
+    <update id="updateProdDsgnSavg">
+        UPDATE TB_PROD_DSGN_SAVG
+        SET
+        SAVG_PAY_TY_CD = #{prodPayTyCd},
+        SAVG_GOAL_AMT = #{savgCircleAmt},
+        SAVG_GOAL_PRD = #{savgGoalPrd},
+        SAVG_STRT_DT = #{savgStrtDt},
+        SAVG_MTR_DT = #{savgMtrDt},
+        SAVG_APLY_RATE = #{savgAplyRate},
+        SAVG_INT_TAX_TY_CD = #{savgIntTaxTyCd},
+        SAVG_CIRCLE_AMT = #{savgCircleAmt},
+        SAVG_TOT_DPST_AMT = #{savgTotDpstAmt},
+        SAVG_TOT_DPST_INT = #{savgTotDpstInt},
+        SAVG_INT_TAX_AMT = #{savgIntTaxAmt},
+        SAVG_ATX_RCVE_AMT = #{savgAtxRcveAmt}
+        WHERE
+        DSGN_SN = #{dsgnSno} <!-- 기존 데이터를 식별하는 조건 -->
+    </update>
+
+    <update id="updateLoanCustprodDsgn">
+        UPDATE TB_CUSTPROD_DSGN
+        SET
+        PROD_SN = #{prodSn},
+        DSGN_UPDATE_AT = #{dsgnUpdateAt},
+        DSGN_DS_TY_CD = #{prodDsTyCd},
+        DSGN_PRG_STCD = #{dsgnPrgStcd}
+        WHERE
+        DSGN_SN = #{dsgnSn}
+    </update>
+    <update id="updateProdDsgnLoan">
+        UPDATE TB_PROD_DSGN_LOAN
+        SET
+        LOAN_RPTY_CD = #{repaymentMethodCode},
+        LOAN_AMT = #{savgCircleAmt},
+        LOAN_REPY_PRD = #{savgGoalPrd},
+        LOAN_STRT_DT = #{savgStrtDt},
+        LOAN_MTR_DT = #{savgMtrDt},
+        LOAN_RATE = #{savgAplyRate},
+        LOAN_TOT_INT_AMT = #{savgTotDpstInt},
+        LOAN_TOT_PAY_AMT = #{savgAtxRcveAmt}
+        WHERE
+        DSGN_SN = #{dsgnSn}
+    </update>
 
     <select id="findSavgDetails" parameterType="long" resultType="com.team.financial_project.promotion.dto.DsgnDetailDto">
         WITH dsgn_data AS (
@@ -234,7 +347,7 @@
         ),
         savg_data AS (
         SELECT
-        savg_strt_dt, savg_mtr_dt, savg_goal_amt, savg_goal_prd, savg_aply_rate
+        savg_strt_dt, savg_mtr_dt, savg_goal_amt, savg_goal_prd, savg_aply_rate, savg_int_tax_ty_cd, savg_pay_ty_cd
         FROM tb_prod_dsgn_savg
         WHERE dsgn_sn = #{dsgnSn}
         ),
@@ -258,6 +371,7 @@
         WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
             ELSE dsgn_data.dsgn_create_at
         END AS effectiveDsgnDate,
+        dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
         prod_data.prod_nm AS prodNm,
         cust_data.cust_nm AS custNm,
@@ -273,6 +387,8 @@
         savg_data.savg_goal_amt AS savgGoalAmt,
         savg_data.savg_goal_prd AS savgGoalPrd,
         savg_data.savg_aply_rate AS savgAplyRate,
+        savg_data.savg_int_tax_ty_cd AS savgIntTaxTyCd,
+        savg_data.savg_pay_ty_cd AS savgPayTyCd,
         tax_code_data.code_tax_rate AS savgTaxRate,
         pay_term_data.code_nm AS payTerm
         FROM dsgn_data
@@ -319,7 +435,7 @@
         ),
         acml_data AS (
         SELECT
-        acml_strt_dt, acml_mtr_dt, acml_goal_amt, acml_goal_prd, acml_aply_rate
+        acml_strt_dt, acml_mtr_dt, acml_goal_amt, acml_goal_prd, acml_aply_rate, acml_int_tax_ty_cd, acml_pay_ty_cd
         FROM tb_prod_dsgn_acml
         WHERE dsgn_sn = #{dsgnSn}
         ),
@@ -343,6 +459,7 @@
         WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
         ELSE dsgn_data.dsgn_create_at
         END AS effectiveDsgnDate,
+        dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
         prod_data.prod_nm AS prodNm,
         cust_data.cust_nm AS custNm,
@@ -358,6 +475,8 @@
         acml_data.acml_goal_amt AS savgGoalAmt,
         acml_data.acml_goal_prd AS savgGoalPrd,
         acml_data.acml_aply_rate AS savgAplyRate,
+        acml_data.acml_int_tax_ty_cd AS savgIntTaxTyCd,
+        acml_data.acml_pay_ty_cd AS savgPayTyCd,
         tax_code_data.code_tax_rate AS savgTaxRate,
         pay_term_data.code_nm AS payTerm
         FROM dsgn_data
@@ -404,7 +523,7 @@
         ),
         dpst_data AS (
         SELECT
-        dpst_strt_dt, dpst_mtr_dt, dpst_amt, dpst_prd, dpst_aply_rate
+        dpst_strt_dt, dpst_mtr_dt, dpst_amt, dpst_prd, dpst_aply_rate, dpst_int_tax_ty_cd, dpst_pay_ty_cd
         FROM tb_prod_dsgn_dpst
         WHERE dsgn_sn = #{dsgnSn}
         ),
@@ -428,6 +547,7 @@
         WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
         ELSE dsgn_data.dsgn_create_at
         END AS effectiveDsgnDate,
+        dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
         prod_data.prod_nm AS prodNm,
         cust_data.cust_nm AS custNm,
@@ -443,6 +563,8 @@
         dpst_data.dpst_amt AS savgGoalAmt,
         dpst_data.dpst_prd AS savgGoalPrd,
         dpst_data.dpst_aply_rate AS savgAplyRate,
+        dpst_data.dpst_int_tax_ty_cd AS savgIntTaxTyCd,
+        dpst_data.dpst_pay_ty_cd AS savgPayTyCd,
         tax_code_data.code_tax_rate AS savgTaxRate,
         pay_term_data.code_nm AS payTerm
         FROM dsgn_data
@@ -489,7 +611,7 @@
         ),
         loan_data AS (
         SELECT
-        loan_strt_dt, loan_mtr_dt, loan_amt, loan_repy_prd, loan_rate
+        loan_strt_dt, loan_mtr_dt, loan_amt, loan_repy_prd, loan_rate, loan_rpty_cd
         FROM tb_prod_dsgn_loan
         WHERE dsgn_sn = #{dsgnSn}
         ),
@@ -506,6 +628,7 @@
         WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
         ELSE dsgn_data.dsgn_create_at
         END AS effectiveDsgnDate,
+        dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
         prod_data.prod_nm AS prodNm,
         cust_data.cust_nm AS custNm,
@@ -521,6 +644,7 @@
         loan_data.loan_amt AS savgGoalAmt,
         loan_data.loan_repy_prd AS savgGoalPrd,
         loan_data.loan_rate AS savgAplyRate,
+        loan_data.loan_rpty_cd AS savgPayTyCd,
         repayment_data.code_nm AS savgTaxRate
         FROM dsgn_data
         LEFT JOIN cust_data ON 1=1

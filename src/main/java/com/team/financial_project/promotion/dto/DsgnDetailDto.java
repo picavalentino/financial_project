@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @ToString
 public class DsgnDetailDto {
     private String effectiveDsgnDate; // 설계일자
+    private Long prodSn; // 상품번호
     private String prodCd; // 상품코드
     private String prodNm; // 상품이름
     private String custNm; // 고객이름
@@ -28,6 +29,8 @@ public class DsgnDetailDto {
     private BigDecimal savgGoalAmt; // 불입금액
     private Integer savgGoalPrd; // 목표기간
     private BigDecimal savgAplyRate; // 적용이율
+    private String savgIntTaxTyCd; // 과세기준 코드
+    private String savgPayTyCd; // 납입주기 코드
     private String savgTaxRate; // 과세기준
     private String payTerm; // 납입주기
     private BigDecimal newSavgTaxRate; // 과세기준 타입변환

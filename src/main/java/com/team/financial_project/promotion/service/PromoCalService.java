@@ -84,4 +84,37 @@ public class PromoCalService {
     public DsgnDetailDto findLoanDetails(Long dsgnSn) {
         return promoCalMapper.findLoanDetails(dsgnSn);
     }
+
+    @Transactional
+    public void updateAcml(SavingsSaveDto savingsSaveDto) {
+        // Step 1: TB_CUSTPROD_DSGN에 데이터 업데이트
+        promoCalMapper.updateCustprodDsgn(savingsSaveDto);
+
+        // Step 2: TB_PROD_DSGN_ACML에 데이터 업데이트
+        promoCalMapper.updateProdDsgnAcml(savingsSaveDto);
+    }
+
+    public void updateDpst(SavingsSaveDto savingsSaveDto) {
+        // Step 1: TB_CUSTPROD_DSGN에 데이터 업데이트
+        promoCalMapper.updateDpstCustprodDsgn(savingsSaveDto);
+
+        // Step 2: TB_PROD_DSGN_ACML에 데이터 업데이트
+        promoCalMapper.updateProdDsgnDpst(savingsSaveDto);
+    }
+
+    public void updateSavg(SavingsSaveDto savingsSaveDto) {
+        // Step 1: TB_CUSTPROD_DSGN에 데이터 업데이트
+        promoCalMapper.updateSavgCustprodDsgn(savingsSaveDto);
+
+        // Step 2: TB_PROD_DSGN_ACML에 데이터 업데이트
+        promoCalMapper.updateProdDsgnSavg(savingsSaveDto);
+    }
+
+    public void updateLoan(SavingsSaveDto savingsSaveDto) {
+        // Step 1: TB_CUSTPROD_DSGN에 데이터 업데이트
+        promoCalMapper.updateLoanCustprodDsgn(savingsSaveDto);
+
+        // Step 2: TB_PROD_DSGN_ACML에 데이터 업데이트
+        promoCalMapper.updateProdDsgnLoan(savingsSaveDto);
+    }
 }
