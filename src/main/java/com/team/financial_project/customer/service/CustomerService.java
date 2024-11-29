@@ -6,7 +6,6 @@ import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.CustomerMapper;
 import com.team.financial_project.mapper.InquireMapper;
 import com.team.financial_project.mapper.UserMapper;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Service
 public class CustomerService {
@@ -123,6 +120,7 @@ public class CustomerService {
         // 고객 정보 저장
         customerMapper.insertCustomer(customerDto);
     }
+
     // ==========================================================================================================
     // 고객정보 수정
     public void updateCustomer(CustomerDTO customerDTO) {
@@ -140,46 +138,42 @@ public class CustomerService {
         return customerMapper.getCustOccpTyCdList();
     }
 
+    public List<CustomerUpdateHistoryDTO> getCustomerHistoryById(String custId) {
+        return customerMapper.findCustomerHistoryListById(custId);
+    }
+
+
+    public CustomerUpdateHistoryDTO createUpdateHistory(CustomerDTO customerDTO, CustomerDTO existingCustomer, String staffId) {
+        // 기존 데이터 가져오기
+        CustomerDTO originalCustomer = customerMapper.getCustomerById(customerDTO.getCustId());
+
+        // 변경된 항목 기록
+        StringBuilder detail = new StringBuilder();
+        if (!Objects.equals(originalCustomer.getCustTelno(), customerDTO.getCustTelno())) {
+            detail.append(String.format("전화번호: %s → %s, ", originalCustomer.getCustTelno(), customerDTO.getCustTelno()));
+        }
+        if (!Objects.equals(originalCustomer.getCustEmail(), customerDTO.getCustEmail())) {
+            detail.append(String.format("이메일: %s → %s, ", originalCustomer.getCustEmail(), customerDTO.getCustEmail()));
+        }
+        if (!Objects.equals(originalCustomer.getCustAddr(), customerDTO.getCustAddr())) {
+            detail.append(String.format("주소: %s → %s, ", originalCustomer.getCustAddr(), customerDTO.getCustAddr()));
+        }
+        if (!Objects.equals(originalCustomer.getCustOccpTyCd(), customerDTO.getCustOccpTyCd())) {
+            detail.append(String.format("직업 코드: %s → %s, ", originalCustomer.getCustOccpTyCd(), customerDTO.getCustOccpTyCd()));
+        }
+
+        // CustomerUpdateHistoryDTO 객체 생성
+        CustomerUpdateHistoryDTO history = new CustomerUpdateHistoryDTO();
+        history.setCustId(customerDTO.getCustId());
+        history.setUserId(staffId); // 수정자 ID 설정
+        history.setUpdateDetail(detail.length() > 0 ? detail.substring(0, detail.length() - 2) : "변경 사항 없음");
+        history.setCustUpdateAt(LocalDateTime.now());
+
+        return history;
+    }
+
     public void saveHistory(CustomerUpdateHistoryDTO history) {
         customerMapper.insertUpdateHistory(history);
     }
-
-    public void saveUpdateHistory(CustomerDTO customerDTO) {
-        CustomerUpdateHistoryDTO history = new CustomerUpdateHistoryDTO();
-        history.setCustId(customerDTO.getCustId());
-        history.setUserId(customerDTO.getUsers().getUser_id());
-        history.setUpdateDetail(createUpdateDetail(customerDTO));
-        history.setCustUpdateAt(LocalDateTime.now());
-        saveHistory(history);
-    }
-
-    private String createUpdateDetail(CustomerDTO customerDTO) {
-        StringBuilder detail = new StringBuilder();
-
-        if (!customerDTO.getCustTelno().equals(customerDTO.getPreviousTelno())) {
-            detail.append(String.format("전화번호: %s → %s, ", customerDTO.getPreviousTelno(), customerDTO.getCustTelno()));
-        }
-        if (!customerDTO.getCustEmail().equals(customerDTO.getPreviousEmail())) {
-            detail.append(String.format("이메일: %s → %s, ", customerDTO.getPreviousEmail(), customerDTO.getCustEmail()));
-        }
-        if (!customerDTO.getCustAddr().equals(customerDTO.getPreviousAddr())) {
-            detail.append(String.format("주소: %s → %s, ", customerDTO.getPreviousAddr(), customerDTO.getCustAddr()));
-        }
-        if (!customerDTO.getCustOccpTyCd().equals(customerDTO.getPreviousOccpTyCd())) {
-            detail.append(String.format("직업 코드: %s → %s, ", customerDTO.getPreviousOccpTyCd(), customerDTO.getCustOccpTyCd()));
-        }
-
-        if (detail.length() > 0) {
-            detail.setLength(detail.length() - 2); // 마지막 쉼표 제거
-        }
-
-        return detail.toString();
-    }
-
-    // 특정 고객의 수정 내역 조회
-    public List<CustomerUpdateHistoryDTO> getUpdateHistoryByCustId(String custId) {
-        return customerMapper.findUpdateHistoryByCustId(custId);
-    }
-
 }
 

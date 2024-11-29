@@ -27,8 +27,6 @@ public interface CustomerMapper {
     // 검색 조건에 따른 총 고객 수 계산
     int getCustomerCount(@Param("searchType") String searchType,
                          @Param("keyword") String keyword);
-    // ==============================================================================================================
-    // 고객 선택 조회
 
     // ==============================================================================================================
 
@@ -47,19 +45,7 @@ public interface CustomerMapper {
     // 고객 직업 코드
     List<CustomerDTO> getCustOccpTyCdList();
 
-    // 고객 수정 내역 삽입
-
-    @Insert("""
-        INSERT INTO tb_cust_update_hist (cust_id, user_id, update_detail, cust_update_at) 
-        VALUES (#{custId}, #{userId}, #{updateDetail}, #{custUpdateAt})
-    """)
     void insertUpdateHistory(CustomerUpdateHistoryDTO history);
 
-    // 고객 수정 내역 조회
-    @Select("""
-        SELECT * FROM tb_cust_update_hist 
-        WHERE cust_id = #{custId} 
-        ORDER BY cust_update_at DESC
-    """)
-    List<CustomerUpdateHistoryDTO> findUpdateHistoryByCustId(@Param("custId") String custId);
+    List<CustomerUpdateHistoryDTO> findCustomerHistoryListById(String custId);
 }

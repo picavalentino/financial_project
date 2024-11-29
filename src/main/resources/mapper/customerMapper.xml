@@ -196,7 +196,7 @@
         ON codeUserDept.code_cl = usr.user_dept_cd_code_cl
         AND codeUserDept.code_no = usr.user_dept_cd
 
-        WHERE cust.cust_id = #{custId};
+        WHERE cust.cust_id = #{custId}
     </select>
     <!-- ============================================================================================================= -->
     <!-- 오늘 등록된 고객 수 조회 -->
@@ -241,7 +241,24 @@
         ORDER BY code_no ASC -- 코드 번호 순으로 정렬
     </select>
     <!-- ============================================================================================================= -->
-    <!-- 고객 정보 수정 내역 -->
 
+    <!-- 고객 정보 수정 내역 -->
+    <insert id="insertUpdateHistory" parameterType="com.team.financial_project.dto.CustomerUpdateHistoryDTO">
+        INSERT INTO tb_cust_update_hist
+        (cust_id, cust_update_at, user_id, update_detail)
+        VALUES
+        (#{custId}, #{custUpdateAt}, #{userId}, #{updateDetail})
+    </insert>
+
+    <select id="findCustomerHistoryListById" resultType="com.team.financial_project.dto.CustomerUpdateHistoryDTO">
+        SELECT
+        cust_id AS custId,
+        cust_update_at AS custUpdateAt,
+        user_id AS userId,
+        update_detail AS updateDetail
+        FROM tb_cust_update_hist
+        WHERE cust_id = #{custId}
+        ORDER BY cust_update_at DESC
+    </select>
 
 </mapper>
