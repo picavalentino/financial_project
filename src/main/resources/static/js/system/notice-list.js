@@ -38,13 +38,12 @@ function resetFilters(page = 1) {
 // 조건 검색 및 정렬
 function filterResults(page = 1) {
     console.log("AJAX 요청: 페이지 번호 =", page); // 페이지 번호 확인
-
     const data = {
         inqCategory: $('#inqCategory').val(),
         keywordType: $('#keywordType').val(),
         keyword: $('input[name="keyword"]').val(),
         inqCreateAt: $('input[name="inqCreateAt"]').val(),
-        page, // 이 값을 AJAX 요청에 포함
+        page,
         size: 8,
         sortColumn: currentSortColumn,
         sortDirection,
@@ -71,6 +70,8 @@ function updateProductSize(size) {
     $('.product-size span').text(size);
 }
 
+
+// 테이블 렌더링
 function renderTable(data) {
     console.log('Rendering data:', data);
     const tableBody = $('#result-table-body');
@@ -125,7 +126,6 @@ function renderTable(data) {
                 const inqId = product.inqId;
                 window.location.href = `/inquire/detail/${inqId}`;
             });
-
             tableBody.append(row);
         });
     } else {

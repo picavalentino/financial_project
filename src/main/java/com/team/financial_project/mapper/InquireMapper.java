@@ -14,6 +14,8 @@ public interface InquireMapper {
     // 게시글 CRUD
     List<InquireDTO> findAllList();
 
+    InquireDTO findById(Long inqId);
+
     @Select("SELECT user_name FROM tb_user WHERE user_id = #{userId}")
     String getUserName(String userId);
 
@@ -56,5 +58,4 @@ public interface InquireMapper {
     void insertComment(InquireCommentDTO commentDTO);
 
     void updateInquire(InquireDTO inquireDTO);
-
 }

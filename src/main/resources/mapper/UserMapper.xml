@@ -299,6 +299,26 @@
         WHERE user_id = #{user_id}
     </update>
 
+    <!-- 사번 찾기 유저 존재 여부 -->
+    <select id="hasExistByUser_name" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
+        SELECT * FROM tb_user WHERE user_telno= #{telno} AND user_name= #{name}
+    </select>
+
+    <!--  사번 찾기  -->
+    <select id="findUserIdByUserTelno" resultType="java.lang.String" parameterType="string">
+        SELECT user_id FROM tb_user WHERE user_telno= #{telno}
+    </select>
+
+    <!-- 비밀번호 찾기 유저 존재 여부 -->
+    <select id="hasExistByUser_id" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
+        SELECT * FROM tb_user WHERE user_telno= #{telno} AND user_id= #{id}
+    </select>
+
+    <!--  사번으로 비밀번호 수정  -->
+    <update id="updateUserPw" parameterType="string">
+        UPDATE tb_user SET user_pw = #{pw} WHERE user_id = #{id}
+    </update>
+
     <!-- 상품등록페이지: 사원 이름으로 아이디 조회  -->
     <select id="findByNameContaining" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT user_id AS id, user_name AS name

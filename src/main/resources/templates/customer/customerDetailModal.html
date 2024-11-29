@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<meta charset="UTF-8">
+<head>
+    <script src="/js/customer/customerDetailModal.js"></script>
+</head>
+<body>
+<!--  ====================================================================================================================  -->
+<!-- 담당자검색 -->
+<div th:fragment="managerSearchModal">
+    <div id="searchModal" class="modal-overlay" style="display: none;">
+        <div class="modal-search-content">
+            <h2>담당자 조회</h2>
+            <button class="close-button" onclick="closeModal('searchModal')">✖</button>
+            <div class="modal-body">
+                <div class="search-bar">
+                    <input type="text" placeholder="이름을 입력해주세요.">
+                    <button class="search-button" onclick="searchManager()">검색</button>
+                </div>
+                <div class="result-list">
+                    <!-- 검색된 결과 버튼들이 여기에 추가될 것입니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

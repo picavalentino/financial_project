@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+<head>
+    <meta charset="UTF-8">
+    <title>GS Bank</title>
+    <!-- 전체 적용될 CSS -->
+    <th:block layout:fragment="css"></th:block>
+    <!-- 전체 적용될 스크립트 -->
+    <th:block layout:fragment="script"></th:block>
+    <!-- 페이지별 고객 조회 CSS -->
+    <link rel="stylesheet" th:href="@{/css/customer/customerList.css}">
+    <link rel="stylesheet" th:href="@{/css/customer/customerListModal.css}">
+    <script th:src="@{/js/customer/customerListModal.js}" defer></script>
+</head>
+<body>
+<div layout:fragment="content" class="content">
+    <div class="main-content">
+        <section class="location">
+            <div class="breadcrumb">
+                <span class="icon">🏠</span>
+                <a href="/main">Home</a> &gt;
+                <a href="/customer/list">고객관리</a> &gt;
+                <span>고객목록</span>
+            </div>
+            <h2>고객목록</h2>
+        </section>
+        <!--       ======================================================================================================         -->
+        <section class="customer-query">
+            <div class="actions">
+                <!-- 왼쪽 버튼 그룹 -->
+                <div class="left-actions">
+                    <button class="btn-print" onclick="openPrintModal()"><span class="icon">🖨️</span> 인쇄</button>
+                    <button class="message-button" onclick="openMessageModal()"><span class="icon">✉️</span> 메시지 발송
+                    </button>
+                </div>
+                <!--       ======================================================================================================         -->
+                <!-- 오른쪽 버튼 그룹 -->
+                <div class="right-actions">
+                    <div class="search">
+                        <form id="search-form" method="GET" action="/customer/list">
+                            <select name="searchType">
+                                <option value="" th:selected="${searchType == ''}">검색</option>
+                                <option value="name" th:selected="${searchType == 'name'}">고객명</option>
+                                <option value="email" th:selected="${searchType == 'email'}">이메일</option>
+                                <option value="manager" th:selected="${searchType == 'manager'}">담당자</option>
+                                <option value="status" th:selected="${searchType == 'status'}">활동 상태</option>
+                            </select>
+                            <input type="text" name="keyword" placeholder="검색어를 입력하세요" th:value="${keyword}">
+                            <button type="submit" class="search-button">
+                                <span class="icon">🔍</span> 검색
+                            </button>
+                        </form>
+                    </div>
+                    <!-- 등록 버튼 -->
+                    <button type="button" class="insert-button">
+                        <span class="icon">➕</span> 등록
+                    </button>
+                </div>
+            </div>
+            <!--       ======================================================================================================         -->
+            <table class="listTable">
+                <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox"
+                               name="selectAllCustomers"
+                               value="selectAllCustomers"
+                               onclick="selectAll(this)">
+                    </th>
+                    <th>고객ID</th>
+                    <th>고객명</th>
+                    <th>생년월일</th>
+                    <th>전화번호</th>
+                    <th class="emailTh">Email</th>
+                    <th>담당자</th>
+                    <th>활동 상태</th>
+                    <th>등록일</th>
+                </tr>
+                </thead>
+                <!--       ======================================================================================================         -->
+                <tbody>
+                <tr th:each="customer : ${customers}"
+                    th:attr="data-id=${customer.custId},
+                             data-custid=${customer.custId},
+                             data-custnm=${customer.custNm},
+                             data-birthdate=${customer.birthDate},
+                             data-custtelno=${customer.custTelno},
+                             data-custemail=${customer.custEmail},
+                             data-custcreateat=${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')},
+                             data-custstatecd=${customer.custStateCd},
+                             data-usersname=${customer.users != null && customer.users.user_name != null ? customer.users.user_name : '없음'}">
+                    <td>
+                        <input type="checkbox"
+                               name="selectedCustomers"
+                               class="customer-checkbox"
+                               th:value="${customer.custId}"
+                               onclick="checkSelected()">
+                    </td>
+                    <td th:text="${customer.custId}"></td>
+                    <td>
+                        <a th:href="@{'/customer/detail/' + ${customer.custId}}" th:text="${customer.custNm}">이름</a>
+                    </td>
+                    <td th:text="${customer.birthDate}">19940926</td>
+                    <td th:text="${customer.custTelno}">010-1111-1111</td>
+                    <td th:text="${customer.custEmail}">aaa@naver.com</td>
+                    <td th:text="${customer.users != null && customer.users.user_name != null ? customer.users.user_name : '없음'}">
+                        김사원
+                    </td>
+                    <td th:text="${customer.custStateCd}"><span class="status active">상태</span></td>
+                    <td th:text="${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')}">2024-11-18</td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- ======================================================================================================  -->
+            <div class="pagination-container">
+                <div class="pagination">
+                    <!-- 이전 페이지 링크 -->
+                    <a th:href="@{'?page=' + (${currentPage - 1}) + '&pageSize=' + ${pageSize} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword}}"
+                       th:if="${currentPage > 1}">&lt;</a>
+
+                    <!-- 페이지 번호 링크들 -->
+                    <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                        <a th:href="@{'?page=' + ${i} + '&pageSize=' + ${pageSize} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword}}"
+                           th:text="${i}"
+                           th:classappend="${currentPage == i} ? 'active' : ''"></a>
+                    </span>
+
+                    <!-- 다음 페이지 링크 -->
+                    <a th:href="@{'?page=' + (${currentPage + 1}) + '&pageSize=' + ${pageSize} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword}}"
+                       th:if="${currentPage < totalPages}">&gt;</a>
+                </div>
+
+                <!-- 현재 페이지와 총 페이지 정보 -->
+                <span class="pagination-info" th:text="'페이지 ' + ${currentPage} + ' / ' + ${totalPages}"></span>
+            </div>
+        </section>
+    </div>
+    <!-- ======================================================================================================================== -->
+    <!--모달 이동-->
+    <div th:replace="~{customer/customerListModal :: customerPrintModal}"></div>
+    <div th:replace="~{customer/customerListModal :: customerMessageModal}"></div>
+    <div th:replace="~{customer/customerListModal :: customerInsertModal}"></div>
+</div>
+</body>
+</html>

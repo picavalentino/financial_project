@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.financial_project.counsel.mapper.CounselMapper">
+
+    <!--  MyBatis Test  -->
+    <select id="checkConnection" resultType="int">
+        SELECT 1
+    </select>
+
+    <!-- 특정 고객 최근 상담 내역 1건 가져오기 -->
+    <select id="getLatestCounselByCustomerId" parameterType="string" resultType="com.team.financial_project.counsel.dto.TbCounselDTO">
+        SELECT
+            c.*,
+            cc.CODE_NM AS counsel_category_nm,  -- 상담 내용 카테고리명
+            ud.CODE_NM AS user_dept_nm          -- 부서명
+        FROM
+            TB_COUNSEL c
+        LEFT JOIN
+            TB_CODE cc
+            ON c.counsel_category = cc.CODE_NO
+            AND cc.CODE_CL = '700'  -- 상담 카테고리 코드 분류
+        LEFT JOIN
+            TB_CODE ud
+            ON c.user_dept_cd = ud.CODE_NO
+            AND ud.CODE_CL = '200'  -- 부서 코드 분류
+        WHERE
+            c.cust_id = #{custId}  -- 고객 ID 필터링
+        ORDER BY
+            c.counsel_id DESC       -- 최신 상담 내역 우선
+        LIMIT 1                    -- 한 건만 가져오기
+    </select>
+
+    <!-- 페이지에 출력하기 위한 코드 리스트 조회 -->
+    <select id="getCodeListByCl" parameterType="string" resultType="com.team.financial_project.counsel.dto.CodeDTO">
+        SELECT
+            CODE_NO AS codNo,
+            CODE_NM AS codNm
+        FROM TB_CODE
+        WHERE CODE_CL = #{codeCl}
+        ORDER BY CODE_NO ASC
+    </select>
+
+    <!-- 상담 전체 내역 가져오기 -->
+    <select id="getPagedCounselData" resultType="com.team.financial_project.counsel.dto.TbCounselDTO">
+        SELECT
+            c.*,
+            cc.CODE_NM AS counsel_category_nm,  -- 상담 내용 카테고리명
+            ud.CODE_NM AS user_dept_nm          -- 부서명
+        FROM
+            TB_COUNSEL c
+        LEFT JOIN
+            TB_CODE cc
+            ON c.counsel_category = cc.CODE_NO
+            AND cc.CODE_CL = '700'  -- 상담 카테고리 코드 분류
+        LEFT JOIN
+            TB_CODE ud
+            ON c.user_dept_cd = ud.CODE_NO
+            AND ud.CODE_CL = '200'  -- 부서 코드 분류
+        ORDER BY
+            c.counsel_id ASC
+        LIMIT
+            #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 상담 전체 - 총 레코드 수 가져오기 -->
+    <select id="getTotalCounselCount" resultType="long">
+        SELECT COUNT(*) FROM TB_COUNSEL
+    </select>
+
+    <!-- 특정 고객 상담 내역 가져오기 -->
+    <select id="getCounselByCustomerId" parameterType="java.util.Map" resultType="com.team.financial_project.counsel.dto.TbCounselDTO">
+        SELECT
+            c.*,
+            cc.CODE_NM AS counsel_category_nm,  -- 상담 내용 카테고리명
+            ud.CODE_NM AS user_dept_nm          -- 부서명
+        FROM
+            TB_COUNSEL c
+        LEFT JOIN
+            TB_CODE cc
+            ON c.counsel_category = cc.CODE_NO
+            AND cc.CODE_CL = '700'  -- 상담 카테고리 코드 분류
+        LEFT JOIN
+            TB_CODE ud
+            ON c.user_dept_cd = ud.CODE_NO
+            AND ud.CODE_CL = '200'  -- 부서 코드 분류
+        WHERE
+            c.cust_id = #{custId}  -- 고객 ID 필터링
+        ORDER BY
+            c.counsel_id ASC
+        LIMIT
+            #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 특정 고객 상담 - 총 레코드 수 가져오기 -->
+    <select id="getTotalCounselCountByCustomerId" parameterType="String" resultType="long">
+        SELECT COUNT(*) FROM TB_COUNSEL WHERE cust_id = #{custId}
+    </select>
+
+    <!-- 로그인된 직원ID로 직원 정보 가져오기 -->
+    <select id="getUserById" parameterType="String" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+            tu.user_id,                         -- 직원ID
+            tu.user_name,                       -- 직원명
+            tu.user_dept_cd AS user_dept_cd,    -- 부서코드
+            dept_cd.code_nm AS dept_name        -- 부서명
+        FROM
+            tb_user tu
+        LEFT JOIN
+            tb_code dept_cd
+        ON
+            tu.user_dept_cd_code_cl = dept_cd.code_cl
+            AND tu.user_dept_cd = dept_cd.code_no
+        WHERE
+            tu.user_id = #{userId}
+    </select>
+
+    <!-- 상담 작성 -->
+    <insert id="insertCounsel" parameterType="com.team.financial_project.counsel.dto.TbCounselDTO">
+        INSERT INTO TB_COUNSEL (
+        cust_id,
+        user_id,
+        counsel_category,
+        counsel_content,
+        counsel_create_at,
+        counsel_update_at,
+        counsel_stcd,
+        user_dept_cd,
+        user_name
+        ) VALUES (
+        #{dto.cust_id},
+        #{dto.user_id},
+        #{dto.counsel_category},
+        #{dto.counsel_content},
+        CURRENT_TIMESTAMP,
+        #{dto.counsel_update_at},
+        #{dto.counsel_stcd},
+        #{dto.user_dept_cd},
+        #{dto.user_name}
+        )
+    </insert>
+
+    <!-- 상담 수정 -->
+    <update id="updateCounsel" parameterType="java.util.Map">
+        UPDATE TB_COUNSEL
+        SET counsel_category = #{category}, counsel_content = #{content}, counsel_update_at = CURRENT_TIMESTAMP
+        WHERE counsel_id = #{id}
+    </update>
+
+    <!-- 수정 후 최신 데이터 가져오기 -->
+    <select id="getCounselById" parameterType="Long" resultType="com.team.financial_project.counsel.dto.TbCounselDTO">
+        SELECT
+            c.*,
+            cc.CODE_NM AS counsel_category_nm,  -- 상담 내용 카테고리명
+            ud.CODE_NM AS user_dept_nm          -- 부서명
+        FROM
+            TB_COUNSEL c
+        LEFT JOIN
+            TB_CODE cc
+            ON c.counsel_category = cc.CODE_NO
+            AND cc.CODE_CL = '700'  -- 상담 카테고리 코드 분류
+        LEFT JOIN
+            TB_CODE ud
+            ON c.user_dept_cd = ud.CODE_NO
+            AND ud.CODE_CL = '200'  -- 부서 코드 분류
+        WHERE
+            c.counsel_id = #{id}  -- 특정 상담 ID
+    </select>
+
+    <!-- 상담 삭제 -->
+    <delete id="deleteCounsel" parameterType="Long">
+        DELETE FROM TB_COUNSEL
+        WHERE counsel_id = #{id}
+    </delete>
+
+</mapper>

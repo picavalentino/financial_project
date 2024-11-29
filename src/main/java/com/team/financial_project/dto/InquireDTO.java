@@ -20,6 +20,8 @@ public class InquireDTO {
     private String inqContent;
     private String inqPwd;
     private String inqReply;
+    private Integer inqCheck;
+    private String inqNotice;
     private String inqAttachFile1;
     private String inqAttachFile2;
     private String inqAttachFile3;

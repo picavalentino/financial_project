@@ -9,6 +9,7 @@
     <script th:src="@{/js/jQuery.js}"></script>
     <script th:src="@{/js/login/login.js}"></script>
     <link rel="stylesheet" th:href="@{/css/login/login.css}">
+    <link rel="stylesheet" th:href="@{/css/login/retrieve-id.css}">
 </head>
 <body>
 <div class="login-container">
@@ -17,25 +18,25 @@
     </div>
     <div class="right">
         <form class="login" th:action="@{/loginProc}" method="post" id="loginForm">
-            <input type="hidden" id="hiddenErrorMessage" th:value="${errorMessage}">
+            <div id="error-container" th:data-error-message="${session.errorMessage}" class="d-none"></div>
             <div class="mb-5">
                 <label for="user_id" class="form-label">사원번호</label>
-                <div class="input-container">
+                <div class="input-container" id="id-border">
                     <div class="employee-number-id">
                         <i class="bi bi-person-bounding-box me-2 text-secondary"></i>
-                        <input type="text" name="user_id" id="user_id" class="id-input" placeholder="사원번호를 입력해주세요.">
+                        <input type="text" inputmode="numeric" maxlength="11" name="user_id" id="user_id" class="id-input" placeholder="사원번호를 입력해주세요." autocomplete="off">
                     </div>
                     <div class="remember_id">
-                        <input type="checkbox" id="remember_checkbox" class="remember_checkbox">
+                        <input type="checkbox" id="remember_checkbox" class="remember_checkbox ">
                         <label for="remember_checkbox">저장하기</label>
                     </div>
                 </div>
             </div>
             <div class="mb-5">
                 <label for="user_pw" class="form-label">비밀번호</label>
-                <div class="input-container d-flex align-items-center">
+                <div class="input-container d-flex align-items-center" id="pw-border">
                     <div class="password">
-                        <i class="bi bi-lock me-2 text-secondary"></i>
+                        <i class="bi bi-lock me-2 text-secondary" style="font-size: 20px;"></i>
                         <input type="password" name="user_pw" id="user_pw" class="password-input" placeholder="비밀번호를 입력해주세요.">
                     </div>
                     <button type="button" class="btn btn-link" id="btn-eye">
@@ -48,15 +49,16 @@
             <div class="btns">
                 <input type="button" value="등록하기" class="btn-register" onclick="location.href='/register'">
                 <div>
-                    <input type="button" value="사번 찾기" class="btn-retrieve-id" onclick="openIdModal()">
+                    <input type="button" value="사번 찾기" class="btn-retrieve-id">
                     <input type="button" value="비밀번호 찾기" class="btn-retrieve-pw">
                 </div>
             </div>
         </form>
 
         <!-- 모달창 -->
-<!--        <div th:replace="id-modal :: id-modal"></div>-->
-<!--        <div th:replace="pw-modal :: pw-modal"></div>-->
+        <div th:replace="~{login/retrieve-id :: retrieve-id}" id="id-modal" class="modal"></div>
+        <div th:replace="~{login/retrieve-pw :: retrieve-pw}" id="pw-modal" class="modal"></div>
+        <div th:replace="~{login/change-pw :: change-pw}" id="change-pw-modal" class="modal"></div>
     </div>
 </div>
 </body>

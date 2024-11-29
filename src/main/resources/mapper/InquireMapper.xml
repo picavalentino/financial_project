@@ -65,6 +65,7 @@
         i.inq_check AS inqCheck,
         i.inq_notice AS inqNotice,
         i.inq_create_at AS inqCreateAt
+
         FROM t_inquire i
         LEFT JOIN tb_user u ON u.user_id = i.user_id
         WHERE 1=1

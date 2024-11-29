@@ -28,4 +28,9 @@ public interface MainMapper {
     // 직위 이름 조회
     @Select("SELECT code_nm FROM tb_code WHERE code_cl = #{codeCl} AND code_no = #{codeNo}")
     String findCodeNameByCodeClAndCodeNo(@Param("codeCl") String codeCl, @Param("codeNo") String codeNo);
+
+    List<Map<String, Object>> getTodayTasks(@Param("userId") String userId);
+
+    void updateTaskChecked(@Param("calendarSn") Long calendarSn);
+
 }
