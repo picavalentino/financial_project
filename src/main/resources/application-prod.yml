@@ -12,9 +12,9 @@ spring:
     password: ${rds.password}
   data:
     redis:
-      host: ${REDIS.HOST}
+      host: financialproject-cache-igbva6.serverless.apn2.cache.amazonaws.com
       port: 6379
-      password: ${REDIS.PW}
+      password: sun1234
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
