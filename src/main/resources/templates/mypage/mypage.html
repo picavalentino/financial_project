@@ -51,7 +51,9 @@
                                 <input class="phone" type="text" id="phone_input1" name="phonePart1" th:value="${#strings.substring(mypageDTO.userTelno, 0, 3)}" disabled> -
                                 <input class="phone" type="text" id="phone_input2" name="phonePart2" th:value="${#strings.substring(mypageDTO.userTelno, 4, 8)}" disabled> -
                                 <input class="phone" type="text" id="phone_input3" name="phonePart3" th:value="${#strings.substring(mypageDTO.userTelno, 9)}" disabled>
+                                <input type="button" value="인증" id="phone_btn">
                             </p>
+
                         </div>
                         <p>E-Mail <br>
                             <input type="email" id="user_email" name="userEmail" th:value="${mypageDTO.userEmail}" disabled>

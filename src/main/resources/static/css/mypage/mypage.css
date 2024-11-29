@@ -187,7 +187,7 @@ margin-top:30px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.phone button {
+#phone_btn {
     width: 50px;
     height: 30px;
     border-radius: 10px;
@@ -212,78 +212,72 @@ h5 {
 
 
 
-
-/* 오른쪽 페이지 */
+/* 왼쪽 페이지 */
 .mypage_left {
     align-items: flex-end;
-    padding: 20px;
-    /* border: 1px solid #ababab; *//
+    padding: 15px;
     border-radius: 20px;
-    /* background-color: darksalmon; */
-    width: 750px;
+    width: 560px; /* 최대 크기를 560px로 조정 */
     height: auto;
-    margin-right: 50px;
-    margin-left: 20px;
-
+    margin-right: 40px;
+    margin-left: 15px;
 }
 
 .mycustomer,
 .myboard {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* 간격 축소 */
 }
 
 #mycustomer_title {
     display: flex;
     font-weight: bold;
-    gap: 390px;
+    gap: 300px; /* 기존 대비 축소 */
 }
 
 #mycustomer_title p {
     margin-bottom: 0px;
-    width: 180px;
-    font-weight:700;
-    font-size:25px;
+    width: 150px; /* 텍스트 영역 크기 축소 */
+    font-weight: 700;
+    font-size: 20px; /* 글자 크기 축소 */
 }
 
 #myboard_title {
     display: flex;
     font-weight: bold;
-    gap: 440px;
+    gap: 340px; /* 기존 대비 축소 */
 }
 
 #myboard_title p {
     margin-bottom: 0px;
-    width: 130px;
-     font-weight:700;
-     font-size:25px;
+    width: 110px; /* 텍스트 영역 크기 축소 */
+    font-weight: 700;
+    font-size: 20px; /* 글자 크기 축소 */
 }
 
 .myboard {
-    margin-top: 50px;
-
+    margin-top: 40px; /* 간격 축소 */
 }
 
 table {
     width: 100%;
     overflow: hidden;
-    border-radius: 20px;
+    border-radius: 15px; /* 테두리 반경 축소 */
     height: 100%;
-
 }
 
 thead {
-    height: 40px;
+    height: 35px; /* 높이 축소 */
     background-color: #7AAEBC;
     font-weight: 900;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px; /* 글자 크기 축소 */
 }
 
 #mycustomer_table,
 #myboard_table {
     border-collapse: collapse;
-    border-radius: 20px;
+    border-radius: 15px; /* 테두리 반경 축소 */
     margin: 0 auto;
     background-color: #f0f9fc;
     width: 100%;
@@ -291,57 +285,54 @@ thead {
     border-collapse: separate;
     border-spacing: 0;
     overflow: hidden;
-
-
 }
 
 #mycustomer_table th,
 #mycustomer_table td,
 #myboard_table th,
 #myboard_table td {
-    padding: 15px;
+    padding: 12px; /* 셀 내부 여백 축소 */
     text-align: center;
-
-
 }
 
 #mycustomer_table tbody tr:last-child td,
 #myboard_table tbody tr:last-child td {
     border-bottom: none;
-    border-bottom: 0.1px solid rgba(171, 171, 171, 0.3);;
-
+    border-bottom: 0.1px solid rgba(171, 171, 171, 0.3);
 }
 
 #mycustomer_table thead tr:first-child th:first-child,
 #myboard_table thead tr:first-child th:first-child {
-    border-top-left-radius: 20px;
+    border-top-left-radius: 15px; /* 테두리 반경 축소 */
 }
 
 .mypage_left button {
     background-color: #f0f9fc;
     border: 0.3px solid #d9d9d9;
-    border-radius: 10px;
-    height: 25px;
-    width: 60px;
-    margin-left:80px;
+    border-radius: 8px; /* 테두리 반경 축소 */
+    height: 22px; /* 버튼 높이 축소 */
+    width: 50px; /* 버튼 너비 축소 */
+    margin-left: 50px; /* 좌측 여백 축소 */
     cursor: pointer;
-    font-size: 10px;
-    margin-top: 25px;
-    margin-bottom: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-
+    font-size: 9px; /* 글자 크기 축소 */
+    margin-top: 20px; /* 상단 여백 축소 */
+    margin-bottom: 8px; /* 하단 여백 축소 */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* 그림자 축소 */
 }
 
 button:hover {
     background-color: #ababab;
 }
-a{
+
+a {
     text-decoration: none;
     color: #000000;
 }
+
 a:hover {
     color: #ababab;
 }
+
 .modal {
     display: none; /* 처음에는 숨김 */
     position: fixed;
@@ -453,4 +444,18 @@ input[type="password"] {
     display: flex; /* flexbox로 설정 */
     align-items: center; /* 세로 방향 가운데 정렬 */
     width: 100%; /* 래퍼의 너비를 100%로 설정 */
+}
+.btn-register{
+    font-size: large;
+    padding: 10px 0px;
+    background-color: #71A4AD;
+    border-radius: 25px;
+    border: none;
+
+    color: #ffffff;
+    font-weight: bold;
+}
+.btn-register:hover{
+    background-color: #567d84;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
