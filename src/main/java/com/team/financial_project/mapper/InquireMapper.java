@@ -58,4 +58,6 @@ public interface InquireMapper {
     void insertComment(InquireCommentDTO commentDTO);
 
     void updateInquire(InquireDTO inquireDTO);
+
+    int countAllList();
 }

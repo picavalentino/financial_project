@@ -73,7 +73,7 @@
     <!-- 하단 컨텐츠: 게시글 목록 테이블 -->
     <div class="bottom">
       <div class="bottom-menu">
-        <div class="product-size"> 총 : <span th:text="${productSize}"></span>개</div>
+        <div class="product-size"> 총 : <span th:text="${totalItems}"></span>개</div>
         <div class="btn-wrap" id="btn-bottom-menu">
           <button class="btn" id="btn-register">
             <div class="icon-container"><i class="icon bi bi-plus-circle-fill"></i></div> 등록
@@ -123,20 +123,25 @@
       <div class="pagination-container">
         <div class="pagination">
           <!-- 이전 버튼 -->
-          <button class="pagination-prev pagination-button" th:if="${currentPage > 1}"
-                  th:href="@{${requestURI}(page=${currentPage - 1}, inqCategory=${inqCategory ?: ''}, keywordType=${keywordType ?: ''}, keyword=${keyword ?: ''}, inqCreateAt=${inqCreateAt ?: ''})}">
-            &lt;</button>
-          <button class="pagination-prev pagination-button" th:if="${currentPage == 1}" disabled>&lt;</button>
+          <a class="pagination-prev pagination-button"
+             th:if="${currentPage > 1}"
+             th:href="@{${requestURI}(page=${currentPage - 1}, inqCategory=${inqCategory ?: ''}, keywordType=${keywordType ?: ''}, keyword=${keyword ?: ''}, inqCreateAt=${inqCreateAt ?: ''})}">
+            &lt;
+          </a>
+          <span class="pagination-prev pagination-button disabled" th:if="${currentPage == 1}">&lt;</span>
           <!-- 페이지 번호 -->
           <a th:each="page : ${#numbers.sequence(1, totalPages)}"
              th:classappend="${page == currentPage} ? 'pagination-active' : ''"
-             th:href="@{${requestURI}(page=${currentPage}, inqCategory=${inqCategory ?: ''}, keywordType=${keywordType ?: ''}, keyword=${keyword ?: ''}, inqCreateAt=${inqCreateAt ?: ''})}"
+             th:href="@{${requestURI}(page=${page}, inqCategory=${inqCategory ?: ''}, keywordType=${keywordType ?: ''}, keyword=${keyword ?: ''}, inqCreateAt=${inqCreateAt ?: ''})}"
              th:text="${page}" class="pagination-number"></a>
           <!-- 다음 버튼 -->
-          <button class="pagination-next pagination-button" th:if="${currentPage < totalPages}"
-                  th:href="@{${requestURI}(page=${currentPage + 1}, inqCategory=${inqCategory ?: ''}, keywordType=${keywordType ?: ''}, keyword=${keyword ?: ''}, inqCreateAt=${inqCreateAt ?: ''})}">
-            &gt;</button>
-          <button class="pagination-next pagination-button" th:if="${currentPage == totalPages}" disabled>&gt;</button>
+          <a class="pagination-next pagination-button"
+             th:if="${currentPage < totalPages}"
+             th:href="@{${requestURI}(page=${currentPage + 1}, inqCategory=${inqCategory ?: ''}, keywordType=${keywordType ?: ''}, keyword=${keyword ?: ''}, inqCreateAt=${inqCreateAt ?: ''})}">
+            &gt;
+          </a>
+          <span class="pagination-next pagination-button disabled" th:if="${currentPage == totalPages}">&gt;</span>
+          <!-- 페이지 정보 -->
           <span class="pagination-info" th:text="'Page ' + ${currentPage} + ' of ' + ${totalPages}"></span>
         </div>
       </div>
