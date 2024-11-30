@@ -619,6 +619,14 @@
                 loadProductList(productCode, productName);
             });
 
+            // 엔터키 입력 이벤트 추가
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") { // 엔터키 확인
+                    const productCode = document.getElementById('prodCdSearch').value.trim();
+                    const productName = document.getElementById('prodNmSearch').value.trim();
+                    loadProductList(productCode, productName);
+                }
+            });
 
             // 고객 모달
             const customerModal = document.getElementById("customerModal");

@@ -33,6 +33,14 @@ function resetFilters(page = 1) { // 기본값으로 1페이지를 설정
     filterResults(page); // 초기화된 필터와 정렬 상태를 기준으로 데이터 재조회
 }
 
+// 엔터키 감지 함수
+function checkEnterKey(event) {
+    if (event.key === "Enter") {
+       event.preventDefault(); // 기본 엔터키 동작(예: 폼 제출)을 막음
+       filterResults(); // 공통 함수 호출
+    }
+}
+
 // 조건검색
 function filterResults(page = 1) {
     const prgStcd = $('#prgStcd').val(); // 진행 상태 선택값 가져오기

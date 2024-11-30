@@ -34,11 +34,11 @@
             <div class="search-row">
                 <div class="search-item">
                     <label for="custNm">고객명</label>
-                    <input type="text" id="custNm" name="custNm">
+                    <input type="text" id="custNm" onkeydown="checkEnterKey(event)" name="custNm">
                 </div>
                 <div class="search-item">
                     <label for="userNm">담당자</label>
-                    <input type="text" id="userNm" name="userNm">
+                    <input type="text" id="userNm" onkeydown="checkEnterKey(event)" name="userNm">
                 </div>
                 <div class="search-item">
                     <label></label>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="search-item">
                     <label for="prodNm">상품명</label>
-                    <input type="text" id="prodNm" name="prodNm">
+                    <input type="text" id="prodNm" onkeydown="checkEnterKey(event)" name="prodNm">
                 </div>
                 <div class="search-buttons">
                     <button class="btn btn-search" onclick="filterResults()">

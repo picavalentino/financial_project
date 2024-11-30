@@ -24,7 +24,7 @@ public class DepositCalculator {
         }
 
         // 단리 계산: 이자 = 원금 × 금리 × (기간 / 12)
-        BigDecimal interest = baseAmount.multiply(interestRate)
+        BigDecimal interest = baseAmount.multiply(interestRate.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)) // 백분율 변환
                 .multiply(BigDecimal.valueOf(period))
                 .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
 
