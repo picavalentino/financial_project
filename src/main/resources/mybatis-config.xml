@@ -11,5 +11,8 @@
         <typeAlias type="com.team.financial_project.dto.ProductDTO" alias="productDTO"></typeAlias>
         <typeAlias type="com.team.financial_project.dto.ProdHistDTO" alias="prodHistDTO"></typeAlias>
         <typeAlias type="com.team.financial_project.dto.TotalSalesDTO" alias="totalSalesDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.CustomerDTO" alias="customerDTO"/>
+        <typeAlias type="com.team.financial_project.dto.InquireDTO" alias="inquireDTO"></typeAlias>
+        <typeAlias type="com.team.financial_project.dto.InquireCommentDTO" alias="inquireCommentDTO"></typeAlias>
     </typeAliases>
 </configuration>

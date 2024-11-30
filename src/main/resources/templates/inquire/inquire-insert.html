@@ -48,7 +48,7 @@
                                 <input id="td-writer" type="text" name="writer" th:value="${userName}" readonly>
                                 <span>익명</span>
                                 <input type="checkbox" id="inqAnonymCheckbox">
-                                <input type="hidden" name="inqAnonym" id="inqAnonym" value="2">
+                                <input type="hidden" name="inqAnonym" id="inqAnonym" value="0">
                             </div>
                         </td>
                     </tr>
@@ -121,7 +121,7 @@
                     // 체크박스 해제 시
                     const userName = /*[[${userName}]]*/ ''; // Thymeleaf에서 전달된 userName 값
                     $("#td-writer").val(userName);
-                    $("#inqAnonym").val("2"); // hidden 필드 값 설정 (작성자 있음)
+                    $("#inqAnonym").val("0"); // hidden 필드 값 설정 (작성자 있음)
                 }
             });
 
@@ -157,12 +157,6 @@
                     alert("최소 하나의 파일 필드는 유지해야 합니다.");
                 }
             });
-
-
-
-
-
-
         });
     </script>
 </div>

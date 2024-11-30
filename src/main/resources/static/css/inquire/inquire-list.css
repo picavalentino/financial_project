@@ -1,9 +1,9 @@
 /* 상단 메뉴 박스 */
 .condition-box, .bottom {
-    margin: 30px;
+    margin-bottom: 30px;
     padding: 20px;
     width: 100%;
-    max-width: 1400px;
+    /*max-width: 1400px;*/
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -14,14 +14,14 @@
     display: flex;
     flex-wrap: nowrap; /* 모든 요소를 한 줄로 유지 */
     align-items: flex-end; /* 하단 정렬 */
-    gap: 10px; /* 요소 간 간격 */
+    gap: 20px; /* 요소 간 간격 */
     width: 100%;
 }
 
 /* 개별 조건 필드 */
 .condition {
     display: flex;
-    flex-direction: row; /* 라벨과 입력 필드 수직 배치 */
+    flex-direction: column; /* 라벨과 입력 필드 수직 배치 */
     min-width: 200px; /* 최소 크기 */
     flex: 1; /* 각 필드가 동일한 비율로 확장 */
 }
@@ -38,8 +38,6 @@
     border-radius: 5px;
     height: 38px; /* 높이를 명시적으로 지정 */
     box-sizing: border-box; /* 테두리와 패딩 포함 */
-    width: 90%;
-    text-align: center;
 }
 
 /* 검색 조건 (셀렉트 박스 + 입력 필드) */
@@ -62,7 +60,6 @@
 /* 작성일 필드 */
 .condition-date {
     flex: 1; /* 동일한 비율로 확장 */
-    margin-left: 20px;
 }
 
 /* 버튼 그룹 */
@@ -73,6 +70,16 @@
     gap: 10px;
     flex: 1; /* 버튼도 동일 비율로 배치 */
 }
+
+.btn{
+    color: #000000;
+}
+
+.btn:hover{
+    color: #ddd;
+}
+
+
 /* 하단 테이블 */
 .bottom-menu {
     display: flex;
@@ -102,15 +109,6 @@
   color: #495057;
   font-weight: bold;
 }
-.highlight-row {
-    background-color: #cddee3; /* 하늘색 */
-  }
-
-#td-reply{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 /* highlight-row 스타일 */
 .highlight-row {
@@ -126,39 +124,6 @@
   background-color: #e9ecef; /* 마우스오버 시 색상 */
 }
 
-/* 버튼 */
-.reply{
-    height: 30px;
-    width: 75px;
-    border: none;
-    border-radius: 20px;
-    color: white;
-    background-color: #010535;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-#rep-wait{
-    background-color: #667085;
-}
-.btn-notice-register{
-    width: 50px;
-    height: 30px;
-    border-radius: 15px;
-    color: white;
-    background-color: #010535;
-    border: none;
-    margin: auto;
-}
-.btn-notice-cancel{
-    width: 50px;
-    height: 30px;
-    border-radius: 15px;
-    color: white;
-    background-color: #667085;
-    border: none;
-    margin: auto;
-}
 /* 페이지네이션 */
 .pagination-container {
     display: flex;

@@ -21,7 +21,7 @@
         tam.auth_id,
         tam.menu_id,
         c.code_nm AS auth_name,
-        m.menu_view_name AS menu_name
+        m.menu_name AS menu_name
         FROM tb_auth_menu tam
         LEFT JOIN tb_code c ON tam.auth_id = c.code_id
         LEFT JOIN tb_menu m ON tam.menu_id = m.menu_id

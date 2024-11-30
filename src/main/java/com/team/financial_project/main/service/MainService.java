@@ -32,4 +32,12 @@ public class MainService {
         System.out.println("Service received userId: " + userId);
         return mainMapper.getSalesStatistics(userId);
     }
+
+    public List<Map<String, Object>> getTodayTasks(String userId) {
+        return mainMapper.getTodayTasks(userId);
+    }
+
+    public void updateTaskChecked(Long calendarSn) {
+        mainMapper.updateTaskChecked(calendarSn);
+    }
 }

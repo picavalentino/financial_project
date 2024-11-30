@@ -12,6 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -55,6 +58,11 @@ public class MainController {
         List<MainInquireDTO> mainInquireDTOList = mainService.mainInqireList();
         model.addAttribute("noticeList", mainInquireDTOList);
 
+        //오늘 할 일
+        List<Map<String, Object>> todayTasks = mainService.getTodayTasks(userId); // 오늘의 할 일 가져오기
+        log.info("오늘할일:"+todayTasks.toString());
+        model.addAttribute("todayTasks", todayTasks);
+
         // 경제 뉴스 데이터 가져오기
         //네이버 경제 뉴스 카테고리 페이지
         String categoryUrl = "https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=101";
@@ -76,6 +84,20 @@ public class MainController {
 
 
         return "financial/main";
+    }
+
+    @PostMapping("/updateTask")
+    @ResponseBody
+    public String updateTask(@RequestParam("calendarSn") Long calendarSn) {
+        mainService.updateTaskChecked(calendarSn);
+        return "success";
+    }
+
+    @GetMapping("/api/today-tasks")
+    @ResponseBody
+    public List<Map<String, Object>> getTodayTasks() {
+        String userId = getAuthenticatedUserId(); // 현재 로그인한 사용자 ID
+        return mainService.getTodayTasks(userId);
     }
 
 }
