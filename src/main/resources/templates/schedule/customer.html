@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<meta name="_csrf" content="CSRF_TOKEN_VALUE">
+<meta name="_csrf_header" content="X-CSRF-TOKEN">
+<meta name="user_id" th:attr="content=${user_id}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고객 이벤트 관리</title>
+    <link rel="stylesheet" th:href="@{/css/schedule/customer.css}">
+</head>
+
+<body>
+<div layout:fragment="content" class="content">
+    <div class="container1">
+        <div class="content1">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <h2>
+                        <button id="btn_left">&lt;</button>
+                        <span id="current-month-year"></span>
+                        <button id="btn_right">&gt;</button>
+                    </h2>
+                    <div class="button-container">
+                        <button id="schedule_all_btn">전체</button>
+                        <button id="birthday_btn">생일</button>
+                        <button id="finish_btn">만기</button>
+                    </div>
+                </div>
+                <table class="calendar-table">
+                    <thead>
+                    <tr>
+                        <th id="sun">일</th>
+                        <th>월</th>
+                        <th>화</th>
+                        <th>수</th>
+                        <th>목</th>
+                        <th>금</th>
+                        <th id="sat">토</th>
+                    </tr>
+                    </thead>
+                    <tbody class="calendar-body">
+                    <!-- JavaScript로 날짜 생성 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="today_task">
+            <div class="header-container">
+                <h3 class="task-header">
+                    <button id="prev-day-btn">&lt;</button>
+                    <img th:src="@{/css/schedule/img/task_img.png}" alt="Task">
+                    <span id="today-date"></span>
+                    <button id="next-day-btn">&gt;</button>
+                </h3>
+                <button class="task_add">
+                    <img id="task_add_btn" src="/css/schedule/img/add.png" alt="Add">
+                </button>
+            </div>
+            <div class="today-cls-list"></div>
+        </div>
+
+    </div>
+
+
+    <div class="event-card" style="display:none;">
+        <span class="close-event">&times;</span>
+        <div class="card-header">
+            <h2 class="event-title"></h2>
+            <div class="card-actions">
+                <button class="delete-btn"><img id="delete_btn" th:src="@{/css/schedule/img/delete.png}" alt="Delete"></button>
+                <button><img id="email_img" th:src="@{/css/schedule/img/email.png}" alt="Mail"></button>
+            </div>
+        </div>
+        <div class="card-details">
+            <div>
+                <img th:src="@{/css/schedule/img/time.png}" alt="time">
+                <span class="event-time"></span> <!-- 종료 날짜 표시 -->
+            </div>
+            <div>
+                <img th:src="@{/css/schedule/img/memo.png}" alt="memo">
+                <span class="event-memo"></span> <!-- dsgn_ds_ty_cd 표시 -->
+            </div>
+        </div>
+    </div>
+    <div class="schedule_detail" style="display:none;">
+        <div class="scheduler-container">
+            <h1>일정 상세</h1>
+            <div class="date-display">
+                <button id="prev-day">&lt;</button>
+                <span id="current-date"></span>
+                <button id="next-day">&gt;</button>
+            </div>
+            <div class="scheduler">
+                <span class="close">&times;</span>
+                <div class="row">
+                    <select class="time-select" id="time-select"></select>
+                    <input type="text" class="task-title" placeholder="Enter title...">
+                    <input type="text" class="location-input" placeholder="Enter location...">
+                    <div class="checkboxes">
+                        <label><input type="checkbox" class="select-checkbox" id="team-team"> 팀</label>
+                        <label><input type="checkbox" class="select-checkbox" id="team-personal"> 개인</label>
+                        <label><input type="checkbox" id="event-allday"> 종일</label>
+                    </div>
+                </div>
+                <div class="details">
+                    <textarea class="details-input" placeholder="Enter detailed information..."></textarea>
+                </div>
+                <input type="submit" id="submit_btn" value="등록">
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            const customerScheduleList = /*[[${customerScheduleList}]]*/ [];
+            console.log("Customer Schedule List:", customerScheduleList);
+
+            let scheduleList = [];
+            let addedBirthdayIds = new Set(); // 생일 데이터 중복 확인용 Set
+            let addedMaturityIds = new Set(); // 만기 데이터 중복 확인용 Set
+            let currentFilter = 'all'; // 현재 필터 상태 ('all', 'birthday', 'maturity')
+            let currentDate = new Date(); // 현재 날짜 객체
+
+            // 데이터 플래튼(flatten): customerBirthdayDTO와 customerMtrDtDTO 데이터 추출
+            customerScheduleList.forEach(schedule => {
+                if (schedule.customerBirthdayDTO) {
+                    schedule.customerBirthdayDTO.forEach(birthday => {
+                        if (!addedBirthdayIds.has(birthday.cust_id)) {
+                            scheduleList.push({
+                                type: "birthday",
+                                date: birthday.cust_birthday, // MM-DD 형식
+                                name: birthday.cust_nm,
+                            });
+                            addedBirthdayIds.add(birthday.cust_id);
+                        }
+                    });
+                }
+                if (schedule.customerMtrDtDTO) {
+                    schedule.customerMtrDtDTO.forEach(maturity => {
+                        if (!addedMaturityIds.has(maturity.dsgn_sn)) {
+                            scheduleList.push({
+                                type: "maturity",
+                                date: maturity.dpst_mtr_dt.split('-').slice(1).join('-'), // MM-DD 형식
+                                name: maturity.cust_nm,
+                                dsgn_ds_ty_cd: maturity.dsgn_ds_ty_cd,
+                            });
+                            addedMaturityIds.add(maturity.dsgn_sn);
+                        }
+                    });
+                }
+            });
+
+            console.log("Flattened Schedule List:", scheduleList);
+
+            // 캘린더 생성 함수
+            function generateCalendar() {
+                const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+                const lastDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+                const prevLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+
+                const today = new Date();
+                const todayYear = today.getFullYear();
+                const todayMonth = today.getMonth();
+                const todayDate = today.getDate();
+
+                const isCurrentMonth = currentDate.getFullYear() === todayYear && currentDate.getMonth() === todayMonth;
+
+                $('.calendar-body').html('');
+                let date = 1;
+
+                for (let i = 0; i < 6; i++) {
+                    const row = document.createElement('tr');
+                    for (let j = 0; j < 7; j++) {
+                        const cell = document.createElement('td');
+                        cell.classList.add('calendar-cell');
+
+                        if (i === 0 && j < firstDay) {
+                            cell.textContent = prevLastDate - (firstDay - j - 1);
+                            cell.classList.add('prev-month-cell');
+                            cell.style.color = '#aaaaaa';
+                            cell.style.backgroundColor = '#f0f0f0';
+                        } else if (date <= lastDate) {
+                            const formattedDate = `${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                            cell.innerHTML = `<div class="calendar-date">${date}</div>`;
+                            cell.dataset.date = formattedDate; // MM-DD 형식 저장
+
+                            if (isCurrentMonth && date === todayDate) {
+                                const calendarDateDiv = cell.querySelector('.calendar-date');
+                                calendarDateDiv.style.backgroundColor = '#CC0000';
+                                calendarDateDiv.style.color = '#ffffff';
+                                calendarDateDiv.style.width = '30px';
+                                calendarDateDiv.style.height = '30px';
+                                calendarDateDiv.style.display = 'flex';
+                                calendarDateDiv.style.justifyContent = 'center';
+                                calendarDateDiv.style.alignItems = 'center';
+                                calendarDateDiv.style.borderRadius = '50%';
+                            }
+
+                            date++;
+                        } else {
+                            cell.textContent = date - lastDate;
+                            cell.classList.add('next-month-cell');
+                            cell.style.color = '#aaaaaa';
+                            cell.style.backgroundColor = '#f0f0f0';
+                            date++;
+                        }
+
+                        row.appendChild(cell);
+                    }
+                    $('.calendar-body').append(row);
+                    if (date > lastDate) break;
+                }
+
+                renderEvents(scheduleList); // 이벤트 렌더링
+                applyFilter(currentFilter); // 현재 필터 상태 적용
+            }
+
+            // 필터 적용 함수
+            function applyFilter(filter) {
+                if (filter === 'all') {
+                    $('.event-bar-birthday, .event-bar-maturity').show();
+                } else if (filter === 'birthday') {
+                    $('.event-bar-birthday').show();
+                    $('.event-bar-maturity').hide();
+                } else if (filter === 'maturity') {
+                    $('.event-bar-maturity').show();
+                    $('.event-bar-birthday').hide();
+                }
+            }
+
+            // 이벤트 렌더링 함수
+            function renderEvents(events) {
+                const today = new Date();
+                const todayDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+                $('.calendar-body .calendar-cell').each(function () {
+                    const cellDate = $(this).data('date'); // 캘린더 셀의 날짜 (MM-DD 형식)
+                    if (!cellDate) return;
+
+                    const dayEvents = events.filter(event => {
+                        const eventFullDate = `${currentDate.getFullYear()}-${cellDate}`;
+                        return event.date === cellDate;
+                    });
+
+                    $(this).find('.event-bar-birthday, .event-bar-maturity').remove();
+
+                    dayEvents.slice(0, 3).forEach(event => {
+                        const emoji = event.type === "birthday" ? '🎂' : '📅';
+    const eventClass = event.type === "birthday" ? 'event-bar-birthday' : 'event-bar-maturity';
+
+   const eventFullDate = `${currentDate.getFullYear()}-${event.date}`; // 이벤트의 전체 날짜
+    const eventDate = new Date(eventFullDate); // 이벤트 날짜 객체 생성
+    const today = new Date();
+   const isPastEvent = eventDate < today.setHours(0, 0, 0, 0); // 현재 날짜와 비교해 과거인지 확인
+
+    const $eventElement = $(`
+        <div class="${eventClass} event-item ${isPastEvent ? 'past-event' : ''}"
+             data-date="${event.date}"
+             data-dsgn-ds-ty-cd="${event.dsgn_ds_ty_cd || ''}">
+            <span class="event-emoji">${emoji}</span>
+            <span class="event-text">${event.name} 고객님</span>
+        </div>
+    `);
+
+    $(this).append($eventElement);
+                    });
+                });
+            }
+
+            // 모달창 열기
+            $('.calendar-body').on('click', '.event-bar-maturity', function (event) {
+    event.stopPropagation();
+    const customerName = $(this).find('.event-text').text();
+    const maturityDate = $(this).data('date');
+    const dsgnDsTyCd = $(this).data('dsgn-ds-ty-cd');
+console.log("dsgnDsTyCd 값:", dsgnDsTyCd);
+    // dsgnDsTyCd 값에 따라 출력 텍스트 설정
+    let dsgnTypeText;
+    switch (String(dsgnDsTyCd)) {
+        case '1':
+            dsgnTypeText = "적금";
+            break;
+        case '2':
+            dsgnTypeText = "목돈";
+            break;
+        case '3':
+            dsgnTypeText = "예금";
+            break;
+        case '4':
+            dsgnTypeText = "대출";
+            break;
+        default:
+            dsgnTypeText = "알 수 없음";
+    }
+
+    // 모달창에 데이터 삽입
+    $('.event-card .event-title').text(`고객 : ${customerName}`);
+    $('.event-card .event-time').text(`종료 날짜 : ${maturityDate}`);
+    $('.event-card .event-memo').text(`가입 상품 : ${dsgnTypeText}`);
+
+    // 클릭 위치에 모달창 표시
+    const clickX = event.pageX;
+    const clickY = event.pageY;
+
+    $('.event-card').css({
+        display: 'block',
+        top: clickY + 'px',
+        left: clickX + 'px',
+        position: 'absolute',
+        transform: 'translate(-50%, 5%)'
+    }).fadeIn();
+});
+
+            // 모달창 닫기
+            $('.event-card .close-event').on('click', function () {
+                $('.event-card').fadeOut();
+            });
+
+            // 필터 버튼 이벤트
+            $('#schedule_all_btn').on('click', function () {
+                currentFilter = 'all';
+                applyFilter(currentFilter);
+            });
+
+            $('#birthday_btn').on('click', function () {
+                currentFilter = 'birthday';
+                applyFilter(currentFilter);
+            });
+
+            $('#finish_btn').on('click', function () {
+                currentFilter = 'maturity';
+                applyFilter(currentFilter);
+            });
+
+            // 달력 이동 버튼 이벤트
+            $('#btn_left').on('click', function () {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateMonthYear();
+                generateCalendar();
+            });
+
+            $('#btn_right').on('click', function () {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateMonthYear();
+                generateCalendar();
+            });
+
+            // 월 및 연도 업데이트
+            function updateMonthYear() {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth() + 1;
+                $('#current-month-year').text(`${year}년 ${month}월`);
+            }
+
+            // 초기화
+            updateMonthYear();
+            generateCalendar();
+        });
+
+$(document).ready(function () {
+    const customerScheduleList = /*[[${customerScheduleList}]]*/ []; // 서버에서 받은 일정 데이터
+    const user_id = /*[[${user_id}]]*/ ''; // 현재 로그인된 사용자 ID
+    let currentDate = new Date(); // 현재 날짜 객체
+
+    // 날짜 형식 포맷 함수 (요일 포함)
+    function formatDateWithDay(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토']; // 요일 배열
+        const dayOfWeek = daysOfWeek[date.getDay()]; // 요일 가져오기
+        return `${month}월${day}일 (${dayOfWeek})`;
+    }
+
+    // 문자열 날짜를 JavaScript Date 객체로 변환
+    function parseDate(dateString) {
+        return new Date(dateString.replace(' ', 'T')); // '2024-11-30 00:00' -> '2024-11-30T00:00'
+    }
+
+    // 오늘 상담 일정 렌더링 함수
+    function renderTodayTasks(scheduleList) {
+        const todayFormatted = formatDateWithDay(currentDate); // 현재 날짜 포맷
+        const $todayTaskContainer = $('.today_task .today-cls-list');
+        $todayTaskContainer.empty(); // 기존 내용 초기화
+
+        console.log("Current Date (Formatted):", todayFormatted);
+        console.log("Customer Schedule List:", scheduleList);
+
+        // 오늘의 상담 일정 필터링
+        const todayEvents = scheduleList.filter(event => {
+            const eventDate = formatDateWithDay(parseDate(event.calendar_event_bgn_date)); // 날짜 비교
+            return (
+                eventDate === todayFormatted && // 날짜가 오늘인지 확인
+                event.user_id === user_id &&   // user_id가 일치하는지 확인
+                event.calendar_type === '3'   // calendar_type이 '3'인지 확인
+            );
+        });
+
+        console.log("Filtered Events:", todayEvents);
+
+        // 일정이 없는 경우
+        if (todayEvents.length === 0) {
+            $todayTaskContainer.append('<p>오늘 상담 일정이 없습니다.</p>');
+            return;
+        }
+
+        // 일정 렌더링
+             todayEvents.forEach(event => {
+            const time = parseDate(event.calendar_event_bgn_date).toTimeString().substring(0, 5); // HH:mm 포맷
+            const $taskElement = $(`
+                <div class="today-tasks" data-calendar-sn="${event.calendar_sn}">
+                    <label><strong>&middot; ${time}</strong></label>
+                    <button class="delete-task">
+                        <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
+                    </button>
+                    <button class="task_etc">
+                        <img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo">
+                    </button>
+
+                    <div id="task_text">
+                        <p>${event.calendar_event_title || '제목 없음'}</p>
+                    </div>
+                </div>
+            `);
+            $todayTaskContainer.append($taskElement);
+        });
+    }
+
+    // 모달창 열기 함수
+    function openModal(eventData) {
+        // 모달창 데이터 삽입
+        $('.schedule_detail #current-date').text(formatDateWithDay(parseDate(eventData.calendar_event_bgn_date)));
+        $('.schedule_detail .task-title').val(eventData.calendar_event_title || '');
+        $('.schedule_detail .location-input').val(eventData.calendar_event_location || '');
+        $('.schedule_detail .details-input').val(eventData.calendar_event_detail || '');
+
+        // 모달창 표시
+        $('.schedule_detail').fadeIn();
+    }
+
+    // 모달창 닫기 이벤트
+    $('.schedule_detail .close').on('click', function () {
+        $('.schedule_detail').fadeOut();
+    });
+
+    // 오늘의 상담 일정에서 task_add 버튼 클릭 이벤트
+    $('.today_task').on('click', '.task_add', function (e) {
+        e.stopPropagation(); // 부모 요소의 클릭 이벤트 방지
+        const $task = $(this).closest('.today-tasks'); // 현재 클릭한 버튼의 부모 요소
+        const calendarSn = $task.data('calendar-sn'); // calendar_sn 값 가져오기
+        const eventData = customerScheduleList.find(event => event.calendar_sn === calendarSn);
+
+        if (eventData) {
+            openModal(eventData); // 선택된 일정 데이터를 기반으로 모달창 열기
+        } else {
+            console.error('일치하는 데이터를 찾을 수 없습니다.', calendarSn);
+        }
+    });
+
+    // 날짜 업데이트 함수
+    function updateTodayDate() {
+        $('#today-date').text(formatDateWithDay(currentDate)); // 날짜와 요일을 함께 출력
+    }
+
+    // 이전 날짜 버튼 클릭 이벤트
+    $('#prev-day-btn').on('click', function () {
+        currentDate.setDate(currentDate.getDate() - 1); // 날짜 감소
+        updateTodayDate();
+        renderTodayTasks(customerScheduleList); // 업데이트된 날짜 기준으로 일정 렌더링
+    });
+
+    // 다음 날짜 버튼 클릭 이벤트
+    $('#next-day-btn').on('click', function () {
+        currentDate.setDate(currentDate.getDate() + 1); // 날짜 증가
+        updateTodayDate();
+        renderTodayTasks(customerScheduleList); // 업데이트된 날짜 기준으로 일정 렌더링
+    });
+
+    // 초기화 작업
+    updateTodayDate(); // 초기 날짜 표시
+    renderTodayTasks(customerScheduleList); // 초기 일정 렌더링
+});
+    </script>
+
+</div>
+</body>
+
+</html>

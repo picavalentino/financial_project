@@ -25,4 +25,7 @@ public class UserDTO {
     private String status_name; // 상태 이름
     private String auth_name; // 권한 이름
     private String yearMonth; // 신입사원 검색 날짜
+
+    public void setUserImgpath(String fileUrl) {
+    }
 }
