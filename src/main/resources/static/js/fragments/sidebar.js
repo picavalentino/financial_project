@@ -1,8 +1,3 @@
-$(document).ready(function(){
-    alert("동작 확인");
-    // auth_menu 리스트 불러오기
-
-})
 // 사용자 프로필 정보 로드
 function loadUserProfileInfo() {
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');

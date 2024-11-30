@@ -60,12 +60,13 @@
         t.menu_category,
         t.menu_url,
         t.menu_name,
-        c.code_nm AS auth_name
+        CONCAT('ROLE_', c.code_nm) AS auth_name
         FROM tb_auth_menu a
         JOIN tb_menu t
         ON a.menu_id = t.menu_id
         JOIN tb_code c
         ON a.auth_id = c.code_id
         WHERE t.menu_category IS NOT NULL
+        ORDER BY t.menu_id
     </select>
 </mapper>

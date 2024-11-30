@@ -7,8 +7,11 @@ import com.team.financial_project.mapper.AuthSystemMapper;
 import com.team.financial_project.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +60,7 @@ public class SidebarService {
                         if (category.getCategoryName().equals(authData.getMenu_category())) {
                             category.getMenuList().forEach(subMenu -> {
                                 if(subMenu.getName().equals(authData.getMenu_name())){
-                                    subMenu.setHasAnyRole(subMenu.getHasAnyRole() + " " + authData.getAuth_name());
+                                    subMenu.setHasAnyRole(subMenu.getHasAnyRole() + ", " + authData.getAuth_name());
                                 }
                             });
                         }
@@ -83,7 +86,7 @@ public class SidebarService {
                 menuCategoryList.add(newMenuCategory);
             }
         }
-        return menuCategoryList;
+        return setCategoryAuth(menuCategoryList, authMenu); // 카테고리 권한 담아가기
     }
 
     public SubMenuDTO createSubMenu(AuthSystemDTO authData){
@@ -100,9 +103,30 @@ public class SidebarService {
         String imgType = ".png";
 
         return new MenuCategoryDTO(
-                commonUrl + authData.getMenu_category().trim() + imgType,
+                commonUrl + authData.getMenu_category().replace(" ", "") + imgType,
                 authData.getMenu_category(),
+                null,
                 subMenuList
         );
+    }
+
+    private List<MenuCategoryDTO> setCategoryAuth(List<MenuCategoryDTO> menuCategoryList, List<AuthSystemDTO> authMenu) {
+        // 메뉴카테고리에 넣을 권한 정보 가공
+        MultiValueMap<String, String> categoryAuth = new LinkedMultiValueMap<>();
+
+        for(AuthSystemDTO authSystem : authMenu){
+            List<String> authList = categoryAuth.get(authSystem.getMenu_category());
+
+            // 권한 리스트가 없거나, 중복되지 않을때 추가
+            if (authList == null || !authList.contains(authSystem.getAuth_name())) {
+                categoryAuth.add(authSystem.getMenu_category(), authSystem.getAuth_name());
+            }
+        }
+
+        // 가공된 정보 카테고리에 넣기
+        for(MenuCategoryDTO menuCategory : menuCategoryList){
+            menuCategory.setHasAnyRole(categoryAuth.get(menuCategory.getCategoryName()).toString());
+        }
+        return menuCategoryList;
     }
 }

@@ -10,5 +10,6 @@ import java.util.List;
 public class MenuCategoryDTO {
     private String iconImg;
     private String categoryName;
+    private String hasAnyRole;
     private List<SubMenuDTO> menuList;
 }
