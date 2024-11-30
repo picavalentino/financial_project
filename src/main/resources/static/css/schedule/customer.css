@@ -179,7 +179,7 @@ width: 90%;
 justify-content: space-between;
 margin-top: -40px;
 margin-left:10px;
-font-size: 14px;
+font-size: 20px;
 
 
 }
@@ -192,21 +192,51 @@ width: 18px;
 margin-top: -5px;
 
 }
-.today_task button{
+.delete-task, .task_etc{
 border: none;
 background: none;
 margin-top: -5px;
-margin-left: 223px;
+margin-left: 203px;
 
 }
-.today_task h3 {
+.task-header  {
 margin-left: 15px;
 margin-top: 10px;
 font-size: 20px;
 font-weight: 500;
 }
+.header-container {
+    display: flex;
+    justify-content: space-between; /* 양쪽 끝으로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 10px 0; /* 위아래 여백 추가 */
+}
+
+.task-header {
+    display: flex;
+    align-items: center; /* 버튼과 텍스트 세로 정렬 */
+    gap: 10px; /* 요소 간 간격 */
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between; /* 양쪽 끝으로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 10px 0; /* 상하 여백 */
+}
+
+.task-header {
+    display: flex;
+    align-items: center; /* 버튼과 텍스트 세로 정렬 */
+    gap: 10px; /* 요소 간 간격 */
+    margin: 0; /* h3 기본 여백 제거 */
+}
 
 
+.task_add img {
+    width: 24px;
+    height: 24px;
+}
 /* 체크박스 크기 키우기 */
 .today-tasks input[type="checkbox"] {
 width: 15px;
@@ -489,13 +519,13 @@ gap: 10px; /* 버튼 간격 */
 margin-right: auto;
 margin-left: 90px;
 }
-.today_task button{
+.task_add{
 border: none;
 background: none;
 margin-top: 0px;
-margin-left: 190px;
-
+width:24px;
 }
+
 #delete{
 margin-top: -60px;
 }
@@ -551,6 +581,8 @@ margin-top: -110px;
 margin-left: 25px;
 width:24px;
 }
+
+
 strong{
 
 font-size: 18px;
@@ -585,7 +617,7 @@ border-radius: 10px;
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 padding: 20px;
 padding-left: 35px;
-width: 400px;
+width: 300px;
 margin: auto;
 border: 1px solid #dfe6e9;
 }
@@ -676,11 +708,13 @@ width:30px;
 margin-left: 25px;
 margin-right:13px;
 background-color: #D0D4D6;
+border:none;
 border-radius: 10px;
 padding-bottom: 5px;
 text-align: center;
 }
  #next-day-btn{
+ border:none;
 margin-left: 10px;
 background-color: #D0D4D6;
 border-radius: 10px;

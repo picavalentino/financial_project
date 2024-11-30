@@ -49,14 +49,20 @@
         </div>
 
         <div class="today_task">
-            <h3>
-                <button id="prev-day-btn">&lt;</button>
-                <img th:src="@{/css/schedule/img/task_img.png}" alt="Task">
-                <span id="today-date"></span>
-                <button id="next-day-btn">&gt;</button>
-            </h3>
+            <div class="header-container">
+                <h3 class="task-header">
+                    <button id="prev-day-btn">&lt;</button>
+                    <img th:src="@{/css/schedule/img/task_img.png}" alt="Task">
+                    <span id="today-date"></span>
+                    <button id="next-day-btn">&gt;</button>
+                </h3>
+                <button class="task_add">
+                    <img id="task_add_btn" src="/css/schedule/img/add.png" alt="Add">
+                </button>
+            </div>
             <div class="today-cls-list"></div>
         </div>
+
     </div>
 
 
@@ -80,6 +86,34 @@
             </div>
         </div>
     </div>
+    <div class="schedule_detail" style="display:none;">
+        <div class="scheduler-container">
+            <h1>일정 상세</h1>
+            <div class="date-display">
+                <button id="prev-day">&lt;</button>
+                <span id="current-date"></span>
+                <button id="next-day">&gt;</button>
+            </div>
+            <div class="scheduler">
+                <span class="close">&times;</span>
+                <div class="row">
+                    <select class="time-select" id="time-select"></select>
+                    <input type="text" class="task-title" placeholder="Enter title...">
+                    <input type="text" class="location-input" placeholder="Enter location...">
+                    <div class="checkboxes">
+                        <label><input type="checkbox" class="select-checkbox" id="team-team"> 팀</label>
+                        <label><input type="checkbox" class="select-checkbox" id="team-personal"> 개인</label>
+                        <label><input type="checkbox" id="event-allday"> 종일</label>
+                    </div>
+                </div>
+                <div class="details">
+                    <textarea class="details-input" placeholder="Enter detailed information..."></textarea>
+                </div>
+                <input type="submit" id="submit_btn" value="등록">
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script th:inline="javascript">
         $(document).ready(function () {
@@ -376,10 +410,10 @@ $(document).ready(function () {
         }
 
         // 일정 렌더링
-        todayEvents.forEach(event => {
+             todayEvents.forEach(event => {
             const time = parseDate(event.calendar_event_bgn_date).toTimeString().substring(0, 5); // HH:mm 포맷
             const $taskElement = $(`
-                <div class="today-tasks">
+                <div class="today-tasks" data-calendar-sn="${event.calendar_sn}">
                     <label><strong>&middot; ${time}</strong></label>
                     <button class="delete-task">
                         <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
@@ -387,6 +421,7 @@ $(document).ready(function () {
                     <button class="task_etc">
                         <img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo">
                     </button>
+
                     <div id="task_text">
                         <p>${event.calendar_event_title || '제목 없음'}</p>
                     </div>
@@ -395,6 +430,37 @@ $(document).ready(function () {
             $todayTaskContainer.append($taskElement);
         });
     }
+
+    // 모달창 열기 함수
+    function openModal(eventData) {
+        // 모달창 데이터 삽입
+        $('.schedule_detail #current-date').text(formatDateWithDay(parseDate(eventData.calendar_event_bgn_date)));
+        $('.schedule_detail .task-title').val(eventData.calendar_event_title || '');
+        $('.schedule_detail .location-input').val(eventData.calendar_event_location || '');
+        $('.schedule_detail .details-input').val(eventData.calendar_event_detail || '');
+
+        // 모달창 표시
+        $('.schedule_detail').fadeIn();
+    }
+
+    // 모달창 닫기 이벤트
+    $('.schedule_detail .close').on('click', function () {
+        $('.schedule_detail').fadeOut();
+    });
+
+    // 오늘의 상담 일정에서 task_add 버튼 클릭 이벤트
+    $('.today_task').on('click', '.task_add', function (e) {
+        e.stopPropagation(); // 부모 요소의 클릭 이벤트 방지
+        const $task = $(this).closest('.today-tasks'); // 현재 클릭한 버튼의 부모 요소
+        const calendarSn = $task.data('calendar-sn'); // calendar_sn 값 가져오기
+        const eventData = customerScheduleList.find(event => event.calendar_sn === calendarSn);
+
+        if (eventData) {
+            openModal(eventData); // 선택된 일정 데이터를 기반으로 모달창 열기
+        } else {
+            console.error('일치하는 데이터를 찾을 수 없습니다.', calendarSn);
+        }
+    });
 
     // 날짜 업데이트 함수
     function updateTodayDate() {
