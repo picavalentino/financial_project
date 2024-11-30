@@ -79,4 +79,6 @@ public interface ProductMapper {
             @Param("userId") String userId,
             @Param("prodNm") String prodNm
     ); // @Param 추가
+
+    int updateProductStatus();
 }
