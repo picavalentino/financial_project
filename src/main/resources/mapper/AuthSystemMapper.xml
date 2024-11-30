@@ -42,6 +42,7 @@
             AND c.code_no = #{auth}
         </if>
     </select>
+
     <select id="getAllAuthMenu" resultType="com.team.financial_project.dto.AuthSystemDTO">
         SELECT
         t.menu_url,
@@ -52,6 +53,7 @@
         JOIN tb_code c
         ON a.auth_id = c.code_id
     </select>
+
     <select id="getMenuList" resultType="com.team.financial_project.dto.AuthSystemDTO">
         SELECT
         t.menu_id,
