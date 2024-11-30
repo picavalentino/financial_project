@@ -35,16 +35,63 @@
     user_id = #{userId}
 </select>
     <select id="findCustomerMaturityDates" resultType="com.team.financial_project.schedule.dto.CustomerMtrDtDTO">
-        SELECT DISTINCT ON (dp.dsgn_sn)
+        SELECT DISTINCT ON (dsgn_sn)
         (SELECT tc.cust_nm
         FROM tb_customer tc
         WHERE tc.cust_id = cd.cust_id
-        LIMIT 1) AS cust_nm, dpst_mtr_dt
-        FROM
-        tb_prod_dsgn_dpst dp
-        JOIN
-        tb_custprod_dsgn cd ON dp.dsgn_sn = cd.dsgn_sn
-        where user_id = #{userId};
+        LIMIT 1) AS cust_nm,
+        dpst_mtr_dt,
+        cd.dsgn_sn,
+        cd.dsgn_ds_ty_cd
+        FROM tb_prod_dsgn_dpst dp
+        JOIN tb_custprod_dsgn cd ON dp.dsgn_sn = cd.dsgn_sn
+        WHERE user_id = #{userId}
+        AND cd.dsgn_prg_stcd = '4'
+
+        UNION ALL
+
+        SELECT DISTINCT ON (dsgn_sn)
+        (SELECT tc.cust_nm
+        FROM tb_customer tc
+        WHERE tc.cust_id = cd.cust_id
+        LIMIT 1) AS cust_nm,
+        acml_mtr_dt AS dpst_mtr_dt,
+        cd.dsgn_sn,
+        cd.dsgn_ds_ty_cd
+        FROM tb_prod_dsgn_acml ac
+        JOIN tb_custprod_dsgn cd ON ac.dsgn_sn = cd.dsgn_sn
+        WHERE user_id = #{userId}
+        AND cd.dsgn_prg_stcd = '4'
+
+        UNION ALL
+
+        SELECT DISTINCT ON (dsgn_sn)
+        (SELECT tc.cust_nm
+        FROM tb_customer tc
+        WHERE tc.cust_id = cd.cust_id
+        LIMIT 1) AS cust_nm,
+        loan_mtr_dt AS dpst_mtr_dt,
+        cd.dsgn_sn,
+        cd.dsgn_ds_ty_cd
+        FROM tb_prod_dsgn_loan ln
+        JOIN tb_custprod_dsgn cd ON ln.dsgn_sn = cd.dsgn_sn
+        WHERE user_id = #{userId}
+        AND cd.dsgn_prg_stcd = '4'
+
+        UNION ALL
+
+        SELECT DISTINCT ON (dsgn_sn)
+        (SELECT tc.cust_nm
+        FROM tb_customer tc
+        WHERE tc.cust_id = cd.cust_id
+        LIMIT 1) AS cust_nm,
+        savg_mtr_dt AS dpst_mtr_dt,
+        cd.dsgn_sn,
+        cd.dsgn_ds_ty_cd
+        FROM tb_prod_dsgn_savg sv
+        JOIN tb_custprod_dsgn cd ON sv.dsgn_sn = cd.dsgn_sn
+        WHERE user_id = #{userId}
+        AND cd.dsgn_prg_stcd = '4'
 
 
     </select>
