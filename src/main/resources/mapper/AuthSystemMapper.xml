@@ -66,5 +66,6 @@
         ON a.menu_id = t.menu_id
         JOIN tb_code c
         ON a.auth_id = c.code_id
+        WHERE t.menu_category IS NOT NULL
     </select>
 </mapper>

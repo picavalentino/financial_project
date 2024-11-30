@@ -38,53 +38,71 @@ public class SidebarService {
     public List<MenuCategoryDTO> getMenuList() {
         List<AuthSystemDTO> authMenu = authSystemMapper.getMenuList();
         List<MenuCategoryDTO> menuCategoryList = new ArrayList<>();
+
+        for(AuthSystemDTO authData : authMenu){
+            // menuCategoryList에 일치하는 카테고리가 있는지
+            MenuCategoryDTO existingCategory = menuCategoryList.stream()
+                    .filter(category -> category.getCategoryName().equals(authData.getMenu_category()))
+                    .findFirst().orElse(null);
+
+            if(existingCategory != null){
+                List<SubMenuDTO> subMenuList = existingCategory.getMenuList();
+                SubMenuDTO existingSubMenu = subMenuList.stream()
+                        .filter(subMenu -> subMenu.getName().equals(authData.getMenu_name()))
+                        .findFirst().orElse(null);
+
+                if(existingSubMenu != null){
+                    // 기존 서브메뉴의 권한 가공
+                    menuCategoryList.forEach(category -> {
+                        if (category.getCategoryName().equals(authData.getMenu_category())) {
+                            category.getMenuList().forEach(subMenu -> {
+                                if(subMenu.getName().equals(authData.getMenu_name())){
+                                    subMenu.setHasAnyRole(subMenu.getHasAnyRole() + " " + authData.getAuth_name());
+                                }
+                            });
+                        }
+                    });
+                }else {
+                    // 새로운 서브메뉴 생성, 리스트에 넣기
+                    SubMenuDTO newSubMenu = createSubMenu(authData);
+                    subMenuList.add(newSubMenu);
+                    menuCategoryList.forEach(category -> {
+                        if (category.getCategoryName().equals(authData.getMenu_category())) {
+                            category.setMenuList(subMenuList);
+                        }
+                    });
+                }
+            }else { // 메뉴카테고리 새로 추가
+                // 새로운 서브메뉴 생성, 새로운 리스트에 넣기
+                SubMenuDTO newSubMenu = createSubMenu(authData);
+                List<SubMenuDTO> newSubMenuList = new ArrayList<>();
+                newSubMenuList.add(newSubMenu);
+                // 새로운 카테고리 생성
+                MenuCategoryDTO newMenuCategory = createMenuCategory(authData, newSubMenuList);
+                // 리스트에 넣기
+                menuCategoryList.add(newMenuCategory);
+            }
+        }
+        return menuCategoryList;
+    }
+
+    public SubMenuDTO createSubMenu(AuthSystemDTO authData){
+        return new SubMenuDTO(
+                authData.getMenu_id(),
+                authData.getMenu_url(),
+                authData.getMenu_name(),
+                authData.getAuth_name()
+        );
+    }
+
+    public MenuCategoryDTO createMenuCategory(AuthSystemDTO authData, List<SubMenuDTO> subMenuList){
         String commonUrl = "/images/common/";
         String imgType = ".png";
 
-        for(AuthSystemDTO authData : authMenu){ // 가져온 정보 루프
-            for (MenuCategoryDTO menuCategory : menuCategoryList){ // 가공된 카테고리 루프
-                if(menuCategory.getCategoryName().equals(authData.getMenu_category())){ // 해당 카테고리가 이미 존재한다면
-                    List<SubMenuDTO> subMenuList = menuCategory.getMenuList();
-
-                    for(SubMenuDTO subMenu : subMenuList){
-                        if(subMenu.getName().equals(authData.getMenu_name())){ // 권한 리스트에 같은 이름의 서브메뉴가 있다면
-                            // 한 줄로 가공 ex) "MASTER HR_TEAM"
-                            subMenu.setHasAnyRole(subMenu.getHasAnyRole() + " " + authData.getAuth_name());
-                        }else { // 없으면 새로운 서브메뉴 생성 후 넣기
-                            // 새로운 서브메뉴 생성
-                            SubMenuDTO newSubMenu = new SubMenuDTO(
-                                    authData.getMenu_id(),
-                                    authData.getMenu_url(),
-                                    authData.getMenu_name(),
-                                    authData.getAuth_name()
-                            );
-                            // 해당 카테고리 서브메뉴 리스트에 추가 후 카테고리 업데이트
-                            subMenuList.add(newSubMenu);
-                        }
-                    }
-                }else {
-                    // 새로운 서브메뉴 생성
-                    SubMenuDTO newSubMenu = new SubMenuDTO(
-                            authData.getMenu_id(),
-                            authData.getMenu_url(),
-                            authData.getMenu_name(),
-                            authData.getAuth_name()
-                    );
-                    // 새로운 서브메뉴 리스트에 넣어주기
-                    List<SubMenuDTO> subMenuList = new ArrayList<>();
-                    subMenuList.add(newSubMenu);
-                    // 새로운 메뉴카테고리 생성
-                    MenuCategoryDTO newMenuCategory = new MenuCategoryDTO(
-                            commonUrl + authData.getMenu_category().trim() +imgType,
-                            authData.getMenu_category(),
-                            subMenuList
-                    );
-                    // 메뉴 카테고리 리스트에 넣어주기
-                    menuCategoryList.add(newMenuCategory);
-                }
-            }
-        }
-        menuCategoryList.forEach(System.out::println);
-        return null;
+        return new MenuCategoryDTO(
+                commonUrl + authData.getMenu_category().trim() + imgType,
+                authData.getMenu_category(),
+                subMenuList
+        );
     }
 }

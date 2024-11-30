@@ -8,7 +8,7 @@ function loadUserProfileInfo() {
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-    fetch('/user/info', {
+    fetch('/sidebar/info', {
         method: 'GET',
         headers: {
             [csrfHeader]: csrfToken, // CSRF 토큰 추가
