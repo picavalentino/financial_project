@@ -61,4 +61,7 @@ public interface PromotionMapper {
 
     void insertProdDsgnSavg(SavingsSaveDto savingsSaveDto);
 
+    List<AutoMaturityDateDto> findDesignsWithMaturityDates();
+
+    void updateDesignStatus(@Param("dsgnSn") Long dsgnSn, @Param("newStatus") int newStatus);
 }

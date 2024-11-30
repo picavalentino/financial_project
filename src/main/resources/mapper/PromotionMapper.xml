@@ -453,4 +453,25 @@
         #{savgIntTaxAmt}, #{savgAtxRcveAmt}
         )
     </insert>
+
+    <select id="findDesignsWithMaturityDates" resultType="com.team.financial_project.promotion.dto.AutoMaturityDateDto">
+        SELECT
+        d.dsgn_sn,
+        a.acml_mtr_dt,
+        b.dpst_mtr_dt,
+        c.loan_mtr_dt,
+        d.savg_mtr_dt
+        FROM tb_custprod_dsgn t
+        LEFT JOIN tb_prod_dsgn_acml a ON t.dsgn_sn = a.dsgn_sn
+        LEFT JOIN tb_prod_dsgn_dpst b ON t.dsgn_sn = b.dsgn_sn
+        LEFT JOIN tb_prod_dsgn_loan c ON t.dsgn_sn = c.dsgn_sn
+        LEFT JOIN tb_prod_dsgn_savg d ON t.dsgn_sn = d.dsgn_sn
+        WHERE t.dsgn_prg_stcd = '3'
+    </select>
+
+    <update id="updateDesignStatus">
+        UPDATE tb_custprod_dsgn
+        SET dsgn_prg_stcd = #{newStatus}
+        WHERE dsgn_sn = #{dsgnSn};
+    </update>
 </mapper>

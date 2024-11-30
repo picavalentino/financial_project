@@ -658,4 +658,5 @@
         LEFT JOIN loan_data ON dsgn_data.dsgn_ds_ty_cd = '4'
         LEFT JOIN repayment_data ON dsgn_data.dsgn_ds_ty_cd = '4'
     </select>
+
 </mapper>
