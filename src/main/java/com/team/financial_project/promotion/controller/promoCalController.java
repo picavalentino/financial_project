@@ -86,6 +86,7 @@ public class promoCalController {
             switch (dsTyCd) {
                 case "1":
                     DsgnDetailDto dsgnDetailDto = promoCalService.findSavgDetails(dsgnSn);
+                    System.out.println("=============================================================" + dsgnDetailDto);
                     List<CodeDto> progressStatusList1 = promotionService.getCodeListByCl(codeCl);
                     model.addAttribute("progressStatusList", progressStatusList1);
                     System.out.println("Result from findSavgDetails: " + dsgnDetailDto);
@@ -110,10 +111,10 @@ public class promoCalController {
                     return "promotion/promotionDetailDpst";
                 case "4":
                     DsgnDetailDto dsgnDetailDtos = promoCalService.findLoanDetails(dsgnSn);
-                    System.out.println("=============================================================" + dsgnDetailDtos);
+//                    System.out.println("=============================================================" + dsgnDetailDtos);
                     List<CodeDto> progressStatusList4 = promotionService.getCodeListByCl(codeCl);
                     model.addAttribute("progressStatusList", progressStatusList4);
-                    System.out.println("Result from findSavgDetails: " + dsgnDetailDtos);
+//                    System.out.println("Result from findSavgDetails: " + dsgnDetailDtos);
                     model.addAttribute("savgInfo",dsgnDetailDtos);
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "promotion/promotionDetailLoan";
