@@ -21,15 +21,12 @@
 <div layout:fragment="content" class="content print-area">
     <div class="main-content">
         <!-- 페이지 위치 & 제목 -->
-        <section class="page-location">
-            <div class="page-breadcrumb">
-                <span class="home-icon"><i class="bi bi-house-door-fill"></i></span>
-                <a href="/main">Home</a> &gt;
-                <a href="/promotion/list">프로모션관리</a> &gt;
-                <span>금융계산기</span>
-            </div>
-            <h1 class="page-title">금융계산기</h1>
-        </section>
+        <div class="location">
+            <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+            <a th:href="@{/promotion/list}"> / 프로모션관리</a>
+            <p> / 금융계산기</p>
+        </div>
+        <h1 class="title">금융계산기</h1>
 
         <!-- 설계 탭 -->
         <div class="tabs">
@@ -133,7 +130,7 @@
                         <label for="savgAplyRate">대출금리 (%)</label>
                         <label for="repaymentMethod">상환방법</label>
                         <label for="dsgnCreateAt">설계일자</label>
-                        <label for="dsgnUpdateAt">작성일자</label>
+                        <label for="dsgnUpdateAt">수정일자</label>
                     </div>
                     <div class="input-group">
                         <div class="input-group-content">
@@ -218,7 +215,7 @@
                             <input type="hidden" id="savgIntTaxTyCd" name="savgIntTaxTyCd">
 
                             <!-- 설계일자 -->
-                            <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" th:value="${savgInfo.effectiveDsgnDate}" disabled>
+                            <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" th:value="${savgInfo.dsgnCreateAt}" disabled>
 
                             <!-- 수정일자 -->
                             <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" disabled>
@@ -417,20 +414,10 @@
                 return today.toISOString().split('T')[0]; // yyyy-mm-dd
             }
 
-            // 날짜 필드 설정 (오늘 날짜)
-            const dsgnCreateAt = document.getElementById('dsgnCreateAt');
+            // 수정일자 (dsgnUpdateAt) 필드만 오늘 날짜로 설정
             const dsgnUpdateAt = document.getElementById('dsgnUpdateAt');
-            const savgStrtDt = document.getElementById('savgStrtDt'); // 시작일자
 
-<!--            if (dsgnCreateAt) dsgnCreateAt.value = getTodayDate();-->
             if (dsgnUpdateAt) dsgnUpdateAt.value = getTodayDate();
-
-            // 시작일자 기본값과 최소값 설정
-            if (savgStrtDt) {
-                const today = getTodayDate();
-                savgStrtDt.value = today; // 기본값 설정
-                savgStrtDt.min = today;  // 최소값 설정
-            }
 
 
             // 만기일자 계산
