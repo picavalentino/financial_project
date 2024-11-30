@@ -384,52 +384,58 @@ $(document).ready(function () {
 
     // 오늘 상담 일정 렌더링 함수
     function renderTodayTasks(scheduleList) {
-        const todayFormatted = formatDateWithDay(currentDate); // 현재 날짜 포맷
-        const $todayTaskContainer = $('.today_task .today-cls-list');
-        $todayTaskContainer.empty(); // 기존 내용 초기화
+    const todayFormatted = formatDateWithDay(currentDate); // 현재 날짜 포맷
+    const $todayTaskContainer = $('.today_task .today-cls-list');
+    $todayTaskContainer.empty(); // 기존 내용 초기화
 
-        console.log("Current Date (Formatted):", todayFormatted);
-        console.log("Customer Schedule List:", scheduleList);
+    console.log("Current Date (Formatted):", todayFormatted);
+    console.log("Customer Schedule List:", scheduleList);
 
-        // 오늘의 상담 일정 필터링
-        const todayEvents = scheduleList.filter(event => {
-            const eventDate = formatDateWithDay(parseDate(event.calendar_event_bgn_date)); // 날짜 비교
-            return (
-                eventDate === todayFormatted && // 날짜가 오늘인지 확인
-                event.user_id === user_id &&   // user_id가 일치하는지 확인
-                event.calendar_type === '3'   // calendar_type이 '3'인지 확인
-            );
-        });
+    // 오늘의 상담 일정 필터링
+    const todayEvents = scheduleList.filter(event => {
+        const eventDate = formatDateWithDay(parseDate(event.calendar_event_bgn_date)); // 날짜 비교
+        return (
+            eventDate === todayFormatted && // 날짜가 오늘인지 확인
+            event.user_id === user_id &&   // user_id가 일치하는지 확인
+            event.calendar_type === '3'   // calendar_type이 '3'인지 확인
+        );
+    });
 
-        console.log("Filtered Events:", todayEvents);
+    console.log("Filtered Events:", todayEvents);
 
-        // 일정이 없는 경우
-        if (todayEvents.length === 0) {
-            $todayTaskContainer.append('<p>오늘 상담 일정이 없습니다.</p>');
-            return;
-        }
-
-        // 일정 렌더링
-             todayEvents.forEach(event => {
-            const time = parseDate(event.calendar_event_bgn_date).toTimeString().substring(0, 5); // HH:mm 포맷
-            const $taskElement = $(`
-                <div class="today-tasks" data-calendar-sn="${event.calendar_sn}">
-                    <label><strong>&middot; ${time}</strong></label>
-                    <button class="delete-task">
-                        <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
-                    </button>
-                    <button class="task_etc">
-                        <img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo">
-                    </button>
-
-                    <div id="task_text">
-                        <p>${event.calendar_event_title || '제목 없음'}</p>
-                    </div>
-                </div>
-            `);
-            $todayTaskContainer.append($taskElement);
-        });
+    // 일정이 없는 경우
+    if (todayEvents.length === 0) {
+        $todayTaskContainer.append('<p>오늘 상담 일정이 없습니다.</p>');
+        return;
     }
+
+    // 일정 렌더링
+    todayEvents.forEach(event => {
+        // UTC 시간 데이터를 로컬 시간대로 변환
+        const localDate = new Date(event.calendar_event_bgn_date); // 서버에서 가져온 UTC 시간
+        localDate.setHours(localDate.getHours() + 9); // UTC -> KST (9시간 추가)
+
+        const time = localDate.toTimeString().substring(0, 5); // HH:mm 포맷
+
+        const $taskElement = $(`
+            <div class="today-tasks" data-calendar-sn="${event.calendar_sn}">
+                <label><strong>&middot; ${time}</strong></label>
+                <button class="delete-task">
+                    <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
+                </button>
+                <button class="task_etc">
+                    <img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo">
+                </button>
+
+                <div id="task_text">
+                    <p>${event.calendar_event_title || '제목 없음'}</p>
+                </div>
+            </div>
+        `);
+        $todayTaskContainer.append($taskElement);
+    });
+}
+
 
     // 모달창 열기 함수
     function openModal(eventData) {
