@@ -31,11 +31,11 @@
                         <div class="card notice-card">
                             <div class="card-header d-flex justify-content-between align-items-center text-primary">
                                 공지사항
-                                <a th:href="@{/board/list}" class="text-decoration-none text-primary">&gt;</a>
+                                <a th:href="@{/inquire/list}" class="text-decoration-none text-primary">&gt;</a>
                             </div>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex align-items-center" th:each="notice : ${noticeList}">
-                                    <a href="#" th:text="${'◎ '+notice.inqTitle}"> 첫번째 공지사항입니다.</a>
+                                    <a th:href="@{/inquire/detail/{inqId}(inqId=${notice.inqId})}" th:text="${'◎ '+notice.inqTitle}"> 첫번째 공지사항입니다.</a>
                                 </li>
                             </ul>
                         </div>
@@ -46,26 +46,20 @@
                         <div class="card todo-card">
                             <div class="card-header d-flex justify-content-between align-items-center text-primary">
                                 오늘 일정
-                                <a href="#" class="text-decoration-none text-primary">&gt;</a>
+                                <a th:href="@{/schedule/personal}" class="text-decoration-none text-primary">&gt;</a>
                             </div>
-                            <ul class="list-group list-group-flush">
+                            <ul class="list-group list-group-flush todo-item-container">
                                 <!-- 날짜 항목 -->
                                 <li class="list-group-item d-flex align-items-center date-item"
                                     th:text="${#dates.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}">
                                     2024년 11월 18일 (목)
                                 </li>
                                 <!-- 할 일 항목 -->
-                                <li class="list-group-item d-flex align-items-center todo-item">
-                                    할 일 첫 번째
-                                    <button class="btn btn-sm btn-outline-primary ms-auto">완료</button>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center todo-item">
-                                    할 일 두 번째
-                                    <button class="btn btn-sm btn-outline-primary ms-auto">완료</button>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center todo-item">
-                                    할 일 세 번째
-                                    <button class="btn btn-sm btn-outline-primary ms-auto">완료</button>
+                                <li class="list-group-item d-flex align-items-center todo-item" th:each="task : ${todayTasks}">
+                                    <span th:text="${task.calendareventtitle}"></span>
+                                    <button class="btn btn-sm btn-outline-primary ms-auto"
+                                            th:data-calendar-sn="${task.calendarsn}"
+                                            onclick="updateTask(this)">완료</button>
                                 </li>
                             </ul>
                         </div>
@@ -273,6 +267,45 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- 사용자 정의 스크립트 -->
     <script>
+        //할 일 체크
+        document.addEventListener('DOMContentLoaded', function () {
+            window.updateTask = function (button) {
+                const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+                const calendarSn = button.getAttribute('data-calendar-sn');
+
+                $.ajax({
+                    url: '/updateTask',
+                    method: 'POST',
+                    headers: {
+                        [csrfHeader]: csrfToken
+                    },
+                    data: { calendarSn: calendarSn },
+                    success: function(response) {
+                        if (response === 'success') {
+                            alert('할 일이 완료되었습니다!');
+                            // 화면에서 해당 항목 숨기기
+                            const listItem = button.closest('.list-group-item');
+                            if (listItem) {
+                                listItem.remove(); // <li> 요소 제거
+                            }
+                            // 페이지 새로고침
+                            location.reload();
+                        } else {
+                            alert('작업 처리에 실패했습니다.');
+                        }
+                    },
+                    error: function(error) {
+                        console.error('오류 발생:', error);
+                        alert('서버 요청 중 오류가 발생했습니다.');
+                    }
+                });
+            };
+        });
+
+
+
         $(document).ready(function () {
             // AJAX를 사용하여 데이터 가져오기
             $.ajax({
@@ -289,11 +322,6 @@
                         // 백분율 계산
                         const malePercentage = totalCount > 0 ? ((maleCount / totalCount) * 100).toFixed(1) : 0;
                         const femalePercentage = totalCount > 0 ? ((femaleCount / totalCount) * 100).toFixed(1) : 0;
-
-                        // 로그 출력
-<!--                        console.log(`총 고객 수: ${totalCount}`);-->
-<!--                        console.log(`남성 비율: ${malePercentage}%`);-->
-<!--                        console.log(`여성 비율: ${femalePercentage}%`);-->
 
                         // 성별 분포 차트 생성
                         const genderCtx = $('#genderChart')[0].getContext('2d');
@@ -340,15 +368,6 @@
                         const age40sPercentage = totalCount > 0 ? ((age40s / totalCount) * 100).toFixed(1) : 0;
                         const age50sPercentage = totalCount > 0 ? ((age50s / totalCount) * 100).toFixed(1) : 0;
                         const age60sUpPercentage = totalCount > 0 ? ((age60sUp / totalCount) * 100).toFixed(1) : 0;
-
-                        // 로그 출력
-<!--                        console.log(`총 고객 수: ${totalCount}`);-->
-<!--                        console.log(`10대 비율: ${age10sUnderPercentage}%`);-->
-<!--                        console.log(`20대 비율: ${age20sPercentage}%`);-->
-<!--                        console.log(`30대 비율: ${age30sPercentage}%`);-->
-<!--                        console.log(`40대 비율: ${age40sPercentage}%`);-->
-<!--                        console.log(`50대 비율: ${age50sPercentage}%`);-->
-<!--                        console.log(`60대 비율: ${age60sUpPercentage}%`);-->
 
                         // 연령 분포 차트 생성
                         const ageCtx = $('#ageChart')[0].getContext('2d');
@@ -553,7 +572,6 @@
                                     }
                                 }
                             }
-
                         });
                     } else {
                         console.warn('응답 데이터가 비어 있습니다.');
@@ -563,6 +581,13 @@
                     console.error('데이터를 가져오는 중 오류 발생:', error);
                 }
             });
+
+
+
+
+
+
+
 
 
 

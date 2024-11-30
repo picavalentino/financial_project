@@ -62,4 +62,28 @@
         FROM tb_custprod_dsgn
         WHERE user_id = #{userId} AND dsgn_prg_stcd = '3';
     </select>
+
+    <select id="getTodayTasks" resultType="java.util.Map">
+        SELECT
+        calendar_sn AS calendarSn,
+        calendar_event_title AS calendarEventTitle,
+        calendar_event_bgn_date AS calendarEventBgnDate,
+        calendar_event_end_date AS calendarEventEndDate,
+        task_checked_val AS taskCheckedVal
+        FROM tb_calendar
+        WHERE user_id = #{userId}
+        AND task_checked_val = false
+        AND calendar_type = '2'
+        AND CURRENT_DATE BETWEEN calendar_event_bgn_date::date AND calendar_event_end_date::date
+        ORDER BY calendar_event_bgn_date ASC
+        LIMIT 3;
+    </select>
+
+    <update id="updateTaskChecked">
+        UPDATE tb_calendar
+        SET task_checked_val = true
+        WHERE calendar_sn = #{calendarSn};
+    </update>
+
+
 </mapper>

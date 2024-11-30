@@ -30,11 +30,16 @@ public class InquireDTO {
     private String inqStatus;
     private LocalDateTime inqCreateAt;
     private LocalDateTime inqUpdateAt;
+    // 특정 포맷 지정
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public String getFormattedInqCreateAt() {
-        if (inqCreateAt != null) {
-            return inqCreateAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        }
-        return null; // 날짜가 없는 경우 처리
+    // inqCreateAt 반환
+    public String getFormattedCreateAt() {
+        return inqCreateAt != null ? inqCreateAt.format(FORMATTER) : null;
+    }
+
+    // inqUpdateAt 반환
+    public String getFormattedUpdateAt() {
+        return inqUpdateAt != null ? inqUpdateAt.format(FORMATTER) : null;
     }
 }

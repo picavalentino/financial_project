@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -51,7 +50,7 @@ public class SmsService {
             log.info("###########Redis 연결 상태 : "+ ping);
             return ping;
         } catch (Exception e) {
-            log.info("###########Redis 연결 상태 : 연결 오류" + e.getMessage());
+            log.info("###########Redis 연결 상태 : 연결 오류");
             return false;
         }
     }
@@ -111,5 +110,26 @@ public class SmsService {
     public boolean verifyCode(String recipientPhoneNumber, String inputCode) {
         String savedCode = redisTemplate.opsForValue().get(recipientPhoneNumber);
         return savedCode != null && savedCode.equals(inputCode);
+    }
+
+    // 찐 메세지 전송
+    public Boolean sendCustomMessage(String phoneNumber, String messageContent) {
+        String sanitizedPhoneNumber = phoneNumber.replaceAll("-", "");
+
+        System.out.println(sanitizedPhoneNumber);
+
+        Message message = new Message();
+        message.setFrom(sender);  // 발신자 번호 설정
+        message.setTo(sanitizedPhoneNumber);  // "-"가 제거된 수신자 번호
+        message.setText(messageContent);  // 메시지 내용 설정
+
+        try {
+            SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
+            System.out.println("SMS 발송 성공: " + response);
+            return true;
+        } catch (Exception e) {
+            System.err.println("SMS 발송 실패: " + e.getMessage());
+            return false;
+        }
     }
 }

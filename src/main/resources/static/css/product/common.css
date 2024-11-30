@@ -1,5 +1,9 @@
+.body{
+    background-color: #EFEFF1;;
+}
 .sub_content {
-    margin: 20px;
+    margin: 5px auto;
+    margin-left: 20px;
 }
 .title{
     font-size: 25px;
@@ -17,4 +21,7 @@
 
 .location p {
     display: inline;
+}
+.button-wrap{
+    margin: 20px auto;
 }
