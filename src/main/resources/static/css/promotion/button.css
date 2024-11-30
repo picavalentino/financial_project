@@ -97,11 +97,11 @@
 
 /* 검색 버튼 */
 .btn-search {
-    background-color: #1b1f44; /* 진한 파란색 */
+    background-color: #1b1f44;
 }
 
 .btn-search .icon {
-    background-color: #0f132e; /* 더 진한 파란색 */
+    background-color: #0f132e;
 }
 
 .btn-search:hover {
@@ -110,11 +110,11 @@
 
 /* 전체 버튼 */
 .btn-search-all {
-    background-color: #13183c; /* 다소 진한 파란색 */
+    background-color: #13183c;
 }
 
 .btn-search-all .icon {
-    background-color: #0f132e; /* 진한 파란색 */
+    background-color: #0f132e;
 }
 
 .btn-search-all:hover {
@@ -123,39 +123,52 @@
 
 /* 인쇄 버튼 */
 .btn-print {
-    background-color: #292D32; /* 청록색 */
+    background-color: #292D32;
 }
 
 .btn-print .icon {
-    background-color: #8E98A8; /* 진한 청록색 */
+    background-color: #8E98A8;
 }
 
 .btn-print:hover {
-    background-color: #1d1f22;
+    background-color: #8E98A8;
 }
 
 /* 메일 버튼 */
 .btn-mail {
-    background-color: #292D32; /* 청록색 */
+    background-color: #292D32;
 }
 
 .btn-mail .icon {
-    background-color: #8E98A8; /* 진한 청록색 */
+    background-color: #8E98A8;
 }
 
 .btn-mail:hover {
-    background-color: #1d1f22;
+    background-color: #8E98A8;
 }
 
 /* 삭제 버튼 */
 .btn-delete {
-    background-color: #FF6767; /* 청록색 */
+    background-color: #FF6767;
 }
 
 .btn-delete .icon {
-    background-color: #BD3232; /* 진한 청록색 */
+    background-color: #BD3232;
 }
 
 .btn-delete:hover {
-    background-color: #bd4c4c;
+    background-color: #BD3232;
+}
+
+/* 새로고침 버튼 */
+.btn-refresh {
+    background-color: #5A5A5A;
+}
+
+.btn-refresh .icon {
+    background-color: #4D4D4D;
+}
+
+.btn-refresh:hover {
+    background-color: #4D4D4D;
 }

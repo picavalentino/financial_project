@@ -12,12 +12,12 @@ public class AccumulatedFundCalculator {
         BigDecimal interestRate = dto.getInterestRate();
         int period = dto.getPeriod();
 
-        // 입력값 검증
+        // 입력값 검증 : 입력값이 null이거나 잘못된 값이면 null 반환
         if (baseAmount == null || interestRate == null || period <= 0) {
-            return BigDecimal.ZERO;
+            return null;
         }
         if (interestRate.compareTo(BigDecimal.ZERO) < 0) {
-            return BigDecimal.ZERO;
+            return null;
         }
 
         // 단리 계산: 이자 = 목표 금액 × 금리 × (기간 / 12)

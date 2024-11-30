@@ -367,10 +367,8 @@
         AND code_cl = (SELECT savg_pay_ty_cd_code_cl FROM tb_prod_dsgn_savg WHERE dsgn_sn = #{dsgnSn})
         )
         SELECT
-        CASE
-        WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
-            ELSE dsgn_data.dsgn_create_at
-        END AS effectiveDsgnDate,
+        dsgn_data.dsgn_create_at AS dsgnCreateAt, -- 설계일자
+        dsgn_data.dsgn_update_at AS dsgnUpdateAt, -- 수정일자
         dsgn_data.dsgn_ds_ty_cd AS dsgnDsTyCd,
         dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
@@ -456,10 +454,8 @@
         AND code_cl = (SELECT acml_pay_ty_cd_code_cl FROM tb_prod_dsgn_acml WHERE dsgn_sn = #{dsgnSn})
         )
         SELECT
-        CASE
-        WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
-        ELSE dsgn_data.dsgn_create_at
-        END AS effectiveDsgnDate,
+        dsgn_data.dsgn_create_at AS dsgnCreateAt, -- 설계일자
+        dsgn_data.dsgn_update_at AS dsgnUpdateAt, -- 수정일자
         dsgn_data.dsgn_ds_ty_cd AS dsgnDsTyCd,
         dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
@@ -545,10 +541,8 @@
         AND code_cl = (SELECT dpst_pay_ty_cd_code_cl FROM tb_prod_dsgn_dpst WHERE dsgn_sn = #{dsgnSn})
         )
         SELECT
-        CASE
-        WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
-        ELSE dsgn_data.dsgn_create_at
-        END AS effectiveDsgnDate,
+        dsgn_data.dsgn_create_at AS dsgnCreateAt, -- 설계일자
+        dsgn_data.dsgn_update_at AS dsgnUpdateAt, -- 수정일자
         dsgn_data.dsgn_ds_ty_cd AS dsgnDsTyCd,
         dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,
@@ -627,10 +621,8 @@
         AND code_cl = (SELECT loan_rpty_cd_code_cl FROM tb_prod_dsgn_loan WHERE dsgn_sn = #{dsgnSn})
         )
         SELECT
-        CASE
-        WHEN dsgn_data.dsgn_update_at IS NOT NULL THEN dsgn_data.dsgn_update_at
-        ELSE dsgn_data.dsgn_create_at
-        END AS effectiveDsgnDate,
+        dsgn_data.dsgn_create_at AS dsgnCreateAt, -- 설계일자
+        dsgn_data.dsgn_update_at AS dsgnUpdateAt, -- 수정일자
         dsgn_data.dsgn_ds_ty_cd AS dsgnDsTyCd,
         dsgn_data.prod_sn AS prodSn,
         prod_data.prod_cd AS prodCd,

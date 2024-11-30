@@ -12,7 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class DsgnDetailDto {
-    private String effectiveDsgnDate; // 설계일자
+    private LocalDate dsgnCreateAt; // 설계일자
+    private LocalDate dsgnUpdateAt; // 수정일자
     private String dsgnDsTyCd; // 설계번호
     private Long prodSn; // 상품번호
     private String prodCd; // 상품코드

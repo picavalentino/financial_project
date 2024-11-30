@@ -43,7 +43,7 @@ public interface PromotionMapper {
     List<PromotionListDto> getAllPromotions();
 
     // 진행상태 업데이트
-    void updateProgressStatus(String dsgnSn, String newStatus);
+    void updateProgressStatus(@Param("dsgnSn") String dsgnSn, @Param("newStatus") String newStatus);
 
 
     // 금융계산기 페이지

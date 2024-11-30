@@ -126,8 +126,8 @@
         <choose>
             <when test="sortColumn != null and sortColumn != ''">
                 ORDER BY
-                <if test="sortColumn == 'custNm'"> cm.CUST_NM </if>
-                <if test="sortColumn == 'userNm'"> pm.USER_NAME </if>
+                <if test="sortColumn == 'custNm'"> cm.CUST_NM COLLATE "ko_KR.utf8" </if>
+                <if test="sortColumn == 'userNm'"> pm.USER_NAME COLLATE "ko_KR.utf8" </if>
                 <if test="sortColumn == 'dsTyCd'"> pds.DSGN_DS_TY_CD </if>
                 <if test="sortColumn == 'prodNm'"> pd.PROD_NM </if>
                 <if test="sortColumn == 'prgStcd'"> pds.DSGN_PRG_STCD </if>
@@ -142,7 +142,8 @@
                 ${sortDirection} <!-- ASC 또는 DESC -->
             </when>
             <otherwise>
-                ORDER BY pds.DSGN_PRG_STCD ASC, pds.DSGN_SN ASC <!-- 진행 상태 → 설계 번호 오름차순 -->
+                ORDER BY pds.DSGN_SN ASC <!-- 상품설계번호 오름차순 -->
+                <!--ORDER BY pds.DSGN_PRG_STCD ASC, pds.DSGN_SN ASC--> <!-- 진행 상태 → 설계 번호 오름차순 -->
             </otherwise>
         </choose>
         LIMIT #{size} OFFSET #{offset}  <!-- 페이징 처리: 페이지당 크기와 시작 위치 -->
@@ -153,7 +154,13 @@
         SELECT
         pds.DSGN_SN AS dsgnSn,                      -- 설계 고유 번호
         pds.DSGN_PRG_STCD AS prgStcd,               -- 진행 상태 코드
-        COALESCE(dp.DPST_MTR_DT, sv.SAVG_MTR_DT, ln.LOAN_MTR_DT, ac.ACML_MTR_DT) AS mtrDate,  -- 만기일자
+        CASE pds.DSGN_DS_TY_CD
+        WHEN '1' THEN sv.SAVG_MTR_DT
+        WHEN '2' THEN ac.ACML_MTR_DT
+        WHEN '3' THEN dp.DPST_MTR_DT
+        WHEN '4' THEN ln.LOAN_MTR_DT
+        ELSE NULL
+        END AS mtrDate,                             -- 만기일자
         pds.DSGN_DS_TY_CD AS dsTyCd,                -- 설계 유형 코드
 
         -- 시작 일시
@@ -203,7 +210,7 @@
     <update id="updateProgressStatus">
         UPDATE TB_CUSTPROD_DSGN
         SET DSGN_PRG_STCD = #{newStatus}
-        WHERE DSGN_SN = #{dsgnSn}
+        WHERE DSGN_SN = CAST(#{dsgnSn} AS BIGINT)
     </update>
 
     <!-- 금융계산기 페이지 -->

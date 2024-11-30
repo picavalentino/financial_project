@@ -9,38 +9,28 @@ a {
     padding: 20px;
 }
 
-/* 페이지 위치 */
-.page-breadcrumb {
+.title {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.location {
     display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #888888;
-    gap: 5px; /* 아이콘과 텍스트 사이 간격 */
+    flex-direction: row;
+    color: #212529;
 }
 
-.home-icon {
-    font-size: 16px;
+.location a {
+    text-decoration: none;
+    color: inherit;
     margin-right: 5px;
+    height: 40px;
 }
 
-.page-breadcrumb a {
-    color: #888888;
+.location p {
+    display: inline;
 }
 
-.page-breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-/* 페이지 제목 */
-.page-title {
-    /*font-size: 25px;*/
-    font-size: 1.75rem;
-    /*font-weight: bold;*/
-    margin-top: 20px; /* 페이지 위치와의 간격 */
-    margin-bottom: 30px; /* 아래 내용과의 간격 */
-    padding-left: 20px;
-    color: #303249;
-}
 /* 인쇄관련 CSS */
 @media print {
 /* 모든 요소를 기본적으로 숨김 */

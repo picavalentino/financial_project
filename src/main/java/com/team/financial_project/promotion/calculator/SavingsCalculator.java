@@ -22,9 +22,10 @@ public class SavingsCalculator {
         LocalDate startDate = dto.getStartDate();
         int totalPeriod = dto.getPeriod();
 
-        // 유효성 검사: 입력값이 null이거나 잘못된 값이면 0 반환
+        // 입력값 검증 : 입력값이 null이거나 잘못된 값이면 null 반환
         if (monthlyDeposit == null || interestRate == null || startDate == null || totalPeriod <= 0) {
-            return BigDecimal.ZERO;
+            return null;
+            // return BigDecimal.ZERO;
         }
 
         // 현재까지 경과된 회차 계산
