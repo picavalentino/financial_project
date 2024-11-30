@@ -22,9 +22,10 @@ public class LoanCalculator {
         int period = dto.getPeriod(); // 상환 기간 (개월)
         LocalDate startDate = dto.getStartDate(); // 대출 시작일
 
-        // 입력값 검증
+        // 입력값 검증 : 입력값이 null이거나 잘못된 값이면 null 반환
         if (loanAmount == null || interestRate == null || period <= 0 || startDate == null) {
-            return BigDecimal.ZERO;
+            // return BigDecimal.ZERO;
+            return null;
         }
 
         // 연 이자율 -> 월 이자율 (백분율 기반 계산)
