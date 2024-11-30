@@ -5,12 +5,14 @@ import com.team.financial_project.promotion.dto.*;
 import com.team.financial_project.promotion.mapper.PromotionMapper;
 import com.team.financial_project.promotion.service.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -152,18 +154,24 @@ public class PromotionController {
         return ResponseEntity.ok("저장이 완료되었습니다.");
     }
 
+    // 진행상태 업데이트
+    @PostMapping("/update-statuses")
+    @ResponseBody
+    public ResponseEntity<String> updateProgressStatuses() {
+        try {
+            int updatedCount = promotionService.updateAllProgressStatuses();
+            String formattedDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-    // 금융계산기 페이지 (상세)
-//    @GetMapping("/cal/detail")
-//    public String getDetail(@RequestParam("dsgnSn") String dsgnSn, Model model){
-////        PromotionListDto detail = promotionService.getDetailByDsgnSn(dsgnSn);
-////        model.addAttribute("detail", detail);
-//
-//        return "promotion/promotionDetail";
-//    }
-
-
-
+            if (updatedCount > 0) {
+                return ResponseEntity.ok("총 " + updatedCount + "건의 진행 상태가 " + formattedDateTime + " 기준으로 업데이트되었습니다.");
+            } else {
+                return ResponseEntity.ok("업데이트가 필요한 진행 상태가 없습니다. (" + formattedDateTime + ")");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("진행 상태를 갱신하는 중 오류가 발생했습니다.");
+        }
+    }
 }
 
 

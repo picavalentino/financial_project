@@ -96,6 +96,7 @@ public class promoCalController {
                     DsgnDetailDto detailDto = promoCalService.findAcmlDetails(dsgnSn);
                     List<CodeDto> progressStatusList2 = promotionService.getCodeListByCl(codeCl);
                     model.addAttribute("progressStatusList", progressStatusList2);
+                    System.out.println("Result from findSavgDetails: " + detailDto);
                     model.addAttribute("savgInfo",detailDto);
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "promotion/promotionDetailAcml";
@@ -103,6 +104,7 @@ public class promoCalController {
                     DsgnDetailDto detailDtos = promoCalService.findDpstDetails(dsgnSn);
                     List<CodeDto> progressStatusList3= promotionService.getCodeListByCl(codeCl);
                     model.addAttribute("progressStatusList", progressStatusList3);
+                    System.out.println("Result from findSavgDetails: " + detailDtos);
                     model.addAttribute("savgInfo",detailDtos);
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "promotion/promotionDetailDpst";
@@ -110,6 +112,7 @@ public class promoCalController {
                     DsgnDetailDto dsgnDetailDtos = promoCalService.findLoanDetails(dsgnSn);
                     List<CodeDto> progressStatusList4 = promotionService.getCodeListByCl(codeCl);
                     model.addAttribute("progressStatusList", progressStatusList4);
+                    System.out.println("Result from findSavgDetails: " + dsgnDetailDtos);
                     model.addAttribute("savgInfo",dsgnDetailDtos);
                     model.addAttribute("dsgnSn", dsgnSn);
                     return "promotion/promotionDetailLoan";
