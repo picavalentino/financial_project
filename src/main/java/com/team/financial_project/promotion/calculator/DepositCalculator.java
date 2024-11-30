@@ -61,7 +61,7 @@ public class DepositCalculator {
         BigDecimal preTaxTotal = principal.add(totalInterest);
 
         // 이자 과세금 계산 (세전 이자에 대해 과세율 적용)
-        BigDecimal taxAmount = totalInterest.multiply(taxRate).setScale(0, RoundingMode.HALF_UP);
+        BigDecimal taxAmount = totalInterest.multiply(taxRate).setScale(0, RoundingMode.CEILING);
 
         // 세후 수령액 = 세전 수령액 - 이자 과세금
         BigDecimal afterTaxTotal = preTaxTotal.subtract(taxAmount);

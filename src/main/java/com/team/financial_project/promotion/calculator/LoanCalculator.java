@@ -81,7 +81,7 @@ public class LoanCalculator {
         // 월 상환액 계산
         BigDecimal multiplier = (BigDecimal.ONE.add(monthlyInterestRate)).pow(loanPeriodMonths);
         BigDecimal monthlyPayment = loanAmount.multiply(monthlyInterestRate).multiply(multiplier)
-                .divide(multiplier.subtract(BigDecimal.ONE), 2, RoundingMode.HALF_UP);
+                .divide(multiplier.subtract(BigDecimal.ONE), 0, RoundingMode.FLOOR);
 
         List<LoanDetailsDto> paymentSchedule = new ArrayList<>();
         LocalDate currentDate = loanCalDto.getSavgStrtDt();
@@ -92,9 +92,9 @@ public class LoanCalculator {
             LocalDate dueDate = currentDate.plusMonths(i - 1);
 
             // 이자 및 원금 계산
-            BigDecimal interestPayment = remainingBalance.multiply(monthlyInterestRate).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal principalPayment = monthlyPayment.subtract(interestPayment).setScale(2, RoundingMode.HALF_UP);
-            remainingBalance = remainingBalance.subtract(principalPayment).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal interestPayment = remainingBalance.multiply(monthlyInterestRate).setScale(0, RoundingMode.FLOOR);
+            BigDecimal principalPayment = monthlyPayment.subtract(interestPayment).setScale(0, RoundingMode.FLOOR);
+            remainingBalance = remainingBalance.subtract(principalPayment).setScale(0, RoundingMode.FLOOR);
 
             // 총 이자 누적
             totalInterest = totalInterest.add(interestPayment);
@@ -109,7 +109,7 @@ public class LoanCalculator {
         }
 
         // 총 상환 금액 계산
-        BigDecimal totalRepayment = loanAmount.add(totalInterest).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalRepayment = loanAmount.add(totalInterest).setScale(0, RoundingMode.FLOOR);
 
         // 결과 DTO에 값 설정
         loanCalDto.setSavgTotDpstAmt(loanAmount); // 대출액
@@ -129,7 +129,7 @@ public class LoanCalculator {
         BigDecimal annualInterestRate = loanCalDto.getSavgAplyRate(); // 연이율
 
         // 월 원금 계산
-        BigDecimal monthlyPrincipal = loanAmount.divide(BigDecimal.valueOf(loanPeriodMonths), 2, RoundingMode.HALF_UP);
+        BigDecimal monthlyPrincipal = loanAmount.divide(BigDecimal.valueOf(loanPeriodMonths), 0, RoundingMode.FLOOR);
 
         // 초기 변수 설정
         List<LoanDetailsDto> paymentSchedule = new ArrayList<>();
@@ -163,7 +163,7 @@ public class LoanCalculator {
         }
 
         // 총 납입 금액 계산
-        BigDecimal totalRepayment = loanAmount.add(totalInterest).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalRepayment = loanAmount.add(totalInterest).setScale(0, RoundingMode.FLOOR);
 
         // 결과 DTO 설정
         loanCalDto.setSavgTotDpstAmt(loanAmount); // 대출액

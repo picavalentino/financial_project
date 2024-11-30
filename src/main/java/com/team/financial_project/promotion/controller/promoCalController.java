@@ -110,6 +110,7 @@ public class promoCalController {
                     return "promotion/promotionDetailDpst";
                 case "4":
                     DsgnDetailDto dsgnDetailDtos = promoCalService.findLoanDetails(dsgnSn);
+                    System.out.println("=============================================================" + dsgnDetailDtos);
                     List<CodeDto> progressStatusList4 = promotionService.getCodeListByCl(codeCl);
                     model.addAttribute("progressStatusList", progressStatusList4);
                     System.out.println("Result from findSavgDetails: " + dsgnDetailDtos);
