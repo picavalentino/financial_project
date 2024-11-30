@@ -71,7 +71,7 @@
             <div class="mycustomer">
                 <div id="mycustomer_title">
                     <p>나의 고객 정보:</p>
-                    <a href="@{/customer/list}" ><button type="button" id="customerMoreBtn">더보기</button></a>
+                    <a th:href="@{/customer/list}" ><button type="button" id="customerMoreBtn">더보기</button></a>
                 </div>
 
                 <table id="mycustomer_table">
@@ -98,7 +98,7 @@
             <div class="myboard">
                 <div id="myboard_title">
                     <p>내 작성글:</p>
-                    <a href="@{/inquire/list}"><button type="button" id="inquireMoreBtn">더보기</button></a>
+                    <a  th:href="@{/inquire/list}"><button type="button" id="inquireMoreBtn">더보기</button></a>
                 </div>
 
                 <table id="myboard_table">
