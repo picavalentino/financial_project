@@ -298,4 +298,49 @@
         user_imgpath = #{user_imgpath}
         WHERE user_id = #{user_id}
     </update>
+
+    <!-- 사번 찾기 유저 존재 여부 -->
+    <select id="hasExistByUser_name" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
+        SELECT * FROM tb_user WHERE user_telno= #{telno} AND user_name= #{name}
+    </select>
+
+    <!--  사번 찾기  -->
+    <select id="findUserIdByUserTelno" resultType="java.lang.String" parameterType="string">
+        SELECT user_id FROM tb_user WHERE user_telno= #{telno}
+    </select>
+
+    <!-- 비밀번호 찾기 유저 존재 여부 -->
+    <select id="hasExistByUser_id" resultType="com.team.financial_project.dto.UserDTO" parameterType="string">
+        SELECT * FROM tb_user WHERE user_telno= #{telno} AND user_id= #{id}
+    </select>
+
+    <!--  사번으로 비밀번호 수정  -->
+    <update id="updateUserPw" parameterType="string">
+        UPDATE tb_user SET user_pw = #{pw} WHERE user_id = #{id}
+    </update>
+
+    <!-- 상품등록페이지: 사원 이름으로 아이디 조회  -->
+    <select id="findByNameContaining" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT user_id AS id, user_name AS name
+        FROM tb_user
+        WHERE user_name LIKE CONCAT('%', #{name}, '%')
+    </select>
+
+    <!--고객 관리 페이지 : 담당자 이름으로 담당자 정보 조회-->
+    <select id="findManagersByName" parameterType="String" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        usr.user_id,
+        usr.user_name,
+        usr.user_telno,
+        codeUserPosit.code_nm AS position_name, -- 담당자 직책 매핑
+        codeUserDept.code_nm AS dept_name -- 담당자 부서 매핑
+        FROM tb_user usr
+        LEFT JOIN tb_code AS codeUserPosit
+        ON codeUserPosit.code_cl = usr.user_jbps_ty_cd_code_cl
+        AND codeUserPosit.code_no = usr.user_jbps_ty_cd
+        LEFT JOIN tb_code AS codeUserDept
+        ON codeUserDept.code_cl = usr.user_dept_cd_code_cl
+        AND codeUserDept.code_no = usr.user_dept_cd
+        WHERE usr.user_name LIKE CONCAT('%', #{name}, '%')
+    </select>
 </mapper>

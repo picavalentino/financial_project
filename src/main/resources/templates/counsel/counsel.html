@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
+<head>
+    <meta charset="UTF-8">
+    <title>GS Bank</title>
+    <!-- 전체 적용될 CSS -->
+    <th:block layout:fragment="css"></th:block>
+    <!-- 전체 적용될 스크립트 -->
+    <th:block layout:fragment="script"></th:block>
+    <!-- 페이지별 상담 페이지 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/counsel/counsel.css}">
+    <link rel="stylesheet" th:href="@{/css/counsel/button.css}">
+</head>
+<!-- 우리가 작업할 공간 -->
+<body>
+<div layout:fragment="content" class="content">
+    <!-- 버튼 -->
+    <button id="openModalBtn">상담 일지</button>
+
+    <!-- 상담 목록 모달 창 -->
+    <div></div>
+    <div th:fragment="myModal" id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">홍길동 고객님 상담 목록</div>
+                <button id="counselWriteBtn" class="modal-btn-insert">등록</button>
+                <button id="closeModalBtn">X</button>
+            </div>
+            <div class="modal-table-container">
+                <table class="modal-table">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>작성자</th>
+                        <th>작성부서</th>
+                        <th>상담유형</th>
+                        <th>작성일</th>
+                        <th>수정일</th>
+                    </tr>
+                    </thead>
+                    <tbody id="counselList">
+                    <!-- 반복적인 직원 정보 행들 추가 -->
+                    </tbody>
+                </table>
+                <!-- 페이지네이션 -->
+                <div id="paginationControls" class="custom-pagination-container">
+                    <div id="pagination" class="custom-pagination">
+                        <!-- JavaScript 동적으로 버튼 추가 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상담 상세 모달 창 -->
+    <div th:fragment="detailModal" id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">홍길동 고객님 상담 상세</div>
+                <button id="closeDetailModalBtn">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-input-container">
+                    <div class="modal-input-row">
+                        <div class="modal-input-group">
+                            <label>작성자</label>
+                            <input type="text" id="user_id" readonly>
+                        </div>
+                        <div class="modal-input-group">
+                            <label>작성부서</label>
+                            <input type="text" id="user_dept_nm" readonly>
+                            <input type="hidden" id="user_dept_cd">
+                        </div>
+                        <div class="modal-input-group">
+                            <label>작성일</label>
+                            <input type="text" id="counsel_create_at" readonly>
+                        </div>
+                    </div>
+                    <div class="modal-input-row">
+                        <div class="modal-input-group">
+                            <label>상담유형</label>
+                            <input type="text" id="counsel_category_nm" readonly>
+                            <input type="hidden" id="counsel_category">
+                        </div>
+                        <div class="modal-input-group">
+                            <label hidden>정렬</label>
+                            <input type="hidden">
+                        </div>
+                        <div class="modal-input-group">
+                            <label>수정일</label>
+                            <input id="counsel_update_at" readonly>
+                        </div>
+                    </div>
+                    <div class="modal-input-row-textarea">
+                        <label>상담내용</label>
+                        <textarea id="counsel_content" readonly></textarea>
+                    </div>
+                </div>
+                <div class="modal-bottom-button-group">
+                    <div class="left-btn">
+                        <button class="btn btn-list" id="backBtn1">
+                            <i class="icon bi bi-list"></i> 목록
+                        </button>
+                    </div>
+                    <div class="modal-right-btns">
+                        <button class="btn btn-register" id="counsel_update">
+                            <i class="icon bi bi-plus-circle-fill"></i> 수정
+                        </button>
+                        <button class="btn btn-delete" id="counsel_delete">
+                            <i class="icon bi bi-trash-fill"></i> 삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상담 작성 모달 창 -->
+    <div th:fragment="writeModal" id="writeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">홍길동 고객님 상담 작성</div>
+                <button id="closeWriteModalBtn">X</button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/customer/counsel/insertCounsel}" id="insertCounsel" method="post">
+                    <!-- 고객 아이디를 넣어주기 -->
+                    <input type="hidden" id="cust_id" name="cust_id">
+                    <!-- 직원 아이디를 넣어주기 -->
+                    <input type="hidden" id="writer_user_id" name="user_id">
+                    <!-- 상담 내용 상태 코드 = 상담완료 : 1, 상담대기 : 0 -->
+                    <input type="hidden" name="counsel_stcd" value="0">
+                    <div class="modal-input-container">
+                        <div class="modal-input-row">
+                            <div class="modal-input-group">
+                                <label>상담유형</label>
+                                <select id="insert_counsel_category" name="counsel_category">
+                                    <option selected>선택</option>
+                                    <option th:each="category : ${counselCategories}"
+                                            th:value="${category.codNo}"
+                                            th:text="${category.codNm}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="modal-input-group">
+                                <label>작성자</label>
+                                <input type="text" id="writer_user_name" name="user_name" readonly>
+                            </div>
+                            <div class="modal-input-group">
+                                <label>작성부서</label>
+                                <input type="text" id="writer_user_dept_nm" readonly>
+                                <input type="hidden" id="writer_user_dept_cd" name="user_dept_cd" >
+                            </div>
+                        </div>
+                        <div class="modal-input-row-textarea">
+                            <label>상담내용</label>
+                            <textarea id="insert_counsel_content" name="counsel_content" ></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-bottom-button-group">
+                        <button class="btn btn-list" id="backBtn2">
+                            <i class="icon bi bi-list"></i> 목록
+                        </button>
+                        <button class="btn btn-register" id="insert_counsel_btn">
+                            <i class="icon bi bi-plus-circle-fill"></i> 저장
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상담 수정 모달 창 -->
+    <div th:fragment="updateModal" id="updateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">홍길동 고객님 상담 수정</div>
+                <button id="closeUpdateModalBtn">X</button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/customer/counsel/updateCounsel}" id="updateCounsel" method="post">
+                    <input type="hidden" name="counsel_id" id="counsel_id">
+                    <div class="modal-input-container">
+                        <div class="modal-input-row">
+                            <div class="modal-input-group">
+                                <label>상담유형</label>
+                                <select id="update_counsel_category" name="update_counsel_category">
+                                    <option th:each="category : ${counselCategories}"
+                                            th:value="${category.codNo}"
+                                            th:text="${category.codNm}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="modal-input-group">
+                                <label>작성자</label>
+                                <input type="text" id="update_user_name" readonly>
+                            </div>
+                            <div class="modal-input-group">
+                                <label>작성부서</label>
+                                <input type="text" id="update_user_dept_nm" readonly>
+                                <input type="hidden" id="update_user_dept_cd">
+                            </div>
+                        </div>
+                        <div class="modal-input-row-textarea">
+                            <label>상담내용</label>
+                            <textarea id="update_counsel_content" name="update_counsel_content" ></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-bottom-button-group">
+                        <button class="btn btn-list" id="backBtn3">
+                            <i class="icon bi bi-arrow-left"></i> 뒤로
+                        </button>
+                        <button class="btn btn-register" id="counsel_update_btn_2">
+                            <i class="icon bi bi-plus-circle-fill"></i> 수정
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/counsel/counsel.js"></script>
+</div>
+</body>
+</html>

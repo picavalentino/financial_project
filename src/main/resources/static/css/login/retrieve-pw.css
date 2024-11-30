@@ -1,0 +1,23 @@
+.pw-btns{
+    display: none;
+    gap: 5px;
+}
+.pw-btns input{
+    font-size: large;
+    padding: 10px 0px;
+    background-color: #71A4AD;
+    border-radius: 25px;
+    border: none;
+    width: 50%;
+    color: #ffffff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.pw-btns input:disabled{
+    background-color: rgb(140 140 140);
+    cursor: not-allowed;
+}
+.pw-btns input:enabled:hover{
+    background-color: #567d84;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.financial_project.mapper.AuthSystemMapper">
+    <!--    셀렉트 박스에서 쓸 권한 이름 가져오기-->
+    <select id="selectAuthList" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        code_no AS user_auth_cd, -- 현재 권한 코드 (코드 번호)
+        code_nm AS auth_name    -- 권한명
+        FROM
+        tb_code
+        WHERE
+        code_cl LIKE '101'    -- 101번 권한 코드임
+        ORDER BY
+        code_no ASC  -- 코드 번호 순으로 정렬
+    </select>
+
+    <select id="getAuthSystemList" resultType="com.team.financial_project.authSystem.dto.AuthSystemDTO">
+        SELECT
+        tam.tb_id,
+        tam.auth_id,
+        tam.menu_id,
+        c.code_nm AS auth_name,
+        m.menu_name AS menu_name
+        FROM tb_auth_menu tam
+        LEFT JOIN tb_code c ON tam.auth_id = c.code_id
+        LEFT JOIN tb_menu m ON tam.menu_id = m.menu_id
+        WHERE c.code_cl = '101'
+        <if test="auth != null and auth != ''">
+            AND c.code_no = #{auth}
+        </if>
+        ORDER BY tam.tb_id ASC
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="getTotalAuthCount" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_auth_menu tam
+        LEFT JOIN tb_code c ON tam.auth_id = c.code_id
+        WHERE c.code_cl = '101'
+        <if test="auth != null and auth != ''">
+            AND c.code_no = #{auth}
+        </if>
+    </select>
+</mapper>

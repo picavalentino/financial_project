@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.financial_project.mapper.CustomerMapper">
+
+    <select id="findManagersByName" parameterType="String" resultType="com.team.financial_project.dto.UserDTO">
+        SELECT
+        usr.user_id,
+        usr.user_name,
+        usr.user_telno,
+        codeUserPosit.code_nm AS position_name, -- 담당자 직책 매핑
+        codeUserDept.code_nm AS dept_name -- 담당자 부서 매핑
+        FROM tb_user usr
+        LEFT JOIN tb_code AS codeUserPosit
+        ON codeUserPosit.code_cl = usr.user_jbps_ty_cd_code_cl
+        AND codeUserPosit.code_no = usr.user_jbps_ty_cd
+        LEFT JOIN tb_code AS codeUserDept
+        ON codeUserDept.code_cl = usr.user_dept_cd_code_cl
+        AND codeUserDept.code_no = usr.user_dept_cd
+        WHERE usr.user_name LIKE CONCAT('%', #{name}, '%')
+    </select>
+
+    <resultMap id="CustomerUserMap" type="com.team.financial_project.dto.CustomerDTO">
+        <id property="custId" column="custId"/>
+        <result property="custNm" column="custNm"/>
+        <result property="custRrn" column="custRrn"/>
+        <result property="custTelno" column="custTelno"/>
+        <result property="custEmail" column="custEmail"/>
+        <result property="custOccpTyCd" column="custOccpTyCd"/>
+        <result property="custAddr" column="custAddr"/>
+        <result property="custCreateAt" column="custCreateAt"/>
+        <result property="custUpdateAt" column="custUpdateAt"/>
+        <result property="custStateCd" column="custStateCd"/>
+
+        <!-- UserDTO 매핑 -->
+        <association property="users" javaType="com.team.financial_project.dto.UserDTO">
+            <id property="user_id" column="user_id"/>
+            <result property="user_name" column="user_name"/>
+            <result property="user_telno" column="user_telno"/>
+            <result property="position_name" column="position_name"/>
+            <result property="dept_name" column="dept_name"/>
+        </association>
+    </resultMap>
+    <!-- ================================================================================================================== -->
+    <select id="searchCustomers" resultMap="CustomerUserMap">
+        SELECT DISTINCT
+        cust.cust_id AS custId,
+        cust.cust_nm AS custNm,
+        cust.cust_rrn AS custRrn,
+        cust.cust_telno AS custTelno,
+        cust.cust_email AS custEmail,
+        cust.cust_create_at AS custCreateAt,
+        statCode.code_nm AS custStateCd,
+
+        usr.user_id AS user_id,
+        usr.user_name AS user_name
+
+        FROM tb_customer AS cust
+        LEFT JOIN tb_code AS statCode
+        ON cust.cust_state_cd = statCode.code_no
+        AND cust.cust_state_cd_code_cl = statCode.code_cl
+        LEFT JOIN tb_user AS usr
+        ON usr.user_id = cust.user_id
+
+        WHERE 1=1
+        <if test="searchType != null and searchType != ''">
+            <choose>
+                <when test="searchType == 'name'">
+                    AND cust.cust_nm LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="searchType == 'email'">
+                    AND cust.cust_email LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="searchType == 'manager'">
+                    AND usr.user_name LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="searchType == 'status'">
+                    AND cust.cust_state_cd = #{keyword}
+                </when>
+            </choose>
+        </if>
+        ORDER BY cust.cust_create_at DESC, cust.cust_id ASC
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+    <!-- ================================================================================================================== -->
+    <select id="getCustomersWithPagination" resultMap="CustomerUserMap">
+        SELECT DISTINCT
+        cust.cust_id AS custId,
+        cust.cust_nm AS custNm,
+        cust.cust_rrn AS custRrn,
+        cust.cust_telno AS custTelno,
+        cust.cust_email AS custEmail,
+        cust.cust_create_at AS custCreateAt,
+        statCode.code_nm AS custStateCd,
+
+        usr.user_id AS user_id,
+        usr.user_name AS user_name
+
+        FROM tb_customer AS cust
+        LEFT JOIN tb_code AS statCode
+        ON cust.cust_state_cd = statCode.code_no
+        AND cust.cust_state_cd_code_cl = statCode.code_cl
+        LEFT JOIN tb_user AS usr
+        ON usr.user_id = cust.user_id
+
+        ORDER BY cust.cust_create_at DESC, cust.cust_id ASC
+        LIMIT #{limit}
+        OFFSET #{offset};
+    </select>
+    <!-- ================================================================================================================== -->
+    <select id="getCustomerCount" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_customer AS cust
+        LEFT JOIN tb_user AS usr
+        ON usr.user_id = cust.user_id
+
+        WHERE 1=1
+        <if test="searchType != null and searchType != ''">
+            <choose>
+                <when test="searchType == 'name'">
+                    AND cust.cust_nm LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="searchType == 'email'">
+                    AND cust.cust_email LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="searchType == 'manager'">
+                    AND usr.user_name LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="searchType == 'status'">
+                    AND cust.cust_state_cd = #{keyword}
+                </when>
+            </choose>
+        </if>
+    </select>
+
+    <!-- ================================================================================================= -->
+    <!-- 고객 아이디 기반 검색 -->
+    <resultMap id="CustomerUserDetailMap" type="com.team.financial_project.dto.CustomerDTO">
+        <id property="custId" column="custId"/>
+        <result property="custNm" column="custNm"/>
+        <result property="custRrn" column="custRrn"/>
+        <result property="custTelno" column="custTelno"/>
+        <result property="custEmail" column="custEmail"/>
+        <result property="custOccpTyCd" column="custOccpTyCd"/>
+        <result property="custAddr" column="custAddr"/>
+        <result property="custCreateAt" column="custCreateAt"/>
+        <result property="custUpdateAt" column="custUpdateAt"/>
+        <result property="custStateCd" column="custStateCd"/>
+
+        <!-- 담당자 정보 매핑 -->
+        <association property="users" javaType="com.team.financial_project.dto.UserDTO">
+            <id property="user_id" column="user_id"/>
+            <result property="user_name" column="user_name"/>
+            <result property="user_telno" column="user_telno"/>
+            <result property="position_name" column="position_name"/>
+            <result property="dept_name" column="dept_name"/>
+        </association>
+    </resultMap>
+
+    <!-- 고객 아이디 기반 검색 -->
+    <select id="getCustomerById" parameterType="String" resultMap="CustomerUserDetailMap">
+        SELECT
+        cust.cust_id AS custId,
+        cust.cust_nm AS custNm,
+        cust.cust_rrn AS custRrn,
+        cust.cust_telno AS custTelno,
+        cust.cust_email AS custEmail,
+        code.code_no AS custOccpTyCd, -- 직업 코드 매핑
+        code.code_nm AS custOccpTyCd_name,
+        cust.cust_addr AS custAddr,
+        cust.cust_create_at AS custCreateAt,
+        cust.cust_update_at AS custUpdateAt,
+        statCode.code_nm AS custStateCd, -- 고객 상태
+
+        usr.user_id AS user_id, -- 담당자 아이디 매핑
+        usr.user_name AS user_name, -- 담당자 이름 매핑
+        usr.user_telno AS user_telno, -- 담당자 연락처 매핑
+        codeUserPosit.code_nm AS position_name, -- 담당자 직책 매핑
+        codeUserDept.code_nm AS dept_name -- 담당자 부서 매핑
+
+        FROM tb_customer AS cust
+        LEFT JOIN tb_code AS statCode
+        ON cust.cust_state_cd = statCode.code_no
+        AND cust.cust_state_cd_code_cl = statCode.code_cl
+
+        LEFT JOIN tb_code AS code
+        ON cust.cust_occp_ty_cd = code.code_no
+        AND cust.cust_occp_ty_cd_code_cl = code.code_cl
+
+        LEFT JOIN tb_user AS usr
+        ON usr.user_id = cust.user_id
+        LEFT JOIN tb_code AS codeUserPosit
+        ON codeUserPosit.code_cl = usr.user_jbps_ty_cd_code_cl
+        AND codeUserPosit.code_no = usr.user_jbps_ty_cd
+        LEFT JOIN tb_code AS codeUserDept
+        ON codeUserDept.code_cl = usr.user_dept_cd_code_cl
+        AND codeUserDept.code_no = usr.user_dept_cd
+
+        WHERE cust.cust_id = #{custId}
+    </select>
+    <!-- ============================================================================================================= -->
+    <!-- 오늘 등록된 고객 수 조회 -->
+    <select id="countTodayCustomers" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_customer
+        WHERE DATE(cust_create_at) = CURRENT_DATE
+    </select>
+
+    <!-- 고객 등록 -->
+    <insert id="insertCustomer" parameterType="com.team.financial_project.dto.CustomerDTO">
+        INSERT INTO tb_customer
+        (cust_id, cust_nm, cust_rrn, cust_telno, cust_email, cust_occp_ty_cd, cust_addr,
+        cust_create_at, cust_update_at, cust_state_cd, user_id)
+        VALUES
+        (#{custId}, #{custNm}, #{custRrn}, #{custTelno}, #{custEmail}, #{custOccpTyCd}, #{custAddr},
+        #{custCreateAt}, #{custUpdateAt}, #{custStateCd}, #{users.user_id})
+    </insert>
+    <!-- ============================================================================================================= -->
+
+    <!-- 고객 정보 수정 -->
+    <update id="updateCustomer" parameterType="com.team.financial_project.dto.CustomerDTO">
+        UPDATE tb_customer
+        SET
+        cust_telno = #{custTelno},
+        cust_email = #{custEmail},
+        cust_occp_ty_cd = #{custOccpTyCd},
+        cust_addr = #{custAddr},
+        cust_update_at = NOW(),
+        user_id = #{users.user_id}
+        WHERE cust_id = #{custId}
+    </update>
+
+
+    <!--셀렉트 박스에서 쓸 직업 가져오는 구문-->
+    <select id="getCustOccpTyCdList" resultType="com.team.financial_project.dto.CustomerDTO">
+        SELECT
+        code_no AS custOccpTyCd, -- 부서 코드 (코드 번호)
+        code_nm AS custOccpTyCd_name -- 부서명
+        FROM tb_code
+        WHERE code_cl LIKE '301' -- 301번대의 코드 클러스터 필터링 (301번대가 고객 코드임)
+        ORDER BY code_no ASC -- 코드 번호 순으로 정렬
+    </select>
+    <!-- ============================================================================================================= -->
+
+    <insert id="insertHistoryById" parameterType="list">
+        INSERT INTO tb_cust_update_hist (cust_id, user_id, update_detail, cust_update_at)
+        VALUES
+        <foreach collection="list" item="history" separator=",">
+            (#{history.custId}, #{history.userId}, #{history.updateDetail}, #{history.custUpdateAt})
+        </foreach>
+    </insert>
+
+    <select id="findCustomerHistoryListById" resultType="com.team.financial_project.dto.CustomerUpdateHistoryDTO">
+        SELECT
+        cust_id AS custId,
+        cust_update_at AS custUpdateAt,
+        user_id AS userId,
+        update_detail AS updateDetail
+        FROM tb_cust_update_hist
+        WHERE cust_id = #{custId}
+        ORDER BY cust_update_at DESC
+    </select>
+
+</mapper>

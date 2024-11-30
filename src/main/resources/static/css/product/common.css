@@ -1,0 +1,27 @@
+.body{
+    background-color: #EFEFF1;;
+}
+.sub_content {
+    margin: 5px auto;
+    margin-left: 20px;
+}
+.title{
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+.location{
+    display: flex;
+    flex-direction: row;
+}
+.location a {
+    text-decoration: none;
+    color: inherit;
+    margin-right: 5px;
+}
+
+.location p {
+    display: inline;
+}
+.button-wrap{
+    margin: 20px auto;
+}

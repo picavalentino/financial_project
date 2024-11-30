@@ -1,0 +1,301 @@
+/* 모달 전체 화면 배경 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 닫기 버튼 스타일 */
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #000000;
+}
+
+/* 모달 제목 */
+.modal-title {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* ==================================================================================================================== */
+/* 메세지 발송 */
+
+/* 핸드폰 모양의 모달 */
+.modal-message-content {
+    background-color: #efeff1;
+    padding: 20px;
+    border-radius: 20px;
+    width: 430px;
+    height: 700px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid #010535;
+    z-index: 1001;
+}
+
+/* 상단에 스피커 부분 모방 */
+.phone-speaker {
+    width: 60px;
+    height: 5px;
+    background-color: #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* 메시지 박스 */
+.message-box {
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.message-box textarea {
+    width: 100%;
+    height: 400px;
+    padding: 10px;
+    border: 1px solid #8c8c8c;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: none;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+/* 태그 컨테이너 */
+.tag-container {
+    margin-top:10px;
+    padding:5px 0px 5px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    height: 80px;
+    width: 100%;
+    overflow-y: auto; /* 최대 높이를 초과할 경우 스크롤 활성화 */
+    padding-right: 5px; /* 스크롤바와의 간격을 위한 패딩 */
+    justify-content: flex-start; /* 항상 왼쪽 정렬 유지 */
+    align-items: flex-start;
+    text-align: left; /* 텍스트가 항상 왼쪽 정렬되도록 보장 */
+    border: 1px solid #8c8c8c; /* 테두리 추가 (옵션) */
+    border-radius: 8px; /* 모서리를 둥글게 (옵션) */
+    background-color: #f9f9f9; /* 배경색 추가 (옵션) */
+    box-sizing: border-box; /* 패딩과 스크롤바 포함 */
+}
+
+.tag-btn {
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.close-tag {
+    margin-left: 5px;
+    color: #888;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+/* 메시지 발송 버튼을 하단에 고정 */
+.message-send-button {
+    background-color: #343a40;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+#send-button {
+ margin-top: 10px; /* 상단 여유 공간을 채워 아래쪽에 고정 */
+}
+
+.message-send-button.icon {
+    margin-right: 5px;
+}
+
+.message-send-button:hover {
+    background-color: #292d3e;
+}
+
+/* ==================================================================================================================== */
+/* 고객 등록 */
+/* 모달 외형*/
+.modal-insert-content {
+   background-color: #f3f8f9;
+   padding: 20px;
+   border-radius: 10px;
+   width: 350px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+   position: relative;
+}
+
+/* 폼 스타일 */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.register-form label {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.register-form input,
+.register-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9em;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.register-form input::placeholder,
+.register-form select::placeholder {
+    color: #aaa;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+    outline: none;
+    border-color: #8bbfbd;
+}
+
+/* 제출 버튼 */
+.submit-button {
+    background-color: #8bbfbd;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.submit-button:hover {
+    background-color: #7da8a5;
+}
+
+/* ==================================================================================================================== */
+/* 고객 출력 */
+/* 모달 내용 */
+.modal-print-content {
+    background-color: #f3f8f9;
+    padding: 20px;
+    border-radius: 10px;
+    width: 1000px;
+    position: relative;
+}
+
+/* 테이블 스크롤 컨테이너 */
+.table-scroll-container {
+  max-height: 300px; /* 스크롤 활성화를 위한 고정 높이 */
+  overflow-y: auto; /* 수직 스크롤 활성화 */
+  overflow-x: auto; /* 수평 스크롤 활성화 */
+  margin-top: 10px;
+}
+
+/* 테이블 스타일 */
+.print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.print-table th,
+.print-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+
+}
+
+.print-table th {
+    position: sticky; /* 테이블 헤더 고정 */
+    top: 0; /* 헤더 고정 위치 */
+
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #555;
+}
+
+.print-table .status {
+    padding: 5px 10px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 0.8em;
+}
+
+/* 상태 아이콘 스타일 */
+.status.active {
+    color: green;
+    font-weight: bold;
+}
+
+.status.inactive {
+    color: red;
+    font-weight: bold;
+}
+
+.print-button-container {
+   display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 10px; /* 버튼과 테이블 사이 간격 */
+}
+
+/* 인쇄 버튼 */
+.btn-print {
+    background-color: #292D32;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.btn-print .icon {
+    background-color: #8E98A8;
+}
+
+.btn-print:hover {
+    background-color: #1d1f22;
+}
+
+
+

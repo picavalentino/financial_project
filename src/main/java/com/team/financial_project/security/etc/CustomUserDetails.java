@@ -1,4 +1,4 @@
-package com.team.financial_project.main.security;
+package com.team.financial_project.security.etc;
 
 import com.team.financial_project.dto.UserDTO;
 import org.springframework.security.core.GrantedAuthority;

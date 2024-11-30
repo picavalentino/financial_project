@@ -26,12 +26,12 @@ $(document).ready(function(){
                     $('#userResults').empty();
 
                     if (users.length > 0) {
-                        $('#userResults').show();
+                        $('#userResults').css("display", "block");
                         users.forEach(function(user) {
                             $('#userResults').append('<div class="dropdown-item" data-name="' + user.user_name
                             + '" data-birthday="' + user.user_birthday
                             + '" data-id="' + user.user_id+ '">'
-                            + user.user_name +" / "+ user.user_birthday + '</div>');
+                            + user.user_name +" / "+ user.user_birthday +'<span>'+ user.user_id +'</span></div>');
                         });
                         // 검색한 이름 선택시
                         $('.dropdown-item').on('click', function() {
@@ -43,7 +43,9 @@ $(document).ready(function(){
                             $("#user_name").text(selectedName);
                             $("#user_birthday").text(selectedBirthday);
 
-                            $('#userResults').hide();
+                            alert("⚠️본인정보만 선택해주세요⚠️");
+                            $("#user_id").prop("readonly",true);
+                            $('#userResults').css("display", "none");
                             isSelectedId = true;
                             validateForm();
                         });
@@ -52,13 +54,29 @@ $(document).ready(function(){
                     }
                 },
                 error: function() {
-                    $('#userResults').empty().hide();
+                    $('#userResults').empty().css("display", "none");
                 }
             });
         } else {
-            $('#userResults').empty().hide();
+            $('#userResults').empty().css("display", "none");
         }
     })
+    // 사원번호 선택 후 다시 인풋박스 클릭시
+    $("#user_id").on("click",function(){
+        let id = $(this).val();
+        if(id.length===11 && window.confirm("사원번호를 다시 검색하시겠습니까?")){
+            $("#user_id").prop("readonly", false).val("");
+            $("#user_name").text(" ");
+            $("#user_birthday").text(" ");
+        }
+    })
+    // 검색창, 드롭박스 외 다른 구역 클릭시
+    $(document).on('click', function(event) {
+        // 검색 컨테이너 내부를 클릭하지 않은 경우
+        if (!$(event.target).closest("#id-container").length) {
+            $("#userResults").css("display", "none");
+        }
+    });
     // 사진등록 누르면 숨겨진 파일 입력 태그 동작
     $("#btn-photoReg").on("click", function (e) {
         e.preventDefault();
@@ -104,62 +122,32 @@ $(document).ready(function(){
         }
     })
     // 비밀번호 유효성 검사
-    $("#user_pw").on("input", function() {
-        let pw = $(this).val();
+    $("#user_pw, #confirm-user_pw").on("input", function() {
+        let pw = $("#user_pw").val();
         let confirm_pw = $("#confirm-user_pw").val();
         const pwPattern = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,13}$/;
-        if(confirm_pw !==0){
-            if (pw !== confirm_pw) {
-                if($("#msg-not-match").text().length === 0){
-                    $("#msg-not-match").text("일치하지 않습니다.");
-                }
-                isMatchConfirmPw = false;
-                validateForm();
-            }else{
-                $("#msg-not-match").text("");
-                isMatchConfirmPw = true;
-                validateForm();
-            }
-        }else{
-            $("#msg-not-match").text("");
-            isMatchConfirmPw = false;
-            validateForm();
-        }
-        if (pw.length === 0) {
-            $("#msg-invalid-pw").text("");
-            isPwValid = false;
-            validateForm();
-        } else if (!pwPattern.test(pw)) {
-            if($("#msg-invalid-pw").text().length === 0){
-                $("#msg-invalid-pw").text("숫자+영문 6~13자리여야 합니다");
-            }
-            isPwValid = false;
-            validateForm();
-        } else {
-            $("#msg-invalid-pw").text("");
-            isPwValid = true;
-            validateForm();
-        }
-    })
-    // 비밀번호 일치 확인
-    $("#confirm-user_pw").on("input", function(){
-        let pw = $("#user_pw").val();
-        let confirm_pw = $(this).val();
-        if (confirm_pw.length === 0) {
-            $("#msg-not-match").text("");
-            isMatchConfirmPw = false;
-            validateForm();
-        } else if (pw !== confirm_pw) {
-            if($("#msg-not-match").text().length === 0){
-                $("#msg-not-match").text("일치하지 않습니다.");
-            }
-            isMatchConfirmPw = false;
-            validateForm();
-        } else {
-            $("#msg-not-match").text("");
+        if (pw === confirm_pw) {
             isMatchConfirmPw = true;
-            validateForm();
+            $("#msg-not-match").css("display", "none");
+            if (pwPattern.test(pw)) {
+                $("#msg-invalid-pw").css("display", "none");
+                isPwValid = true;
+            } else {
+                $("#msg-invalid-pw").css("display", "inline");
+                isPwValid = false;
+            }
+        }else {
+            isMatchConfirmPw = false;
+            $("#msg-not-match").css("display", "inline");
+            if (pwPattern.test(pw)) {
+                $("#msg-invalid-pw").css("display", "none");
+                isPwValid = true;
+            } else {
+                $("#msg-invalid-pw").css("display", "inline");
+                isPwValid = false;
+            }
         }
+        validateForm();
     })
     // 이메일 유효성 검사
     $("#user_email").on("input", function (){
@@ -171,16 +159,25 @@ $(document).ready(function(){
                 $("#msg-invalid-email").text("유효하지 않는 이메일입니다.");
             }
             isEmailValid = false;
-            validateForm();
         } else {
             $("#msg-invalid-email").text("");
             isEmailValid = true;
-            validateForm();
         }
         if(email.length==0){
             $("#msg-invalid-email").text("");
             isEmailValid = false;
-            validateForm();
+        }
+        validateForm();
+
+    });
+    // 전화번호 숫자만
+    $("#phone2, #phone3").on('keypress', function (event) {
+        // 숫자 (0-9)만 입력 가능하게 설정
+        if (event.which < 48 || event.which > 57) {
+            // 백스페이스 (8), 탭 (9), 화살표 키 등은 허용
+            if (event.which !== 8 && event.which !== 9) {
+                event.preventDefault();
+            }
         }
     });
     // 휴대전화 유효성 검사
@@ -191,7 +188,8 @@ $(document).ready(function(){
         let phone2 = $("#phone2").val();
         let phone3 = $("#phone3").val();
         let phone = phone1 +"-"+ phone2 +"-"+ phone3;
-        if(phone.length>11 && phone.length<14){
+        let phoneRegex = /^01[0-9]-\d{3,4}-\d{4}$/;
+        if(phoneRegex.test(phone)){
             $("#btn-certify").prop("disabled", false).val("인증");
         }else{
             $("#btn-certify").prop("disabled", true).val("인증");
