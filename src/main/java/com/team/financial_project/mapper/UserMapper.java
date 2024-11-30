@@ -87,4 +87,7 @@ public interface UserMapper {
 
     // 상품등록페이지: 담당자 검색
     List<Map<String, Object>> findByNameContaining(@Param("name") String name);
+
+    // 고객관리페이지 : 담당자 검색
+    List<UserDTO> findManagersByName(@Param("name") String name);
 }
