@@ -1,13 +1,18 @@
 package com.team.financial_project.product.service;
 
+import com.team.financial_project.dto.ProdHistDTO;
 import com.team.financial_project.mapper.ProductMapper;
 import com.team.financial_project.dto.ProductDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -109,7 +114,20 @@ public class ProductService {
 
     // 단일 제품 조회
     public ProductDTO findById(Long prodSn) {
-        ProductDTO product = productMapper.findById(prodSn);
+        ProductDTO product = productMapper.getProductById(prodSn);
+
+        // histList 초기화
+        if (product != null && product.getHistList() == null) {
+            product.setHistList(new ArrayList<>());
+        }
+
+        List<ProdHistDTO> prodHist = productMapper.getProdHistById(prodSn);
+        if (prodHist != null) {
+            for (ProdHistDTO x : prodHist) {
+                product.getHistList().add(x);
+            }
+        }
+
         if (product != null) {
             applyMappingsToProduct(product); // 매핑 적용
         }
@@ -117,14 +135,17 @@ public class ProductService {
         return product;
     }
 
-    public void updateProduct(ProductDTO dto) {
-        productMapper.updateProduct(dto);
+    @Transactional
+    public void updateProduct(ProductDTO dto, String userId) {
+        productMapper.updateProduct(dto, userId);
     }
 
+    @Transactional
     public void deleteProduct(BigDecimal prodSn) {
         productMapper.deleteProduct(prodSn);
     }
 
+    @Transactional
     public void insertProduct(ProductDTO dto) {
         // 상품코드 생성 로직
         if (dto.getProdTyCd().equals("1")) { // 적금
@@ -177,4 +198,29 @@ public class ProductService {
         System.out.println("### create prodCd: " + dto.getProdCd());
         productMapper.insertProduct(dto);
     }
+
+    @Transactional
+    public void updateProductStatuses() {
+        List<ProductDTO> productsBeforeUpdate = productMapper.findAllList(); // 상태 변경 전 조회
+        int updatedRows = productMapper.updateProductStatus();
+        List<ProductDTO> productsAfterUpdate = productMapper.findAllList();  // 상태 변경 후 조회
+
+        if (updatedRows > 0) {
+            log.info("상품 상태 변경 완료: {}개의 상품 상태가 업데이트되었습니다.", updatedRows);
+
+            // 상태 변경된 상품 로깅
+            for (int i = 0; i < productsBeforeUpdate.size(); i++) {
+                ProductDTO before = productsBeforeUpdate.get(i);
+                ProductDTO after = productsAfterUpdate.get(i);
+
+                if (!before.getProdCurrStcd().equals(after.getProdCurrStcd())) {
+                    log.info("상품 ID: {}, 상태 변경: {} -> {}",
+                            before.getProdSn(), before.getProdCurrStcd(), after.getProdCurrStcd());
+                }
+            }
+        } else {
+            log.warn("상품 상태 변경 작업이 수행되지 않았습니다. (업데이트된 상품 없음)");
+        }
+    }
+
 }

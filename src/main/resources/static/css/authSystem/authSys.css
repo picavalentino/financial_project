@@ -42,37 +42,6 @@
     border-radius: 8px;
 }
 
-/* 페이지 위치 경로 설정 */
-.location {
-    display: inline-flex;
-    align-items: center;
-    margin-bottom: 10px; /* 간격 축소 */
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.location a {
-    color: #333;
-    text-decoration: none;
-    margin-right: 5px; /* 각 링크 간격 추가 */
-}
-
-.location a:hover {
-    text-decoration: underline;
-}
-
-.location i {
-    font-size: 20px;
-    margin-right: 5px;
-}
-
-/* 제목 설정 */
-.title {
-    font-size: 25px;
-    color: #black;
-    margin-bottom: 10px; /* 간격 축소 */
-}
-
 /* 상단 설정 */
 .top {
     display: flex;

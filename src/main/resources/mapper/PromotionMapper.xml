@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.financial_project.promotion.mapper.PromotionMapper">
+
+    <!--  MyBatis Test  -->
+    <select id="checkConnection" resultType="int">
+        SELECT 1
+    </select>
+
+    <!-- 페이지에 출력하기 위한 코드 리스트 조회 -->
+    <select id="getCodeListByCl" parameterType="string" resultType="com.team.financial_project.promotion.dto.CodeDto">
+        SELECT
+            CODE_NO AS codNo,
+            CODE_NM AS codNm
+        FROM TB_CODE
+        WHERE CODE_CL = #{codeCl}
+        ORDER BY CODE_NO ASC
+    </select>
+
+    <!-- 설계 조회 페이지 -->
+    <!-- 전체 데이터 개수 조회 -->
+    <select id="getTotalCount" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_CUSTPROD_DSGN pds
+        LEFT JOIN TB_CUSTOMER cm ON pds.CUST_ID = cm.CUST_ID
+        LEFT JOIN TB_USER pm ON pds.USER_ID = pm.USER_ID
+        LEFT JOIN TB_PRODUCT pd ON pds.PROD_SN = pd.PROD_SN
+        <where>
+            <!-- 진행상태 필터 조건 -->
+            <if test="prgStcd != null and prgStcd != ''">
+                pds.DSGN_PRG_STCD = #{prgStcd}
+            </if>
+            <!-- 상품유형 필터 조건 -->
+            <if test="dsTyCd != null and dsTyCd != ''">
+                AND pds.DSGN_DS_TY_CD = #{dsTyCd}
+            </if>
+            <!-- 고객명 필터 조건 -->
+            <if test="custNm != null and custNm != ''">
+                AND cm.CUST_NM LIKE CONCAT('%', #{custNm}, '%')
+            </if>
+            <!-- 담당자 필터 조건 -->
+            <if test="userNm != null and userNm != ''">
+                AND pm.USER_NAME LIKE CONCAT('%', #{userNm}, '%')
+            </if>
+            <!-- 상품명 필터 조건 -->
+            <if test="prodNm != null and prodNm != ''">
+                AND pd.PROD_NM LIKE CONCAT('%', #{prodNm}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 페이징된 데이터 리스트 조회 -->
+    <select id="getPagedList" parameterType="java.util.Map" resultType="com.team.financial_project.promotion.dto.PromotionListDto">
+        SELECT
+            pds.DSGN_SN AS dsgnSn,              <!-- 설계 고유 번호 -->
+            pds.PROD_SN AS prodSn,              <!-- 상품 설계 번호 -->
+            pds.CUST_ID AS custId,              <!-- 고객 ID -->
+            cm.CUST_NM AS custNm,               <!-- 고객 이름 -->
+            pds.USER_ID AS userId,              <!-- 직원 ID -->
+            pm.USER_NAME AS userNm,             <!-- 담당자 이름 -->
+            pd.PROD_NM AS prodNm,               <!-- 상품명 -->
+            pds.DSGN_DS_TY_CD AS dsTyCd,        <!-- 설계 유형 코드 -->
+            (SELECT COALESCE(
+            (SELECT DPST_MTR_DT FROM TB_PROD_DSGN_DPST WHERE DSGN_SN = pds.DSGN_SN),
+            (SELECT LOAN_MTR_DT FROM TB_PROD_DSGN_LOAN WHERE DSGN_SN = pds.DSGN_SN),
+            (SELECT SAVG_MTR_DT FROM TB_PROD_DSGN_SAVG WHERE DSGN_SN = pds.DSGN_SN),
+            (SELECT ACML_MTR_DT FROM TB_PROD_DSGN_ACML WHERE DSGN_SN = pds.DSGN_SN)
+            )) AS mtrDate,                      <!-- 만기일자 -->
+            pds.DSGN_PRG_STCD AS prgStcd,       <!-- 진행 상태 코드 -->
+            CASE pds.DSGN_DS_TY_CD
+                WHEN '1' THEN (SELECT SAVG_STRT_DT FROM TB_PROD_DSGN_SAVG WHERE DSGN_SN = pds.DSGN_SN) -- 적금 시작일
+                WHEN '2' THEN (SELECT ACML_STRT_DT FROM TB_PROD_DSGN_ACML WHERE DSGN_SN = pds.DSGN_SN) -- 목돈 시작일
+                WHEN '3' THEN (SELECT DPST_STRT_DT FROM TB_PROD_DSGN_DPST WHERE DSGN_SN = pds.DSGN_SN) -- 예금 시작일
+                WHEN '4' THEN (SELECT LOAN_STRT_DT FROM TB_PROD_DSGN_LOAN WHERE DSGN_SN = pds.DSGN_SN) -- 대출 시작일
+                ELSE NULL
+            END AS startDate,                   <!-- 시작 일시 -->
+            CASE pds.DSGN_DS_TY_CD
+                WHEN '1' THEN (SELECT SAVG_CIRCLE_AMT FROM TB_PROD_DSGN_SAVG WHERE DSGN_SN = pds.DSGN_SN) -- 적금 불입액
+                WHEN '2' THEN (SELECT ACML_CIRCLE_AMT FROM TB_PROD_DSGN_ACML WHERE DSGN_SN = pds.DSGN_SN) -- 목돈 불입액
+                WHEN '3' THEN (SELECT DPST_AMT FROM TB_PROD_DSGN_DPST WHERE DSGN_SN = pds.DSGN_SN)       -- 예금 금액
+                WHEN '4' THEN (SELECT LOAN_AMT FROM TB_PROD_DSGN_LOAN WHERE DSGN_SN = pds.DSGN_SN)       -- 대출 금액
+                ELSE NULL
+            END AS baseAmount,                  <!-- 설계별 금액 -->
+            CASE pds.DSGN_DS_TY_CD
+                WHEN '1' THEN (SELECT SAVG_APLY_RATE FROM TB_PROD_DSGN_SAVG WHERE DSGN_SN = pds.DSGN_SN) -- 적금 금리
+                WHEN '2' THEN (SELECT ACML_APLY_RATE FROM TB_PROD_DSGN_ACML WHERE DSGN_SN = pds.DSGN_SN) -- 목돈 금리
+                WHEN '3' THEN (SELECT DPST_APLY_RATE FROM TB_PROD_DSGN_DPST WHERE DSGN_SN = pds.DSGN_SN) -- 예금 금리
+                WHEN '4' THEN (SELECT LOAN_RATE FROM TB_PROD_DSGN_LOAN WHERE DSGN_SN = pds.DSGN_SN)       -- 대출 금리
+                ELSE NULL
+            END AS interestRate,               <!-- 설계별 금리 -->
+            CASE pds.DSGN_DS_TY_CD
+                WHEN '1' THEN (SELECT SAVG_GOAL_PRD FROM TB_PROD_DSGN_SAVG WHERE DSGN_SN = pds.DSGN_SN)  -- 적금 기간
+                WHEN '2' THEN (SELECT ACML_GOAL_PRD FROM TB_PROD_DSGN_ACML WHERE DSGN_SN = pds.DSGN_SN)  -- 목돈 기간
+                WHEN '3' THEN (SELECT DPST_PRD FROM TB_PROD_DSGN_DPST WHERE DSGN_SN = pds.DSGN_SN)       -- 예금 기간
+                WHEN '4' THEN (SELECT LOAN_REPY_PRD FROM TB_PROD_DSGN_LOAN WHERE DSGN_SN = pds.DSGN_SN)  -- 대출 기간
+                ELSE NULL
+            END AS period                      <!-- 설계별 기간 -->
+        FROM TB_CUSTPROD_DSGN pds
+        LEFT JOIN TB_CUSTOMER cm ON pds.CUST_ID = cm.CUST_ID
+        LEFT JOIN TB_USER pm ON pds.USER_ID = pm.USER_ID
+        LEFT JOIN TB_PRODUCT pd ON pds.PROD_SN = pd.PROD_SN
+        <where>
+            <!-- 진행상태 필터 조건 -->
+            <if test="prgStcd != null and prgStcd != ''">
+                pds.DSGN_PRG_STCD = #{prgStcd}
+            </if>
+            <!-- 상품유형 필터 조건 -->
+            <if test="dsTyCd != null and dsTyCd != ''">
+                AND pds.DSGN_DS_TY_CD = #{dsTyCd}
+            </if>
+            <!-- 고객명 필터 조건 -->
+            <if test="custNm != null and custNm != ''">
+                AND cm.CUST_NM LIKE CONCAT('%', #{custNm}, '%')
+            </if>
+            <!-- 담당자 필터 조건 -->
+            <if test="userNm != null and userNm != ''">
+                AND pm.USER_NAME LIKE CONCAT('%', #{userNm}, '%')
+            </if>
+            <!-- 상품명 필터 조건 -->
+            <if test="prodNm != null and prodNm != ''">
+                AND pd.PROD_NM LIKE CONCAT('%', #{prodNm}, '%')
+            </if>
+        </where>
+        <!-- 동적 정렬 -->
+        <choose>
+            <when test="sortColumn != null and sortColumn != ''">
+                ORDER BY
+                <if test="sortColumn == 'custNm'"> cm.CUST_NM COLLATE "ko_KR.utf8" </if>
+                <if test="sortColumn == 'userNm'"> pm.USER_NAME COLLATE "ko_KR.utf8" </if>
+                <if test="sortColumn == 'dsTyCd'"> pds.DSGN_DS_TY_CD </if>
+                <if test="sortColumn == 'prodNm'"> pd.PROD_NM </if>
+                <if test="sortColumn == 'prgStcd'"> pds.DSGN_PRG_STCD </if>
+                <if test="sortColumn == 'mtrDt'">
+                    (SELECT COALESCE(
+                    (SELECT DPST_MTR_DT FROM TB_PROD_DSGN_DPST WHERE DSGN_SN = pds.DSGN_SN),
+                    (SELECT LOAN_MTR_DT FROM TB_PROD_DSGN_LOAN WHERE DSGN_SN = pds.DSGN_SN),
+                    (SELECT SAVG_MTR_DT FROM TB_PROD_DSGN_SAVG WHERE DSGN_SN = pds.DSGN_SN),
+                    (SELECT ACML_MTR_DT FROM TB_PROD_DSGN_ACML WHERE DSGN_SN = pds.DSGN_SN)
+                    ))
+                </if>
+                ${sortDirection} <!-- ASC 또는 DESC -->
+            </when>
+            <otherwise>
+                ORDER BY pds.DSGN_SN ASC <!-- 상품설계번호 오름차순 -->
+                <!--ORDER BY pds.DSGN_PRG_STCD ASC, pds.DSGN_SN ASC--> <!-- 진행 상태 → 설계 번호 오름차순 -->
+            </otherwise>
+        </choose>
+        LIMIT #{size} OFFSET #{offset}  <!-- 페이징 처리: 페이지당 크기와 시작 위치 -->
+    </select>
+
+    <!-- 진행 상태 업데이트 하기 위해 모든 데이터 조회 -->
+    <select id="getAllPromotions" resultType="com.team.financial_project.promotion.dto.PromotionListDto">
+        SELECT
+        pds.DSGN_SN AS dsgnSn,                      -- 설계 고유 번호
+        pds.DSGN_PRG_STCD AS prgStcd,               -- 진행 상태 코드
+        CASE pds.DSGN_DS_TY_CD
+        WHEN '1' THEN sv.SAVG_MTR_DT
+        WHEN '2' THEN ac.ACML_MTR_DT
+        WHEN '3' THEN dp.DPST_MTR_DT
+        WHEN '4' THEN ln.LOAN_MTR_DT
+        ELSE NULL
+        END AS mtrDate,                             -- 만기일자
+        pds.DSGN_DS_TY_CD AS dsTyCd,                -- 설계 유형 코드
+
+        -- 시작 일시
+        CASE pds.DSGN_DS_TY_CD
+        WHEN '1' THEN sv.SAVG_STRT_DT
+        WHEN '2' THEN ac.ACML_STRT_DT
+        WHEN '3' THEN dp.DPST_STRT_DT
+        WHEN '4' THEN ln.LOAN_STRT_DT
+        ELSE NULL
+        END AS startDate,
+
+        -- 설계 금액
+        CASE pds.DSGN_DS_TY_CD
+        WHEN '1' THEN sv.SAVG_CIRCLE_AMT
+        WHEN '2' THEN ac.ACML_CIRCLE_AMT
+        WHEN '3' THEN dp.DPST_AMT
+        WHEN '4' THEN ln.LOAN_AMT
+        ELSE NULL
+        END AS baseAmount,
+
+        -- 금리
+        CASE pds.DSGN_DS_TY_CD
+        WHEN '1' THEN sv.SAVG_APLY_RATE
+        WHEN '2' THEN ac.ACML_APLY_RATE
+        WHEN '3' THEN dp.DPST_APLY_RATE
+        WHEN '4' THEN ln.LOAN_RATE
+        ELSE NULL
+        END AS interestRate,
+
+        -- 기간
+        CASE pds.DSGN_DS_TY_CD
+        WHEN '1' THEN sv.SAVG_GOAL_PRD
+        WHEN '2' THEN ac.ACML_GOAL_PRD
+        WHEN '3' THEN dp.DPST_PRD
+        WHEN '4' THEN ln.LOAN_REPY_PRD
+        ELSE NULL
+        END AS period
+
+        FROM TB_CUSTPROD_DSGN pds
+        LEFT JOIN TB_PROD_DSGN_DPST dp ON pds.DSGN_SN = dp.DSGN_SN
+        LEFT JOIN TB_PROD_DSGN_SAVG sv ON pds.DSGN_SN = sv.DSGN_SN
+        LEFT JOIN TB_PROD_DSGN_LOAN ln ON pds.DSGN_SN = ln.DSGN_SN
+        LEFT JOIN TB_PROD_DSGN_ACML ac ON pds.DSGN_SN = ac.DSGN_SN
+    </select>
+
+    <!-- 진행 상태 업데이트 -->
+    <update id="updateProgressStatus">
+        UPDATE TB_CUSTPROD_DSGN
+        SET DSGN_PRG_STCD = #{newStatus}
+        WHERE DSGN_SN = CAST(#{dsgnSn} AS BIGINT)
+    </update>
+
+    <!-- 금융계산기 페이지 -->
+
+
+
+    <!-- 고객 정보 리스트 조회 -->
+    <select id="getUserInfoList" resultType="com.team.financial_project.promotion.dto.UserInfoDto">
+        SELECT
+            C.CUST_ID AS custId,              -- 고객 ID
+            C.CUST_NM AS custNm,              -- 고객명
+            CASE
+                WHEN CAST(SUBSTR(C.CUST_RRN, 1, 2) AS INTEGER) &lt;= 22
+                THEN CONCAT('20', SUBSTR(C.CUST_RRN, 1, 2), '-', SUBSTR(C.CUST_RRN, 3, 2), '-', SUBSTR(C.CUST_RRN, 5, 2))
+                ELSE CONCAT('19', SUBSTR(C.CUST_RRN, 1, 2), '-', SUBSTR(C.CUST_RRN, 3, 2), '-', SUBSTR(C.CUST_RRN, 5, 2))
+            END AS custBirth,                 -- 생년월일
+            C.CUST_EMAIL AS custEmail,        -- 이메일
+            C.CUST_TELNO AS custTelno,        -- 전화번호
+            CD.CODE_NM AS custOccp,           -- 직업명
+            C.CUST_ADDR AS custAddr,          -- 주소
+            TO_CHAR(C.CUST_CREATE_AT, 'YYYY-MM-DD') AS custCreateAt, -- 작성일자
+            U.USER_ID AS userId,              -- 담당자 ID
+            U.USER_NAME AS userName           -- 담당자명
+        FROM TB_CUSTOMER C
+        LEFT JOIN TB_USER U
+            ON C.USER_ID = U.USER_ID
+        LEFT JOIN TB_CODE CD
+            ON CD.CODE_CL = C.CUST_OCCP_TY_CD_CODE_CL
+            AND CD.CODE_NO = C.CUST_OCCP_TY_CD
+        WHERE 1 = 1
+        <if test="custNm != null and custNm != ''">
+            AND C.CUST_NM LIKE CONCAT('%', #{custNm}, '%')
+        </if>
+        <if test="custTelno != null and custTelno != ''">
+            AND C.CUST_TELNO LIKE CONCAT('%', #{custTelno}, '%')
+        </if>
+        ORDER BY C.CUST_NM ASC
+    </select>
+
+    <!-- 상품 정보 리스트 조회 -->
+    <!-- 적금  -->
+    <select id="getProductList" resultType="com.team.financial_project.promotion.dto.ProductInfoDto">
+        SELECT
+            p.PROD_SN as prodSn,                        -- 상품설계번호
+            p.PROD_DS_TY_CD as prodDsTyCd,              -- 설계유형코드
+            p.PROD_CD as prodCd,                        -- 상품코드
+            p.PROD_NM as prodNm,                        -- 상품명
+            sbstgCode.CODE_NM as prodSbstgTy,           -- 가입대상
+            payTyCode.CODE_NM as prodPayTy,             -- 납입주기
+            p.PROD_PAY_TY_CD as prodPayTyCd,            -- 납입주기코드
+            p.PROD_AIR_MIN as prodAirMin,               -- 최소적용금리
+            p.PROD_AIR_MAX as prodAirMax,               -- 최대적용금리
+            p.PROD_INT_TAX_TY_CD as prodIntTaxTyCd,     -- 이자과세코드
+            intTaxCode.CODE_NM as prodIntTaxTy,         -- 이자과세명
+            intTaxCode.CODE_TAX_RATE as prodIntTaxRate  -- 이자과세율
+        FROM TB_PRODUCT p
+        -- 가입대상 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE sbstgCode
+            ON sbstgCode.CODE_CL = p.PROD_SBSTG_TY_CD_CODE_CL
+            AND sbstgCode.CODE_NO = p.PROD_SBSTG_TY_CD
+        -- 납입주기 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE payTyCode
+            ON payTyCode.CODE_CL = p.PROD_PAY_TY_CD_CODE_CL
+            AND payTyCode.CODE_NO = p.PROD_PAY_TY_CD
+        -- 이자과세 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE intTaxCode
+            ON intTaxCode.CODE_CL = p.PROD_INT_TAX_TY_CD_CODE_CL
+            AND intTaxCode.CODE_NO = p.PROD_INT_TAX_TY_CD
+        WHERE
+            -- 적금 상품만 조회
+            p.prod_ty_cd IN (
+                SELECT
+                    code_no
+                FROM
+                    tb_code
+                WHERE
+                    prod_nm LIKE '%적금%')
+        <if test="prodCd != null and prodCd != ''">
+            AND p.PROD_CD LIKE '%' || #{prodCd} || '%'
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND p.PROD_NM LIKE '%' || #{prodNm} || '%'
+        </if>
+        ORDER BY p.PROD_CD ASC
+    </select>
+
+    <!-- 목돈적금  -->
+    <select id="getAcmlProductList" resultType="com.team.financial_project.promotion.dto.ProductInfoDto">
+        SELECT
+        p.PROD_SN as prodSn,                        -- 상품설계번호
+        p.PROD_DS_TY_CD as prodDsTyCd,              -- 설계유형코드
+        p.PROD_CD as prodCd,                        -- 상품코드
+        p.PROD_NM as prodNm,                        -- 상품명
+        sbstgCode.CODE_NM as prodSbstgTy,           -- 가입대상
+        payTyCode.CODE_NM as prodPayTy,             -- 납입주기
+        p.PROD_PAY_TY_CD as prodPayTyCd,            -- 납입주기코드
+        p.PROD_AIR_MIN as prodAirMin,               -- 최소적용금리
+        p.PROD_AIR_MAX as prodAirMax,               -- 최대적용금리
+        p.PROD_INT_TAX_TY_CD as prodIntTaxTyCd,     -- 이자과세코드
+        intTaxCode.CODE_NM as prodIntTaxTy,         -- 이자과세명
+        intTaxCode.CODE_TAX_RATE as prodIntTaxRate  -- 이자과세율
+        FROM TB_PRODUCT p
+        -- 가입대상 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE sbstgCode
+        ON sbstgCode.CODE_CL = p.PROD_SBSTG_TY_CD_CODE_CL
+        AND sbstgCode.CODE_NO = p.PROD_SBSTG_TY_CD
+        -- 납입주기 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE payTyCode
+        ON payTyCode.CODE_CL = p.PROD_PAY_TY_CD_CODE_CL
+        AND payTyCode.CODE_NO = p.PROD_PAY_TY_CD
+        -- 이자과세 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE intTaxCode
+        ON intTaxCode.CODE_CL = p.PROD_INT_TAX_TY_CD_CODE_CL
+        AND intTaxCode.CODE_NO = p.PROD_INT_TAX_TY_CD
+        WHERE
+        -- 적금 상품만 조회
+        p.prod_ty_cd IN (
+        SELECT
+        code_no
+        FROM
+        tb_code
+        WHERE
+        prod_nm LIKE '%목돈%')
+        <if test="prodCd != null and prodCd != ''">
+            AND p.PROD_CD LIKE '%' || #{prodCd} || '%'
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND p.PROD_NM LIKE '%' || #{prodNm} || '%'
+        </if>
+        ORDER BY p.PROD_CD ASC
+    </select>
+
+    <!-- 예금  -->
+    <select id="getDpstProductList" resultType="com.team.financial_project.promotion.dto.ProductInfoDto">
+        SELECT
+        p.PROD_SN as prodSn,                        -- 상품설계번호
+        p.PROD_DS_TY_CD as prodDsTyCd,              -- 설계유형코드
+        p.PROD_CD as prodCd,                        -- 상품코드
+        p.PROD_NM as prodNm,                        -- 상품명
+        sbstgCode.CODE_NM as prodSbstgTy,           -- 가입대상
+        payTyCode.CODE_NM as prodPayTy,             -- 납입주기
+        p.PROD_PAY_TY_CD as prodPayTyCd,            -- 납입주기코드
+        p.PROD_AIR_MIN as prodAirMin,               -- 최소적용금리
+        p.PROD_AIR_MAX as prodAirMax,               -- 최대적용금리
+        p.PROD_INT_TAX_TY_CD as prodIntTaxTyCd,     -- 이자과세코드
+        intTaxCode.CODE_NM as prodIntTaxTy,         -- 이자과세명
+        intTaxCode.CODE_TAX_RATE as prodIntTaxRate  -- 이자과세율
+        FROM TB_PRODUCT p
+        -- 가입대상 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE sbstgCode
+        ON sbstgCode.CODE_CL = p.PROD_SBSTG_TY_CD_CODE_CL
+        AND sbstgCode.CODE_NO = p.PROD_SBSTG_TY_CD
+        -- 납입주기 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE payTyCode
+        ON payTyCode.CODE_CL = p.PROD_PAY_TY_CD_CODE_CL
+        AND payTyCode.CODE_NO = p.PROD_PAY_TY_CD
+        -- 이자과세 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE intTaxCode
+        ON intTaxCode.CODE_CL = p.PROD_INT_TAX_TY_CD_CODE_CL
+        AND intTaxCode.CODE_NO = p.PROD_INT_TAX_TY_CD
+        WHERE
+        -- 적금 상품만 조회
+        p.prod_ty_cd IN (
+        SELECT
+        code_no
+        FROM
+        tb_code
+        WHERE
+        prod_nm LIKE '%예금%')
+        <if test="prodCd != null and prodCd != ''">
+            AND p.PROD_CD LIKE '%' || #{prodCd} || '%'
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND p.PROD_NM LIKE '%' || #{prodNm} || '%'
+        </if>
+        ORDER BY p.PROD_CD ASC
+    </select>
+
+    <!-- 대출  -->
+    <select id="getLoanProductList" resultType="com.team.financial_project.promotion.dto.ProductInfoDto">
+        SELECT
+        p.PROD_SN as prodSn,                        -- 상품설계번호
+        p.PROD_DS_TY_CD as prodDsTyCd,              -- 설계유형코드
+        p.PROD_CD as prodCd,                        -- 상품코드
+        p.PROD_NM as prodNm,                        -- 상품명
+        sbstgCode.CODE_NM as prodSbstgTy,           -- 가입대상
+        payTyCode.CODE_NM as prodPayTy,             -- 납입주기
+        p.PROD_PAY_TY_CD as prodPayTyCd,            -- 납입주기코드
+        p.PROD_AIR_MIN as prodAirMin,               -- 최소적용금리
+        p.PROD_AIR_MAX as prodAirMax,               -- 최대적용금리
+        p.PROD_INT_TAX_TY_CD as prodIntTaxTyCd,     -- 이자과세코드
+        intTaxCode.CODE_NM as prodIntTaxTy,         -- 이자과세명
+        intTaxCode.CODE_TAX_RATE as prodIntTaxRate  -- 이자과세율
+        FROM TB_PRODUCT p
+        -- 가입대상 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE sbstgCode
+        ON sbstgCode.CODE_CL = p.PROD_SBSTG_TY_CD_CODE_CL
+        AND sbstgCode.CODE_NO = p.PROD_SBSTG_TY_CD
+        -- 납입주기 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE payTyCode
+        ON payTyCode.CODE_CL = p.PROD_PAY_TY_CD_CODE_CL
+        AND payTyCode.CODE_NO = p.PROD_PAY_TY_CD
+        -- 이자과세 유형 코드 조회를 위한 조인
+        LEFT JOIN TB_CODE intTaxCode
+        ON intTaxCode.CODE_CL = p.PROD_INT_TAX_TY_CD_CODE_CL
+        AND intTaxCode.CODE_NO = p.PROD_INT_TAX_TY_CD
+        WHERE
+        -- 적금 상품만 조회
+        p.prod_ty_cd IN (
+        SELECT
+        code_no
+        FROM
+        tb_code
+        WHERE
+        prod_nm LIKE '%대출%')
+        <if test="prodCd != null and prodCd != ''">
+            AND p.PROD_CD LIKE '%' || #{prodCd} || '%'
+        </if>
+        <if test="prodNm != null and prodNm != ''">
+            AND p.PROD_NM LIKE '%' || #{prodNm} || '%'
+        </if>
+        ORDER BY p.PROD_CD ASC
+    </select>
+
+    <!-- TB_CUSTPROD_DSGN에 데이터 삽입 -->
+    <insert id="insertCustprodDsgn" useGeneratedKeys="true" keyProperty="dsgnSn">
+        INSERT INTO TB_CUSTPROD_DSGN (
+        PROD_SN, CUST_ID, USER_ID, DSGN_CREATE_AT, DSGN_UPDATE_AT,
+        DSGN_DS_TY_CD, DSGN_PRG_STCD
+        ) VALUES (
+        #{prodSn}, #{custId}, #{userId}, #{dsgnCreateAt}, #{dsgnUpdateAt},
+        #{prodDsTyCd}, #{dsgnPrgStcd}
+        )
+    </insert>
+
+    <!-- TB_PROD_DSGN_SAVG에 데이터 삽입 -->
+    <insert id="insertProdDsgnSavg">
+        INSERT INTO TB_PROD_DSGN_SAVG (
+        DSGN_SN, SAVG_PAY_TY_CD, SAVG_GOAL_AMT,
+        SAVG_GOAL_PRD, SAVG_STRT_DT, SAVG_MTR_DT, SAVG_APLY_RATE,
+        SAVG_INT_TAX_TY_CD, SAVG_CIRCLE_AMT, SAVG_TOT_DPST_AMT, SAVG_TOT_DPST_INT,
+        SAVG_INT_TAX_AMT, SAVG_ATX_RCVE_AMT
+        ) VALUES (
+        #{dsgnSn}, #{prodPayTyCd}, #{savgCircleAmt},
+        #{savgGoalPrd}, #{savgStrtDt}, #{savgMtrDt}, #{savgAplyRate},
+        #{savgIntTaxTyCd}, #{savgCircleAmt}, #{savgTotDpstAmt}, #{savgTotDpstInt},
+        #{savgIntTaxAmt}, #{savgAtxRcveAmt}
+        )
+    </insert>
+
+    <select id="findDesignsWithMaturityDates" resultType="com.team.financial_project.promotion.dto.AutoMaturityDateDto">
+        SELECT
+        d.dsgn_sn,
+        a.acml_mtr_dt,
+        b.dpst_mtr_dt,
+        c.loan_mtr_dt,
+        d.savg_mtr_dt
+        FROM tb_custprod_dsgn t
+        LEFT JOIN tb_prod_dsgn_acml a ON t.dsgn_sn = a.dsgn_sn
+        LEFT JOIN tb_prod_dsgn_dpst b ON t.dsgn_sn = b.dsgn_sn
+        LEFT JOIN tb_prod_dsgn_loan c ON t.dsgn_sn = c.dsgn_sn
+        LEFT JOIN tb_prod_dsgn_savg d ON t.dsgn_sn = d.dsgn_sn
+        WHERE t.dsgn_prg_stcd = '3'
+    </select>
+
+    <update id="updateDesignStatus">
+        UPDATE tb_custprod_dsgn
+        SET dsgn_prg_stcd = #{newStatus}
+        WHERE dsgn_sn = #{dsgnSn};
+    </update>
+</mapper>

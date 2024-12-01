@@ -1,7 +1,3 @@
-// CSRF 토큰 가져오기
-let csrfToken = $('meta[name="_csrf"]').attr('content');
-let csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-
 // formatNumber 함수 정의
 function formatNumber(input) {
     // 기존 입력값에서 숫자만 추출
@@ -15,6 +11,10 @@ function formatNumber(input) {
 }
 
 $(document).ready(function () {
+    // CSRF 토큰 가져오기
+    let csrfToken = $('meta[name="_csrf"]').attr('content');
+    let csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
     // 필드 유효성 검사 함수
     function validateForm() {
         let isValid = true;

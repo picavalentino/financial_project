@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     margin: 20px auto;
+    padding: 20px;
     align-items: center;
     width: 80%;
     background-color: white;
@@ -9,9 +10,7 @@
     overflow-x: hidden; /* 가로 오버플로우 숨기기 */
 }
 
-
 .inquire-table {
-    padding: 10px;
     width: 100%;
     margin: auto;
     border-collapse: separate; /* 행 간 간격 유지 */

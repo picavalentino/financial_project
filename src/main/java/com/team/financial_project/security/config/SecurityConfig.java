@@ -1,6 +1,7 @@
 package com.team.financial_project.security.config;
 
 import com.team.financial_project.security.etc.CustomAuthFailureHandler;
+import com.team.financial_project.security.service.AuthMenuAccessService;
 import com.team.financial_project.security.service.CustomUserDetailService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -10,25 +11,34 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.util.MultiValueMap;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig{
     private final CustomUserDetailService customUserDetailService;
+    private final AuthMenuAccessService authMenuAccessService;
 
-    public SecurityConfig(CustomUserDetailService customUserDetailService) {
+    public SecurityConfig(CustomUserDetailService customUserDetailService, AuthMenuAccessService authMenuAccessService) {
         this.customUserDetailService = customUserDetailService;
+        this.authMenuAccessService = authMenuAccessService;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.authorizeHttpRequests((auth)-> auth.requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/login/**", "/register/**","/system/**","/management/**").permitAll()
-                .requestMatchers("/api/**").permitAll()
-                .requestMatchers("/mypage/**").permitAll()
-                .anyRequest().authenticated() // 그외 모든 요청은 인증된 사용자들만 접근 가능
+        MultiValueMap<String, String> menuList = authMenuAccessService.getAllAuthMenu();
+        http.authorizeHttpRequests((auth)->
+                menuList.forEach((url, roles)->
+                        auth.requestMatchers(url + "/**").hasAnyRole(roles.toArray(new String[0]))
+                )
         );
+        http.authorizeHttpRequests((auth)-> auth.requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/login/**", "/register/**").permitAll()
+                .requestMatchers("/api/**", "/sidebar/**").permitAll()
+                .anyRequest().authenticated()
+        );
+
         http.formLogin((auth)-> auth.loginPage("/login").loginProcessingUrl("/loginProc")
                 .usernameParameter("user_id").passwordParameter("user_pw")
                 .defaultSuccessUrl("/main", true)
