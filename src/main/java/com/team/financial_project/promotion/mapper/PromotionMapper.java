@@ -36,7 +36,8 @@ public interface PromotionMapper {
             @Param("sortColumn") String sortColumn, // 정렬 기준
             @Param("sortDirection") String sortDirection, // 정렬 방향
             @Param("offset") int offset,
-            @Param("size") int size
+            @Param("size") int size,
+            @Param("custId") String custId
     );
 
     // 진행상태 업데이트 위해 모든 데이터 조회

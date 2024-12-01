@@ -64,18 +64,17 @@ public class PromotionController {
         int totalCount = promotionService.getTotalCount(prgStcd, dsTyCd, custNm, userNm, prodNm);
 // =============================================
 
-        // 고객 상세 정보 가져오기
-        CustomerDTO customer = customerService.getCustomerById(custId);
-
-        // 고객명 기본값 설정 (필요한 경우)
+        // 기본값 설정
+        if (custId == null || custId.trim().isEmpty()) {
+            custId = ""; // 기본값 설정
+        }
         if (custNm == null || custNm.trim().isEmpty()) {
             custNm = ""; // 기본값 설정
         }
-
 // =============================================
         // 조건 및 페이징에 맞는 데이터 조회
         List<PromotionListDto> promotionList = promotionService.getPagedList(
-                page, size, prgStcd, dsTyCd, custNm, userNm, prodNm, sortColumn, sortDirection);
+                page, size, prgStcd, dsTyCd, custNm, userNm, prodNm, sortColumn, sortDirection, custId);
 
         // 총 페이지 수 계산
         int totalPages = (int) Math.ceil((double) totalCount / size);
@@ -102,7 +101,7 @@ public class PromotionController {
         }
 
         // HTML 렌더링 요청인 경우
-        model.addAttribute("customer", customer);
+        model.addAttribute("custId", custId);
         model.addAttribute("PromotionList", promotionList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
