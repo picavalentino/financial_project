@@ -54,7 +54,7 @@ inquire-form{
 /* 내용 텍스트 필드 넓이 확장 */
 .inquire-table input[name="inqContent"],
 .inquire-table textarea[name="inqContent"] {
-    height: 100px; /* 높이를 늘려 더 많은 텍스트 작성 가능 */
+    height: 300px; /* 높이를 늘려 더 많은 텍스트 작성 가능 */
 }
 
 .list-row {

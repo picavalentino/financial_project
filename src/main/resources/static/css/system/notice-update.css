@@ -1,7 +1,7 @@
 .detail-container{
     display: flex;
     flex-direction: column;
-    margin: 20px auto;
+    margin: 20px 0;
     align-items: center;
     width: 70%;
     background-color: white;
