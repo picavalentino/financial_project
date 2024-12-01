@@ -1,206 +1,117 @@
-.main-content {
-    flex: 1;
-    padding: 0 20px;
-}
-
-.customer-query {
+/* 상단 - 검색 바탕, 하단 - 테이블 바탕 */
+.search-controls-area, .bottom-container {
+    display: flex;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 1440px;
+    background-color: white;
+    border-radius: 15px;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.location h2 {
-    margin-bottom: 20px;
-    font-size: 1.75rem;
-    font-weight: bold;
-    color: #333;
+.search-controls-area {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-controls-area > * {
+    flex: 1; /* 자식 요소들이 동일한 크기를 차지 */
+}
+
+/* 검색 영역 - 폼 그룹 */
+#search-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 입력 필드 및 셀렉트 박스 */
+#search-form input,
+#search-form select {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 100%;
+    /*max-width: 150px;*/
+    height: 32px;
+    padding: 0 8px;
+}
+
+/* 검색 버튼 */
+.btn-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 80px;
+    margin-left: 3px;
 }
 
 /* ======================================================================================================= */
-/* 브레드크럼 스타일 */
-.breadcrumb {
+/* 하단 테이블 바탕 */
+.bottom-container {
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bottom-buttons-container {
     display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #888888; /* 텍스트 색상 */
-    gap: 5px; /* 아이콘과 텍스트 사이 간격 */
-}
-
-.breadcrumb .icon {
-    font-size: 16px; /* 홈 아이콘 크기 */
-    color: #888888;
-    margin-right: 5px; /* 아이콘과 텍스트 간격 */
-}
-
-.breadcrumb a {
-    color: #888888;
-    text-decoration: none;
-}
-
-.breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.breadcrumb span {
-    color: #888888;
-}
-/* =================================================================================================================== */
-/* 전체 검색 영역 스타일 */
-.actions {
-    display: flex;
-    justify-content: space-between; /* 왼쪽과 오른쪽으로 버튼 그룹 분리 */
-    align-items: center;
-    background-color: #E7E7E9;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-/* 왼쪽 버튼 그룹 스타일 */
-.left-actions {
-    display: flex;
-    gap: 10px; /* 버튼 간 간격 */
-}
-
-/* 오른쪽 버튼 그룹 스타일 */
-.right-actions {
-    display: flex;
-    gap: 10px; /* 검색과 등록 버튼 간격 */
+    justify-content: space-between;
     align-items: center;
 }
 
-/* 공통 버튼 스타일 */
-.actions button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    font-size: 14px;
-    font-weight: bold;
-    color: #ffffff;
-}
-
-/* 인쇄 버튼 */
-.btn-print {
-    background-color: #292D32;
-}
-
-.btn-print .icon {
-    background-color: #8E98A8;
-}
-
-.btn-print:hover {
-    background-color: #1d1f22;
-}
-
-.message-button {
-    background-color: #343a40; /* 더 어두운 회색 */
-}
-
-.message-button:hover {
-    background-color: #292d3e;
-}
-
-.search-button {
-    background-color: #010535; /* 짙은 남색 */
-}
-
-.insert-button {
-    background-color: #5AA4B8; /* 밝은 청록색 */
-}
-
-/* 아이콘과 텍스트 사이 간격 */
-.actions button .icon {
-    margin-right: 5px;
-}
-
-/* 검색 영역 스타일 */
-.right-actions .search {
+.bottom-left-button {
     display: flex;
+    gap: 20px;
     align-items: center;
-    gap: 5px;
-}
-
-.right-actions .search select,
-.right-actions .search input {
-    padding: 8px;
-    border: 1px solid #CED4DA;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #495057;
-}
-
-.right-actions .search input {
-    width: 180px; /* 검색 입력 필드 너비 */
+    padding-left: 3px;
 }
 
 /* ======================================================================================================= */
 /* 테이블 스타일 */
-.listTable {
+.data-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
     font-size: 14px;
     color: #333;
-    background-color: #ffffff;
-    table-layout: auto; /* 열의 너비를 자동으로 설정 (균일하지 않은 상태 유지) */
 }
 
-.emailTh{
-    width : 300px;
-}
-
-.table-hover tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-.listTable th, .listTable td {
+/* 테이블 셀 공통 */
+.data-table th, .data-table td {
     border: 1px solid #e0e0e0;
     padding: 10px;
     text-align: center;
 }
 
-.table thead th {
+/* 테이블 헤더 */
+.data-table thead th {
     font-weight: bold;
-    background-color: #f8f9fa;
+    background-color: #f1f3f5;
     text-align: center;
     color: #495057;
+    position: relative;
 }
 
-.table tbody td {
-  vertical-align: middle;
-  text-align: center;
-  background-color: #fff;
+/* 체크박스 헤더에서 화살표 숨기기 */
+/*.data-table th:has(input[type="checkbox"])::after {
+    content: none;
+}*/
+
+/* 테이블 바디 행 */
+.data-table tbody tr {
+    background-color: #ffffff;
 }
 
-table .status {
-    padding: 4px 8px;
-    border-radius: 12px;
-    color: #fff;
-    font-size: 12px;
-    display: inline-flex;
-    align-items: center;
+.data-table tbody tr:hover {
+    background-color: #f8f9fa;
 }
 
-/* 상태 아이콘 스타일 */
-.status.active {
-    color: green;
-    font-weight: bold;
-    padding: 5px;
-    background-color: #e6ffe6; /* 연한 녹색 배경 */
-    border-radius: 4px; /* 아이콘을 둥글게 */
-    display: inline-block; /* 배경 색과 패딩을 적용하기 위해 */
-}
+/* 테이블 바디의 체크박스 셀 */
+/*.data-table tbody td:first-child {
+    cursor: default; *//* 기본 커서 *//*
+}*/
 
-.status.inactive {
-    color: gray;
-    font-weight: normal;
-    padding: 5px;
-    background-color: #f0f0f0; /* 연한 회색 배경 */
-    border-radius: 4px;
-    display: inline-block;
-}
 /* ======================================================================================================= */
 /* 페이지네이션 컨테이너 */
 .pagination-container {
@@ -209,30 +120,19 @@ table .status {
     align-items: center;
     position: relative;
     margin-top: 10px;
-
-    width: 100%; /* 혹은 특정 px 값으로 고정 */
-    text-align: center; /* 페이지네이션 버튼 정렬 */
-    box-sizing: border-box;
 }
-
 
 /* 페이지네이션 스타일 */
 .pagination {
-    display: flex; /* 가운데 정렬 */
-    min-width: 300px; /* 최소 너비 고정 (적절한 값 설정) */
+    display: flex;
     align-items: center;
     gap: 8px; /* 페이지 번호 간 간격 */
     padding: 10px 20px;
     border-radius: 8px;
 }
 
-.pagination span {
-    color: #666;
-    margin-left: auto; /* span 요소를 오른쪽 끝으로 이동 */
-}
-
 /* 페이지 번호와 버튼 */
-.pagination button, .pagination a {
+.pagination-button, .pagination-number {
     color: #333;
     border: none;
     padding: 6px 12px;
@@ -247,21 +147,22 @@ table .status {
 }
 
 /* 현재 페이지 스타일 */
-.pagination .active {
+.pagination-active {
     background-color: #010535;
     color: #ffffff;
     font-weight: bold;
 }
 
 /* 페이지 버튼 및 링크 호버 효과 */
-.pagination button:hover, .pagination a:hover {
+.pagination-button:hover, .pagination-number:hover {
     background-color: #ced4da;
 }
 
 /* 이전/다음 버튼 스타일 */
-.pagination .prev, .pagination .next {
-    font-size: 16px;
-    padding: 6px 8px;
+.pagination-prev, .pagination-next {
+    font-size: 14px;
+    padding: 6px 12px;
+    background-color: transparent;
 }
 
 /* 페이지 정보 스타일 */

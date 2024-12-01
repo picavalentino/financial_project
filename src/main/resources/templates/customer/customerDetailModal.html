@@ -7,19 +7,33 @@
 <body>
 <!--  ====================================================================================================================  -->
 <!-- 담당자검색 -->
-<div th:fragment="managerSearchModal">
-    <div id="searchModal" class="modal-overlay" style="display: none;">
-        <div class="modal-search-content">
-            <h2>담당자 조회</h2>
-            <button class="close-button" onclick="closeModal('searchModal')">✖</button>
-            <div class="modal-body">
-                <div class="search-bar">
-                    <input type="text" placeholder="이름을 입력해주세요.">
-                    <button class="search-button" onclick="searchManager()">검색</button>
-                </div>
-                <div class="result-list">
-                    <!-- 검색된 결과 버튼들이 여기에 추가될 것입니다 -->
-                </div>
+<div th:fragment="managerSearchModal" id="searchModal" class="search-modal">
+    <div class="modal-search-content">
+        <div class="modal-search-header">
+            <div class="modal-search-title">담당자 조회</div>
+            <button id="closeSearchModalBtn" onclick="closeModal('searchModal')">X</button>
+        </div>
+        <div class="modal-search-body">
+            <!-- 검색 필드 -->
+            <div class="search-bar modal-search-bar">
+                <label>담당자명</label>
+                <input type="text">
+                <button class="search-button modal-search-button" onclick="searchManager()">검색</button>
+            </div>
+            <!-- 모달 테이블 -->
+            <div class="modal-search-table-container">
+                <table class="modal-search-table">
+                    <thead>
+                    <tr>
+                        <th>담당자</th>
+                        <th>담당자 ID</th>
+                        <th>연락처</th>
+                    </tr>
+                    </thead>
+                    <tbody id="managerList">
+                    <!-- 검색 결과 추가 -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
