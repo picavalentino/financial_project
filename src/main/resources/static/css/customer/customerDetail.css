@@ -1,6 +1,6 @@
 .main-content {
     flex: 1;
-    padding: 20px;
+    padding: 0 20px;
 }
 
 .customerInfo {
@@ -19,7 +19,6 @@
 .customerInfo h2{
     color: #ffffff;
     background-color: #343a40;
-    padding: 10px;
     border-radius: 4px;
     font-size: 20px;
     width : 200px;

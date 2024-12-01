@@ -1,32 +1,48 @@
-/* 왼쪽페이지 */
-.content1 {
-   /*  background-color: aqua; */
+.location{
     display: flex;
-
+    flex-direction: row;
+    border-bottom: 1px solid #bcbcbc;
+    padding: 10px 25px;
+}
+.location a {
+    text-decoration: none;
+    color: inherit;
+    margin-right: 5px;
+}
+.location p {
+    display: inline;
+    margin: 0;
 }
 
-h1 {
-    margin-top:40px;
-    margin-left:20px;
+.content1 {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.left {
+    background-color: #ffffffc4;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.myInfo {
     font-size: 40px;
     font-weight: 900;
-    /* -webkit-text-stroke: 1px black; */
     color: #010535;
     opacity: 0.7;
-    margin-left: 20px;
+    margin: 0 30px;
 
 }
 
 .mypage_right {
     align-items: left;
-    padding: 20px;
+    padding: 40px;
     border: 1px solid #ababab;
     border-radius: 20px;
-    /* background-color: blueviolet; */
+    background-color: rgba(255, 255, 255, 0.5);
     width: 750px;
     height: 756px;
-    margin-right: 50px;
-    margin-left: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,7 +53,6 @@ h1 {
 .input_box {
     display: flex;
     margin-top: 20px;
-    /* background-color: blue; */
     width: 580px;
     height: 450px;
 
@@ -103,7 +118,6 @@ h1 {
 
 
 #myprofile_left {
-    /* background-color: coral; */
     align-items: left;
     width: 250px;
     height: 400px;
@@ -124,7 +138,6 @@ input {
 }
 
 #myprofile_right {
-    /* background-color: crimson; */
     align-items: right;
     margin-left: 50px;
     width: 280px;
@@ -159,15 +172,14 @@ input[type="text"] {
     font-weight: 400;
 }
 
-p {
+.input_box p {
     margin-bottom: 15px;
     font-weight: 900;
     font-size: 20px;
-
 }
 
 .buttons {
-margin-top:30px;
+    margin-top:30px;
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -210,60 +222,40 @@ h5 {
     font-size: 13px
 }
 
-
-
-/* 왼쪽 페이지 */
 .mypage_left {
     align-items: flex-end;
-    padding: 15px;
+    padding-top: 20px;
     border-radius: 20px;
-    width: 560px; /* 최대 크기를 560px로 조정 */
+    min-width: 560px;
     height: auto;
-    margin-right: 40px;
-    margin-left: 15px;
+    background-color: #ffffffc4;
+    padding: 35px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .mycustomer,
 .myboard {
     text-align: center;
-    margin-bottom: 15px; /* 간격 축소 */
 }
 
-#mycustomer_title {
-    display: flex;
-    font-weight: bold;
-    gap: 300px; /* 기존 대비 축소 */
-}
-
-#mycustomer_title p {
-    margin-bottom: 0px;
-    width: 150px; /* 텍스트 영역 크기 축소 */
-    font-weight: 700;
-    font-size: 20px; /* 글자 크기 축소 */
-}
-
+#mycustomer_title,
 #myboard_title {
     display: flex;
     font-weight: bold;
-    gap: 340px; /* 기존 대비 축소 */
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
 }
 
+#mycustomer_title p,
 #myboard_title p {
     margin-bottom: 0px;
-    width: 110px; /* 텍스트 영역 크기 축소 */
     font-weight: 700;
     font-size: 20px; /* 글자 크기 축소 */
 }
 
 .myboard {
-    margin-top: 40px; /* 간격 축소 */
-}
-
-table {
-    width: 100%;
-    overflow: hidden;
-    border-radius: 15px; /* 테두리 반경 축소 */
-    height: 100%;
+    margin-top: 15px; /* 간격 축소 */
 }
 
 thead {
@@ -272,19 +264,52 @@ thead {
     font-weight: 900;
     text-align: center;
     font-size: 16px; /* 글자 크기 축소 */
+    border-radius: 10px 10px 0 0px;
+    display: inline-table;
+}
+th, td{
+    width: 20%;
+}
+tbody {
+    height: 300px;
+    overflow-y: auto;
+    display: block;
+}
+/* 전체 스크롤바 너비 조정 */
+tbody::-webkit-scrollbar {
+    width: 8px; /* 세로 스크롤바의 너비 */
+    height: 8px; /* 가로 스크롤바의 높이 */
+}
+
+/* 스크롤바 트랙 (배경 부분) */
+tbody::-webkit-scrollbar-track {
+    background: #f0f9fc; /* 트랙 배경 색상 */
+    border-radius: 10px; /* 모서리를 둥글게 */
+    border: 0.2px solid #ababab;
+}
+
+/* 스크롤바 핸들 (움직이는 부분) */
+tbody::-webkit-scrollbar-thumb {
+    background: #51727b; /* 스크롤바 핸들 색상 */
+    border-radius: 10px; /* 모서리를 둥글게 */
+}
+
+/* 스크롤바 핸들에 마우스를 올렸을 때 */
+tbody::-webkit-scrollbar-thumb:hover {
+    background: #668f9a; /* 마우스 오버 시 색상 */
 }
 
 #mycustomer_table,
 #myboard_table {
-    border-collapse: collapse;
-    border-radius: 15px; /* 테두리 반경 축소 */
+    display: grid;
+    border-radius: 15px 15px 5px 5px; /* 테두리 반경 축소 */
     margin: 0 auto;
     background-color: #f0f9fc;
     width: 100%;
     border: 1px solid #ababab;
     border-collapse: separate;
     border-spacing: 0;
-    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 #mycustomer_table th,
@@ -312,25 +337,13 @@ thead {
     border-radius: 8px; /* 테두리 반경 축소 */
     height: 22px; /* 버튼 높이 축소 */
     width: 50px; /* 버튼 너비 축소 */
-    margin-left: 50px; /* 좌측 여백 축소 */
     cursor: pointer;
     font-size: 9px; /* 글자 크기 축소 */
-    margin-top: 20px; /* 상단 여백 축소 */
-    margin-bottom: 8px; /* 하단 여백 축소 */
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* 그림자 축소 */
 }
 
 button:hover {
     background-color: #ababab;
-}
-
-a {
-    text-decoration: none;
-    color: #000000;
-}
-
-a:hover {
-    color: #ababab;
 }
 
 .modal {
