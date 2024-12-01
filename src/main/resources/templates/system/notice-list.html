@@ -95,14 +95,21 @@
               th:classappend="${inquire.inqNotice == '1'} ? 'highlight-row' : ''"
               onclick="handleRowClick(this)">
             <td id="inqId">[[ ${inquire.inqId} ]]</td>
-            <td>[[ ${inquire.inqCategory} ]]</td>
+            <td>
+              <span th:switch="${inquire.inqCategory}">
+                  <span th:case="'1'">공지사항</span>
+                  <span th:case="'2'">시스템관련문의</span>
+                  <span th:case="'3'">기타건의사항</span>
+              </span>
+            </td>
             <td  th:text="${inquire.inqAnonym == 1 ? '익명' : inquire.userId}"></td>
             <td>[[ ${inquire.inqTitle} ]]</td>
             <td th:text="${inquire.getFormattedCreateAt()}"></td>
             <td>[[ ${inquire.inqCheck} ]]</td>
             <td id="td-reply">
-              <div th:if="${inquire.inqReply == '1'}" class="reply" id="rep-completed">답변완료</div>
-              <div th:if="${inquire.inqReply == '0'}" class="reply" id="rep-wait"
+              <div th:if="${inquire.inqCategory == '1'}">-</div>
+              <div th:if="${(inquire.inqCategory != '1') && (inquire.inqReply == '1')}" class="reply" id="rep-completed">답변완료</div>
+              <div th:if="${(inquire.inqCategory != '1') && (inquire.inqReply == '0')}" class="reply" id="rep-wait"
                    th:onclick="|window.location.href='/inquire/detail/' + ${inquire.inqId};|"
                    style="cursor: pointer;">답변대기</div>
             </td>
