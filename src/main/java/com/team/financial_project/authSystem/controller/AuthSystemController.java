@@ -59,6 +59,6 @@ public class AuthSystemController {
         // 검색 조건 모델에 추가
         model.addAttribute("auth", auth);
 
-        return "/authSystem/authSystem";
+        return "authSystem/authSystem";
     }
 }
