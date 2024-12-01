@@ -17,14 +17,16 @@ public interface CustomerMapper {
     List<CustomerDTO> searchCustomers(@Param("pageSize") int pageSize,
                                       @Param("offset") int offset,
                                       @Param("searchType") String searchType,
-                                      @Param("keyword") String keyword);
+                                      @Param("keyword") String keyword,
+                                      @Param("status") String status);
 
     // 검색 조건 없는 페이징 처리된 고객 목록 조회
     List<CustomerDTO> getCustomersWithPagination(@Param("limit") int limit, @Param("offset") int offset);
 
     // 검색 조건에 따른 총 고객 수 계산
     int getCustomerCount(@Param("searchType") String searchType,
-                         @Param("keyword") String keyword);
+                         @Param("keyword") String keyword,
+                         @Param("status") String status);
 
     // ==============================================================================================================
 

@@ -46,9 +46,9 @@ public class CustomerService {
 
     // ======================================================================================================
     // 검색 조건이 있는 고객 목록 조회
-    public List<CustomerDTO> searchCustomersWithPagination(int page, int pageSize, String searchType, String keyword) {
+    public List<CustomerDTO> searchCustomersWithPagination(int page, int pageSize, String searchType, String keyword, String status) {
         int offset = (page - 1) * pageSize;
-        List<CustomerDTO> customers = customerMapper.searchCustomers(pageSize, offset, searchType, keyword);
+        List<CustomerDTO> customers = customerMapper.searchCustomers(pageSize, offset, searchType, keyword, status);
 
         // 각 고객의 생년월일 추출
         for (CustomerDTO customer : customers) {
@@ -72,8 +72,8 @@ public class CustomerService {
     }
 
     // 검색 조건에 따른 총 고객 수 계산
-    public int getTotalCustomerCount(String searchType, String keyword) {
-        return customerMapper.getCustomerCount(searchType, keyword);
+    public int getTotalCustomerCount(String searchType, String keyword, String status) {
+        return customerMapper.getCustomerCount(searchType, keyword, status);
     }
 
     // ======================================================================================================
