@@ -65,7 +65,7 @@
             <div class="mycustomer">
                 <div id="mycustomer_title">
                     <p>나의 고객 정보:</p>
-                    <button type="button" id="customerMoreBtn">더보기</button>
+                    <button type="button" id="customerMoreBtn" th:attr="data-user-name=${mypageDTO.userName}">더보기</button>
                 </div>
 
                 <table id="mycustomer_table">
@@ -92,7 +92,7 @@
             <div class="myboard">
                 <div id="myboard_title">
                     <p>내 작성글:</p>
-                    <button type="button" id="inquireMoreBtn">더보기</button>
+                    <button type="button" id="inquireMoreBtn" th:attr="data-user-name=${mypageDTO.userName}">더보기</button>
                 </div>
 
                 <table id="myboard_table">
