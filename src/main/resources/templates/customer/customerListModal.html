@@ -10,65 +10,66 @@
 <body>
 <!--  ====================================================================================================================  -->
 <!-- 고객 등록-->
-<div th:fragment="customerInsertModal">
-    <div id="insertModal" class="modal-overlay" style="display: none;">
-        <div class="modal-insert-content">
-            <button class="close-button" onclick="closeModal('insertModal')">✖</button>
-            <h2 class="modal-title">고객 등록</h2>
-            <form id="customerForm" class="register-form" onsubmit="return validateForm(event)">
-                <label>고객명</label>
-                <input type="text" id="custNm" name="custNm" placeholder="이름을 입력해주세요." required minlength="2" maxlength="50">
-
-                <label>주민등록번호</label>
-                <input type="text" id="custRrn" name="custRrn" placeholder="주민등록번호를 입력해주세요" required pattern="^\d{6}-\d{7}$">
-
-                <label>연락처</label>
-                <input type="tel" id="custTelno" name="custTelno" placeholder="010-1111-1111" required pattern="^010-\d{4}-\d{4}$">
-
-                <label>Email</label>
-                <input type="email" id="custEmail" name="custEmail" placeholder="example@gssitm.co.kr" required>
-
-                <label>직업</label>
-                <select id="custOccpTyCd" name="custOccpTyCd" required>
-                    <option value="">직업코드를 선택해주세요</option>
-                    <option value="100">관리자(사무직)</option>
-                    <option value="101">전문가 및 관련 종사자</option>
-                    <option value="102">사무 종사자</option>
-                    <option value="103">서비스 종사자</option>
-                    <option value="104">판매 종사자</option>
-                    <option value="105">농림어업 숙련 종사자</option>
-                    <option value="106">기능원 및 관련 기능 종사자</option>
-                    <option value="107">장치/기계 조작 및 조립 종사자</option>
-                    <option value="108">단순노무 종사자</option>
-                    <option value="109">군인</option>
-                    <option value="110">주부, 학생 및 기타 비경제활동인구</option>
-                </select>
-
-                <label for="custAddr">주소</label>
-                <input type="text" id="custAddr" name="custAddr" readonly placeholder="주소를 입력하세요" required>
-
-                <button type="button" id="submitCustomer" class="submit-button">고객 등록</button>
-                <input type="hidden" name="staffId" th:value="${staffId}">
-            </form>
-
-            <!-- 카카오 주소 검색 API -->
-            <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-            <script th:inline="javascript">
-                document.addEventListener("DOMContentLoaded", function () {
-                    const addressInput = document.getElementById("custAddr");
-                    const searchAddressButton = document.getElementById("searchAddressButton");
-
-                    // 카카오 주소 찾기 API 사용
-                    custAddr.addEventListener("click", function () {
-                        new daum.Postcode({
-                            oncomplete: function (data) {
-                                addressInput.value = data.address;
-                            }
-                        }).open();
-                    });
-                });
-            </script>
+<div th:fragment="customerInsertModal" id="insertModal" class="modal">
+    <div class="modal-insert-content">
+        <div class="modal-header">
+            <div class="modal-title">고객 등록</div>
+            <button id="closeInsertModalBtn" onclick="closeModal('insertModal')">X</button>
         </div>
+
+        <form id="customerForm" class="register-form" onsubmit="return validateForm(event)">
+            <label>고객명</label>
+            <input type="text" id="custNm" name="custNm" placeholder="이름을 입력해주세요." required minlength="2" maxlength="50">
+
+            <label>주민등록번호</label>
+            <input type="text" id="custRrn" name="custRrn" placeholder="주민등록번호를 입력해주세요" required pattern="^\d{6}-\d{7}$">
+
+            <label>연락처</label>
+            <input type="tel" id="custTelno" name="custTelno" placeholder="010-1111-1111" required pattern="^010-\d{4}-\d{4}$">
+
+            <label>Email</label>
+            <input type="email" id="custEmail" name="custEmail" placeholder="example@gssitm.co.kr" required>
+
+            <label>직업</label>
+            <select id="custOccpTyCd" name="custOccpTyCd" required>
+                <option value="">직업코드를 선택해주세요</option>
+                <option value="100">관리자(사무직)</option>
+                <option value="101">전문가 및 관련 종사자</option>
+                <option value="102">사무 종사자</option>
+                <option value="103">서비스 종사자</option>
+                <option value="104">판매 종사자</option>
+                <option value="105">농림어업 숙련 종사자</option>
+                <option value="106">기능원 및 관련 기능 종사자</option>
+                <option value="107">장치/기계 조작 및 조립 종사자</option>
+                <option value="108">단순노무 종사자</option>
+                <option value="109">군인</option>
+                <option value="110">주부, 학생 및 기타 비경제활동인구</option>
+            </select>
+
+            <label for="custAddr">주소</label>
+            <input type="text" id="custAddr" name="custAddr" readonly placeholder="주소를 입력하세요" required>
+
+            <button type="button" id="submitCustomer" class="submit-button">등록</button>
+            <input type="hidden" name="staffId" th:value="${staffId}">
+        </form>
+
+        <!-- 카카오 주소 검색 API -->
+        <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script th:inline="javascript">
+            document.addEventListener("DOMContentLoaded", function () {
+                const addressInput = document.getElementById("custAddr");
+                // const searchAddressButton = document.getElementById("searchAddressButton");
+
+                // 카카오 주소 찾기 API 사용
+                custAddr.addEventListener("click", function () {
+                    new daum.Postcode({
+                        oncomplete: function (data) {
+                            addressInput.value = data.address;
+                        }
+                    }).open();
+                });
+            });
+        </script>
     </div>
 </div>
 <!--   =================================================================================================================  -->
@@ -90,30 +91,31 @@
                 </textarea>
             </div>
 
-            <div>
-                <button id="general-button">일반</button>
-                <button id="birthday-button">생일</button>
+            <div class="message-modal-buttons">
+                <button id="general-button" class="general-button">일반</button>
+                <button id="birthday-button" class="birthday-button">생일</button>
             </div>
 
             <div id="tagContainer" class="tag-container">
                 <!-- 선택된 고객을 태그 형태로 추가할 예정 -->
             </div>
-            <button class="message-send-button" id="send-button" onclick="sendMessage()">✉ 메시지 발송</button>
+            <button class="message-send-button" id="send-button" onclick="sendMessage()">메시지 발송</button>
         </div>
     </div>
 </div>
 
 <!--  ==================================================================================================================  -->
 <!-- 고객 목록 인쇄-->
-<div th:fragment="customerPrintModal">
-    <div id="printModal" class="modal-overlay" style="display: none;">
-        <div class="modal-print-content">
-            <button class="close-button" onclick="closeModal('printModal')">✖</button>
-            <h2 class="modal-title">고객 목록 인쇄</h2>
-
+<div th:fragment="customerPrintModal" id="printModal" class="modal">
+    <div class="modal-print-content modal-content">
+        <div class="modal-header">
+            <div class="modal-title">고객 목록 인쇄</div>
+            <button id="closePrintModalBtn" onclick="closeModal('printModal')">X</button>
+        </div>
+        <div class="modal-body">
             <!-- 테이블 컨테이너 -->
             <div class="table-scroll-container">
-                <table class="print-table" id="print-table">
+                <table class="print-table modal-table" id="print-table">
                     <thead>
                     <tr>
                         <th>번호</th>
@@ -122,7 +124,7 @@
                         <th>전화번호</th>
                         <th>Email</th>
                         <th>담당자</th>
-                        <th>활동 상태</th>
+                        <th>활동상태</th>
                         <th>등록일</th>
                     </tr>
                     </thead>
@@ -133,7 +135,9 @@
             </div>
 
             <div class="print-button-container">
-                <button class="btn-print" onclick="printTable()"><span class="icon">🖨️</span> 인쇄</button>
+                <button class="btn btn-print" onclick="printTable()">
+                    <i class="icon bi bi-printer"></i> 인쇄
+                </button>
             </div>
         </div>
     </div>
