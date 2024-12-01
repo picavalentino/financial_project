@@ -58,6 +58,10 @@
                                             th:data-calendar-sn="${task.calendarsn}"
                                             onclick="updateTask(this)">완료</button>
                                 </li>
+                                <!-- 일정이 없는 경우 -->
+                                <li th:if="${todayTasks == null}"  class="list-group-item d-flex align-items-center todo-item">
+                                    <span id="noToDo" th:text="${noTasksMessage}"></span>
+                                </li>
                             </ul>
                         </div>
                     </div>

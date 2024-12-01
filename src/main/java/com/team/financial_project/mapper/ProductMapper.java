@@ -1,5 +1,6 @@
 package com.team.financial_project.mapper;
 
+import com.team.financial_project.dto.ProdHistDTO;
 import com.team.financial_project.dto.ProductDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,9 +14,11 @@ import java.util.Map;
 public interface ProductMapper {
     List<ProductDTO> findAllList();
 
-    ProductDTO findById(@Param("prodSn") Long prodSn); // @Param 추가
+    ProductDTO getProductById(@Param("prodSn") Long prodSn); // @Param 추가
 
-    void updateProduct(@Param("dto") ProductDTO dto); // @Param 추가
+    List<ProdHistDTO> getProdHistById(@Param("prodSn") Long prodSn); // @Param 추가
+
+    void updateProduct(@Param("dto") ProductDTO dto, @Param("userId") String userId); // @Param 추가
 
     void deleteProduct(@Param("prodSn") BigDecimal prodSn); // @Param 추가
 
