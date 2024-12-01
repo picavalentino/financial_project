@@ -18,7 +18,7 @@ spring:
       max-lifetime: 1800000         # 연결 최대 유지 시간 (밀리초)
   data:
     redis:
-      host: ${REDIS.HOST}
+      host: redis-cluster-001.igbva6.0001.apn2.cache.amazonaws.com
       port: 6379
 
 mybatis:

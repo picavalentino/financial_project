@@ -1,3 +1,12 @@
+.content{
+    padding: 0px;
+    margin: 0px;
+}
+.sub-content{
+    margin: 5px auto;
+    margin-left: 20px;
+}
+
 /* 공통 조건 박스 */
 .bottom {
     display: flex;
@@ -63,7 +72,7 @@
 }
 
 .location i {
-    font-size: 20px;
+    font-size: 16px;
     margin-right: 5px;
 }
 

@@ -16,7 +16,7 @@ function sortTable(column) {
 
 function updateSortIcons(column) {
     $('.sortable').removeClass('sort-asc sort-desc');
-    const header = $(`[onclick="sortTable('${column}')"]`);
+    const header = $(`[data-column="${column}"]`);
     if (sortDirection === 'asc') {
         header.addClass('sort-asc');
     } else {
@@ -37,7 +37,7 @@ function resetFilters(page = 1) {
 
 // 조건 검색 및 정렬
 function filterResults(page = 1) {
-    console.log("AJAX 요청: 페이지 번호 =", page); // 페이지 번호 확인
+    console.log("AJAX 요청: 페이지 번호 =", page);
     const data = {
         inqCategory: $('#inqCategory').val(),
         keywordType: $('#keywordType').val(),
@@ -51,17 +51,17 @@ function filterResults(page = 1) {
     };
 
     $.ajax({
-        url: window.location.origin + '/system/inquire',
+        url: `${window.location.origin}/system/inquire`,
         method: 'GET',
         data: data,
         success: function (response) {
-            console.log("서버 응답:", response); // 응답 확인
-            renderTable(response.list);
+            console.log("서버 응답:", response);
+            renderTable(response.list); // 테이블 렌더링
             updatePagination(response.totalPages, response.currentPage); // 페이지네이션 업데이트
-            updateProductSize(response.totalItems);
+            updateProductSize(response.totalItems); // 총 항목 수 업데이트
         },
         error: function (error) {
-            console.error('AJAX 요청 오류:', error); // 에러 로그
+            console.error('AJAX 요청 오류:', error);
         }
     });
 }
@@ -149,34 +149,48 @@ function handleRowClick(row) {
 // 페이지네이션 렌더링
 function updatePagination(totalPages, currentPage) {
     const paginationContainer = $('.pagination-container');
-    paginationContainer.empty();
+    paginationContainer.empty(); // 기존 페이지네이션 초기화
+
+    const maxVisible = 5; // 한 번에 표시할 최대 페이지 번호 수
+    const startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    const endPage = Math.min(totalPages, startPage + maxVisible - 1);
 
     // 이전 버튼
     if (currentPage > 1) {
         paginationContainer.append(
             `<button class="pagination-prev" data-page="${currentPage - 1}">&lt;</button>`
         );
+    } else {
+        paginationContainer.append(
+            `<button class="pagination-prev" disabled>&lt;</button>`
+        );
     }
-    // 페이지 번호 버튼
-    for (let i = 1; i <= totalPages; i++) {
+
+    // 페이지 번호
+    for (let i = startPage; i <= endPage; i++) {
         const activeClass = i === currentPage ? 'pagination-active' : '';
         paginationContainer.append(
             `<a class="pagination-number ${activeClass}" data-page="${i}">${i}</a>`
         );
     }
+
     // 다음 버튼
     if (currentPage < totalPages) {
         paginationContainer.append(
             `<button class="pagination-next" data-page="${currentPage + 1}">&gt;</button>`
         );
+    } else {
+        paginationContainer.append(
+            `<button class="pagination-next" disabled>&gt;</button>`
+        );
     }
+
     // 이벤트 바인딩
     $('.pagination-number, .pagination-prev, .pagination-next').off('click').on('click', function () {
         const page = $(this).data('page');
         filterResults(page); // AJAX 요청
     });
 }
-
 
 // Document Ready
 $(document).ready(function () {
