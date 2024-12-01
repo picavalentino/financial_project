@@ -1,6 +1,6 @@
 /* 상단 메뉴 박스 */
 .condition-box, .bottom {
-    margin: 30px;
+    margin-bottom: 30px;
     padding: 20px;
     width: 100%;
     max-width: 1400px;

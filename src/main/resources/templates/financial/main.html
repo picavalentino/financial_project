@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
-<!--security 적용 후 아래 코드로 변경해주세요-->
-<!--<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:sec="www.thymeleaf.org/extras/spring-security">-->
-
 <meta charset="UTF-8">
 <title>GS Bank</title>
 <!-- 전체 적용될 CSS -->
@@ -60,6 +57,10 @@
                                     <button class="btn btn-sm btn-outline-primary ms-auto"
                                             th:data-calendar-sn="${task.calendarsn}"
                                             onclick="updateTask(this)">완료</button>
+                                </li>
+                                <!-- 일정이 없는 경우 -->
+                                <li th:if="${todayTasks == null}"  class="list-group-item d-flex align-items-center todo-item">
+                                    <span id="noToDo" th:text="${noTasksMessage}"></span>
                                 </li>
                             </ul>
                         </div>
@@ -263,8 +264,6 @@
     </section>
 
 
-    <!-- Chart.js를 로드 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- 사용자 정의 스크립트 -->
     <script>
         //할 일 체크

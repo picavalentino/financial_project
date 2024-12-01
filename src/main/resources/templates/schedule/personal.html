@@ -13,6 +13,11 @@
 
 <body>
 <div layout:fragment="content" class="content">
+    <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a th:href="@{/schedule/personal}"> / 활동 관리</a>
+        <span> / 개인 일정 관리 </span>
+    </div>
     <div class="container1">
         <div class="content1">
             <!-- 캘린더 영역 -->
@@ -668,83 +673,104 @@
             });
 
 
-            // 등록 버튼 클릭 시 데이터 처리
-            $('#submit_btn').on('click', function () {
-                const modalDate = $('#current-date').text(); // 모달의 날짜
-                const selectedTime = $('#time-select').val(); // 선택된 시간
+         // UTC 시간을 기준으로 9시간 빼는 함수
+function subtractNineHours(dateString) {
+    const date = new Date(dateString); // 입력된 날짜 문자열을 Date 객체로 변환
+    const utcOffset = 9 * 60 * 60 * 1000; // 9시간 (밀리초 단위)
+    const adjustedDate = new Date(date.getTime() - utcOffset); // 9시간 빼기
 
-                let combinedDateTime = null;
+    const year = adjustedDate.getFullYear();
+    const month = String(adjustedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(adjustedDate.getDate()).padStart(2, '0');
+    const hours = String(adjustedDate.getHours()).padStart(2, '0');
+    const minutes = String(adjustedDate.getMinutes()).padStart(2, '0');
+    const seconds = String(adjustedDate.getSeconds()).padStart(2, '0');
 
-                if (modalDate && selectedTime) {
-                    combinedDateTime = `${modalDate} ${selectedTime}:00`; // 초(:00) 추가
-                    console.log("Combined DateTime:", combinedDateTime);
-                } else {
-                    console.error("Error: Missing modalDate or selectedTime.");
-                    alert("날짜와 시간을 선택하세요.");
-                    return;
-                }
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`; // YYYY-MM-DD HH:mm:ss 형식 반환
+}
 
-                const userId = /*[[${user_id}]]*/ ''; // user_id 가져오기
-                const eventTitle = $('.task-title').val();
-                const eventLocation = $('.location-input').val();
-                const eventDetail = $('.details-input').val();
+// 등록 버튼 클릭 시 데이터 처리
+$('#submit_btn').on('click', function () {
+    const modalDate = $('#current-date').text(); // 모달의 날짜
+    const selectedTime = $('#time-select').val(); // 선택된 시간
 
-                // "팀"인지 "개인"인지 확인
-                const eventType = $('#team-team').is(':checked') ? '1' : ($('#team-personal').is(':checked') ? '2' : null);
-                if (!eventType) {
-                    alert("팀 또는 개인을 선택하세요.");
-                    return;
-                }
+    let combinedDateTime = null;
 
-                // "종일" 체크 여부
-                const isAllDay = $('#event-allday').is(':checked') ? 'Y' : 'N';
+    if (modalDate && selectedTime) {
+        combinedDateTime = `${modalDate} ${selectedTime}:00`; // 초(:00) 추가
+        console.log("Combined DateTime (Before Adjustment):", combinedDateTime);
 
-                // 디버깅 로그
-                console.log("User ID:", userId);
-                console.log("Event Title:", eventTitle);
-                console.log("Event Location:", eventLocation);
-                console.log("Event Detail:", eventDetail);
-                console.log("Event Type:", eventType);
-                console.log("Calendar is All Day:", isAllDay);
+        // 9시간 빼기
+        combinedDateTime = subtractNineHours(combinedDateTime);
+        console.log("Combined DateTime (Adjusted):", combinedDateTime);
+    } else {
+        console.error("Error: Missing modalDate or selectedTime.");
+        alert("날짜와 시간을 선택하세요.");
+        return;
+    }
 
-                if (!eventTitle) {
-                    alert("제목을 입력하세요.");
-                    return;
-                }
+    const userId = /*[[${user_id}]]*/ ''; // user_id 가져오기
+    const eventTitle = $('.task-title').val();
+    const eventLocation = $('.location-input').val();
+    const eventDetail = $('.details-input').val();
 
-                const now = new Date();
-                const createdAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+    // "팀"인지 "개인"인지 확인
+    const eventType = $('#team-team').is(':checked') ? '1' : ($('#team-personal').is(':checked') ? '2' : null);
+    if (!eventType) {
+        alert("팀 또는 개인을 선택하세요.");
+        return;
+    }
 
-                // AJAX 요청
-                $.ajax({
-                    type: "POST",
-                    url: "/schedule/personal/register",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        user_id: userId, // user_id 전달
-                        calendar_event_bgn_date: combinedDateTime, // 일정 시작 날짜와 시간
-                        calendar_create_at: createdAt, // 일정이 추가된 시간
-                        calendar_event_title: eventTitle, // 제목
-                        calendar_event_location: eventLocation, // 장소
-                        calendar_type: eventType, // 팀 또는 개인
-                        calendar_event_detail: eventDetail, // 상세 정보
-                        calendar_is_all_day: isAllDay // 종일 여부
-                    }),
-                    beforeSend: function (xhr) {
-                        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-                        const csrfToken = $('meta[name="_csrf"]').attr('content');
-                        xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 헤더 추가
-                    },
-                    success: function () {
-                        alert("일정이 성공적으로 등록되었습니다.");
-                        location.reload();
-                    },
-                    error: function (xhr) {
-                        console.error("일정 등록 실패:", xhr.responseText);
-                        alert("일정 등록에 실패했습니다.");
-                    }
-                });
-            });
+    // "종일" 체크 여부
+    const isAllDay = $('#event-allday').is(':checked') ? 'Y' : 'N';
+
+    // 디버깅 로그
+    console.log("User ID:", userId);
+    console.log("Event Title:", eventTitle);
+    console.log("Event Location:", eventLocation);
+    console.log("Event Detail:", eventDetail);
+    console.log("Event Type:", eventType);
+    console.log("Calendar is All Day:", isAllDay);
+
+    if (!eventTitle) {
+        alert("제목을 입력하세요.");
+        return;
+    }
+
+    const now = new Date();
+    const createdAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+    // AJAX 요청
+    $.ajax({
+        type: "POST",
+        url: "/schedule/personal/register",
+        contentType: "application/json",
+        data: JSON.stringify({
+            user_id: userId, // user_id 전달
+            calendar_event_bgn_date: combinedDateTime, // 9시간 뺀 시간 저장
+            calendar_create_at: createdAt, // 일정이 추가된 시간
+            calendar_event_title: eventTitle, // 제목
+            calendar_event_location: eventLocation, // 장소
+            calendar_type: eventType, // 팀 또는 개인
+            calendar_event_detail: eventDetail, // 상세 정보
+            calendar_is_all_day: isAllDay // 종일 여부
+        }),
+        beforeSend: function (xhr) {
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 헤더 추가
+        },
+        success: function () {
+            alert("일정이 성공적으로 등록되었습니다.");
+            location.reload();
+        },
+        error: function (xhr) {
+            console.error("일정 등록 실패:", xhr.responseText);
+            alert("일정 등록에 실패했습니다.");
+        }
+    });
+});
+
             function getTodayDate() {
                 const today = new Date();
                 const year = today.getFullYear();
