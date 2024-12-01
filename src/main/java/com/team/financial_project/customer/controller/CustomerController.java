@@ -54,7 +54,7 @@ public class CustomerController {
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(name = "searchType", required = false) String searchType,
             @RequestParam(name = "keyword", required = false) String keyword,
-            @RequestParam(name = "status", required = false) String status, // 필터링 추가
+            @RequestParam(name = "status", required = false) String status,
             Model model) {
 
         // 로그인된 사용자 ID 설정
@@ -63,17 +63,31 @@ public class CustomerController {
         model.addAttribute("userName", userName);
         model.addAttribute("staffId", userId);
 
-        // 요청 파라미터가 비어 있는 경우에만 기본값 설정
-        if ((searchType == null || searchType.isEmpty()) && (keyword == null || keyword.isEmpty()) && (status == null || status.isEmpty())) {
-            searchType = "manager";
-            keyword = userName;
+
+        // `status`가 null 또는 빈 문자열일 경우 전체 상태로 처리
+        if (status != null && status.trim().isEmpty()) {
+            status = null;
         }
 
-        // 고객 데이터 조회 (검색, 필터링, 페이징 처리)
-        List<CustomerDTO> customers = customerService.searchCustomersWithPagination(page, pageSize, searchType, keyword, status);
+        // 검색 조건 기본값 설정
+        if ((searchType == null || searchType.trim().isEmpty()) && (keyword == null || keyword.trim().isEmpty())) {
+            searchType = null; // 검색 타입 초기화
+            keyword = "";    // 검색어 초기화
+        }
 
-        // 총 고객 수 및 총 페이지 수 계산
-        int totalCustomers = customerService.getTotalCustomerCount(searchType, keyword, status);
+        List<CustomerDTO> customers;
+        int totalCustomers;
+
+        // 검색 조건과 상태에 따라 적절한 조회 메서드 호출
+        if (searchType == null && keyword == null && status == null) {
+            // 전체 고객 조회
+            customers = customerService.getCustomersWithPagination(page, pageSize);
+            totalCustomers = customerService.getTotalCustomerCount(null, null, null);
+        } else {
+            // 검색 조건에 따른 고객 조회
+            customers = customerService.searchCustomersWithPagination(page, pageSize, searchType, keyword, status);
+            totalCustomers = customerService.getTotalCustomerCount(searchType, keyword, status);
+        }
         int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
 
         // 모델에 데이터 추가
@@ -87,7 +101,6 @@ public class CustomerController {
 
         return "customer/customerList"; // 뷰 이름
     }
-
     /* ================================================================================================================= */
 
     // 고객 등록 (POST 요청)
@@ -155,7 +168,7 @@ public class CustomerController {
             customerService.updateCustomer(customerDTO, staffId);
 
             // 고객 수정 내역 생성 및 저장
-            List<CustomerUpdateHistoryDTO> historyList = customerService.createAndSaveHistory(customerDTO,customerDTO, staffId);
+            List<CustomerUpdateHistoryDTO> historyList = customerService.createAndSaveHistory(customerDTO, customerDTO, staffId);
 
             // 응답 데이터 생성
             Map<String, Object> response = new HashMap<>();

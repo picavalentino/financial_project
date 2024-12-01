@@ -46,7 +46,7 @@
                                 <option value="email" th:selected="${searchType == 'email'}">이메일</option>
                                 <option value="manager" th:selected="${searchType == 'manager'}">담당자</option>
                             </select>
-                            <input type="text" name="keyword" placeholder="검색어를 입력하세요" th:value="${keyword}">
+                            <input type="text" name="keyword" placeholder="검색어를 입력하세요"  th:value="${keyword != null ? keyword : ''}" >
                             <button type="submit" class="search-button">
                                 <span class="icon">🔍</span> 검색
                             </button>
@@ -76,13 +76,13 @@
                     <th>담당자</th>
                     <th>
                         <form id="filterForm" th:action="@{/customer/list}" method="get">
-                            <input type="hidden" name="searchType" th:value="${searchType}">
-                            <input type="hidden" name="keyword" th:value="${keyword}">
                             <select name="status" onchange="document.getElementById('filterForm').submit();">
-                                <option value="1" th:selected="${status == null || status == '1'}">활동상태</option>
+                                <option value="" th:selected="${status == null || status == ''}">모든 상태</option>
                                 <option value="1" th:selected="${status == '1'}">ACTIVE</option>
                                 <option value="0" th:selected="${status == '0'}">INACTIVE</option>
                             </select>
+                            <input type="hidden" name="searchType" th:value="${searchType}">
+                            <input type="hidden" name="keyword" th:value="${keyword}">
                         </form>
                     </th>
                     <th>등록일</th>
@@ -126,23 +126,32 @@
             <div class="pagination-container">
                 <div class="pagination">
                     <!-- 이전 페이지 링크 -->
-                    <a th:href="@{'?page=' + (${currentPage - 1}) + '&pageSize=' + ${pageSize} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword} + '&status=' + ${status}}"
-                       th:if="${currentPage > 1}">&lt;</a>
+                    <a th:href="@{'?page=' + (${currentPage - 1})
+                        + '&pageSize=' + ${pageSize}
+                        + '&searchType=' + ${searchType != null ? searchType : ''}
+                        + '&keyword=' + ${keyword != null ? keyword : ''}
+                        + '&status=' + ${status != null ? status : ''}}"
+                                       th:if="${currentPage > 1}">&lt;</a>
 
-                    <!-- 페이지 번호 링크들 -->
-                    <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-                        <a th:href="@{'?page=' + ${i} + '&pageSize=' + ${pageSize} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword}  + '&status=' + ${status}}"
+                                    <!-- 페이지 번호 링크들 -->
+                                    <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                        <a th:href="@{'?page=' + ${i}
+                            + '&pageSize=' + ${pageSize}
+                            + '&searchType=' + ${searchType != null ? searchType : ''}
+                            + '&keyword=' + ${keyword != null ? keyword : ''}
+                            + '&status=' + ${status != null ? status : ''}}"
                            th:text="${i}"
                            th:classappend="${currentPage == i} ? 'active' : ''"></a>
                     </span>
 
-                    <!-- 다음 페이지 링크 -->
-                    <a th:href="@{'?page=' + (${currentPage + 1}) + '&pageSize=' + ${pageSize} + '&searchType=' + ${searchType} + '&keyword=' + ${keyword}  + '&status=' + ${status}}"
+                                    <!-- 다음 페이지 링크 -->
+                                    <a th:href="@{'?page=' + (${currentPage + 1})
+                        + '&pageSize=' + ${pageSize}
+                        + '&searchType=' + ${searchType != null ? searchType : ''}
+                        + '&keyword=' + ${keyword != null ? keyword : ''}
+                        + '&status=' + ${status != null ? status : ''}}"
                        th:if="${currentPage < totalPages}">&gt;</a>
                 </div>
-                <!-- 현재 페이지와 총 페이지 정보 -->
-                <span class="pagination-info" th:text="'페이지 ' + ${currentPage} + ' / ' + ${totalPages}"></span>
-            </div>
         </section>
     </div>
     <!-- ======================================================================================================================== -->

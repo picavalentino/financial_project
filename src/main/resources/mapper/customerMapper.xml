@@ -45,10 +45,8 @@
         cust.cust_email AS custEmail,
         cust.cust_create_at AS custCreateAt,
         statCode.code_nm AS custStateCd,
-
         usr.user_id AS user_id,
         usr.user_name AS user_name
-
         FROM tb_customer AS cust
         LEFT JOIN tb_code AS statCode
         ON cust.cust_state_cd = statCode.code_no
@@ -56,21 +54,23 @@
         LEFT JOIN tb_user AS usr
         ON usr.user_id = cust.user_id
         WHERE 1=1
+        <!-- 상태 조건 -->
+        <if test="status != null">
+            AND cust.cust_state_cd = #{status}
+        </if>
+        <!-- 검색 조건 -->
         <if test="searchType != null and searchType != ''">
             <choose>
                 <when test="searchType == 'name'">
-                    AND LOWER(cust.cust_nm) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+                    AND cust.cust_nm LIKE CONCAT('%', #{keyword}, '%')
                 </when>
                 <when test="searchType == 'email'">
-                    AND LOWER(cust.cust_email) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+                    AND cust.cust_email LIKE CONCAT('%', #{keyword}, '%')
                 </when>
                 <when test="searchType == 'manager'">
-                    AND LOWER(usr.user_name) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+                    AND usr.user_name LIKE CONCAT('%', #{keyword}, '%')
                 </when>
             </choose>
-        </if>
-        <if test="status != null and status != ''">
-            AND cust.cust_state_cd = #{status}
         </if>
         ORDER BY cust.cust_create_at DESC, cust.cust_id ASC
         LIMIT #{pageSize} OFFSET #{offset}
@@ -118,9 +118,6 @@
                 </when>
                 <when test="searchType == 'manager'">
                     AND usr.user_name LIKE CONCAT('%', #{keyword}, '%')
-                </when>
-                <when test="searchType == 'status'">
-                    AND cust.cust_state_cd = #{keyword}
                 </when>
             </choose>
         </if>
@@ -211,32 +208,6 @@
         (#{custId}, #{custNm}, #{custRrn}, #{custTelno}, #{custEmail}, #{custOccpTyCd}, #{custAddr},
         #{custCreateAt}, #{custUpdateAt}, #{custStateCd}, #{users.user_id})
     </insert>
-
-    <!-- ============================================================================================================= -->
-    <!-- 필터링 -->
-    <select id="selectCustomersByStatus" resultMap="CustomerUserMap">
-        SELECT DISTINCT
-        cust.cust_id AS custId,
-        cust.cust_nm AS custNm,
-        cust.cust_rrn AS custRrn,
-        cust.cust_telno AS custTelno,
-        cust.cust_email AS custEmail,
-        cust.cust_create_at AS custCreateAt,
-        statCode.code_nm AS custStateCd,
-
-        usr.user_id AS user_id,
-        usr.user_name AS user_name
-
-        FROM tb_customer AS cust
-        LEFT JOIN tb_code AS statCode
-        ON cust.cust_state_cd = statCode.code_no
-        AND cust.cust_state_cd_code_cl = statCode.code_cl
-        LEFT JOIN tb_user AS usr
-        ON usr.user_id = cust.user_id
-
-        WHERE cust_state_cd = #{status}
-        ORDER BY cust.cust_create_at DESC, cust.cust_id ASC
-    </select>
 
     <!-- ============================================================================================================= -->
 
