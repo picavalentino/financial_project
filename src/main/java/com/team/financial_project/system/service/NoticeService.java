@@ -63,16 +63,34 @@ public class NoticeService {
     public Map<String, Object> getNotices(String inqCategory, String keywordType, String keyword,
                                           String inqCreateAt, int page, int size,
                                           String sortColumn, String sortDirection) {
-        // 검색 조건에 따라 데이터를 가져옴
+        // 기본값 설정
+        page = Math.max(page, 1); // 최소 1 페이지
+        size = Math.max(size, 1); // 최소 1개 데이터
+
+        int totalItems; // 총 게시글 개수
+
+        // 검색 조건이 있을 경우와 없을 경우를 분리
+        if (inqCategory != null || keywordType != null || keyword != null || inqCreateAt != null) {
+            // 조건 검색인 경우
+            totalItems = inquireMapper.countSearchInquires(inqCategory, keywordType, keyword, inqCreateAt);
+        } else {
+            // 조건이 없는 처음 로딩의 경우
+            totalItems = inquireMapper.countAllList();
+        }
+
+        // 페이징 처리
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+        int startIndex = (page - 1) * size;
+
+        // 게시글 가져오기
         List<InquireDTO> list;
         if (inqCategory != null || keywordType != null || keyword != null || inqCreateAt != null) {
             list = inquireMapper.searchInquiresAll(inqCategory, keywordType, keyword, inqCreateAt);
         } else {
-            list = inquireMapper.findAllList();
+            list = inquireMapper.findAllList(); // 처음 로딩 데이터
         }
-        applyMappingsToInquires(list);
 
-        // 정렬 로직: 기본적으로 inqNotice = '1'이 우선 정렬
+        // 정렬 로직
         Comparator<InquireDTO> comparator = Comparator.comparing((InquireDTO inquire) -> "1".equals(inquire.getInqNotice()) ? 0 : 1);
         if (sortColumn != null && sortDirection != null) {
             Comparator<InquireDTO> secondaryComparator = getComparator(sortColumn, sortDirection);
@@ -82,17 +100,16 @@ public class NoticeService {
         }
         list.sort(comparator);
 
-        // 페이징 처리
-        int totalItems = list.size();
-        int totalPages = (int) Math.ceil((double) totalItems / size);
-        int startIndex = (page - 1) * size;
+        // 페이징된 데이터 추출
         int endIndex = Math.min(startIndex + size, totalItems);
-        List<InquireDTO> paginatedList = list.subList(startIndex, endIndex);
+        List<InquireDTO> paginatedList = (startIndex >= 0 && startIndex < totalItems)
+                ? list.subList(startIndex, endIndex)
+                : List.of();
 
         // 결과 반환
         Map<String, Object> result = new HashMap<>();
         result.put("list", paginatedList);
-        result.put("totalPages", totalPages);
+        result.put("totalPages", Math.max(totalPages, 1)); // 최소 1페이지
         result.put("totalItems", totalItems);
         return result;
     }
