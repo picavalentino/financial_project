@@ -1,9 +1,3 @@
-// customerListModal.js
-
-// CSRF 토큰 가져오기
-const csrfToken = $('meta[name="_csrf"]').attr('content');
-const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-
 /* 모달 닫기 */
 function closeModal(modalId) {
   document.getElementById(modalId).style.display = 'none';
@@ -14,9 +8,8 @@ function closeModal(modalId) {
 $(document).ready(function () {
     // 고객 등록 버튼 클릭 이벤트
     $(".insert-button").on("click", function () {
-    console.log("버튼 눌렀잖아");
-        // openModal 함수로 모달 열기
-        openModal('insertModal');
+        console.log("버튼 눌렀잖아");
+        openModal("insertModal");
     });
 });
 
@@ -25,20 +18,28 @@ function openModal(modalId) {
     modal.style.display = "flex"; // 모달을 중앙에 배치
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var submitButton = document.getElementById("submitCustomer");
 
-    submitButton.addEventListener("click", function(e) {
+    submitButton.addEventListener("click", function (e) {
         // 기본 폼 제출 동작 방지
         e.preventDefault();
 
+        // 유효성 검사
+        if (!validateForm()) {
+            return; // 유효성 검사 실패 시 서버 요청 중단
+        }
+
         // 입력 값 가져오기
-        var custNm = document.getElementById("custNm").value;
-        var custRrn = document.getElementById("custRrn").value;
-        var custTelno = document.getElementById("custTelno").value;
-        var custEmail = document.getElementById("custEmail").value;
+        var custNm = document.getElementById("custNm").value.trim();
+        var custRrn = document.getElementById("custRrn").value.trim();
+        var custTelno = document.getElementById("custTelno").value.trim();
+        var custEmail = document.getElementById("custEmail").value.trim();
         var custOccpTyCd = document.getElementById("custOccpTyCd").value;
-        var custAddr = document.getElementById("custAddr").value;
+        var custAddr = document.getElementById("custAddr").value.trim();
+
+        // 로그인 정보 가져오기
+        const staffId = document.querySelector('input[name="staffId"]').value;
 
         // 고객 정보 객체 생성 (custId는 서버에서 생성되므로 제외)
         var customerData = {
@@ -47,35 +48,89 @@ document.addEventListener("DOMContentLoaded", function() {
             custTelno: custTelno,
             custEmail: custEmail,
             custOccpTyCd: custOccpTyCd,
-            custAddr: custAddr
+            custAddr: custAddr,
+            users: {
+                user_id: staffId,
+            },
         };
 
+        const csrfToken = $('meta[name="_csrf"]').attr("content");
+        const csrfHeader = $('meta[name="_csrf_header"]').attr("content");
+
         // 비동기적으로 데이터를 서버에 전송
-        fetch('/customer/list/insert', {
-            method: 'POST',
+        fetch("/customer/list/insert", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken // CSRF 토큰 추가
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken,
             },
-            body: JSON.stringify(customerData)
+            body: JSON.stringify(customerData),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('고객이 성공적으로 등록되었습니다.');
-                // 필요한 경우 모달을 닫거나, 폼 초기화 등을 수행
-                document.getElementById("insertModal").style.display = "none";
-                document.getElementById("customerForm").reset();
-            } else {
-                alert('고객 등록에 실패했습니다: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('고객 등록 중 오류가 발생했습니다:', error);
-            alert('오류가 발생했습니다. 다시 시도해주세요.');
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert("고객이 성공적으로 등록되었습니다.");
+                    // 모달 닫기 및 폼 초기화
+                    closeModal("insertModal");
+                    document.getElementById("customerForm").reset();
+                } else {
+                    alert("고객 등록에 실패했습니다: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("고객 등록 중 오류가 발생했습니다:", error);
+                alert("오류가 발생했습니다. 다시 시도해주세요.");
+            });
     });
 });
+
+// 폼 유효성 검사 함수
+function validateForm() {
+    // 각 필드 값 가져오기
+    const custNm = document.getElementById("custNm").value.trim();
+    const custRrn = document.getElementById("custRrn").value.trim();
+    const custTelno = document.getElementById("custTelno").value.trim();
+    const custEmail = document.getElementById("custEmail").value.trim();
+    const custOccpTyCd = document.getElementById("custOccpTyCd").value;
+    const custAddr = document.getElementById("custAddr").value.trim();
+
+    // 정규식 패턴
+    const rrnPattern = /^\d{6}-\d{7}$/; // 주민등록번호 형식
+    const telPattern = /^010-\d{4}-\d{4}$/; // 휴대폰 번호 형식
+
+    // 유효성 검사
+    if (custNm.length < 2 || custNm.length > 50) {
+        alert("이름은 2자 이상 50자 이하로 입력해주세요.");
+        return false;
+    }
+
+    if (!rrnPattern.test(custRrn)) {
+        alert("주민등록번호는 '123456-1234567' 형식으로 입력해주세요.");
+        return false;
+    }
+
+    if (!telPattern.test(custTelno)) {
+        alert("전화번호는 '010-1234-5678' 형식으로 입력해주세요.");
+        return false;
+    }
+
+    if (!custEmail.includes("@") || custEmail.length < 5) {
+        alert("올바른 이메일 주소를 입력해주세요.");
+        return false;
+    }
+
+    if (custOccpTyCd === "") {
+        alert("직업을 선택해주세요.");
+        return false;
+    }
+
+    if (custAddr === "") {
+        alert("주소를 입력해주세요.");
+        return false;
+    }
+
+    return true; // 모든 유효성 검사를 통과한 경우
+}
 
 /* ========================================================================= */
 /* 체크 박스 */
@@ -310,8 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // =======================================================================================================================
 document.addEventListener("DOMContentLoaded", function() {
     // 기본 메시지 정의
-    const defaultMessage = `[Web 발신]
-안녕하십니까 GS-BANK입니다.
+    const defaultMessage = `안녕하십니까 GS-BANK입니다.
 고객님 평안한 하루 보내고 계십니까
 저는 퇴근 좀 시켜주세요
 제발...
@@ -355,10 +409,21 @@ function showBirthdayCustomers() {
         birthdayCustomers.forEach((customer) => {
             const newRow = document.createElement('div');
             newRow.className = 'tag-btn';
-            newRow.innerHTML = `
-                ${customer.custNm} (${customer.custTelno})
-                <span class="close-tag" onclick="removeTag(event)">X</span>
-            `;
+
+            // 고객명과 전화번호 텍스트 추가
+            const customerText = document.createElement('span');
+            customerText.className = 'customer-info';
+            customerText.textContent = `${customer.custNm} (${customer.custTelno})`;
+
+            // X 버튼 추가
+            const closeButton = document.createElement('span');
+            closeButton.className = 'close-tag';
+            closeButton.textContent = 'X';
+            closeButton.onclick = removeTag; // 태그 삭제 이벤트
+
+            // 태그에 요소 추가
+            newRow.appendChild(customerText);
+            newRow.appendChild(closeButton);
             tagBody.appendChild(newRow);
         });
     }
@@ -366,7 +431,7 @@ function showBirthdayCustomers() {
     // 생일 메시지 준비 및 텍스트박스에 설정
     const messageBox = document.querySelector('.message-box textarea');
     if (messageBox) {
-        messageBox.value = `[Web 발신]
+        messageBox.value = `
 안녕하세요, ${today.getFullYear()}년 생일을 맞이하신 고객님!
 GS-BANK에서 생일을 진심으로 축하드립니다.
 건강과 행복이 가득한 한 해 되시기를 기원합니다.
@@ -374,6 +439,7 @@ GS-BANK에서 생일을 진심으로 축하드립니다.
         `;
     }
 }
+
 
 // 일반 버튼 클릭 시 선택된 고객 복원 및 메시지 상태 복원 함수
 function showSelectedCustomers() {
@@ -408,21 +474,32 @@ function openMessageModal(defaultMessage) {
             }
         });
 
-    // 태그 컨테이너 초기화 및 데이터 추가
-    tagBody.innerHTML = '';
-    if (selectedData.length === 0) {
-        tagBody.innerHTML = '<p id="noCustomerMessage">선택된 데이터가 없습니다. 고객을 선택하세요.</p>';
-    } else {
-        selectedData.forEach((customer) => {
-            const newRow = document.createElement('div');
-            newRow.className = 'tag-btn';
-            newRow.innerHTML = `
-                ${customer.custNm} (${customer.custTelno})
-                <span class="close-tag" onclick="removeTag(event)">X</span>
-            `;
-            tagBody.appendChild(newRow);
-        });
-    }
+   // 태그 컨테이너 초기화 및 데이터 추가
+   tagBody.innerHTML = '';
+   if (selectedData.length === 0) {
+       tagBody.innerHTML = '<p id="noCustomerMessage">선택된 데이터가 없습니다. 고객을 선택하세요.</p>';
+   } else {
+       selectedData.forEach((customer) => {
+           const newRow = document.createElement('div');
+           newRow.className = 'tag-btn';
+
+           // 고객명과 전화번호 텍스트 추가
+           const customerText = document.createElement('span');
+           customerText.className = 'customer-info';
+           customerText.textContent = `${customer.custNm} (${customer.custTelno})`;
+
+           // X 버튼 추가
+           const closeButton = document.createElement('span');
+           closeButton.className = 'close-tag';
+           closeButton.textContent = 'X';
+           closeButton.onclick = removeTag; // 태그 삭제 이벤트
+
+           // 태그에 요소 추가
+           newRow.appendChild(customerText);
+           newRow.appendChild(closeButton);
+           tagBody.appendChild(newRow);
+       });
+   }
 
     // 메시지 박스를 기본 메시지로 초기화
     resetMessageBox(defaultMessage);
@@ -449,5 +526,67 @@ function removeTag(event) {
     }
 }
 
+// ===============================================================
+// 찐 메세지 발송
+function sendMessage() {
+    const tagBody = document.getElementById('tagContainer');
+    const messageBox = document.querySelector('.message-box textarea');
+
+    if (!tagBody || !messageBox) {
+        alert('메시지를 보낼 데이터가 없습니다.');
+        return;
+    }
+
+    // 선택된 고객 정보 추출
+    const selectedCustomers = Array.from(tagBody.querySelectorAll('.customer-info')).map(info => {
+        const customerInfo = info.textContent.trim().split(' (');
+        return {
+            custNm: customerInfo[0],
+            custTelno: customerInfo[1]?.replace(')', '').replace(/-/g, '').trim() || ''
+        };
+    });
+
+    if (selectedCustomers.length === 0) {
+        alert('선택된 고객이 없습니다.');
+        return;
+    }
+
+    // 메시지 내용 추출
+    const messageContent = messageBox.value.trim();
+    if (!messageContent) {
+        alert('메시지 내용이 비어 있습니다.');
+        return;
+    }
+
+    // 서버로 데이터 전송
+    const requestData = {
+        messageContent: messageContent,
+        recipients: selectedCustomers
+    };
+
+    const csrfToken = $('meta[name="_csrf"]').attr("content");
+    const csrfHeader = $('meta[name="_csrf_header"]').attr("content");
+
+    fetch('/customer/sms/send', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
+        body: JSON.stringify(requestData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('메시지가 성공적으로 발송되었습니다.');
+            } else {
+                alert('메시지 발송에 실패했습니다: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('메시지 발송 중 오류가 발생했습니다:', error);
+            alert('오류가 발생했습니다. 다시 시도해주세요.');
+        });
+}
 
 

@@ -1,9 +1,8 @@
 package com.team.financial_project.authSystem.service;
 
-import com.team.financial_project.authSystem.dto.AuthSystemDTO;
+import com.team.financial_project.dto.AuthSystemDTO;
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mapper.AuthSystemMapper;
-import com.team.financial_project.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

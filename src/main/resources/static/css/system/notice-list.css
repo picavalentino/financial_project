@@ -208,6 +208,15 @@
     font-size: 16px;
     padding: 6px 8px;
     background-color: white;
+    border: none;
+}
+
+.pagination-prev[disabled],
+.pagination-next[disabled] {
+    background-color: none;
+    color: #999;
+    cursor: not-allowed;
+    border: none;
 }
 
 /* 페이지 정보 */

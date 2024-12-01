@@ -108,7 +108,7 @@
                         <td><a th:href="@{/inquire/detail/{inqId}(inqId=${inquiry.inqId})}"
                                th:text="${inquiry.inqTitle}"></a></td>
                         <td th:with="createAt=${inquiry.inqCreateAt}" th:text="${#temporals.format(createAt, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${(inquiry.inqCategory == '1') ? '-' : (inquiry.inqReply == '0' ? '답변대기' : '답변완료')}"></td>
+                        <td th:text="${(inquiry.inqCategory == '공지사항') ? '-' : (inquiry.inqReply == '0' ? '답변대기' : '답변완료')}"></td>
                         <td th:text="${inquiry?.inqCheck ?: 'N/A'}"></td>
                     </tr>
                     </tbody>

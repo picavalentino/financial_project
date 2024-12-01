@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.financial_project.mypage.mapper.MypageMapper">
+    <!-- 유저 정보 -->
+    <select id="selectUserInfo" parameterType="String" resultType="com.team.financial_project.mypage.dto.MypageDTO">
+        SELECT
+        u.user_id AS userId,
+        u.user_name AS userName,
+        u.user_email AS userEmail,
+        u.user_telno AS userTelno,
+        u.user_imgpath AS userImgpath,
+        u.user_jncmp_ymd AS userJncmpYmd,
+        c1.code_nm AS userDeptName, -- 부서명
+        c2.code_nm AS userJobName -- 직무명
+        FROM
+        tb_user u
+        LEFT JOIN
+        tb_code c1 ON u.user_dept_cd_code_cl = c1.code_cl AND c1.code_no = u.user_dept_cd
+        LEFT JOIN
+        tb_code c2 ON u.user_jbps_ty_cd_code_cl = c2.code_cl AND c2.code_no = u.user_jbps_ty_cd
+        WHERE u.user_id = #{userId};
+    </select>
+
+
+
+
+    <!-- 상담 리스트 -->
+    <select id="selectInquiriesByUserId" parameterType="String" resultType="com.team.financial_project.mypage.dto.InquireDTO">
+        SELECT
+        inq_title AS inqTitle,
+        inq_create_at AS inqCreateAt
+        FROM t_inquire
+        WHERE user_id = #{userId};
+    </select>
+
+    <!-- 가입 상품 리스트 -->
+    <select id="selectCustProdsByUserId" parameterType="String" resultType="com.team.financial_project.mypage.dto.CustProdDTO">
+        SELECT DISTINCT ON (cust.cust_id)
+        cust.cust_nm AS custNm,
+        cust.cust_email AS custEmail,
+        d.dsgn_ds_ty_cd AS dsgnDsTyCd,
+        d.dsgn_ds_ty_cd_code_cl AS dsgnDsTyCdCodeCl,
+        d.dsgn_prg_stcd AS dsgnPrgStcd,
+        d.dsgn_prg_stcd_code_cl AS dsgnPrgStcdCodeCl,
+        c.code_nm AS dsgnDsTyCdName -- tb_code의 code_nm 추가
+        FROM tb_custprod_dsgn d
+        LEFT JOIN tb_customer cust
+        ON cust.user_id = d.user_id
+        LEFT JOIN tb_code c -- 테이블 이름을 tb_code로 변경
+        ON c.code_cl = d.dsgn_ds_ty_cd_code_cl -- 조인 조건
+        AND c.code_no = d.dsgn_ds_ty_cd
+        WHERE d.user_id = #{userId}
+        ORDER BY cust.cust_id DESC
+    </select>
+
+    <update id="updateUser" parameterType="com.team.financial_project.mypage.dto.MypageDTO">
+        UPDATE tb_user
+        SET
+        user_name = #{userName},
+        user_telno = #{userTelno},
+        user_email = #{userEmail},
+        user_imgpath = #{userImgpath},
+        user_dept_cd_code_cl = (
+        SELECT code_cl
+        FROM tb_code
+        WHERE code_nm = #{userDeptName}
+        LIMIT 1
+        ),
+        user_jbps_ty_cd_code_cl = (
+        SELECT code_cl
+        FROM tb_code
+        WHERE code_nm = #{userJobName}
+        LIMIT 1
+        )
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateUserInfo" parameterType="com.team.financial_project.mypage.dto.MypageDTO">
+        UPDATE tb_user
+        SET
+        user_email = #{userEmail},
+        user_telno = #{userTelno},
+        user_imgpath = #{userImgpath}
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updatePassword" parameterType="map">
+        UPDATE tb_user
+        SET user_pw = #{encryptedPassword}
+        WHERE user_id = #{userId}
+    </update>
+
+
+</mapper>

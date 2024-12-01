@@ -196,7 +196,7 @@
         ON codeUserDept.code_cl = usr.user_dept_cd_code_cl
         AND codeUserDept.code_no = usr.user_dept_cd
 
-        WHERE cust.cust_id = #{custId};
+        WHERE cust.cust_id = #{custId}
     </select>
     <!-- ============================================================================================================= -->
     <!-- 오늘 등록된 고객 수 조회 -->
@@ -210,10 +210,10 @@
     <insert id="insertCustomer" parameterType="com.team.financial_project.dto.CustomerDTO">
         INSERT INTO tb_customer
         (cust_id, cust_nm, cust_rrn, cust_telno, cust_email, cust_occp_ty_cd, cust_addr,
-        cust_create_at, cust_update_at, cust_state_cd)
+        cust_create_at, cust_update_at, cust_state_cd, user_id)
         VALUES
         (#{custId}, #{custNm}, #{custRrn}, #{custTelno}, #{custEmail}, #{custOccpTyCd}, #{custAddr},
-        #{custCreateAt}, #{custUpdateAt}, #{custStateCd})
+        #{custCreateAt}, #{custUpdateAt}, #{custStateCd}, #{users.user_id})
     </insert>
     <!-- ============================================================================================================= -->
 
@@ -230,6 +230,7 @@
         WHERE cust_id = #{custId}
     </update>
 
+
     <!--셀렉트 박스에서 쓸 직업 가져오는 구문-->
     <select id="getCustOccpTyCdList" resultType="com.team.financial_project.dto.CustomerDTO">
         SELECT
@@ -240,4 +241,24 @@
         ORDER BY code_no ASC -- 코드 번호 순으로 정렬
     </select>
     <!-- ============================================================================================================= -->
+
+    <insert id="insertHistoryById" parameterType="list">
+        INSERT INTO tb_cust_update_hist (cust_id, user_id, update_detail, cust_update_at)
+        VALUES
+        <foreach collection="list" item="history" separator=",">
+            (#{history.custId}, #{history.userId}, #{history.updateDetail}, #{history.custUpdateAt})
+        </foreach>
+    </insert>
+
+    <select id="findCustomerHistoryListById" resultType="com.team.financial_project.dto.CustomerUpdateHistoryDTO">
+        SELECT
+        cust_id AS custId,
+        cust_update_at AS custUpdateAt,
+        user_id AS userId,
+        update_detail AS updateDetail
+        FROM tb_cust_update_hist
+        WHERE cust_id = #{custId}
+        ORDER BY cust_update_at DESC
+    </select>
+
 </mapper>

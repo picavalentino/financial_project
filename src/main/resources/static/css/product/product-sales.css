@@ -52,6 +52,7 @@
 #condition-period {
     display: flex;
     flex-direction: row;
+    align-items: center;
     flex: 2;
     max-width: 900px;
     width: 100%;

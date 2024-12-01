@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.financial_project.schedule.mapper.ScheduleMapper">
+    <!-- 일정 목록 가져오기 -->
+    <select id="selectEventsByUserId" resultType="com.team.financial_project.schedule.dto.ScheduleDTO">
+        SELECT
+        user_id,
+        calendar_type,
+        calendar_event_title,
+        calendar_event_bgn_date,
+        calendar_event_end_date,
+        calendar_event_location,
+        calendar_is_all_day,
+        calendar_event_detail,
+        task_checked_val,
+        calendar_sn
+        FROM
+        tb_calendar
+        WHERE
+        user_id = #{userId}
+        ORDER BY
+        calendar_event_bgn_date ASC
+    </select>
+
+
+    <!-- 일정 삭제하기 -->
+    <delete id="deleteEvent" parameterType="int">
+        DELETE FROM tb_calendar
+        WHERE calendar_id = #{calendarId}
+    </delete>
+
+    <insert id="insertSchedule" parameterType="com.team.financial_project.schedule.dto.ScheduleDTO">
+        INSERT INTO tb_calendar (
+        user_id,
+        calendar_event_bgn_date,
+        calendar_create_at,
+        calendar_event_title,
+        calendar_event_location,
+        calendar_type,
+        calendar_event_detail,
+        calendar_is_all_day,
+        task_checked_val
+        ) VALUES (
+        #{user_id},
+        #{calendar_event_bgn_date},
+        #{calendar_create_at},
+        #{calendar_event_title},
+        #{calendar_event_location},
+        #{calendar_type},
+        #{calendar_event_detail},
+        #{calendar_is_all_day},
+        #{task_checked_val}
+        )
+
+    </insert>
+    <update id="updateTaskCheckedStatus" parameterType="map">
+        UPDATE tb_calendar
+        SET task_checked_val = #{taskCheckedVal}
+        WHERE calendar_sn = #{calendarSn}
+    </update>
+    <delete id="deleteSchedule" parameterType="int">
+        DELETE FROM tb_calendar
+        WHERE calendar_sn = #{calendarSn}
+    </delete>
+
+</mapper>
