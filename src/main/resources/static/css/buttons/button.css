@@ -85,6 +85,7 @@
 #btn-list:hover {
   background-color: #151835;
   transform: scale(1.05);
+  color: white;
 }
 /* 검색 버튼 */
 #btn-search {

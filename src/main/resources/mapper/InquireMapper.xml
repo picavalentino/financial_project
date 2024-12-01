@@ -20,6 +20,12 @@
         ORDER BY i.inq_id DESC
     </select>
 
+    <select id="countAllList" resultType="int">
+        SELECT COUNT(*)
+        FROM t_inquire i
+        WHERE i.inq_status = '1'
+    </select>
+
     <!-- 조회수 증가 -->
     <update id="incrementInqCheck" parameterType="Integer">
         UPDATE t_inquire
@@ -68,7 +74,7 @@
 
         FROM t_inquire i
         LEFT JOIN tb_user u ON u.user_id = i.user_id
-        WHERE 1=1
+        WHERE 1=1 AND i.inq_status = '1'
         <if test="inqCategory != null and inqCategory != ''">
             AND i.inq_category = #{inqCategory}
         </if>

@@ -68,13 +68,12 @@
         calendar_sn AS calendarSn,
         calendar_event_title AS calendarEventTitle,
         calendar_event_bgn_date AS calendarEventBgnDate,
-        calendar_event_end_date AS calendarEventEndDate,
         task_checked_val AS taskCheckedVal
         FROM tb_calendar
         WHERE user_id = #{userId}
         AND task_checked_val = false
         AND calendar_type = '2'
-        AND CURRENT_DATE BETWEEN calendar_event_bgn_date::date AND calendar_event_end_date::date
+        AND CURRENT_DATE = calendar_event_bgn_date::date
         ORDER BY calendar_event_bgn_date ASC
         LIMIT 3;
     </select>
