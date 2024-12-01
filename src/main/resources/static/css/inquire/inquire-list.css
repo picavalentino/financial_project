@@ -1,0 +1,185 @@
+/* 상단 메뉴 박스 */
+.condition-box, .bottom {
+    margin-bottom: 30px;
+    padding: 20px;
+    width: 100%;
+    /*max-width: 1400px;*/
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 검색 폼 스타일 수정 */
+#search-form {
+    display: flex;
+    flex-wrap: nowrap; /* 모든 요소를 한 줄로 유지 */
+    align-items: flex-end; /* 하단 정렬 */
+    gap: 20px; /* 요소 간 간격 */
+    width: 100%;
+}
+
+/* 개별 조건 필드 */
+.condition {
+    display: flex;
+    flex-direction: column; /* 라벨과 입력 필드 수직 배치 */
+    min-width: 200px; /* 최소 크기 */
+    flex: 1; /* 각 필드가 동일한 비율로 확장 */
+}
+
+.condition label {
+    margin-bottom: 5px; /* 라벨과 필드 간격 조정 */
+}
+
+/* 개별 조건 필드 */
+.condition input, .condition select {
+    padding: 10px; /* 동일한 패딩 적용 */
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    height: 38px; /* 높이를 명시적으로 지정 */
+    box-sizing: border-box; /* 테두리와 패딩 포함 */
+}
+
+/* 검색 조건 (셀렉트 박스 + 입력 필드) */
+#condition-keyword {
+    display: flex;
+    flex-direction: column; /* 라벨과 필드가 위아래로 정렬 */
+    flex: 2; /* 다른 필드보다 더 넓게 설정 */
+}
+
+#condition-keyword select {
+    width: 120px; /* 셀렉트 박스 너비 */
+    margin-right: 10px; /* 검색 필드와 셀렉트 박스 간격 */
+}
+
+#condition-keyword input {
+    flex-grow: 1; /* 입력 필드가 남은 공간을 채움 */
+
+}
+
+/* 작성일 필드 */
+.condition-date {
+    flex: 1; /* 동일한 비율로 확장 */
+}
+
+/* 버튼 그룹 */
+.btn-wrap {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center;
+    gap: 10px;
+    flex: 1; /* 버튼도 동일 비율로 배치 */
+}
+
+.btn{
+    color: #000000;
+}
+
+.btn:hover{
+    color: #ddd;
+}
+
+
+/* 하단 테이블 */
+.bottom-menu {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: space-between;
+}
+.inquire-size{
+
+}
+.table-inquire {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background-color: #ffffff;
+}
+
+.table-inquire th,
+.table-inquire td {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  font-size: 14px;
+}
+
+.table-inquire th {
+  background-color: #f1f3f5;
+  color: #495057;
+  font-weight: bold;
+}
+
+/* highlight-row 스타일 */
+.highlight-row {
+  background-color: #cddee3 !important; /* 하늘색 */
+}
+
+/* 번갈아가며 배경색 적용 (highlight-row 제외) */
+.table-inquire tbody tr:nth-child(even):not(.highlight-row) {
+  background-color: #f8f9fa; /* 연한 회색 */
+}
+
+.table-inquire tbody tr:hover:not(.highlight-row) {
+  background-color: #e9ecef; /* 마우스오버 시 색상 */
+}
+
+/* 페이지네이션 */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 10px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+/* 페이지 버튼 및 링크 */
+.pagination-button, .pagination-number {
+    color: #333;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+/* 현재 페이지 */
+.pagination-active {
+    background-color: #010535;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* 버튼 및 링크 호버 효과 */
+.pagination-button:hover, .pagination-number:hover {
+    background-color: #ced4da;
+}
+
+/* 이전/다음 버튼 */
+.pagination-prev, .pagination-next {
+    font-size: 16px;
+    padding: 6px 8px;
+    background-color: white;
+}
+
+/* 페이지 정보 */
+.pagination-info {
+    margin-left: auto;
+    font-size: 14px;
+    color: #666;
+    position: absolute;
+    right: 20px;
+}

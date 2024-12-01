@@ -108,4 +108,9 @@ public class ManagementService {
         userMapper.insertEmployee(userDTO);
     }
 
+    // 고객 관리 페이지 : 담당자 목록 조회
+    public List<UserDTO> getManagersByName(String name) {
+        return userMapper.findManagersByName(name);
+    }
+
 }

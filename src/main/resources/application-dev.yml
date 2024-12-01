@@ -20,7 +20,6 @@ spring:
     redis:
       host: ${REDIS.HOST}
       port: 6379
-      password: ${REDIS.PW}
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -40,5 +39,11 @@ coolsms:
     key: ${SMS.API.KEY}
     secret: ${SMS.API.SECRET}
   sender: ${SMS.PHONE}
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
 
 
