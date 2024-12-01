@@ -269,3 +269,33 @@ $("#phone_btn").on("click", function() {
     // 데이터 가져오기 호출
     fetchAndRenderData();
 });
+
+// 마이페이지의 고객 더보기 버튼 클릭 시 내 고객들만 보이게 고객관리 페이지로 이동
+document.getElementById("customerMoreBtn").addEventListener("click", function () {
+    // 필요한 데이터 가져오기
+    const searchType = "manager"; // 고정 값
+    const keyword = this.getAttribute("data-user-name"); // 버튼의 데이터 속성에서 값 읽기
+
+    // URL 생성
+    const url = new URL("/customer/list", window.location.origin);
+    url.searchParams.append("searchType", searchType);
+    url.searchParams.append("keyword", keyword);
+
+    // 페이지 이동
+    window.location.href = url.toString();
+});
+
+// 마이페이지의 내글 더보기 버튼 클릭 시 게시판으로 내글만 보이게 이동
+document.getElementById("inquireMoreBtn").addEventListener("click", function () {
+    // 필요한 데이터 가져오기
+    const keywordType = "user_name"; // 고정 값
+    const keyword = this.getAttribute("data-user-name"); // 버튼의 데이터 속성에서 값 읽기
+
+    // URL 생성
+    const url = new URL("/inquire/list", window.location.origin);
+    url.searchParams.append("keywordType", keywordType);
+    url.searchParams.append("keyword", keyword);
+
+    // 페이지 이동
+    window.location.href = url.toString();
+});
