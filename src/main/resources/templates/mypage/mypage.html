@@ -9,7 +9,7 @@
 <body>
 <div layout:fragment="content">
     <div class="content1">
-        <div>
+        <div class="left">
             <label class="myInfo">나의 정보</label>
             <form id="updateForm" method="POST" action="/mypage/update" enctype="multipart/form-data" class="mypage_right">
                 <input type="hidden" id="hidden_user_id" name="userId" th:value="${mypageDTO.userId}">
