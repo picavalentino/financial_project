@@ -57,7 +57,7 @@
         ORDER BY p.prod_sn DESC;
     </select>
 
-    <select id="getProductById" parameterType="Long" resultType="productDTO">
+    <select id="getProductById" parameterType="BigDecimal" resultType="productDTO">
         SELECT
         p.prod_sn AS prodSn,
         p.prod_nm AS prodNm,
@@ -81,7 +81,7 @@
         FROM tb_product p
         WHERE p.prod_sn = #{prodSn}
     </select>
-    <select id="getProdHistById" parameterType="Long" resultType="prodHistDTO">
+    <select id="getProdHistById" parameterType="BigDecimal" resultType="prodHistDTO">
         SELECT
         h.hist_id AS histId,
         h.prod_sn AS prodSn,
@@ -264,7 +264,7 @@
     </update>
 
     <!-- 상품 삭제 : 상품상태코드 변경 -->
-    <update id="deleteProduct" parameterType="java.math.BigDecimal">
+    <update id="deleteProduct" parameterType="BigDecimal">
         UPDATE tb_product
         SET prod_curr_stcd = 2,
             prod_ntsl_end_ymd = CURRENT_DATE, -- 오늘 날짜를 yyyy-MM-dd 형식으로 설정
@@ -423,22 +423,21 @@
 
     <!-- 매출 조회 - 조건 검색-->
     <select id="findSalesData" parameterType="map" resultType="map">
-        SELECT
-        CASE
+        SELECT CASE
         WHEN s.dsgn_ds_ty_cd = '1' THEN '적금'
         WHEN s.dsgn_ds_ty_cd = '2' THEN '목돈'
         WHEN s.dsgn_ds_ty_cd = '3' THEN '예금'
         WHEN s.dsgn_ds_ty_cd = '4' THEN '대출'
         END AS dsgn_ds_ty,
         COUNT(s.dsgn_sn) AS total_design_count,
-        SUM(
+        COALESCE(SUM(
         CASE
         WHEN s.dsgn_ds_ty_cd = '1' THEN savg.savg_tot_dpst_amt
         WHEN s.dsgn_ds_ty_cd = '2' THEN acml.acml_tot_dpst_amt
         WHEN s.dsgn_ds_ty_cd = '3' THEN d.dpst_amt
         WHEN s.dsgn_ds_ty_cd = '4' THEN loan.loan_amt
         END
-        ) AS total_sales_amount
+        ), 0) AS total_sales_amount
         FROM tb_custprod_dsgn s
         LEFT JOIN tb_prod_dsgn_savg savg ON s.dsgn_sn = savg.dsgn_sn AND s.dsgn_ds_ty_cd = '1'
         LEFT JOIN tb_prod_dsgn_acml acml ON s.dsgn_sn = acml.dsgn_sn AND s.dsgn_ds_ty_cd = '2'
