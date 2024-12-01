@@ -6,13 +6,11 @@ import com.team.financial_project.dto.ProductDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -113,7 +111,7 @@ public class ProductService {
     }
 
     // 단일 제품 조회
-    public ProductDTO findById(Long prodSn) {
+    public ProductDTO findById(BigDecimal prodSn) {
         ProductDTO product = productMapper.getProductById(prodSn);
 
         // histList 초기화
