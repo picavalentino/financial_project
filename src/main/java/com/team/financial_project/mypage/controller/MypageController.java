@@ -2,6 +2,7 @@ package com.team.financial_project.mypage.controller;
 
 import com.team.financial_project.login.service.RegisterService;
 import com.team.financial_project.main.service.S3Service;
+import com.team.financial_project.main.service.SmsService;
 import com.team.financial_project.mypage.dto.MypageDTO;
 import com.team.financial_project.mypage.mapper.MypageMapper;
 import com.team.financial_project.mypage.service.MypageService;
@@ -23,12 +24,16 @@ public class MypageController{
     private final MypageMapper mypageMapper;
     private final S3Service s3Service;
     private final RegisterService registerService;
+    private final SmsService smsService; // SmsService 추가
 
-    public MypageController(MypageService mypageService,MypageMapper mypageMapper, S3Service s3Service, RegisterService registerService) {
+    public MypageController(MypageService mypageService, MypageMapper mypageMapper,
+                            S3Service s3Service, RegisterService registerService,
+                            SmsService smsService) {
         this.mypageMapper = mypageMapper;
         this.s3Service = s3Service;
         this.mypageService = mypageService;
         this.registerService = registerService;
+        this.smsService = smsService; // SmsService 주입
     }
 
 
@@ -141,9 +146,12 @@ public class MypageController{
         }
     }
 
-
-
-
+    @GetMapping("/mypage/certify")
+    @ResponseBody
+    public boolean certifyPhone(@RequestParam("telno") String telno) {
+        System.out.println("Received telno: " + telno);
+        return registerService.certifyByUserTelno(telno);
+    }
 
 
 

@@ -23,35 +23,29 @@
                 </div>
                 <div class="input_box">
                     <div id="myprofile_left">
-                        <p>사원번호 <br>
-                            <input type="text" id="user_id" name="userId" th:value="${mypageDTO.userId}" disabled>
-                        </p>
-                        <p>입사일 <br>
-                            <input type="text" id="user_jncmp_ymd" name="userIncmpYmd" th:value="${mypageDTO.userJncmpYmd}" disabled>
-                        </p>
-                        <p>부서 <br>
-                            <input type="text" id="user_dept_cd_code_cl" name="userDeptCdCodeCl" th:value="${mypageDTO.userDeptName}" disabled>
-                        </p>
-                        <p>직무 <br>
-                            <input type="text" id="user_jbps_ty_cd_code_cl" name="userJbpsTyCdCodeCl" th:value="${mypageDTO.userJobName}" disabled>
-                        </p>
+                        <p>사원번호</p>
+                        <input type="text" id="user_id" name="userId" th:value="${mypageDTO.userId}" disabled>
+                        <p>입사일</p>
+                        <input type="text" id="user_jncmp_ymd" name="userIncmpYmd" th:value="${mypageDTO.userJncmpYmd}" disabled>
+                        <p>부서</p>
+                        <input type="text" id="user_dept_cd_code_cl" name="userDeptCdCodeCl" th:value="${mypageDTO.userDeptName}" disabled>
+                        <p>직무</p>
+                        <input type="text" id="user_jbps_ty_cd_code_cl" name="userJbpsTyCdCodeCl" th:value="${mypageDTO.userJobName}" disabled>
                     </div>
                     <div id="myprofile_right">
-                        <p>이름 <br>
-                            <input type="text" id="user_name" name="userName" th:value="${mypageDTO.userName}" disabled>
-                        </p>
+                        <p>이름</p>
+                        <input type="text" id="user_name" name="userName" th:value="${mypageDTO.userName}" disabled>
                         <div class="phone">
-                            <p>휴대전화 <br>
+                            <p>휴대전화</p>
+                            <div class="phone-inputs">
                                 <input class="phone" type="text" id="phone_input1" name="phonePart1" th:value="${#strings.substring(mypageDTO.userTelno, 0, 3)}" disabled> -
                                 <input class="phone" type="text" id="phone_input2" name="phonePart2" th:value="${#strings.substring(mypageDTO.userTelno, 4, 8)}" disabled> -
                                 <input class="phone" type="text" id="phone_input3" name="phonePart3" th:value="${#strings.substring(mypageDTO.userTelno, 9)}" disabled>
                                 <input type="button" value="인증" id="phone_btn">
-                            </p>
-
+                            </div>
                         </div>
-                        <p>E-Mail <br>
-                            <input type="email" id="user_email" name="userEmail" th:value="${mypageDTO.userEmail}" disabled>
-                        </p>
+                        <p>E-Mail</p>
+                        <input type="email" id="user_email" name="userEmail" th:value="${mypageDTO.userEmail}" disabled>
                         <div class="buttons">
                             <button type="button" id="editButton">수정하기</button>
                             <button type="submit" id="submitButton">등록하기</button>
@@ -65,7 +59,7 @@
             <div class="mycustomer">
                 <div id="mycustomer_title">
                     <p>나의 고객 정보:</p>
-                    <button type="button" id="customerMoreBtn">더보기</button>
+                    <button type="button" id="customerMoreBtn" th:attr="data-user-name=${mypageDTO.userName}">더보기</button>
                 </div>
 
                 <table id="mycustomer_table">
@@ -92,7 +86,7 @@
             <div class="myboard">
                 <div id="myboard_title">
                     <p>내 작성글:</p>
-                    <button type="button" id="inquireMoreBtn">더보기</button>
+                    <button type="button" id="inquireMoreBtn" th:attr="data-user-name=${mypageDTO.userName}">더보기</button>
                 </div>
 
                 <table id="myboard_table">

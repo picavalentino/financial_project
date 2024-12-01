@@ -1,5 +1,7 @@
 package com.team.financial_project.promotion.controller;
 
+import com.team.financial_project.customer.service.CustomerService;
+import com.team.financial_project.dto.CustomerDTO;
 import com.team.financial_project.promotion.calculator.SavingsCalculator;
 import com.team.financial_project.promotion.dto.*;
 import com.team.financial_project.promotion.mapper.PromotionMapper;
@@ -25,6 +27,9 @@ public class PromotionController {
     @Autowired
     private PromotionService promotionService;
 
+    @Autowired
+    private CustomerService customerService;
+
     // MyBatis Test
     @GetMapping("/mybatisTest")
     @ResponseBody
@@ -36,8 +41,8 @@ public class PromotionController {
     // 설계 조회 페이지
     @GetMapping("/list")
     public Object getList(
-            @RequestParam(value="page", required=false, defaultValue="1") int page, // 기본 페이지
-            @RequestParam(value="size", required=false, defaultValue="10") int size, // 페이지당 데이터 개수
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page, // 기본 페이지
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size, // 페이지당 데이터 개수
             @RequestParam(value = "prgStcd", required = false) String prgStcd, // 진행상태 필터
             @RequestParam(value = "dsTyCd", required = false) String dsTyCd, // 상품유형 필터
             @RequestParam(value = "custNm", required = false) String custNm, // 고객명 필터
@@ -46,6 +51,7 @@ public class PromotionController {
             @RequestParam(value = "sortColumn", required = false) String sortColumn, // 정렬 기준 컬럼
             @RequestParam(value = "sortDirection", required = false) String sortDirection, // 정렬 방향
             @RequestParam(value = "ajax", required = false, defaultValue = "false") boolean ajax, // AJAX 여부
+            @RequestParam(value = "custId", required = false) String custId, // customer 페이지에서 넘어온 고객ID
             Model model) {
 
         // 페이지에 출력하기 위한 코드 리스트 조회 --- 진행상태 (430) 상품유형 (401)
@@ -56,10 +62,19 @@ public class PromotionController {
 
         // 전체 데이터의 개수 (필터 조건 포함)
         int totalCount = promotionService.getTotalCount(prgStcd, dsTyCd, custNm, userNm, prodNm);
+// =============================================
 
+        // 기본값 설정
+        if (custId == null || custId.trim().isEmpty()) {
+            custId = ""; // 기본값 설정
+        }
+        if (custNm == null || custNm.trim().isEmpty()) {
+            custNm = ""; // 기본값 설정
+        }
+// =============================================
         // 조건 및 페이징에 맞는 데이터 조회
         List<PromotionListDto> promotionList = promotionService.getPagedList(
-                page, size, prgStcd, dsTyCd, custNm, userNm, prodNm, sortColumn, sortDirection);
+                page, size, prgStcd, dsTyCd, custNm, userNm, prodNm, sortColumn, sortDirection, custId);
 
         // 총 페이지 수 계산
         int totalPages = (int) Math.ceil((double) totalCount / size);
@@ -86,6 +101,7 @@ public class PromotionController {
         }
 
         // HTML 렌더링 요청인 경우
+        model.addAttribute("custId", custId);
         model.addAttribute("PromotionList", promotionList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
