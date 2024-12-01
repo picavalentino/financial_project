@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
-<!--security 적용 후 아래 코드로 변경해주세요-->
 <html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}"
       xmlns:sec="www.thymeleaf.org/extras/spring-security">
 <head>
@@ -11,11 +9,9 @@
     <!-- 전체 적용될 스크립트 -->
     <th:block layout:fragment="script"></th:block>
     <!-- 페이지별 상품 설계 조회 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/promotion/button.css}">
     <link rel="stylesheet" th:href="@{/css/promotion/common.css}">
     <link rel="stylesheet" th:href="@{/css/promotion/promotionCal.css}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script th:src="@{/js/promotion/promotionDetailAcml.js}" defer></script>
 </head>
 <body>
