@@ -23,20 +23,21 @@ $(document).ready(function () {
     // 수정 버튼 클릭
     $("#btn-register").on("click", function (e) {
         e.preventDefault(); // 기본 동작 방지
-        const productId = $("input[name='prodSn']").val(); // 상품 ID
-        if (!productId) {
+        const prodSn = $("input[name='prodSn']").val(); // 상품 ID
+        if (!prodSn) {
             alert("상품 ID가 유효하지 않습니다.");
             return;
         }
-        const updateUrl = `/product/detail/${productId}/update`; // 수정 요청 URL
+        const updateUrl = `/product/detail/${prodSn}/update`; // 수정 요청 URL
 
         // 변경된 데이터 추출
-        const changedData = { prodSn: productId }; // prodSn을 항상 포함
+        const changedData = { prodSn: prodSn }; // prodSn을 항상 포함
         $("input[name='prodAirMin'], input[name='prodAirMax'], input[name='prodAirBgnYmd'], input[name='prodAirEndYmd'], input[name='prodNtslBgnYmd'], input[name='prodNtslEndYmd']").each(function () {
-            const originalValue = $(this).attr("data-original-value");
             const currentValue = $(this).val();
-            if (originalValue !== currentValue) {
+            if (currentValue) {
                 changedData[$(this).attr("name")] = currentValue;
+            } else {
+                changedData[$(this).attr("name")] = null; // 빈 값도 명시적으로 전송
             }
         });
         if (Object.keys(changedData).length === 0) {
@@ -77,13 +78,13 @@ $(document).ready(function () {
             return;
         }
 
-        const productId = $("input[name='prodSn']").val();
+        const prodSn = $("input[name='prodSn']").val();
         if (!productId) {
             alert("상품 ID가 유효하지 않습니다.");
             return;
         }
 
-        const deleteUrl = `/product/detail/${productId}/delete`;
+        const deleteUrl = `/product/detail/${prodSn}/delete`;
         $.ajax({
             url: deleteUrl,
             type: "POST",

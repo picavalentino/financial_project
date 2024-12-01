@@ -38,83 +38,88 @@
         </collection>
     </resultMap>
 
-    <select id="findAllList" resultMap="ProductResultMap">
+    <select id="findAllList" resultType="productDTO">
         SELECT
-            p.prod_sn,
-            p.prod_nm,
-            p.prod_instl_amt_min,
-            p.prod_instl_amt_max,
-            p.prod_cd,
-            p.prod_ty_cd,
-            p.prod_pay_ty_cd,
-            p.prod_int_tax_ty_cd,
-            p.prod_air_min,
-            p.prod_air_max,
-            p.prod_ntsl_bgn_ymd,
-            p.prod_ntsl_end_ymd,
-            p.prod_curr_stcd
+            p.prod_sn AS prodSn,
+            p.prod_nm AS prodNm,
+            p.prod_instl_amt_min AS prodInstlAmtMin,
+            p.prod_instl_amt_max AS prodInstlAmtMax,
+            p.prod_cd AS prodCd,
+            p.prod_ty_cd AS prodTyCd,
+            p.prod_pay_ty_cd AS prodPayTyCd,
+            p.prod_int_tax_ty_cd AS prodIntTaxTyCd,
+            p.prod_air_min AS prodAirMin,
+            p.prod_air_max AS prodAirMax,
+            p.prod_ntsl_bgn_ymd AS prodNtslBgnYmd,
+            p.prod_ntsl_end_ymd AS prodNtslEndYmd,
+            p.prod_curr_stcd AS prodCurrStcd
         FROM tb_product p
         ORDER BY p.prod_sn DESC;
     </select>
 
-    <select id="findById" parameterType="Long" resultMap="ProductResultMap">
+    <select id="getProductById" parameterType="Long" resultType="productDTO">
         SELECT
-        p.prod_sn,
-        p.prod_nm,
-        p.prod_instl_amt_min,
-        p.prod_instl_amt_max,
-        p.prod_create_at,
-        p.prod_update_at,
-        p.user_id,
-        p.prod_cd,
-        p.prod_ty_cd,
-        p.prod_sbstg_ty_cd,
-        p.prod_pay_ty_cd,
-        p.prod_int_tax_ty_cd,
-        p.prod_air_min,
-        p.prod_air_max,
-        p.prod_air_bgn_ymd,
-        p.prod_air_end_ymd,
-        p.prod_curr_stcd,
-        p.prod_ntsl_bgn_ymd,
-        p.prod_ntsl_end_ymd,
-        h.hist_id,
-        h.user_id,
-        h.prod_sn,
-        h.hist_prod_air_min,
-        h.hist_prod_air_max,
-        h.hist_prod_air_bgn_ymd,
-        h.hist_prod_air_end_ymd,
-        h.hist_create_at,
-        h.hist_curr_stcd
+        p.prod_sn AS prodSn,
+        p.prod_nm AS prodNm,
+        p.prod_instl_amt_min AS prodInstlAmtMin,
+        p.prod_instl_amt_max AS prodInstlAmtMax,
+        p.prod_create_at AS prodCreateAt,
+        p.prod_update_at AS prodUpdateAt,
+        p.user_id AS userId,
+        p.prod_cd AS prodCd,
+        p.prod_ty_cd AS prodTyCd,
+        p.prod_sbstg_ty_cd AS prodSbstgTyCd,
+        p.prod_pay_ty_cd AS prodPayTyCd,
+        p.prod_int_tax_ty_cd AS prodIntTaxTyCd,
+        p.prod_air_min AS prodAirMin,
+        p.prod_air_max AS prodAirMax,
+        p.prod_air_bgn_ymd AS prodAirBgnYmd,
+        p.prod_air_end_ymd AS prodAirEndYmd,
+        p.prod_curr_stcd AS prodCurrStcd,
+        p.prod_ntsl_bgn_ymd AS prodNtslBgnYmd,
+        p.prod_ntsl_end_ymd AS prodNtslEndYmd
         FROM tb_product p
-        LEFT JOIN tb_prod_hist h ON h.prod_sn = p.prod_sn
         WHERE p.prod_sn = #{prodSn}
+    </select>
+    <select id="getProdHistById" parameterType="Long" resultType="prodHistDTO">
+        SELECT
+        h.hist_id AS histId,
+        h.prod_sn AS prodSn,
+        h.hist_prod_air_min AS prodAirMin,
+        h.hist_prod_air_max AS prodAirMax,
+        h.hist_prod_air_bgn_ymd AS prodAirBgnYmd,
+        h.hist_prod_air_end_ymd AS prodAirEndYmd,
+        h.hist_create_at AS histCreateAt,
+        h.hist_curr_stcd AS histCurrStcd
+        FROM tb_prod_hist h
+        WHERE h.prod_sn = #{prodSn}
     </select>
 
     <!-- 조건 검색 -->
-    <select id="searchProducts" parameterType="map" resultMap="ProductResultMap">
+    <select id="searchProducts" parameterType="map" resultType="productDTO">
         SELECT
-            p.prod_sn,
-            p.prod_nm,
-            p.prod_instl_amt_min,
-            p.prod_instl_amt_max,
-            p.prod_cd,
-            p.prod_ty_cd,
-            p.prod_pay_ty_cd,
-            p.prod_int_tax_ty_cd,
-            p.prod_air_min,
-            p.prod_air_max,
-            p.prod_ntsl_bgn_ymd,
-            p.prod_ntsl_end_ymd,
-            p.prod_curr_stcd
+            p.prod_sn AS prodSn,
+            p.prod_nm AS prodNm,
+            p.prod_instl_amt_min AS prodInstlAmtMin,
+            p.prod_instl_amt_max AS prodInstlAmtMax,
+            p.prod_cd AS prodCd,
+            p.prod_ty_cd AS prodTyCd,
+            p.prod_pay_ty_cd AS prodPayTyCd,
+            p.prod_int_tax_ty_cd AS prodIntTaxTyCd,
+            p.prod_air_min AS prodAirMin,
+            p.prod_air_max AS prodAirMax,
+            p.prod_ntsl_bgn_ymd AS prodNtslBgnYmd,
+            p.prod_ntsl_end_ymd AS prodNtslEndYmd,
+            p.prod_curr_stcd AS prodCurrStcd
         FROM tb_product p
         WHERE 1=1
         <if test="searchParams.prodTyCd != null and searchParams.prodTyCd != ''">
             AND p.prod_ty_cd = #{searchParams.prodTyCd}
         </if>
         <if test="searchParams.prodCurrStcd != null and searchParams.prodCurrStcd != ''">
-            AND p.prod_curr_stcd = #{searchParams.prodCurrStcd}
+            <if test="searchParams.prodCurrStcd != 'all'">
+                AND p.prod_curr_stcd = #{searchParams.prodCurrStcd}
+            </if>
         </if>
         <if test="searchParams.prodPayTyCd != null and searchParams.prodPayTyCd != ''">
             AND p.prod_pay_ty_cd = #{searchParams.prodPayTyCd}
@@ -132,15 +137,28 @@
     </select>
 
     <!-- 컬럼명으로 정렬 -->
-    <select id="getProductsSorted" resultMap="ProductResultMap">
-        SELECT *
+    <select id="getProductsSorted" resultType="productDTO">
+        SELECT
+            p.prod_sn AS prodSn,
+            p.prod_nm AS prodNm,
+            p.prod_instl_amt_min AS prodInstlAmtMin,
+            p.prod_instl_amt_max AS prodInstlAmtMax,
+            p.prod_cd AS prodCd,
+            p.prod_ty_cd AS prodTyCd,
+            p.prod_pay_ty_cd AS prodPayTyCd,
+            p.prod_int_tax_ty_cd AS prodIntTaxTyCd,
+            p.prod_air_min AS prodAirMin,
+            p.prod_air_max AS prodAirMax,
+            p.prod_ntsl_bgn_ymd AS prodNtslBgnYmd,
+            p.prod_ntsl_end_ymd AS prodNtslEndYmd,
+            p.prod_curr_stcd AS prodCurrStcd
         FROM tb_product
         ORDER BY
         ${sortColumn} ${sortDirection}
     </select>
 
     <!-- 상품 등록 -->
-    <insert id="insertProduct" parameterType="com.team.financial_project.dto.ProductDTO">
+    <insert id="insertProduct" parameterType="productDTO">
         INSERT INTO tb_product (
         prod_nm,             -- 상품명
         prod_instl_amt_min,  -- 최소 가입금액
@@ -161,23 +179,23 @@
         prod_ntsl_end_ymd    -- 판매 종료일
         )
         VALUES (
-        #{prodNm},
-        #{prodInstlAmtMin},
-        #{prodInstlAmtMax},
+        #{dto.prodNm},
+        #{dto.prodInstlAmtMin},
+        #{dto.prodInstlAmtMax},
         NOW(),              -- 생성일 현재 시각
-        #{userId},
-        #{prodCd},
-        #{prodTyCd},
-        #{prodSbstgTyCd},
-        #{prodPayTyCd},
-        #{prodAirMin},
-        #{prodAirMax},
-        #{prodAirBgnYmd},
-        #{prodAirEndYmd},
-        #{prodIntTaxTyCd},
-        #{prodCurrStcd},
-        #{prodNtslBgnYmd},
-        #{prodNtslEndYmd}
+        #{dto.userId},
+        #{dto.prodCd},
+        #{dto.prodTyCd},
+        #{dto.prodSbstgTyCd},
+        #{dto.prodPayTyCd},
+        #{dto.prodAirMin},
+        #{dto.prodAirMax},
+        #{dto.prodAirBgnYmd},
+        #{dto.prodAirEndYmd},
+        #{dto.prodIntTaxTyCd},
+        #{dto.prodCurrStcd},
+        #{dto.prodNtslBgnYmd},
+        #{dto.prodNtslEndYmd}
         )
     </insert>
 
@@ -188,40 +206,42 @@
         WHERE prod_cd LIKE CONCAT(#{keyword}, '%')
     </select>
 
-    <!-- ### 수정 정보 제대로 저장 안됨 ### -->
     <!-- 상품 정보 수정 -->
     <update id="updateProduct" parameterType="com.team.financial_project.dto.ProductDTO">
         <!-- 기존 데이터를 tb_prod_hist 테이블에 추가 -->
         INSERT INTO tb_prod_hist (
-            hist_id,
-            prod_sn,
-            hist_prod_air_min,
-            hist_prod_air_max,
-            hist_prod_air_bgn_ymd,
-            hist_prod_air_end_ymd,
-            hist_create_at
+        hist_id,
+        prod_sn,
+        user_id,
+        hist_prod_air_min,
+        hist_prod_air_max,
+        hist_prod_air_bgn_ymd,
+        hist_prod_air_end_ymd,
+        hist_create_at
         )
         SELECT
-            nextval('tb_prod_hist_hist_id_seq'),
-            prod_sn,
-            prod_air_min,
-            prod_air_max,
-            prod_air_bgn_ymd,
-            prod_air_end_ymd,
-            now()
+        nextval('tb_prod_hist_hist_id_seq'),
+        prod_sn,
+        #{userId},
+        prod_air_min,
+        prod_air_max,
+        prod_air_bgn_ymd,
+        prod_air_end_ymd,
+        now()
         FROM tb_product
-        WHERE prod_sn = #{prodSn};
+        WHERE prod_sn = #{dto.prodSn};
+
         <!-- tb_product 테이블에 데이터 업데이트 -->
         UPDATE tb_product
         SET
-            prod_air_min = COALESCE(#{prodAirMin,jdbcType=NUMERIC}, prod_air_min),
-            prod_air_max = COALESCE(#{prodAirMax,jdbcType=NUMERIC}, prod_air_max),
-            prod_air_bgn_ymd = COALESCE(#{prodAirBgnYmd,jdbcType=VARCHAR}, prod_air_bgn_ymd),
-            prod_air_end_ymd = COALESCE(#{prodAirEndYmd,jdbcType=VARCHAR}, prod_air_end_ymd),
-            prod_ntsl_bgn_ymd = COALESCE(#{prodNtslBgnYmd,jdbcType=VARCHAR}, prod_ntsl_bgn_ymd),
-            prod_ntsl_end_ymd = COALESCE(#{prodNtslEndYmd,jdbcType=VARCHAR}, prod_ntsl_end_ymd),
-            prod_update_at = now()
-        WHERE prod_sn = #{prodSn};
+        prod_air_min = COALESCE(#{dto.prodAirMin, jdbcType=NUMERIC}, prod_air_min),
+        prod_air_max = COALESCE(#{dto.prodAirMax, jdbcType=BIGINT}, prod_air_max),
+        prod_air_bgn_ymd = COALESCE(#{dto.prodAirBgnYmd, jdbcType=VARCHAR}, prod_air_bgn_ymd),
+        prod_air_end_ymd = COALESCE(#{dto.prodAirEndYmd, jdbcType=VARCHAR}, prod_air_end_ymd),
+        prod_ntsl_bgn_ymd = COALESCE(#{dto.prodNtslBgnYmd, jdbcType=VARCHAR}, prod_ntsl_bgn_ymd),
+        prod_ntsl_end_ymd = COALESCE(#{dto.prodNtslEndYmd, jdbcType=VARCHAR}, prod_ntsl_end_ymd),
+        prod_update_at = now()
+        WHERE prod_sn = #{dto.prodSn};
     </update>
 
     <!-- 상품 상태 자동 변경 -->

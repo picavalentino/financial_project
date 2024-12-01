@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,12 @@ public class ProductController {
     public ProductController(ProductService productService, ProductUserService userService) {
         this.productService = productService;
         this.userService = userService;
+    }
+
+    //로그인
+    private String getAuthenticatedUserName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName(); // username을 반환
     }
 
     @GetMapping("/list")
@@ -172,11 +180,16 @@ public class ProductController {
 
         // 포맷팅 처리
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // Null 체크 및 기본 값 처리
+        if (dto.getHistList() == null) {
+            dto.setHistList(Collections.emptyList());
+        }
         dto.getHistList().forEach(hist -> {
             if (hist.getHistCreateAt() != null) {
                 hist.setFormattedHistCreateAt(hist.getHistCreateAt().format(formatter));
             }
         });
+
         model.addAttribute("dto", dto);
         return "product/product-detail";
     }
@@ -233,8 +246,18 @@ public class ProductController {
                 log.error("필수 값 누락: " + dto);
                 return ResponseEntity.badRequest().body("필수 값이 누락되었습니다.");
             }
+
+            // 상품변경한 직원 id 가져오기
+            String userId = getAuthenticatedUserName();
+
+            ProductDTO origin = productService.findById(dto.getProdSn());
+
+            // null 값 처리
+            dto.setProdAirMin(dto.getProdAirMin() != null ? dto.getProdAirMin() : origin.getProdAirMin());
+            dto.setProdAirMax(dto.getProdAirMax() != null ? dto.getProdAirMax() : origin.getProdAirMax());
+
             // 서비스 호출
-            productService.updateProduct(dto);
+            productService.updateProduct(dto, userId);
             ProductDTO updateDTO = productService.findById(dto.getProdSn());
             log.info("### updated dto: "+updateDTO);
             return ResponseEntity.ok("상품 수정 성공");
