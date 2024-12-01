@@ -37,7 +37,8 @@ public class SavingsCalculator {
         System.out.println("Total Paid: " + totalPaid);
 
         // 현재까지 발생한 이자 = 총 납입 금액 × 이자율 × (경과 회차 / 12)
-        BigDecimal interest = totalPaid.multiply(interestRate)
+        BigDecimal normalizedInterestRate = interestRate.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+        BigDecimal interest = totalPaid.multiply(normalizedInterestRate)
                 .multiply(BigDecimal.valueOf(elapsedPeriods))
                 .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
 
@@ -61,61 +62,74 @@ public class SavingsCalculator {
 
 
     public static SavingsCalDto calculateSavings(SavingsCalDto dto) {
-        // 불입금액, 목표기간, 적용금리, 이자과세율, 시작일자
+        // 불입금액, 목표기간, 적용금리, 이자과세율, 시작일자 가져오기
         BigDecimal monthlyDeposit = dto.getSavgCircleAmt();
-        int goalPeriod = dto.getSavgGoalPrd();
-        BigDecimal interestRate = dto.getSavgAplyRate().divide(BigDecimal.valueOf(100)); // %를 소수로 변환
-        BigDecimal taxRate = dto.getProdIntTaxRate().divide(BigDecimal.valueOf(100)); // %를 소수로 변환
+        Integer goalPeriod = dto.getSavgGoalPrd();
+        BigDecimal interestRate = dto.getSavgAplyRate();
+        BigDecimal taxRate = dto.getProdIntTaxRate();
         LocalDate startDate = dto.getSavgStrtDt();
 
-        // 불입금액 합계 계산
-        BigDecimal totalDeposit = monthlyDeposit.multiply(BigDecimal.valueOf(goalPeriod));
-
-        // 세전 이자 계산 (누적이자 방식)
-        BigDecimal totalInterest = BigDecimal.ZERO;
-        List<SavingsDetailDto> detailList = new ArrayList<>();
-
-        // 누적 금액을 기준으로 이자 계산
-        BigDecimal accumulatedAmount = BigDecimal.ZERO;
-
-        // 목표기간 동안 각 회차에 대해 이자 계산
-        for (int i = 1; i <= goalPeriod; i++) {
-            // 매 회차마다 누적된 금액에 대해서 이자 계산
-            BigDecimal installmentInterest = accumulatedAmount.multiply(interestRate).divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
-
-            // 누적 금액 업데이트
-            accumulatedAmount = accumulatedAmount.add(monthlyDeposit);  // 누적 금액에 불입금액을 더함
-
-            SavingsDetailDto detail = new SavingsDetailDto();
-            detail.setInstallmentNo(i); // 회차
-            detail.setInstallmentAmt(monthlyDeposit); // 불입 금액
-            detail.setAccumulatedAmt(accumulatedAmount); // 누적 금액 (누적된 잔액)
-            detail.setInstallmentInt(installmentInterest); // 회차 이자
-            detail.setInstallmentPrincipal(monthlyDeposit.add(installmentInterest)); // 회차 원리금
-            detailList.add(detail);
-
-            // 세전 이자 합산
-            totalInterest = totalInterest.add(installmentInterest);
+        // 검증
+        if (monthlyDeposit == null || goalPeriod == null || interestRate == null ||
+                taxRate == null || startDate == null || goalPeriod <= 0) {
+            throw new IllegalArgumentException("Invalid input data for savings calculation.");
         }
 
-        // 세전 수령액 = 불입금액 + 세전 이자
-        BigDecimal preTaxTotal = totalDeposit.add(totalInterest);
+        // 결과 DTO 초기화
+        SavingsCalDto resultDto = new SavingsCalDto();
+        List<SavingsDetailDto> detailList = new ArrayList<>();
 
-        // 이자 과세금 계산 (세전 이자에 대해 과세율 적용)
-        BigDecimal taxAmount = totalInterest.multiply(taxRate).setScale(0, RoundingMode.HALF_UP);
+        // 불입금액 합계 계산
+        BigDecimal totalDepositAmount = monthlyDeposit.multiply(BigDecimal.valueOf(goalPeriod));
 
-        // 세후 수령액 = 세전 수령액 - 이자 과세금
-        BigDecimal afterTaxTotal = preTaxTotal.subtract(taxAmount);
+        // 세전이자 계산 (이자율은 백분율로 가정)
+        BigDecimal normalizedInterestRate = interestRate.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+        BigDecimal preTaxInterest = monthlyDeposit.multiply(BigDecimal.valueOf(goalPeriod))
+                .multiply(BigDecimal.valueOf(goalPeriod + 1))
+                .divide(BigDecimal.valueOf(2), 10, RoundingMode.HALF_UP)
+                .multiply(normalizedInterestRate)
+                .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
 
-        // 결과 세팅
-        dto.setSavgTotDpstAmt(totalDeposit);
-        dto.setSavgTotDpstInt(totalInterest);
-        dto.setSavgTotRcveAmt(preTaxTotal);
-        dto.setSavgIntTaxAmt(taxAmount);
-        dto.setSavgAtxRcveAmt(afterTaxTotal);
-        dto.setDetailList(detailList);
+        // 세전수령액 계산
+        BigDecimal preTaxTotal = totalDepositAmount.add(preTaxInterest);
 
-        return dto;
+        // 이자 과세금 계산
+        BigDecimal taxAmount = preTaxInterest.multiply(taxRate.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP))
+                .setScale(0, RoundingMode.FLOOR);
+
+        // 세후수령액 계산
+        BigDecimal afterTaxTotal = preTaxTotal.subtract(taxAmount).setScale(0, RoundingMode.CEILING);
+
+        // 상세 데이터 생성
+        BigDecimal accumulatedAmount = BigDecimal.ZERO;
+        for (int i = 1; i <= goalPeriod; i++) {
+            SavingsDetailDto detail = new SavingsDetailDto();
+            detail.setInstallmentNo(i);
+            detail.setInstallmentAmt(monthlyDeposit);
+
+            // 누적 불입금액 계산
+            accumulatedAmount = accumulatedAmount.add(monthlyDeposit);
+            detail.setAccumulatedAmt(accumulatedAmount);
+
+            // 회차 이자 계산
+            BigDecimal installmentInterest = accumulatedAmount.multiply(normalizedInterestRate)
+                    .divide(BigDecimal.valueOf(12), 0, RoundingMode.CEILING);
+            detail.setInstallmentInt(installmentInterest);
+
+            // 회차 원리금 계산
+            detail.setInstallmentPrincipal(monthlyDeposit.add(installmentInterest));
+            detailList.add(detail);
+        }
+
+        // 결과 DTO에 값 설정
+        resultDto.setSavgTotDpstAmt(totalDepositAmount);
+        resultDto.setSavgTotDpstInt(preTaxInterest);
+        resultDto.setSavgTotRcveAmt(preTaxTotal);
+        resultDto.setSavgIntTaxAmt(taxAmount);
+        resultDto.setSavgAtxRcveAmt(afterTaxTotal);
+        resultDto.setDetailList(detailList);
+
+        return resultDto;
     }
 
 
