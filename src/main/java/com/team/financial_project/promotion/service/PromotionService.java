@@ -45,13 +45,13 @@ public class PromotionService {
     public List<PromotionListDto> getPagedList(
             int page, int size, String prgStcd, String dsTyCd,
             String custNm, String userNm, String prodNm,
-            String sortColumn, String sortDirection) {
+            String sortColumn, String sortDirection, String custId) {
 
         // 페이징 처리를 위한 시작 위치(offset) 계산
         // 현재 페이지에서 보여줄 데이터의 시작 위치를 구하기 위해 (현재 페이지 - 1) * 페이지 크기(size)를 사용
         int offset = (page - 1) * size;
         List<PromotionListDto> promotionList = mapper.getPagedList(
-            prgStcd, dsTyCd, custNm, userNm, prodNm, sortColumn, sortDirection, offset, size);
+            prgStcd, dsTyCd, custNm, userNm, prodNm, sortColumn, sortDirection, offset, size, custId);
 
         // 각 항목에 대해 만기금액 계산
         promotionList.forEach(this::setMaturityAmount);

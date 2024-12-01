@@ -101,6 +101,10 @@
         LEFT JOIN TB_USER pm ON pds.USER_ID = pm.USER_ID
         LEFT JOIN TB_PRODUCT pd ON pds.PROD_SN = pd.PROD_SN
         <where>
+            <!-- 고객 ID 필터 조건 -->
+            <if test="custId != null and custId != ''">
+                pds.CUST_ID = #{custId}
+            </if>
             <!-- 진행상태 필터 조건 -->
             <if test="prgStcd != null and prgStcd != ''">
                 pds.DSGN_PRG_STCD = #{prgStcd}

@@ -149,6 +149,11 @@ public class CustomerService {
         compareAndAddHistory(historyList, "주소", original.getCustAddr(), updated.getCustAddr(), updated.getCustId(), staffId);
         compareAndAddHistory(historyList, "직업 코드", original.getCustOccpTyCd(), updated.getCustOccpTyCd(), updated.getCustId(), staffId);
 
+        // 담당자 이름 비교
+        if (original.getUsers() != null && updated.getUsers() != null) {
+            compareAndAddHistory(historyList, "담당자", original.getUsers().getUser_name(), updated.getUsers().getUser_name(), updated.getCustId(), staffId);
+        }
+
         if (!historyList.isEmpty()) {
             customerMapper.insertHistoryById(historyList);
         }
