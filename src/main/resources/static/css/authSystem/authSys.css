@@ -1,3 +1,12 @@
+.content{
+    padding: 5px;
+}
+
+.sub_content{
+    margin: 20px auto;
+    margin-left: 35px;
+}
+
 /* 공통 조건 박스 */
 .bottom {
     display: flex;
@@ -62,7 +71,7 @@
 }
 
 .location i {
-    font-size: 20px;
+    font-size: 16px;
     margin-right: 5px;
 }
 
@@ -70,6 +79,7 @@
 .title {
     font-size: 25px;
     color: #black;
+    margin-top: 5px;
     margin-bottom: 10px; /* 간격 축소 */
 }
 

@@ -1,3 +1,11 @@
+.content{
+    padding: 0px;
+}
+.sub_content{
+    margin: 5px auto;
+    margin-left: 20px;
+}
+
 /* 페이지 위치 경로 설정 */
 .location {
     display: inline-flex;
@@ -20,7 +28,7 @@
 }
 
 .location i {
-    font-size: 20px;
+    font-size: 16px;
     margin-right: 5px;
 }
 

@@ -201,7 +201,7 @@ public class ManagementController {
         model.addAttribute("totalInsertCount", totalInsertCount);
         model.addAttribute("yearMonth", yearMonth);
 
-        return "/management/managementInsert";
+        return "management/managementInsert";
     }
 
      //직원 등록하는 insertModal

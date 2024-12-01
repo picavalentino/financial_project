@@ -63,24 +63,16 @@ public class NoticeController {
         try {
             // 서비스 호출 및 데이터 처리
             Map<String, Object> result = noticeService.getNotices(
-                    inqCategory, keywordType, keyword, inqCreateAt, page, size, sortColumn, sortDirection
+                    inqCategory, keywordType, keyword, inqCreateAt,
+                    Math.max(page, 1), Math.max(size, 8), // 기본값 설정
+                    sortColumn, sortDirection
             );
 
-            // 반환된 데이터 검증
-            if (result == null || result.isEmpty()) {
-                System.err.println("### 서비스 반환 데이터가 비어 있습니다. ###");
-                if (ajax) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body(Map.of("error", "No data found"));
-                }
-                model.addAttribute("error", "No data found");
-                return "system/notice-list";
-            }
-
-            // 결과 데이터 추출
-            List<InquireDTO> paginatedList = (List<InquireDTO>) result.getOrDefault("list", List.of());
-            int totalPages = (int) result.getOrDefault("totalPages", 0);
-            int totalItems = (int) result.getOrDefault("totalItems", 0);
+            // 데이터 추출
+            List<InquireDTO> paginatedList = (List<InquireDTO>) result.get("list");
+            int totalPages = (int) result.get("totalPages");
+            int totalItems = (int) result.get("totalItems");
+            System.out.println("totalItems: "+totalItems);
 
             // AJAX 요청 처리
             if (ajax) {
@@ -89,8 +81,6 @@ public class NoticeController {
                 response.put("totalPages", totalPages);
                 response.put("currentPage", page);
                 response.put("totalItems", totalItems);
-
-                System.out.println("### AJAX 응답 데이터: " + response);
                 return ResponseEntity.ok(response);
             }
 
@@ -99,17 +89,14 @@ public class NoticeController {
             model.addAttribute("currentPage", page);
             model.addAttribute("totalPages", totalPages);
             model.addAttribute("totalItems", totalItems);
-            model.addAttribute("requestURI", request.getRequestURI());
             return "system/notice-list";
         } catch (Exception e) {
-            System.err.println("### 예외 발생 ###");
+            // 예외 처리
             e.printStackTrace();
-
             if (ajax) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(Map.of("error", "An error occurred while processing the request."));
             }
-
             model.addAttribute("error", "An error occurred while processing the request.");
             return "system/notice-list";
         }

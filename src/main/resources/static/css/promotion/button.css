@@ -1,0 +1,174 @@
+.button-wrap {
+    display: flex;
+    gap: 15px;
+    margin: 10px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    width: 80px;
+    height: 30px;
+    cursor: pointer;
+    /*transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;*/
+    transition: transform 0.2s;
+    color: white;
+    margin-left: 0px;
+}
+
+/* 버튼 공통 호버 스타일 */
+.btn:hover {
+    color: #FFF;
+}
+
+.btn i.icon {
+    display: flex;
+    font-size: 18px;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    padding-left: 9px;
+}
+
+.icon {
+    padding-right: 5px;;
+    margin: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: -18px;
+    border-radius: 8px;
+    display: flex;
+    width: 32px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 버튼 개별 스타일 */
+/* 등록 버튼 */
+.btn-register {
+    background-color: #5ba1aa;
+}
+
+.btn-register .icon {
+    background-color: #4a8b92;
+}
+
+.btn-register:hover {
+    background-color: #4a8b92;
+/*    transform: scale(1.05);*/
+}
+
+/* 초기화(전체) 버튼 */
+.btn-reset {
+    background-color: #5a5a5a;
+    width: 90px;
+}
+
+.btn-reset .icon {
+    background-color: #4d4d4d;
+}
+
+.btn-reset:hover {
+    background-color: #4d4d4d;
+/*    transform: scale(1.05);*/
+}
+
+/* 목록 버튼 */
+.btn-list {
+    background-color: #1b1f44;
+}
+
+.btn-list .icon {
+    background-color: #151835;
+}
+
+.btn-list:hover {
+    background-color: #151835;
+/*    transform: scale(1.05);*/
+}
+
+/* 검색 버튼 */
+.btn-search {
+    background-color: #1b1f44;
+}
+
+.btn-search .icon {
+    background-color: #0f132e;
+}
+
+.btn-search:hover {
+    background-color: #13183c;
+}
+
+/* 전체 버튼 */
+.btn-search-all {
+    background-color: #13183c;
+}
+
+.btn-search-all .icon {
+    background-color: #0f132e;
+}
+
+.btn-search-all:hover {
+    background-color: #0b0f28;
+}
+
+/* 인쇄 버튼 */
+.btn-print {
+    background-color: #292D32;
+}
+
+.btn-print .icon {
+    background-color: #8E98A8;
+}
+
+.btn-print:hover {
+    background-color: #8E98A8;
+}
+
+/* 메일 버튼 */
+.btn-mail {
+    background-color: #292D32;
+}
+
+.btn-mail .icon {
+    background-color: #8E98A8;
+}
+
+.btn-mail:hover {
+    background-color: #8E98A8;
+}
+
+/* 삭제 버튼 */
+.btn-delete {
+    background-color: #FF6767;
+}
+
+.btn-delete .icon {
+    background-color: #BD3232;
+}
+
+.btn-delete:hover {
+    background-color: #BD3232;
+}
+
+/* 새로고침 버튼 */
+.btn-refresh {
+    background-color: #5A5A5A;
+}
+
+.btn-refresh .icon {
+    background-color: #4D4D4D;
+}
+
+.btn-refresh:hover {
+    background-color: #4D4D4D;
+}
