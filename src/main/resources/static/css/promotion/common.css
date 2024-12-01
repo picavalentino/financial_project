@@ -7,30 +7,8 @@ a {
 .main-content {
     flex: 1;
     padding: 20px;
+    padding-top: 0px;
 }
-
-.title {
-    font-size: 25px;
-    margin-bottom: 20px;
-}
-
-.location {
-    display: flex;
-    flex-direction: row;
-    color: #212529;
-}
-
-.location a {
-    text-decoration: none;
-    color: inherit;
-    margin-right: 5px;
-    height: 40px;
-}
-
-.location p {
-    display: inline;
-}
-
 /* 인쇄관련 CSS */
 @media print {
 /* 모든 요소를 기본적으로 숨김 */

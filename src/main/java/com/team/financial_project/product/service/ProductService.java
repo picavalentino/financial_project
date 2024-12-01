@@ -1,14 +1,18 @@
 package com.team.financial_project.product.service;
 
+import com.team.financial_project.dto.ProdHistDTO;
 import com.team.financial_project.mapper.ProductMapper;
 import com.team.financial_project.dto.ProductDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -110,7 +114,20 @@ public class ProductService {
 
     // 단일 제품 조회
     public ProductDTO findById(Long prodSn) {
-        ProductDTO product = productMapper.findById(prodSn);
+        ProductDTO product = productMapper.getProductById(prodSn);
+
+        // histList 초기화
+        if (product != null && product.getHistList() == null) {
+            product.setHistList(new ArrayList<>());
+        }
+
+        List<ProdHistDTO> prodHist = productMapper.getProdHistById(prodSn);
+        if (prodHist != null) {
+            for (ProdHistDTO x : prodHist) {
+                product.getHistList().add(x);
+            }
+        }
+
         if (product != null) {
             applyMappingsToProduct(product); // 매핑 적용
         }
@@ -118,14 +135,17 @@ public class ProductService {
         return product;
     }
 
-    public void updateProduct(ProductDTO dto) {
-        productMapper.updateProduct(dto);
+    @Transactional
+    public void updateProduct(ProductDTO dto, String userId) {
+        productMapper.updateProduct(dto, userId);
     }
 
+    @Transactional
     public void deleteProduct(BigDecimal prodSn) {
         productMapper.deleteProduct(prodSn);
     }
 
+    @Transactional
     public void insertProduct(ProductDTO dto) {
         // 상품코드 생성 로직
         if (dto.getProdTyCd().equals("1")) { // 적금

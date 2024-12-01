@@ -15,7 +15,7 @@ public class ProductDTO {
     private Long prodSn;                 // 상품 일련번호
     private String prodNm;                 // 상품명
     private Integer prodInstlAmtMin;    // 최소 가입한도
-    private Integer prodInstlAmtMax;    // 최대 가입한도
+    private Long prodInstlAmtMax;    // 최대 가입한도
     private LocalDateTime prodCreateAt;    // 생성 일시
     private LocalDateTime prodUpdateAt;    // 수정 일시
     private String userId;                 // 담당직원 사원번호
