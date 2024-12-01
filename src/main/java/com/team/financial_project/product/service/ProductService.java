@@ -4,6 +4,7 @@ import com.team.financial_project.mapper.ProductMapper;
 import com.team.financial_project.dto.ProductDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -177,4 +178,29 @@ public class ProductService {
         System.out.println("### create prodCd: " + dto.getProdCd());
         productMapper.insertProduct(dto);
     }
+
+    @Transactional
+    public void updateProductStatuses() {
+        List<ProductDTO> productsBeforeUpdate = productMapper.findAllList(); // 상태 변경 전 조회
+        int updatedRows = productMapper.updateProductStatus();
+        List<ProductDTO> productsAfterUpdate = productMapper.findAllList();  // 상태 변경 후 조회
+
+        if (updatedRows > 0) {
+            log.info("상품 상태 변경 완료: {}개의 상품 상태가 업데이트되었습니다.", updatedRows);
+
+            // 상태 변경된 상품 로깅
+            for (int i = 0; i < productsBeforeUpdate.size(); i++) {
+                ProductDTO before = productsBeforeUpdate.get(i);
+                ProductDTO after = productsAfterUpdate.get(i);
+
+                if (!before.getProdCurrStcd().equals(after.getProdCurrStcd())) {
+                    log.info("상품 ID: {}, 상태 변경: {} -> {}",
+                            before.getProdSn(), before.getProdCurrStcd(), after.getProdCurrStcd());
+                }
+            }
+        } else {
+            log.warn("상품 상태 변경 작업이 수행되지 않았습니다. (업데이트된 상품 없음)");
+        }
+    }
+
 }

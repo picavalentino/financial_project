@@ -27,6 +27,8 @@ public class S3Service {
         InputStream inputStream = file.getInputStream();
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+
         s3Client.putObject(bucketName, fileName, inputStream, metadata);
         return s3Client.getUrl(bucketName, fileName).toString(); // 파일의 S3 URL 반환
     }

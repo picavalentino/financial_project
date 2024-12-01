@@ -21,14 +21,6 @@ public interface MainMapper {
 
     List<MainStatisticsSalesDTO> getSalesStatistics(@Param("userId") String userId);
 
-    // 사용자 정보 조회
-    @Select("SELECT user_imgpath, user_name, user_jbps_ty_cd FROM tb_user WHERE user_id = #{userId}")
-    Map<String, String> findUserById(@Param("userId") String userId);
-
-    // 직위 이름 조회
-    @Select("SELECT code_nm FROM tb_code WHERE code_cl = #{codeCl} AND code_no = #{codeNo}")
-    String findCodeNameByCodeClAndCodeNo(@Param("codeCl") String codeCl, @Param("codeNo") String codeNo);
-
     List<Map<String, Object>> getTodayTasks(@Param("userId") String userId);
 
     void updateTaskChecked(@Param("calendarSn") Long calendarSn);
