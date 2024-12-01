@@ -263,25 +263,6 @@
         AND prod_ntsl_end_ymd IS NOT NULL;
     </update>
 
-    <!-- 상품 상태 자동 변경 -->
-    <update id="updateProductStatus">
-        UPDATE tb_product
-        SET prod_curr_stcd =
-        <choose>
-            <when test="CURRENT_DATE &lt; prod_ntsl_bgn_ymd">
-                '0'  <!-- 판매대기 -->
-            </when>
-            <when test="CURRENT_DATE BETWEEN prod_ntsl_bgn_ymd AND prod_ntsl_end_ymd">
-                '1'  <!-- 판매중 -->
-            </when>
-            <when test="CURRENT_DATE &gt; prod_ntsl_end_ymd">
-                '2'  <!-- 판매종료 -->
-            </when>
-        </choose>
-        WHERE prod_ntsl_bgn_ymd IS NOT NULL
-        AND prod_ntsl_end_ymd IS NOT NULL;
-    </update>
-
     <!-- 상품 삭제 : 상품상태코드 변경 -->
     <update id="deleteProduct" parameterType="java.math.BigDecimal">
         UPDATE tb_product
