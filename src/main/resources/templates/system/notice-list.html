@@ -17,16 +17,16 @@
 <!-- 우리가 작업할 공간 -->
 <body>
 <div layout:fragment="content" class="content">
+  <!--  위치  -->
+  <div class="location">
+    <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+    <a th:href="@{/system/inquire}"> / 시스템 관리</a>
+    <a th:href="@{/system/inquire}"> / 게시판 관리 </a>
+  </div>
+  <h1 class="title">게시글 목록</h1>
   <div class="sub_content">
-    <!--  위치  -->
-    <div class="location">
-      <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-      <a th:href="@{/system/inquire}"> / 시스템 관리</a>
-      <a th:href="@{/system/inquire}"> / 게시판 관리 </a>
-    </div>
     <!--  상단 메뉴  -->
     <div class="top-menu">
-      <h1 class="title">게시글 목록</h1>
       <div class="condition-box">
         <form id="search-form" action="/system/inquire" method="GET">
           <!-- 카테고리 -->
