@@ -1,6 +1,8 @@
 .location{
     display: flex;
     flex-direction: row;
+    border-bottom: 1px solid #bcbcbc;
+    padding: 10px 25px;
 }
 .location a {
     text-decoration: none;
@@ -9,17 +11,18 @@
 }
 .location p {
     display: inline;
+    margin: 0;
 }
 
 .content1 {
     display: flex;
     gap: 20px;
+    padding: 20px;
 }
 
 .left {
     background-color: #ffffffc4;
     border-radius: 20px;
-    border: 0.5px solid  #ababab;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -37,7 +40,7 @@
     padding: 40px;
     border: 1px solid #ababab;
     border-radius: 20px;
-    background-color: rgb(243 254 255 / 50%);
+    background-color: rgba(255, 255, 255, 0.5);
     width: 750px;
     height: 756px;
     display: flex;
@@ -226,7 +229,6 @@ h5 {
     min-width: 560px;
     height: auto;
     background-color: #ffffffc4;
-    border: 0.5px solid  #ababab;
     padding: 35px 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

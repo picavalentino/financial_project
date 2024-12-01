@@ -15,13 +15,13 @@
 <body>
 <div layout:fragment="content" class="content">
     <!-- content 영역 -->
+    <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a th:href="@{/management/list}"> / 직원관리</a>
+        <span> / 직원목록조회 </span>
+    </div>
+    <h1 class="title">직원목록조회</h1>
     <div class="sub-content">
-        <div class="location">
-            <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-            <a th:href="@{/management/list}"> / 직원관리</a>
-            <span> / 직원목록조회 </span>
-        </div>
-        <h1 class="title">직원목록조회</h1>
         <!-- 실제 콘텐츠가 이 부분에 들어갑니다 -->
         <div class="sub_content">
             <div class="top">

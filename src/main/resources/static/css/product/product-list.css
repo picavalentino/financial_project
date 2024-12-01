@@ -3,20 +3,14 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin: 20px auto;
+    margin: 20px 0;
     width: 100%;
     max-width: 1440px;
-/*    background-color: #F4F4F6;*/
     background-color: white;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-/*
-.bottom{
-    background-color: white;
-}
-*/
 
 /* 검색 폼 */
 #search-form {

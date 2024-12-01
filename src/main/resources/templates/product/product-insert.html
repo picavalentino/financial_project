@@ -17,14 +17,14 @@
 <!-- 우리가 작업할 공간 -->
 <body>
 <div layout:fragment="content" class="content">
-        <div class="sub_content">
-            <div class="location">
-                <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-                <a th:href="@{/product/list}"> / 상품관리</a>
-                <p> / 신규상품등록</p>
-            </div>
-            <div class="produce">
-                <h1 class="title">신규상품등록</h1>
+    <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a th:href="@{/product/list}"> / 상품관리</a>
+        <p> / 신규상품등록</p>
+    </div>
+    <h1 class="title">신규상품등록</h1>
+    <div class="sub_content">
+        <div class="produce">
                 <div class="box_wrap">
                     <form th:action="@{/product/insert/}" method="post" class="product-info" id="product-form">
                         <table class="table-product-form">
@@ -155,7 +155,7 @@
                 </div>
             </div>
             <!-- 모달 창 -->
-            <div id="staffSearchModal" class="modal" style="display: none;">
+        <div id="staffSearchModal" class="modal" style="display: none;">
                 <div class="modal-content">
                     <span class="close">&times;</span>
                     <span id="modal-title">담당자명 검색</span>
@@ -168,7 +168,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+    </div>
 </div>
 </body>
 </html>

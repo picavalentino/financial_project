@@ -9,16 +9,14 @@
 <title>GS Bank</title>
 <body>
 <div layout:fragment="content" class="content">
+    <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a th:href="@{/management/list}"> / 직원관리</a>
+        <span> / 신규직원등록 </span>
+    </div>
+
+    <h2 class="title">신규직원등록</h2>
     <div class="sub-content">
-        <div class="location">
-            <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-            <a th:href="@{/management/list}"> / 직원관리</a>
-            <span> / 신규직원등록 </span>
-        </div>
-
-        <h2 class="title">신규직원등록</h2>
-
-        <div class="sub-content">
             <div class="bottom">
                 <form id="searchForm" th:action="@{/management/insert}" method="get"
                       class="d-flex align-items-center">
@@ -103,7 +101,7 @@
 
 
         <!-- 직원 등록 모달 -->
-        <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
+    <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#insertModal"></button>
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -188,7 +186,7 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
     <script th:src="@{/js/management/managementInsert.js}"></script>
 </div>
 </body>

@@ -16,14 +16,14 @@
 <!-- 우리가 작업할 공간 -->
 <body>
 <div layout:fragment="content" class="content">
+  <div class="location">
+    <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+    <a th:href="@{/product/list}"> / 상품관리</a>
+    <p> / 상품목록조회</p>
+  </div>
+  <h1 class="title">상품목록조회</h1>
   <div class="sub_content">
-    <div class="location">
-      <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-      <a th:href="@{/product/list}"> / 상품관리</a>
-      <p> / 상품목록조회</p>
-    </div>
     <div class="top">
-      <h1 class="title">상품목록조회</h1>
       <div class="condition-box">
         <form id="searchForm" action="/product/list" method="GET">
         <div class="menu-top">

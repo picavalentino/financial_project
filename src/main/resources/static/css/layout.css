@@ -292,8 +292,33 @@ body, input::placeholder {
     width: 100%; /* 남은 공간을 차지 */
     min-height: 100vh; /* 콘텐츠 높이가 화면 높이보다 작으면 화면을 채움 */
     height: auto;
-    padding: 20px; /* 기본 여백 */
     background-color: #EFEFF1;
     overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 허용 */
     box-sizing: border-box;
+}
+
+/* location */
+.location{
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #bcbcbc;
+    padding: 10px 25px;
+}
+.location a {
+    text-decoration: none;
+    color: inherit;
+    margin-right: 5px;
+}
+.location p {
+    display: inline;
+    margin: 0;
+}
+/* title */
+.title{
+    font-size: 25px;
+    margin: 15px 25px;
+}
+
+.sub_content {
+    margin: 0 20px;
 }

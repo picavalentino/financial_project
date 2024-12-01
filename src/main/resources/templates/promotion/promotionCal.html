@@ -16,15 +16,13 @@
 </head>
 <body>
 <div layout:fragment="content" class="content print-area">
+    <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <a th:href="@{/promotion/list}"> / 프로모션관리</a>
+        <p> / 금융계산기</p>
+    </div>
+    <h1 class="title">금융계산기</h1>
     <div class="main-content">
-        <!-- 페이지 위치 & 제목 -->
-        <div class="location">
-            <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-            <a th:href="@{/promotion/list}"> / 프로모션관리</a>
-            <p> / 금융계산기</p>
-        </div>
-        <h1 class="title">금융계산기</h1>
-
         <!-- 설계 탭 -->
         <div class="tabs">
             <button class="tab active" onclick="window.location.href='/promotion/cal'">적금 설계</button>
