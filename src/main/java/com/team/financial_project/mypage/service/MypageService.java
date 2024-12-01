@@ -2,6 +2,7 @@ package com.team.financial_project.mypage.service;
 
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.main.service.S3Service;
+import com.team.financial_project.mapper.UserMapper;
 import com.team.financial_project.mypage.dto.MypageDTO;
 import com.team.financial_project.mypage.mapper.MypageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -20,10 +22,12 @@ import java.util.UUID;
 public class MypageService {
     private final MypageMapper mypageMapper;
     private final BCryptPasswordEncoder pwEncoder;
+    private final UserMapper userMapper;
 
-    public MypageService(MypageMapper mypageMapper, BCryptPasswordEncoder pwEncoder) {
+    public MypageService(MypageMapper mypageMapper, BCryptPasswordEncoder pwEncoder, UserMapper userMapper) {
         this.mypageMapper = mypageMapper;
         this.pwEncoder = pwEncoder;
+        this.userMapper = userMapper;
     }
 
 
@@ -66,5 +70,13 @@ public class MypageService {
         }
     }
 
+    public boolean certifyByUserTelno(String telno) {
+        UserDTO userDTO = userMapper.certifyByUserTelno(telno);
+        if(ObjectUtils.isEmpty(userDTO)){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
 }

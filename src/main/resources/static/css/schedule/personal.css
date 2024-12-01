@@ -1,6 +1,7 @@
 /* 전체 스타일 */
 .container1 {
 display: flex;
+justify-content: space-between;
 align-items: flex-start;
 padding: 0;
 gap: 20px;
@@ -11,6 +12,9 @@ margin: 20px;
 display: flex;
 max-width: 100%;
 flex-direction: column;
+margin: 20px auto;
+margin: 0px 0px 0px 0px;
+
 }
 
 .calendar-container {

@@ -1,5 +1,6 @@
 package com.team.financial_project.mypage.mapper;
 
+import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.mypage.dto.CustProdDTO;
 import com.team.financial_project.mypage.dto.InquireDTO;
 import com.team.financial_project.mypage.dto.MypageDTO;
@@ -20,4 +21,5 @@ public interface MypageMapper {
     int updatePassword(@Param("userId") String userId, @Param("encryptedPassword") String encryptedPassword);
 
 
+    UserDTO certifyByUserTelno(String telno);
 }
