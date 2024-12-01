@@ -72,6 +72,7 @@
 
 /* 오늘일정 카드 스타일 */
 .todo-card {
+    min-height: 251px;
     border-radius: 10px;
     border: 1px solid #ddd;
     overflow: hidden;
@@ -85,6 +86,10 @@
     background-color: #ffffff;
     border-bottom: none;
     color: #232755 !important;
+}
+
+#noToDo {
+    font-size: 18px;
 }
 
 /* 날짜 항목 스타일 */
