@@ -26,19 +26,13 @@
         <result property="custRrn" column="custRrn"/>
         <result property="custTelno" column="custTelno"/>
         <result property="custEmail" column="custEmail"/>
-        <result property="custOccpTyCd" column="custOccpTyCd"/>
-        <result property="custAddr" column="custAddr"/>
         <result property="custCreateAt" column="custCreateAt"/>
-        <result property="custUpdateAt" column="custUpdateAt"/>
         <result property="custStateCd" column="custStateCd"/>
 
         <!-- UserDTO 매핑 -->
         <association property="users" javaType="com.team.financial_project.dto.UserDTO">
             <id property="user_id" column="user_id"/>
             <result property="user_name" column="user_name"/>
-            <result property="user_telno" column="user_telno"/>
-            <result property="position_name" column="position_name"/>
-            <result property="dept_name" column="dept_name"/>
         </association>
     </resultMap>
     <!-- ================================================================================================================== -->
@@ -51,18 +45,20 @@
         cust.cust_email AS custEmail,
         cust.cust_create_at AS custCreateAt,
         statCode.code_nm AS custStateCd,
-
         usr.user_id AS user_id,
         usr.user_name AS user_name
-
         FROM tb_customer AS cust
         LEFT JOIN tb_code AS statCode
         ON cust.cust_state_cd = statCode.code_no
         AND cust.cust_state_cd_code_cl = statCode.code_cl
         LEFT JOIN tb_user AS usr
         ON usr.user_id = cust.user_id
-
         WHERE 1=1
+        <!-- 상태 조건 -->
+        <if test="status != null">
+            AND cust.cust_state_cd = #{status}
+        </if>
+        <!-- 검색 조건 -->
         <if test="searchType != null and searchType != ''">
             <choose>
                 <when test="searchType == 'name'">
@@ -73,9 +69,6 @@
                 </when>
                 <when test="searchType == 'manager'">
                     AND usr.user_name LIKE CONCAT('%', #{keyword}, '%')
-                </when>
-                <when test="searchType == 'status'">
-                    AND cust.cust_state_cd = #{keyword}
                 </when>
             </choose>
         </if>
@@ -126,10 +119,10 @@
                 <when test="searchType == 'manager'">
                     AND usr.user_name LIKE CONCAT('%', #{keyword}, '%')
                 </when>
-                <when test="searchType == 'status'">
-                    AND cust.cust_state_cd = #{keyword}
-                </when>
             </choose>
+        </if>
+        <if test="status != null and status != ''">
+            AND cust.cust_state_cd = #{status}
         </if>
     </select>
 
@@ -215,6 +208,7 @@
         (#{custId}, #{custNm}, #{custRrn}, #{custTelno}, #{custEmail}, #{custOccpTyCd}, #{custAddr},
         #{custCreateAt}, #{custUpdateAt}, #{custStateCd}, #{users.user_id})
     </insert>
+
     <!-- ============================================================================================================= -->
 
     <!-- 고객 정보 수정 -->
