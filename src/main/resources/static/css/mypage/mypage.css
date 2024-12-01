@@ -11,38 +11,36 @@
 }
 .location p {
     display: inline;
+}
+p{
     margin: 0;
 }
-
 .content1 {
     display: flex;
-    gap: 20px;
+    gap: 30px;
     padding: 20px;
 }
 
 .left {
     background-color: #ffffffc4;
     border-radius: 20px;
-    padding: 20px;
+    padding: 15px 20px 20px 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .myInfo {
-    font-size: 40px;
+    font-size: 30px;
     font-weight: 900;
     color: #010535;
     opacity: 0.7;
-    margin: 0 30px;
-
+    margin: 0 10px;
 }
 
 .mypage_right {
     align-items: left;
-    padding: 40px;
+    padding: 30px 30px 15px 30px;
     border: 1px solid #ababab;
     border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.5);
-    width: 750px;
-    height: 756px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,9 +51,7 @@
 .input_box {
     display: flex;
     margin-top: 20px;
-    width: 580px;
-    height: 450px;
-
+    gap: 40px;
 }
 #user_email{
    font-size: 16px;
@@ -119,12 +115,9 @@
 
 #myprofile_left {
     align-items: left;
-    width: 250px;
-    height: 400px;
     text-align: center;
     font-size: 18px;
     font-weight: 700;
-
 }
 
 input {
@@ -134,33 +127,23 @@ input {
     height: 40px;
     border-radius: 6px;
     border: 1px solid #ababab;
-
 }
 
 #myprofile_right {
     align-items: right;
-    margin-left: 50px;
-    width: 280px;
-    height: 400px;
     text-align: center;
     font-size: 18px;
     font-weight: 700;
 }
-
-#phone_input1 {
-    width: 50px;
-    text-align: center;
-    height: 30px;
+.phone-inputs{
+    width: 250px;
 }
-#phone_input2 {
-    width: 50px;
-    text-align: center;
-    height: 30px;
-}
+#phone_input1,
+#phone_input2,
 #phone_input3 {
     width: 50px;
     text-align: center;
-    height: 30px;
+    height: 40px;
 }
 input {
     text-align: center;
@@ -170,19 +153,19 @@ input[type="text"] {
     font-size: 19px;
     color: #ababab;
     font-weight: 400;
+    margin-bottom: 10px;
 }
 
 .input_box p {
-    margin-bottom: 15px;
     font-weight: 900;
     font-size: 20px;
 }
 
 .buttons {
-    margin-top:30px;
+    margin-top: 43px;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
 }
 
 .buttons button {
@@ -201,7 +184,7 @@ input[type="text"] {
 
 #phone_btn {
     width: 50px;
-    height: 30px;
+    height: 40px;
     border-radius: 10px;
     border: none;
     font-size: 12px;
@@ -211,10 +194,6 @@ input[type="text"] {
     font-weight: 600;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
 
-}
-
-.phone {
-    margin-top: 20px;
 }
 
 h5 {
@@ -229,7 +208,7 @@ h5 {
     min-width: 560px;
     height: auto;
     background-color: #ffffffc4;
-    padding: 35px 20px;
+    padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -255,7 +234,7 @@ h5 {
 }
 
 .myboard {
-    margin-top: 15px; /* 간격 축소 */
+    margin-top: 25px; /* 간격 축소 */
 }
 
 thead {
@@ -271,7 +250,7 @@ th, td{
     width: 20%;
 }
 tbody {
-    height: 300px;
+    height: 275px;
     overflow-y: auto;
     display: block;
 }
