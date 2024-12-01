@@ -1,11 +1,23 @@
-/* 왼쪽페이지 */
+.location{
+    display: flex;
+    flex-direction: row;
+}
+.location a {
+    text-decoration: none;
+    color: inherit;
+    margin-right: 5px;
+}
+.location p {
+    display: inline;
+}
+
 .content1 {
     display: flex;
     gap: 20px;
 }
 
 .left {
-    background-color: white;
+    background-color: #ffffffc4;
     border-radius: 20px;
     border: 0.5px solid  #ababab;
     padding: 20px;
@@ -156,11 +168,10 @@ input[type="text"] {
     font-weight: 400;
 }
 
-p {
+.input_box p {
     margin-bottom: 15px;
     font-weight: 900;
     font-size: 20px;
-
 }
 
 .buttons {
@@ -207,16 +218,13 @@ h5 {
     font-size: 13px
 }
 
-
-
-/* 왼쪽 페이지 */
 .mypage_left {
     align-items: flex-end;
     padding-top: 20px;
     border-radius: 20px;
     min-width: 560px;
     height: auto;
-    background-color: white;
+    background-color: #ffffffc4;
     border: 0.5px solid  #ababab;
     padding: 35px 20px;
 }

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
-<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>마이페이지</title>
-    <link rel="stylesheet" th:href="@{/css/mypage/mypage.css}">
-</head>
 <body>
 <div layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/mypage/mypage.css}">
+    <div class="location">
+        <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <p> / 마이 페이지</p>
+    </div>
     <div class="content1">
         <div class="left">
             <label class="myInfo">나의 정보</label>
