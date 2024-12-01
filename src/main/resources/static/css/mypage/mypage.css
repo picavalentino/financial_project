@@ -21,6 +21,7 @@
     border-radius: 20px;
     border: 0.5px solid  #ababab;
     padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .myInfo {
     font-size: 40px;
@@ -227,6 +228,7 @@ h5 {
     background-color: #ffffffc4;
     border: 0.5px solid  #ababab;
     padding: 35px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .mycustomer,
@@ -305,6 +307,7 @@ tbody::-webkit-scrollbar-thumb:hover {
     border: 1px solid #ababab;
     border-collapse: separate;
     border-spacing: 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 #mycustomer_table th,
