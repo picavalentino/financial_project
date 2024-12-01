@@ -80,9 +80,20 @@ function renderTable(data) {
     if (data && data.length > 0) {
         console.log('Populating table with data');
         data.forEach(product => {
-            const replyHtml = product.inqReply == '1'
-                ? `<div class="reply" id="rep-completed">답변완료</div>`
-                : `<div class="reply" id="rep-wait" style="cursor: pointer;" onclick="window.location.href='/inquire/detail/${product.inqId}'">답변대기</div>`;
+            const getCategoryText = (inqCategory) => {
+                switch (inqCategory) {
+                    case '1': return '공지사항';
+                    case '2': return '시스템관련문의';
+                    default: return '기타건의사항';
+                }
+            };
+            const categoryHtml = getCategoryText(product.inqCategory);
+
+            const replyHtml = product.inqCategory !== '1'
+                ? (product.inqReply === '1'
+                    ? `<div class="reply" id="rep-completed">답변완료</div>`
+                    : `<div class="reply" id="rep-wait" style="cursor: pointer;" onclick="window.location.href='/inquire/detail/${product.inqId}'">답변대기</div>`)
+                : '-';
 
             // 날짜 형식 변환 함수
             const formatDate = (dateString) => {
@@ -106,7 +117,7 @@ function renderTable(data) {
                 row.addClass('highlight-row');
             }
             row.append(`<td>${product.inqId || 'N/A'}</td>`);
-            row.append(`<td>${product.inqCategory || 'N/A'}</td>`);
+            row.append(`<td>${categoryHtml}</td>`);
             row.append(`<td>${product.inqAnonym == 1 ? '익명' : product.userId}</td>`);
             row.append(`<td>${product.inqTitle}</td>`);
             row.append(`<td>${formattedCreateAt || 'N/A'}</td>`);
