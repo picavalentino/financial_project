@@ -163,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             custAddr: form.querySelector('input[name="custAddr"]').value,
             users: {
                 user_id: form.querySelector('input[name="user_id"]').value,
+                user_name: form.querySelector('input[name="user_name"]').value,
             },
         };
     }
@@ -204,7 +205,7 @@ async function loadRevisionHistory(custId) {
 
         // 수정 내역을 textarea에 추가
         const formattedRevisions = revisions.map(rev => {
-            return `수정 일시: ${new Date(rev.custUpdateAt).toLocaleString()}\n수정 ID: ${rev.userId}\n내용: ${rev.updateDetail}\n======================================`;
+            return `\n수정 일시: ${new Date(rev.custUpdateAt).toLocaleString()}\n수정 ID: ${rev.userId}\n내용: ${rev.updateDetail}\n==========================================`;
         }).join('\n\n');
 
         document.getElementById('revisionHistory').value = formattedRevisions;
@@ -242,7 +243,15 @@ function goList() {
 }
 // =========================================================================
 // 상품설계 페이지로
-function goPromotion() {
-    // Spring Controller의 목록 페이지 URL로 이동
-    window.location.href = "/promotion/list";
-}
+      function goPromotion(button) {
+      // 버튼의 data 속성에서 ID와 고객명을 가져옴
+        const custId = button.getAttribute('data-cust-id');
+        const custNm = button.getAttribute('data-cust-nm');
+
+// URL 생성
+    const url = `/promotion/list?custId=${encodeURIComponent(custId)}&custNm=${encodeURIComponent(custNm)}`;
+
+
+         // 생성된 URL로 페이지 이동
+         window.location.href = url;
+      }
