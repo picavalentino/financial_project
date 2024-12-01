@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px; /* search-row 수직 간격 */
-    margin: 20px auto;
+    margin: 20px 0;
     width: 100%;
     max-width: 1440px;
     background-color: white;
