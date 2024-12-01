@@ -4,6 +4,7 @@ import com.team.financial_project.dto.UserDTO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
@@ -90,4 +91,12 @@ public interface UserMapper {
 
     // 고객관리페이지 : 담당자 검색
     List<UserDTO> findManagersByName(@Param("name") String name);
+
+    // 사용자 정보 조회
+    @Select("SELECT user_imgpath, user_name, user_jbps_ty_cd FROM tb_user WHERE user_id = #{userId}")
+    Map<String, String> findUserById(@Param("userId") String userId);
+
+    // 직위 이름 조회
+    @Select("SELECT code_nm FROM tb_code WHERE code_cl = #{codeCl} AND code_no = #{codeNo}")
+    String findCodeNameByCodeClAndCodeNo(@Param("codeCl") String codeCl, @Param("codeNo") String codeNo);
 }

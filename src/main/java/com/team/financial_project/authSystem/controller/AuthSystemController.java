@@ -1,10 +1,9 @@
 package com.team.financial_project.authSystem.controller;
 
-import com.team.financial_project.authSystem.dto.AuthSystemDTO;
+import com.team.financial_project.dto.AuthSystemDTO;
 import com.team.financial_project.authSystem.service.AuthSystemService;
 import com.team.financial_project.dto.UserDTO;
 import com.team.financial_project.main.service.PaginationService;
-import com.team.financial_project.management.service.ManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,6 +59,6 @@ public class AuthSystemController {
         // 검색 조건 모델에 추가
         model.addAttribute("auth", auth);
 
-        return "/authSystem/authSystem";
+        return "authSystem/authSystem";
     }
 }

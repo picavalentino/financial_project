@@ -42,12 +42,6 @@ public class MainController {
         return authentication.getName(); // username을 반환
     }
 
-    // test용
-    @GetMapping("/test")
-    public String test() {
-        return "financial/test";
-    }
-
     // main
     @GetMapping("/main")
     public String main(Model model) {
