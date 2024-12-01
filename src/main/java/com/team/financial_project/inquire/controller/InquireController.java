@@ -68,7 +68,7 @@ public class InquireController {
         model.addAttribute("currentPage", page);
         model.addAttribute("inquiries", list);
         model.addAttribute("count", totalInquires);
-        return "/inquire/inquire-list";
+        return "inquire/inquire-list";
     }
 
     //게시글 상세보기
@@ -158,7 +158,7 @@ public class InquireController {
         model.addAttribute("replyText",replyText);
         model.addAttribute("fileNames", fileNames);
         model.addAttribute("comments", comments);
-        return "/inquire/inquire-detail";
+        return "inquire/inquire-detail";
     }
 
     //게시글 상세보기 - 댓글 입력
@@ -198,7 +198,7 @@ public class InquireController {
         String userId = getAuthenticatedUserId();
         String userName = inquireService.getUserName(userId);
         model.addAttribute("userName", userName);
-        return "/inquire/inquire-insert";
+        return "inquire/inquire-insert";
     }
 
     @PostMapping("/insert")
@@ -308,10 +308,10 @@ public class InquireController {
         model.addAttribute("fileNames", fileNames);
 
         if(inquireDTO.getInqCategory().equals("공지사항")){
-            return "/system/inquire-update";
+            return "system/inquire-update";
         }
 
-        return "/inquire/inquire-update"; // 수정 페이지로 이동
+        return "inquire/inquire-update"; // 수정 페이지로 이동
     }
     @PostMapping("/detail/{inqId}/update")
     public ResponseEntity<?> updateInquire(
