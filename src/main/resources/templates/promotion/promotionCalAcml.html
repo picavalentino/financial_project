@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<!--security 적용 후 아래 코드로 변경해주세요-->
+<html xmlns:th="www.thymeleaf.org" xmlns:layout="www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}"
+      xmlns:sec="www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>GS Bank</title>
+    <!-- 전체 적용될 CSS -->
+    <th:block layout:fragment="css"></th:block>
+    <!-- 전체 적용될 스크립트 -->
+    <th:block layout:fragment="script"></th:block>
+    <!-- 페이지별 상품 설계 조회 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/promotion/button.css}">
+    <link rel="stylesheet" th:href="@{/css/promotion/common.css}">
+    <link rel="stylesheet" th:href="@{/css/promotion/promotionCal.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:src="@{/js/promotion/promotionCalAcml.js}" defer></script>
+</head>
+<body>
+<div layout:fragment="content" class="content print-area">
+    <div class="main-content">
+        <!-- 페이지 위치 & 제목 -->
+        <div class="location">
+            <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
+            <a th:href="@{/promotion/list}"> / 프로모션관리</a>
+            <p> / 금융계산기</p>
+        </div>
+        <h1 class="title">금융계산기</h1>
+
+        <!-- 설계 탭 -->
+        <div class="tabs">
+            <button class="tab inactive" onclick="window.location.href='/promotion/cal'">적금 설계</button>
+            <button class="tab active" onclick="window.location.href='/promotion/CalAcml'">목돈마련적금 설계</button>
+            <button class="tab inactive" onclick="window.location.href='/promotion/CalDpst'">예금 설계</button>
+            <button class="tab inactive" onclick="window.location.href='/promotion/CalLoan'">대출 설계</button>
+        </div>
+
+        <div class="main-form-container">
+            <!-- 고객 폼 -->
+            <div class="customer-container hidden">
+                <div class="customer-content">
+                    <div class="customer-label-group">
+                        <label for="custCreateAt">등록일자</label>
+                        <label for="custNm">고객명</label>
+                        <label for="custBirth">생년월일</label>
+                        <label for="custEmail">이메일</label>
+                        <label for="custTelno">전화번호</label>
+                        <label for="custOccp">직업</label>
+                        <label for="custAddr" class="custAddr-label">주소</label>
+                        <label for="userNm">담당자</label>
+                    </div>
+                    <div class="customer-input-group">
+                        <input type="hidden" id="custId"> <!-- 고객ID -->
+                        <input type="text" id="custCreateAt" disabled>
+                        <div class="customer-input-with-button">
+                            <input type="text" id="custNm" disabled>
+                            <button class="btn-icon" id="openCustomerModalButton"><i class="bi bi-search"></i></button>
+                        </div>
+                        <input type="text" id="custBirth" disabled>
+                        <input type="text" id="custEmail" disabled>
+                        <input type="text" id="custTelno" disabled>
+                        <input type="text" id="custOccp" disabled>
+                        <textarea id="custAddr" disabled></textarea>
+                        <input type="hidden" id="userId"> <!-- 담당자ID -->
+                        <input type="text" id="userNm" disabled>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 고객 모달 -->
+            <div class="modal" id="customerModal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">고객 선택</div>
+                        <button id="closeCustomerModalButton">X</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 검색 필드 -->
+                        <div class="modal-search-bar">
+                            <label for="custNmSearch">고객명</label>
+                            <input type="text" id="custNmSearch">
+                            <label for="custTelnoSearch">전화번호</label>
+                            <input type="text" id="custTelnoSearch">
+                            <button class="btn-search btn-search-cust">검색</button>
+                        </div>
+                        <!-- 모달 테이블 -->
+                        <div class="modal-table-container">
+                            <table class="modal-table cust-tb">
+                                <thead>
+                                <tr>
+                                    <th>고객명</th>
+                                    <th>생년월일</th>
+                                    <th>전화번호</th>
+                                    <th>담당자</th>
+                                </tr>
+                                </thead>
+                                <tbody id="customerList">
+                                <tr>
+                                    <td>김고객</td>
+                                    <td>99-05-01</td>
+                                    <td>010-1234-5678</td>
+                                    <td>김담당</td>
+                                </tr>
+                                <tr>
+                                    <td>이고객</td>
+                                    <td>88-12-21</td>
+                                    <td>010-1111-1234</td>
+                                    <td>김담당</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 설계 폼 -->
+            <div class="form-container">
+                <div class="form-content">
+                    <div class="label-group">
+                        <label for="dsgnSn">설계번호</label>
+                        <label for="prodCd">상품선택</label>
+                        <label for="prodPayTyCd">납입주기</label>
+                        <label for="savgStrtDt">시작일자</label>
+                        <label for="savgCircleAmt">불입금액 (원)</label>
+                        <label for="savgGoalPrd">목표기간 (개월)</label>
+                        <label for="savgAplyRate">적용금리 (%)</label>
+                        <label for="savgIntTaxTyCd">이자과세</label>
+                        <label for="dsgnCreateAt">설계일자</label>
+                        <label for="dsgnUpdateAt">작성일자</label>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-content">
+                            <!-- 설계번호 -->
+                            <input type="text" id="dsgnSn" name="dsgnSn" disabled>
+
+                            <!-- 상품선택 -->
+                            <div class="input-with-button">
+                                <!-- 상품설계번호 -->
+                                <input type="hidden" id="prodSn" name="prodSn">
+                                <!-- 설계유형코드 -->
+                                <input type="hidden" id="prodDsTyCd" name="prodDsTyCd">
+                                <!-- 상품코드 -->
+                                <input type="text" id="prodCd" name="prodCd" disabled>
+                                <!-- 상품명 -->
+                                <input type="text" id="prodNm" name="prodNm" readonly>
+                                <button><i class="bi bi-search" id="openProductModalButton"></i></button>
+                            </div>
+
+                            <!-- 납입주기 -->
+                            <!-- 표시용 -->
+                            <input type="text" id="prodPayTy" name="prodPayTy" disabled>
+                            <!-- 저장용 -->
+                            <input type="hidden" id="prodPayTyCd" name="prodPayTyCd">
+
+                            <!-- 시작일자 -->
+<!--                            <input type="date" id="savgStrtDt" name="savgStrtDt">-->
+                            <div class="input-with-button">
+                                <!-- 시작일자 -->
+                                <input type="date" id="savgStrtDt" name="savgStrtDt">
+                                <!-- 만기일자 -->
+                                <label for="savgMtrDt">만기일자</label>
+                                <input type="text" id="savgMtrDt" name="savgMtrDt" disabled>
+                            </div>
+
+                            <!-- 불입금액 -->
+                            <div class="button-row">
+                                <input type="text" id="savgCircleAmt" name="savgCircleAmt" value="0">
+                                <div class="button-group">
+                                    <button class="button-plus button-plus-amt">+ 100만원</button>
+                                    <button class="button-plus button-plus-amt">+ 500만원</button>
+                                    <button class="button-plus button-plus-amt">+ 1000만원</button>
+                                    <button class="button-reset button-reset-amt">정정</button>
+                                </div>
+                            </div>
+
+                            <!-- 목표기간 -->
+                            <div class="button-row">
+                                <input type="text" id="savgGoalPrd" name="savgGoalPrd" value="0">
+                                <div class="button-group">
+                                    <button class="button-plus button-plus-prd">+ 6개월</button>
+                                    <button class="button-plus button-plus-prd">+ 12개월</button>
+                                    <button class="button-plus button-plus-prd">+ 36개월</button>
+                                    <button class="button-reset button-reset-prd">정정</button>
+                                </div>
+                            </div>
+
+                            <!-- 적용금리 -->
+                            <div class="input-rate">
+                                <select id="selectSavgAplyRate" name="selectSavgAplyRate">
+                                    <option>금리선택</option>
+                                    <option value="prodairmin">최소금리</option>
+                                    <option value="prodairmax">최대금리</option>
+                                </select>
+                                <input type="text" id="savgAplyRate" name="savgAplyRate" disabled>
+                            </div>
+
+                            <!-- 이자과세 -->
+                            <!-- 표시용 -->
+                            <input type="text" id="prodIntTaxTy" name="prodIntTaxTy" disabled>
+                            <!-- 계산용 -->
+                            <input type="hidden" id="prodIntTaxRate" name="prodIntTaxRate">
+                            <!-- 저장용 -->
+                            <input type="hidden" id="savgIntTaxTyCd" name="savgIntTaxTyCd">
+
+                            <!-- 설계일자 -->
+                            <input type="date" id="dsgnCreateAt" name="dsgnCreateAt" disabled>
+
+                            <!-- 수정일자 -->
+                            <input type="date" id="dsgnUpdateAt" name="dsgnUpdateAt" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상품 모달 -->
+        <div class="modal" id="productModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">상품 선택</div>
+                    <button id="closeProductModalButton">X</button>
+                </div>
+                <div class="modal-body">
+                    <!-- 검색 필드 -->
+                    <div class="modal-search-bar">
+                        <label for="prodCdSearch">상품코드</label>
+                        <input type="text" id="prodCdSearch">
+                        <label for="prodNmSearch">상품명</label>
+                        <input type="text" id="prodNmSearch">
+                        <button class="btn-search btn-search-prod">검색</button>
+                    </div>
+                    <!-- 모달 테이블 -->
+                    <div class="modal-table-container">
+                        <table class="modal-table prod-tb">
+                            <thead>
+                            <tr>
+                                <th>상품코드</th>
+                                <th>상품명</th>
+                                <th>가입대상</th>
+                            </tr>
+                            </thead>
+                            <tbody id="productList">
+                            <tr>
+                                <td>A1000</td>
+                                <td>GS사랑행복적금</td>
+                                <td>일반 개인</td>
+                            </tr>
+                            <tr>
+                                <td>B2000</td>
+                                <td>GS청년희망예금</td>
+                                <td>일반 개인</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 컨트롤 컨테이너-->
+        <div class="control-container">
+            <!-- 설계 유형 선택 -->
+            <div class="radio-group">
+                <label><input type="radio" name="calculationType" value="detailed"> 정상설계</label>
+                <label><input type="radio" name="calculationType" value="simple" checked> 간편설계</label>
+            </div>
+
+            <!-- 우측 버튼 그룹 -->
+            <div class="button-group-right">
+                <button class="btn-int-cal">이자계산</button>
+                <select id="dsgnPrgStcd" name="dsgnPrgStcd">
+                    <option value="">진행상태</option>
+                    <option th:each="status : ${progressStatusList}"
+                            th:value="${status.codNo}"
+                            th:text="${status.codNm}"></option>
+                </select>
+                <button class="btn btn-register">
+                    <i class="icon bi bi-plus-circle-fill"></i> 저장
+                </button>
+<!--                <button class="btn btn-mail">-->
+<!--                    <i class="icon bi bi-printer"></i> 발송-->
+<!--                </button>-->
+                <button class="btn btn-print">
+                    <i class="icon bi bi-envelope"></i> 인쇄
+                </button>
+                <button class="btn btn-list" onclick="location.href='/promotion/list'">
+                    <i class="icon bi bi-list"></i> 목록
+                </button>
+            </div>
+        </div>
+
+        <!--  계산 결과 컨테이너 -->
+        <div class="calculation-container">
+            <!-- 왼쪽 섹션 -->
+            <div class="left-section">
+                <div class="cal-tab calculation-result-tab">계산 결과</div>
+                <div class="calculation-summary">
+                    <!-- 계산 결과 간단히 보여주는 입력 필드 -->
+                    <div class="result-row">
+                        <label>불입금액합계</label>
+                        <input type="text" id="savgTotDpstAmt" name="savgTotDpstAmt" readonly>
+                    </div>
+                    <div class="result-row">
+                        <label>세전이자</label>
+                        <input type="text" id="savgTotDpstInt" name="savgTotDpstInt" readonly>
+                    </div>
+                    <div class="result-row">
+                        <label>세전수령액</label>
+                        <input type="text" id="savgTotRcveAmt" name="savgTotRcveAmt" readonly>
+                    </div>
+                    <div class="result-row">
+                        <label>이자과세금</label>
+                        <input type="text" id="savgIntTaxAmt" name="savgIntTaxAmt" readonly>
+                    </div>
+                    <div class="result-row">
+                        <label>세후수령액</label>
+                        <input type="text" id="savgAtxRcveAmt" name="savgAtxRcveAmt" readonly>
+                    </div>
+                </div>
+                <div class="cal-tab calculation-chart-tab">계산 차트</div>
+                <div class="chart-container">
+                    <!-- 차트 출력 -->
+                    <canvas id="resultChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 오른쪽 섹션 -->
+            <div class="right-section">
+                <div class="non-display">계산 테이블</div>
+                <div class="interest-details">
+                    <div class="right-section-table-container">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>회차</th>
+                                <th>회차불입금액</th>
+                                <th>누적불입금액</th>
+                                <th>회차이자</th>
+                                <th>회차원리금</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 회차별 상세 정보 데이터 반복 -->
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <!-- ... -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
