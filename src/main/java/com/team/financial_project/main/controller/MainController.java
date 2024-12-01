@@ -54,8 +54,19 @@ public class MainController {
 
         //오늘 할 일
         List<Map<String, Object>> todayTasks = mainService.getTodayTasks(userId); // 오늘의 할 일 가져오기
-        log.info("오늘할일:"+todayTasks.toString());
-        model.addAttribute("todayTasks", todayTasks);
+        System.out.println("=========================================="+todayTasks);
+        // 빈 리스트 처리
+        if (todayTasks.isEmpty()) {
+            model.addAttribute("todayTasks", null); // 리스트는 null로 설정
+            model.addAttribute("noTasksMessage", "금일 등록된 일정이 없습니다."); // 메시지 전달
+        } else {
+            model.addAttribute("todayTasks", todayTasks); // 리스트에 데이터가 있는 경우
+            model.addAttribute("noTasksMessage", null); // 메시지를 비우기
+        }
+
+//        System.out.println("===========================================" + todayTasks);
+//        log.info("오늘할일:"+todayTasks.toString());
+//        model.addAttribute("todayTasks", todayTasks);
 
         // 경제 뉴스 데이터 가져오기
         //네이버 경제 뉴스 카테고리 페이지
