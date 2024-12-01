@@ -82,6 +82,7 @@
     flex-direction: row;
     flex: 3;
     max-width: 954px;
+    gap: 10px;
 }
 
 #condition-period select {
