@@ -29,10 +29,19 @@
         <div class="search-controls-area">
             <!-- 첫 번째 줄 -->
             <div class="search-row">
+
+                <!--    <div class="search-item">
+                        <label for="custNm">고객명</label>
+                        <input type="text" id="custNm" onkeydown="checkEnterKey(event)" name="custNm">
+                    </div>-->
+
                 <div class="search-item">
                     <label for="custNm">고객명</label>
-                    <input type="text" id="custNm" onkeydown="checkEnterKey(event)" name="custNm">
+                    <input type="text" id="custNm" name="custNm"
+                           th:value="${custNm}"
+                           onkeydown="checkEnterKey(event)">
                 </div>
+
                 <div class="search-item">
                     <label for="userNm">담당자</label>
                     <input type="text" id="userNm" onkeydown="checkEnterKey(event)" name="userNm">
@@ -161,7 +170,9 @@
                 <div class="pagination">
                     <!-- 이전 버튼 -->
                     <button class="pagination-prev pagination-button" th:if="${currentPage > 1}"
-                            th:onclick="'location.href=\'' + @{/promotion/list(page=${currentPage - 1}, size=${10})} + '\''">&lt;</button>
+                            th:onclick="'location.href=\'' + @{/promotion/list(page=${currentPage - 1}, size=${10})} + '\''">
+                        &lt;
+                    </button>
                     <button class="pagination-prev pagination-button" th:if="${currentPage == 1}" disabled>&lt;</button>
 
                     <!-- 페이지 번호 -->
@@ -172,8 +183,12 @@
 
                     <!-- 다음 버튼 -->
                     <button class="pagination-next pagination-button" th:if="${currentPage < totalPages}"
-                            th:onclick="'location.href=\'' + @{/promotion/list(page=${currentPage + 1}, size=${10})} + '\''">&gt;</button>
-                    <button class="pagination-next pagination-button" th:if="${currentPage == totalPages}" disabled>&gt;</button>
+                            th:onclick="'location.href=\'' + @{/promotion/list(page=${currentPage + 1}, size=${10})} + '\''">
+                        &gt;
+                    </button>
+                    <button class="pagination-next pagination-button" th:if="${currentPage == totalPages}" disabled>
+                        &gt;
+                    </button>
                 </div>
                 <span class="pagination-info"
                       th:text="'Page ' + ${currentPage} + ' of ' + ${totalPages}"></span>

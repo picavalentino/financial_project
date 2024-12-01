@@ -242,7 +242,13 @@ function goList() {
 }
 // =========================================================================
 // 상품설계 페이지로
-function goPromotion() {
-    // Spring Controller의 목록 페이지 URL로 이동
-    window.location.href = "/promotion/list";
-}
+      function goPromotion(button) {
+      // 버튼의 data-cust-nm 속성에서 고객명을 가져옴
+         const custNm = button.getAttribute('data-cust-nm');
+
+         // URL 생성
+         const url = `/promotion/list?custNm=${encodeURIComponent(custNm)}`;
+
+         // 생성된 URL로 페이지 이동
+         window.location.href = url;
+      }
