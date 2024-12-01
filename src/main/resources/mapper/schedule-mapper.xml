@@ -62,7 +62,7 @@
     </update>
     <delete id="deleteSchedule" parameterType="int">
         DELETE FROM tb_calendar
-        WHERE calendar_sn = #{calendarSn}
+        WHERE calendar_sn = #{task_checked_val}
     </delete>
 
 </mapper>

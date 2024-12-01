@@ -86,9 +86,11 @@
             </div>
         </div>
     </div>
-    <div class="schedule_detail" style="display:none;">
+
+
+    <div class="schedule_detail" style="display: none;">
         <div class="scheduler-container">
-            <h1>일정 상세</h1>
+            <h1>상담 일정 등록</h1>
             <div class="date-display">
                 <button id="prev-day">&lt;</button>
                 <span id="current-date"></span>
@@ -101,9 +103,7 @@
                     <input type="text" class="task-title" placeholder="Enter title...">
                     <input type="text" class="location-input" placeholder="Enter location...">
                     <div class="checkboxes">
-                        <label><input type="checkbox" class="select-checkbox" id="team-team"> 팀</label>
-                        <label><input type="checkbox" class="select-checkbox" id="team-personal"> 개인</label>
-                        <label><input type="checkbox" id="event-allday"> 종일</label>
+                        <label><input type="checkbox" class="select-checkbox" id="customer" checked> 고객</label>
                     </div>
                 </div>
                 <div class="details">
@@ -113,6 +113,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- JavaScript -->
     <script th:inline="javascript">
@@ -266,6 +267,48 @@
             <span class="event-text">${event.name} 고객님</span>
         </div>
     `);
+$(document).on('click', '.task_etc', function (event) {
+    event.stopPropagation();
+
+    // 클릭한 Task 정보 가져오기
+    const $taskContainer = $(this).closest('.today-tasks');
+    const calendarSn = $taskContainer.data('calendar-sn'); // 먼저 calendarSn을 가져옴
+
+    if (!calendarSn) {
+        console.error('Calendar SN is missing!');
+        alert('이 일정의 정보를 찾을 수 없습니다.');
+        return;
+    }
+
+    // 모달에 calendar-sn 값 설정
+    $('.event-card').attr('data-calendar-sn', calendarSn);
+
+    const taskDetails = {
+        title: $taskContainer.find('#task_text p').text(),
+        time: $taskContainer.data('date'), // 시작 시간 표시
+        detail: $taskContainer.data('detail') || '세부 내용 없음', // dsgn_ds_ty_cd 데이터
+    };
+
+    // 모달에 Task 정보 채우기
+    const $eventCard = $('.event-card');
+    $eventCard.find('.event-title').text(taskDetails.title || '제목 없음');
+    $eventCard.find('.event-time').text(taskDetails.time || '시간 정보 없음');
+    $eventCard.find('.event-memo').text(taskDetails.detail);
+
+    // 모달 표시
+    $eventCard.css({
+        display: 'block',
+        position: 'absolute',
+        top: `${event.pageY + 10}px`,
+        left: `${event.pageX -280}px`,
+        zIndex: 1000,
+    }).fadeIn();
+});
+
+// 모달 닫기 버튼 이벤트
+$(document).on('click', '.close-event', function () {
+    $('.event-card').fadeOut();
+});
 
     $(this).append($eventElement);
                     });
@@ -362,48 +405,58 @@ console.log("dsgnDsTyCd 값:", dsgnDsTyCd);
             generateCalendar();
         });
 
+
 $(document).ready(function () {
     const customerScheduleList = /*[[${customerScheduleList}]]*/ []; // 서버에서 받은 일정 데이터
     const user_id = /*[[${user_id}]]*/ ''; // 현재 로그인된 사용자 ID
     let currentDate = new Date(); // 현재 날짜 객체
 
-    // 날짜 형식 포맷 함수 (요일 포함)
-    function formatDateWithDay(date) {
+    // 날짜 형식 포맷 함수 (YYYY-MM-DD)
+    function formatDate(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토']; // 요일 배열
-        const dayOfWeek = daysOfWeek[date.getDay()]; // 요일 가져오기
-        return `${month}월${day}일 (${dayOfWeek})`;
+        return `${year}-${month}-${day}`;
     }
 
-    // 문자열 날짜를 JavaScript Date 객체로 변환
-    function parseDate(dateString) {
-        return new Date(dateString.replace(' ', 'T')); // '2024-11-30 00:00' -> '2024-11-30T00:00'
+    // 날짜 형식 포맷 함수 (월, 일, 요일)
+    function formatDateWithDay(date) {
+        const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+        const dayOfWeek = daysOfWeek[date.getDay()];
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${month}월 ${day}일 (${dayOfWeek})`;
     }
 
-    // 오늘 상담 일정 렌더링 함수
-    function renderTodayTasks(scheduleList) {
-    const todayFormatted = formatDateWithDay(currentDate); // 현재 날짜 포맷
+    // 오늘 날짜 출력 함수 (today-date: 월, 일, 요일 형식)
+    function updateTodayDateDisplay() {
+        const formattedDate = formatDateWithDay(currentDate);
+        $('#today-date').text(formattedDate); // today-date에 출력
+    }
+
+    // 현재 날짜 출력 함수 (current-date: YYYY-MM-DD 형식)
+    function updateCurrentDateDisplay() {
+        const formattedDate = formatDate(currentDate);
+        $('#current-date').text(formattedDate); // current-date에 출력
+        $('#current-date').data('current-date', formattedDate); // 데이터 속성도 업데이트
+    }
+
+    // 상담 일정 렌더링 함수
+function renderTodayTasks(scheduleList) {
+    const todayFormatted = formatDate(currentDate); // 현재 날짜를 YYYY-MM-DD 형식으로 변환
     const $todayTaskContainer = $('.today_task .today-cls-list');
     $todayTaskContainer.empty(); // 기존 내용 초기화
 
-    console.log("Current Date (Formatted):", todayFormatted);
-    console.log("Customer Schedule List:", scheduleList);
-
-    // 오늘의 상담 일정 필터링
     const todayEvents = scheduleList.filter(event => {
-        const eventDate = formatDateWithDay(parseDate(event.calendar_event_bgn_date)); // 날짜 비교
+        const eventDate = event.calendar_event_bgn_date.split(' ')[0]; // YYYY-MM-DD 형식으로 변환
         return (
-            eventDate === todayFormatted && // 날짜가 오늘인지 확인
-            event.user_id === user_id &&   // user_id가 일치하는지 확인
+            eventDate === todayFormatted && // 날짜 비교
+            event.user_id === user_id &&   // 현재 사용자 ID와 일치하는 일정
             event.calendar_type === '3'   // calendar_type이 '3'인지 확인
         );
     });
 
-    console.log("Filtered Events:", todayEvents);
-
-    // 일정이 없는 경우
+    // 일정이 없는 경우 처리
     if (todayEvents.length === 0) {
         $todayTaskContainer.append('<p>오늘 상담 일정이 없습니다.</p>');
         return;
@@ -411,14 +464,17 @@ $(document).ready(function () {
 
     // 일정 렌더링
     todayEvents.forEach(event => {
-        // UTC 시간 데이터를 로컬 시간대로 변환
-        const localDate = new Date(event.calendar_event_bgn_date); // 서버에서 가져온 UTC 시간
-        localDate.setHours(localDate.getHours() + 9); // UTC -> KST (9시간 추가)
+        const time = event.calendar_event_bgn_date.split(' ')[1].slice(0, 5); // HH:mm 형식 추출
+        const isChecked = event.task_checked_val ? 'checked' : ''; // task_checked_val에 따라 체크박스 상태 결정
+        const backgroundColor = event.task_checked_val ? '#ababab' : '#f8f9fa'; // 체크 여부에 따라 배경색 설정
 
-        const time = localDate.toTimeString().substring(0, 5); // HH:mm 포맷
-
-        const $taskElement = $(`
-            <div class="today-tasks" data-calendar-sn="${event.calendar_sn}">
+        const $taskElement = `
+            <div class="today-tasks"
+                data-calendar-sn="${event.calendar_sn}"
+                data-date="${event.calendar_event_bgn_date || ''}"
+                data-location="${event.calendar_event_location || ''}"
+                data-detail="${event.calendar_event_detail || ''}"
+                style="background-color: ${backgroundColor};"> <!-- 배경색 적용 -->
                 <label><strong>&middot; ${time}</strong></label>
                 <button class="delete-task">
                     <img id="delete" src="/css/schedule/img/delete.png" alt="Delete">
@@ -426,71 +482,240 @@ $(document).ready(function () {
                 <button class="task_etc">
                     <img id="task_etc_btn" src="/css/schedule/img/memo.png" alt="memo">
                 </button>
-
                 <div id="task_text">
                     <p>${event.calendar_event_title || '제목 없음'}</p>
+                    <input type="checkbox" ${isChecked}> <!-- 체크박스 상태 반영 -->
                 </div>
             </div>
-        `);
+        `;
         $todayTaskContainer.append($taskElement);
     });
 }
 
+    // 상담 일정 삭제
+    $(document).on('click', '.delete-task', function (event) {
+        event.stopPropagation();
+        const $taskContainer = $(this).closest('.today-tasks');
+        const calendarSn = $taskContainer.data('calendar-sn');
 
-    // 모달창 열기 함수
-    function openModal(eventData) {
-        // 모달창 데이터 삽입
-        $('.schedule_detail #current-date').text(formatDateWithDay(parseDate(eventData.calendar_event_bgn_date)));
-        $('.schedule_detail .task-title').val(eventData.calendar_event_title || '');
-        $('.schedule_detail .location-input').val(eventData.calendar_event_location || '');
-        $('.schedule_detail .details-input').val(eventData.calendar_event_detail || '');
+        if (!calendarSn) {
+            console.error('Calendar SN is missing!');
+            return;
+        }
 
-        // 모달창 표시
-        $('.schedule_detail').fadeIn();
+        if (!confirm('정말로 이 일정을 삭제하시겠습니까?')) return;
+
+        $.ajax({
+            type: 'POST',
+            url: '/schedule/personal/delete-task',
+            contentType: 'application/json',
+            data: JSON.stringify({ calendar_sn: calendarSn }),
+            beforeSend: function (xhr) {
+                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function () {
+                $taskContainer.fadeOut(300, function () {
+                    $(this).remove();
+                });
+                console.log('Task deleted successfully.');
+            },
+            error: function (xhr) {
+                console.error('Failed to delete task:', xhr.responseText);
+                alert('일정 삭제에 실패했습니다.');
+            }
+        });
+    });
+
+    // 체크박스 상태 변경 이벤트
+    $(document).on('change', '.today-tasks input[type="checkbox"]', function () {
+        const $taskContainer = $(this).closest('.today-tasks');
+        const calendarSn = $taskContainer.data('calendar-sn');
+        const isChecked = $(this).is(':checked');
+
+        $taskContainer.css('background-color', isChecked ? '#ababab' : '#f8f9fa');
+
+        $.ajax({
+            type: 'POST',
+            url: '/schedule/customer/update-checkbox',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                calendar_sn: calendarSn,
+                task_checked_val: isChecked
+            }),
+            beforeSend: function (xhr) {
+                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function () {
+                console.log('Checkbox state updated successfully:', calendarSn, 'Checked:', isChecked);
+            },
+            error: function (xhr) {
+                console.error('Failed to update checkbox state:', xhr.responseText);
+                alert('상태 업데이트에 실패했습니다.');
+            }
+        });
+    });
+$(document).on('click', '.delete-btn', function (event) {
+    event.stopPropagation(); // 이벤트 전파 방지
+
+    // 모달에서 삭제할 데이터 식별자(calendar-sn) 가져오기
+    const $eventModal = $('.event-card:visible'); // 현재 보이는 모달만 선택
+    const calendarSn = $eventModal.attr('data-calendar-sn'); // data 속성에서 calendar-sn 추출
+
+    if (!calendarSn) {
+        console.error('Calendar SN is missing!');
+        alert('삭제할 일정을 찾을 수 없습니다.');
+        return;
     }
 
-    // 모달창 닫기 이벤트
-    $('.schedule_detail .close').on('click', function () {
+    // 삭제 확인
+    if (!confirm('정말로 이 일정을 삭제하시겠습니까?')) return;
+
+    // AJAX 요청으로 일정 삭제
+    $.ajax({
+        type: 'POST',
+        url: '/schedule/personal/delete-task', // 삭제 API 엔드포인트
+        contentType: 'application/json',
+        data: JSON.stringify({ calendar_sn: calendarSn }), // calendar_sn 데이터를 JSON으로 전달
+        beforeSend: function (xhr) {
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content'); // CSRF 헤더 이름
+            const csrfToken = $('meta[name="_csrf"]').attr('content'); // CSRF 토큰 값
+            xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 헤더 설정
+        },
+        success: function () {
+            // 모달 닫기 및 해당 일정 제거
+            $eventModal.fadeOut();
+            $(`.today-tasks[data-calendar-sn="${calendarSn}"]`).remove();
+            console.log('Event deleted successfully.');
+        },
+        error: function (xhr) {
+            console.error('Failed to delete event:', xhr.responseText);
+            alert('일정 삭제에 실패했습니다.');
+        }
+    });
+});
+
+    // 일정 등록 모달 열기
+    $(document).on('click', '.task_add', function (event) {
+        event.stopPropagation();
+        const clickX = event.pageX;
+        const clickY = event.pageY;
+
+        $('.schedule_detail').css({
+            display: 'block',
+            position: 'absolute',
+            top: `${clickY + 10}px`,
+            left: `${clickX + 30}px`,
+            transform: 'translateX(-90%)',
+            zIndex: 1000
+        }).fadeIn();
+
+        updateCurrentDateDisplay(); // 현재 날짜 업데이트
+    });
+
+    // 일정 등록 모달 닫기
+    $(document).on('click', '.close', function () {
         $('.schedule_detail').fadeOut();
     });
 
-    // 오늘의 상담 일정에서 task_add 버튼 클릭 이벤트
-    $('.today_task').on('click', '.task_add', function (e) {
-        e.stopPropagation(); // 부모 요소의 클릭 이벤트 방지
-        const $task = $(this).closest('.today-tasks'); // 현재 클릭한 버튼의 부모 요소
-        const calendarSn = $task.data('calendar-sn'); // calendar_sn 값 가져오기
-        const eventData = customerScheduleList.find(event => event.calendar_sn === calendarSn);
+    // 일정 등록
+    $(document).on('click', '#submit_btn', function () {
+        const modalDate = $('#current-date').text();
+        const selectedTime = $('#time-select').val();
 
-        if (eventData) {
-            openModal(eventData); // 선택된 일정 데이터를 기반으로 모달창 열기
-        } else {
-            console.error('일치하는 데이터를 찾을 수 없습니다.', calendarSn);
+        if (!modalDate || !selectedTime) {
+            alert('날짜와 시간을 선택하세요.');
+            return;
         }
+
+        const combinedDateTime = `${modalDate} ${selectedTime}:00`;
+        const eventTitle = $('.task-title').val();
+        const eventLocation = $('.location-input').val();
+        const eventDetail = $('.details-input').val();
+
+        if (!eventTitle) {
+            alert('제목을 입력해주세요.');
+            return;
+        }
+
+        const now = new Date();
+        now.setHours(now.getHours() - 9);
+
+        const createdAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+        $.ajax({
+            type: 'POST',
+            url: '/schedule/customer/register',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                user_id: user_id,
+                calendar_event_bgn_date: combinedDateTime,
+                calendar_create_at: createdAt,
+                calendar_event_title: eventTitle,
+                calendar_event_location: eventLocation,
+                calendar_event_detail: eventDetail,
+                calendar_type: '3'
+            }),
+            beforeSend: function (xhr) {
+                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function () {
+                alert('일정이 성공적으로 저장되었습니다.');
+                location.reload();
+            },
+            error: function (xhr) {
+                console.error('일정 저장 실패:', xhr.responseText);
+                alert('일정 저장에 실패했습니다.');
+            }
+        });
     });
 
-    // 날짜 업데이트 함수
-    function updateTodayDate() {
-        $('#today-date').text(formatDateWithDay(currentDate)); // 날짜와 요일을 함께 출력
+    // 이전/다음 버튼 이벤트 (모달 날짜 변경)
+    $(document).on('click', '#prev-day', function () {
+        currentDate.setDate(currentDate.getDate() - 1);
+        updateCurrentDateDisplay(); // 모달의 현재 날짜 업데이트
+    });
+
+    $(document).on('click', '#next-day', function () {
+        currentDate.setDate(currentDate.getDate() + 1);
+        updateCurrentDateDisplay(); // 모달의 현재 날짜 업데이트
+    });
+
+    // 메인 화면의 이전/다음 버튼 (today-date 및 일정 변경)
+    $(document).on('click', '#prev-day-btn', function () {
+        currentDate.setDate(currentDate.getDate() - 1); // 현재 날짜를 하루 전으로 변경
+        updateTodayDateDisplay(); // today-date 업데이트
+        renderTodayTasks(customerScheduleList); // 상담 일정 렌더링
+    });
+
+    $(document).on('click', '#next-day-btn', function () {
+        currentDate.setDate(currentDate.getDate() + 1); // 현재 날짜를 하루 후로 변경
+        updateTodayDateDisplay(); // today-date 업데이트
+        renderTodayTasks(customerScheduleList); // 상담 일정 렌더링
+    });
+
+    // 시간 선택 초기화
+    function initializeTimeSelect() {
+        const $timeSelect = $('#time-select');
+        for (let i = 0; i < 48; i++) {
+            const hour = String(Math.floor(i / 2)).padStart(2, '0');
+            const minute = i % 2 === 0 ? '00' : '30';
+            $timeSelect.append(`<option value="${hour}:${minute}">${hour}:${minute}</option>`);
+        }
     }
 
-    // 이전 날짜 버튼 클릭 이벤트
-    $('#prev-day-btn').on('click', function () {
-        currentDate.setDate(currentDate.getDate() - 1); // 날짜 감소
-        updateTodayDate();
-        renderTodayTasks(customerScheduleList); // 업데이트된 날짜 기준으로 일정 렌더링
-    });
-
-    // 다음 날짜 버튼 클릭 이벤트
-    $('#next-day-btn').on('click', function () {
-        currentDate.setDate(currentDate.getDate() + 1); // 날짜 증가
-        updateTodayDate();
-        renderTodayTasks(customerScheduleList); // 업데이트된 날짜 기준으로 일정 렌더링
-    });
-
-    // 초기화 작업
-    updateTodayDate(); // 초기 날짜 표시
-    renderTodayTasks(customerScheduleList); // 초기 일정 렌더링
+    initializeTimeSelect();
+    updateTodayDateDisplay();
+    updateCurrentDateDisplay();
+    renderTodayTasks(customerScheduleList);
 });
+
+
     </script>
 
 </div>

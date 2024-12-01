@@ -107,6 +107,8 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete task: " + e.getMessage());
         }
     }
+
+
     @GetMapping("/schedule/customer")
     public String scheduleCustomer(Model model) {
         String user_id = getAuthenticatedUserId();
@@ -129,10 +131,51 @@ public class ScheduleController {
         return "schedule/customer";
     }
 
+    @PostMapping("schedule/customer/register")
+    public ResponseEntity<String> registerSchedule(@RequestBody CustomerScheduleDTO scheduleDTO) {
+        try {
+            // 데이터 저장 호출
+            customerScheduleService.saveSchedule(scheduleDTO);
+            return ResponseEntity.ok("Schedule saved successfully.");
+        } catch (Exception e) {
+            // 예외 처리 및 로깅
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save schedule.");
+        }
+    }
 
+    @PostMapping("schedule/customer/delete-task")
+    public ResponseEntity<String> customerDeleteTask(@RequestBody Map<String, Long> request) {
+        Long calendarSn = request.get("calendar_sn");
 
+        if (calendarSn == null) {
+            return ResponseEntity.badRequest().body("Invalid request: calendar_sn is missing");
+        }
 
+        try {
+            customerScheduleService.deleteTask(calendarSn);
+            return ResponseEntity.ok("Task deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete task");
+        }
+    }
+    @PostMapping("schedule/customer/update-checkbox")
+    public ResponseEntity<String> updateCheckboxState(@RequestBody CustomerScheduleDTO request) {
+        try {
+            Long calendarSn = Long.valueOf(request.getCalendar_sn());
+            Boolean taskCheckedVal = request.isTask_checked_val();
 
+            System.out.println("Received calendarSn: " + calendarSn);
+            System.out.println("Received taskCheckedVal: " + taskCheckedVal);
+
+            customerScheduleService.updateCheckboxState(calendarSn, taskCheckedVal);
+
+            return ResponseEntity.ok("Checkbox state updated successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update checkbox state");
+        }
+    }
 
 
 
