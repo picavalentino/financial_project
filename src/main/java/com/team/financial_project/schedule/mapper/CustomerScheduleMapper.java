@@ -16,6 +16,12 @@ public interface CustomerScheduleMapper {
 
     // 만기일 정보 조회
     List<CustomerMtrDtDTO> findCustomerMaturityDates(@Param("userId") String userId);
+
+    void insertSchedule(CustomerScheduleDTO scheduleDTO);
+
+    void deleteTask(Long calendarSn);
+    void updateCheckboxState(@Param("calendarSn") Long calendarSn, @Param("taskCheckedVal") Boolean taskCheckedVal);
 }
+
 
 

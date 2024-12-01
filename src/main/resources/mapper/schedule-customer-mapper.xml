@@ -95,4 +95,32 @@
 
 
     </select>
-    </mapper>
+    <insert id="insertSchedule" parameterType="com.team.financial_project.schedule.dto.CustomerScheduleDTO">
+        INSERT INTO tb_calendar (
+        user_id,
+        calendar_event_bgn_date,
+        calendar_create_at,
+        calendar_event_title,
+        calendar_event_location,
+        calendar_event_detail,
+        calendar_type
+        ) VALUES (
+        #{user_id},
+        #{calendar_event_bgn_date},
+        #{calendar_create_at},
+        #{calendar_event_title},
+        #{calendar_event_location},
+        #{calendar_event_detail},
+        '3' <!-- 무조건 "3"으로 저장 -->
+        )
+    </insert>
+    <delete id="deleteTask" parameterType="int">
+        DELETE FROM tb_calendar
+        WHERE calendar_sn = #{calendarSn}
+    </delete>
+    <update id="updateCheckboxState" parameterType="map">
+        UPDATE tb_calendar
+        SET task_checked_val = #{taskCheckedVal}
+        WHERE calendar_sn = #{calendarSn}
+    </update>
+</mapper>
