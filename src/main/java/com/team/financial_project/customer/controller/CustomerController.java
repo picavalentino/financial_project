@@ -54,6 +54,7 @@ public class CustomerController {
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(name = "searchType", required = false) String searchType,
             @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "status", required = false) String status, // 필터링 추가
             Model model) {
 
         // 로그인된 사용자 ID 설정
@@ -62,21 +63,17 @@ public class CustomerController {
         model.addAttribute("userName", userName);
         model.addAttribute("staffId", userId);
 
-        // 검색 조건 기본값 설정
-        if (searchType == null && keyword == null) {
+        // 요청 파라미터가 비어 있는 경우에만 기본값 설정
+        if ((searchType == null || searchType.isEmpty()) && (keyword == null || keyword.isEmpty()) && (status == null || status.isEmpty())) {
             searchType = "manager";
-            keyword = userName; // 로그인된 사용자 이름을 기본값으로 설정
+            keyword = userName;
         }
 
-        // 검색 조건과 키워드에 따라 페이징 처리된 고객 목록 조회
-        List<CustomerDTO> customers = !searchType.isEmpty() && !keyword.isEmpty()
-                ? customerService.searchCustomersWithPagination(page, pageSize, searchType, keyword)
-                : customerService.getCustomersWithPagination(page, pageSize);
+        // 고객 데이터 조회 (검색, 필터링, 페이징 처리)
+        List<CustomerDTO> customers = customerService.searchCustomersWithPagination(page, pageSize, searchType, keyword, status);
 
-        // 검색 조건에 따른 총 고객 수 계산
-        int totalCustomers = !searchType.isEmpty() && !keyword.isEmpty()
-                ? customerService.getTotalCustomerCount(searchType, keyword)
-                : customerService.getTotalCustomerCount(null, null);
+        // 총 고객 수 및 총 페이지 수 계산
+        int totalCustomers = customerService.getTotalCustomerCount(searchType, keyword, status);
         int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
 
         // 모델에 데이터 추가
@@ -86,6 +83,7 @@ public class CustomerController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("status", status); // 현재 필터링 상태 전달
 
         return "customer/customerList"; // 뷰 이름
     }
@@ -100,7 +98,7 @@ public class CustomerController {
             // 고객 등록 로직 수행
             customerService.insertCustomer(customerDTO);
 
-                        return ResponseEntity.ok().body(Map.of("success", true, "message", "고객이 성공적으로 등록되었습니다."));
+            return ResponseEntity.ok().body(Map.of("success", true, "message", "고객이 성공적으로 등록되었습니다.", "redirectUrl", "/customer/list"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "고객 등록에 실패했습니다: " + e.getMessage()));
         }

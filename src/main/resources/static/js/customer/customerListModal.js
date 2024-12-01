@@ -57,32 +57,37 @@ document.addEventListener("DOMContentLoaded", function () {
         const csrfToken = $('meta[name="_csrf"]').attr("content");
         const csrfHeader = $('meta[name="_csrf_header"]').attr("content");
 
-        // 비동기적으로 데이터를 서버에 전송
-        fetch("/customer/list/insert", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                [csrfHeader]: csrfToken,
-            },
-            body: JSON.stringify(customerData),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    alert("고객이 성공적으로 등록되었습니다.");
-                    // 모달 닫기 및 폼 초기화
-                    closeModal("insertModal");
-                    document.getElementById("customerForm").reset();
-                } else {
-                    alert("고객 등록에 실패했습니다: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("고객 등록 중 오류가 발생했습니다:", error);
-                alert("오류가 발생했습니다. 다시 시도해주세요.");
-            });
-    });
-});
+      // 비동기적으로 데이터를 서버에 전송
+              fetch("/customer/list/insert", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      [csrfHeader]: csrfToken,
+                  },
+                  body: JSON.stringify(customerData),
+              })
+                  .then((response) => response.json())
+                  .then((data) => {
+                      if (data.success) {
+                          alert("고객이 성공적으로 등록되었습니다.");
+                          // 모달 닫기 및 폼 초기화
+                          closeModal("insertModal");
+                          document.getElementById("customerForm").reset();
+
+                          // 페이지 리다이렉트
+                          if (data.redirectUrl) {
+                              window.location.href = data.redirectUrl;
+                          }
+                      } else {
+                          alert("고객 등록에 실패했습니다: " + data.message);
+                      }
+                  })
+                  .catch((error) => {
+                      console.error("고객 등록 중 오류가 발생했습니다:", error);
+                      alert("오류가 발생했습니다. 다시 시도해주세요.");
+                  });
+          });
+      });
 
 // 폼 유효성 검사 함수
 function validateForm() {
@@ -587,6 +592,8 @@ function sendMessage() {
             console.error('메시지 발송 중 오류가 발생했습니다:', error);
             alert('오류가 발생했습니다. 다시 시도해주세요.');
         });
+
+        /* ======================================================================= */
 }
 
 
