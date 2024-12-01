@@ -91,10 +91,6 @@
         SET user_pw = #{encryptedPassword}
         WHERE user_id = #{userId}
     </update>
-    <select id="countByTelno" resultType="int" parameterType="string">
-        SELECT COUNT(*)
-        FROM user
-        WHERE telno = #{telno}
-    </select>
+
 
 </mapper>
