@@ -153,18 +153,15 @@ $(document).ready(function(){
     $("#user_email").on("input", function (){
         let email = $(this).val();
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/;
-
         if (!emailRegex.test(email)) {
-            if($("#msg-invalid-email").text().length === 0){
-                $("#msg-invalid-email").text("유효하지 않는 이메일입니다.");
-            }
+            $("#msg-invalid-email").css("display", "inline");
             isEmailValid = false;
         } else {
-            $("#msg-invalid-email").text("");
+            $("#msg-invalid-email").css("display", "none");
             isEmailValid = true;
         }
         if(email.length==0){
-            $("#msg-invalid-email").text("");
+            $("#msg-invalid-email").css("display", "none");
             isEmailValid = false;
         }
         validateForm();
@@ -182,7 +179,7 @@ $(document).ready(function(){
     });
     // 휴대전화 유효성 검사
     $("#phone1, #phone2, #phone3").on("input change", function() {
-        $("#msg-already-exist").text("");
+        $("#msg-already-exist").css("display", "none");
         $("#user_telno").val("");
         let phone1 = $("#phone1").val();
         let phone2 = $("#phone2").val();
@@ -212,7 +209,7 @@ $(document).ready(function(){
                     alert("인증되었습니다.");
                     validateForm();
                 }else{
-                    $("#msg-already-exist").text("이미 등록된 번호입니다.");
+                    $("#msg-already-exist").css("display", "inline");
                 }
             },
             error: function() {
