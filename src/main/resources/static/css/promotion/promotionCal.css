@@ -4,7 +4,10 @@
     height: 52px;
     gap: 0px; /* 탭 간격 */
     justify-content: space-between;
+    /*margin: auto;*/
     margin-bottom: 32px;
+    width: 100%;
+    max-width: 1440px;
 }
 
 /* 탭 버튼 스타일 */
@@ -40,6 +43,9 @@
     gap: 20px;
 /*    align-items: flex-start;*/
     transition: all 0.3s ease-in-out;
+/*    margin: auto;*/
+    width: 100%;
+    max-width: 1440px;
 }
 
 /* 활성화 상태: 가로 배치 */
@@ -425,6 +431,13 @@ input[type="date"] {
     gap: 16px;
 }
 
+.input-with-button label {
+    height: 32px;
+    color: #303249;
+    font-size: 16px;
+    line-height: 32px;
+}
+
 .input-with-button button {
     width: 32px;
     height: 32px;
@@ -491,6 +504,8 @@ input[type="date"] {
     border-radius: 10px;
     padding: 18px 30px;
     margin-bottom: 32px;
+    width: 100%;
+    max-width: 1440px;
 }
 
 /* 좌측 라디오 버튼 그룹 */
@@ -537,6 +552,8 @@ input[type="date"] {
 .calculation-container {
     display: flex; /* 왼쪽과 오른쪽 섹션을 가로로 배치 */
     gap: 38px;
+    width: 100%;
+    max-width: 1440px;
 }
 
 /* 왼쪽 섹션 */

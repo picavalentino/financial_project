@@ -1,7 +1,7 @@
 /* 상단 - 검색 바탕, 하단 - 테이블 바탕 */
 .search-controls-area, .bottom-container {
     display: flex;
-    margin: 20px auto;
+    margin: 20px 0px;
     width: 100%;
     max-width: 1440px;
     background-color: white;
