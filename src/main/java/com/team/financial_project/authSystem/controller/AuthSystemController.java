@@ -59,6 +59,12 @@ public class AuthSystemController {
         // 검색 조건 모델에 추가
         model.addAttribute("auth", auth);
 
+
         return "authSystem/authSystem";
+    }
+
+    @GetMapping("/accessDenied")
+    public String accessDenied() {
+        return "authSystem/accessDenied"; // Thymeleaf 템플릿 파일 이름 (e.g. accessDenied.html)
     }
 }

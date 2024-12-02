@@ -1,5 +1,6 @@
 package com.team.financial_project.security.config;
 
+import com.team.financial_project.security.etc.CustomAccessDeniedHandler;
 import com.team.financial_project.security.etc.CustomAuthFailureHandler;
 import com.team.financial_project.security.service.AuthMenuAccessService;
 import com.team.financial_project.security.service.CustomUserDetailService;
@@ -54,6 +55,8 @@ public class SecurityConfig{
                 })
                 .invalidateHttpSession(true)
                 .permitAll());
+        // 접근 권한이 없는 페이지로 갔을때 처리
+        http.exceptionHandling((exceptions) -> exceptions.accessDeniedHandler(new CustomAccessDeniedHandler()));
         return http.build();
     }
 
