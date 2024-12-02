@@ -96,7 +96,7 @@ $(document).ready(function(){
                                 if (response.endsWith("회")) {
                                     $("#pw-code-container").css("display", "block");
                                     $("#pw-btn-send").css("display", "none");
-                                    $("#pw-btn-retrieve").css("display", "block");
+                                    $("#pw-btns").css("display", "flex");
                                     // 타이머 초기화
                                     clearInterval(timerInterval); // 이전 타이머 중지 (중복 방지)
                                     timeLeft = 2 * 60; // 시간을 초기화
