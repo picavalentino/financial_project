@@ -1,9 +1,18 @@
+.sub_content{
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+    max-width: 850px;
+    width: 100%;
+    margin-left: 20px;
+}
+
 .detail-container{
     display: flex;
     flex-direction: column;
-    margin: 20px auto;
+    margin: 0px auto;
     align-items: center;
-    width: 70%;
+    width: 100%;
     background-color: white;
     border-radius: 15px;
     overflow-x: hidden; /* 가로 오버플로우 숨기기 */
@@ -49,7 +58,7 @@
     border-radius: 5px;
     padding: 10px;
     font-size: 14px;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     box-sizing: border-box;
     resize: none; /* 텍스트 영역 크기 조정 비활성화 */
     max-width: 100%; /* 셀 너비 제한 */
@@ -74,7 +83,7 @@
     border-radius: 5px;
     padding: 10px;
     font-size: 14px;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     box-sizing: border-box;
     max-width: 100%; /* 셀 너비 제한 */
 }
