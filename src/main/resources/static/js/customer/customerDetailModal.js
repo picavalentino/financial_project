@@ -50,31 +50,31 @@ function searchManager() {
         })
         .then(data => {
             console.log("검색 결과:", data);
-            var resultListDiv = document.querySelector('#searchModal .result-list');
-            resultListDiv.innerHTML = ''; // 기존 검색 결과 초기화
+            var tbody = document.getElementById('managerList');
+            tbody.innerHTML = ''; // 기존 테이블 내용 초기화
 
             if (data.length === 0) {
-                resultListDiv.innerHTML = '<div>검색 결과가 없습니다.</div>';
+                tbody.innerHTML = '<tr><td colspan="3">검색 결과가 없습니다.</td></tr>';
             } else {
                 data.forEach(function (manager) {
-                    // 동적으로 검색 결과 버튼을 추가
-                    var resultButton = document.createElement('button');
-                    resultButton.className = 'result-btn';
-                    resultButton.innerHTML = `
-                        <span class="name">${manager.user_name}</span>
-                        <span class="info">${manager.user_id} / ${manager.user_telno}</span>
+                    // 동적으로 테이블 행 추가
+                    var row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${manager.user_name}</td>
+                        <td>${manager.user_id}</td>
+                        <td>${manager.user_telno}</td>
                     `;
-                    resultButton.onclick = function () {
+                    row.onclick = function () {
                         selectManager(manager);
                     };
-                    resultListDiv.appendChild(resultButton);
+                    tbody.appendChild(row);
                 });
             }
         })
         .catch(error => {
             console.error('검색 중 오류 발생:', error);
-            var resultListDiv = document.querySelector('#searchModal .result-list');
-            resultListDiv.innerHTML = '<div>오류가 발생했습니다. 다시 시도해주세요.</div>';
+            var tbody = document.getElementById('managerList');
+            tbody.innerHTML = '<tr><td colspan="3">오류가 발생했습니다. 다시 시도해주세요.</td></tr>';
         });
 }
 

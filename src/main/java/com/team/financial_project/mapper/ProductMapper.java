@@ -83,5 +83,5 @@ public interface ProductMapper {
             @Param("prodNm") String prodNm
     ); // @Param 추가
 
-    int updateProductStatus();
+    int updateProductStatus(@Param("product") ProductDTO product);
 }
