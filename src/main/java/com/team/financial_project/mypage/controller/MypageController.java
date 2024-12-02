@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @Slf4j
 @Controller
 public class MypageController{
@@ -142,7 +144,26 @@ public class MypageController{
     }
 
 
+    @GetMapping("/mypage/certify")
+    @ResponseBody
+    public boolean certifyPhone(@RequestParam("telno") String telno) {
+        System.out.println("Received telno: " + telno);
+        return registerService.certifyByUserTelno(telno);
+    }
+    @PostMapping("/mypage/savePhone")
+    public ResponseEntity<?> updatePhone(@RequestBody Map<String, String> request) {
+        String userId = request.get("userId"); // 사용자 ID
+        String phoneNumber = request.get("telno"); // 전화번호
 
+        try {
+            // 서비스 호출
+            mypageService.updatePhoneNumber(userId, phoneNumber);
+            return ResponseEntity.ok("전화번호가 업데이트되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("전화번호 업데이트에 실패했습니다.");
+        }
+    }
 
 
 
