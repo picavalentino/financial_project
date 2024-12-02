@@ -245,28 +245,16 @@
     </update>
 
     <!-- 상품 상태 자동 변경 -->
-    <update id="updateProductStatus">
+    <update id="updateProductStatus" parameterType="productDTO">
         UPDATE tb_product
-        SET prod_curr_stcd =
-        <choose>
-            <when test="CURRENT_DATE &lt; prod_ntsl_bgn_ymd">
-                '0'  <!-- 판매대기 -->
-            </when>
-            <when test="CURRENT_DATE BETWEEN prod_ntsl_bgn_ymd AND prod_ntsl_end_ymd">
-                '1'  <!-- 판매중 -->
-            </when>
-            <when test="CURRENT_DATE &gt; prod_ntsl_end_ymd">
-                '2'  <!-- 판매종료 -->
-            </when>
-        </choose>
-        WHERE prod_ntsl_bgn_ymd IS NOT NULL
-        AND prod_ntsl_end_ymd IS NOT NULL;
+        SET prod_curr_stcd = #{product.prodCurrStcd}
+        WHERE prod_sn = #{product.prodSn}
     </update>
 
     <!-- 상품 삭제 : 상품상태코드 변경 -->
     <update id="deleteProduct" parameterType="BigDecimal">
         UPDATE tb_product
-        SET prod_curr_stcd = 2,
+        SET prod_curr_stcd = '2',
             prod_ntsl_end_ymd = CURRENT_DATE, -- 오늘 날짜를 yyyy-MM-dd 형식으로 설정
             prod_update_at = now() -- 현재 시각으로 업데이트
         WHERE prod_sn = #{prodSn}
