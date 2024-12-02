@@ -37,6 +37,7 @@ public class RegisterController {
     @GetMapping("certify")
     @ResponseBody
     public boolean certify_phone(@RequestParam("telno") String telno) {
+        System.out.println("####################################3"+telno);
         return registerService.certifyByUserTelno(telno);
     }
 
