@@ -27,7 +27,7 @@ $(document).ready(function(){
     // 매초마다 updateTimer 함수 실행
     let timerInterval = setInterval(updateTimer, 1000);
     // 전화번호 숫자만
-    $("#pw-phone2, #pw-phone3, #pw-input-code").on('keypress', function (event) {
+    $("#pw-phone2, #pw-phone3, #pw-input-code, #pw-user_id").on('keypress', function (event) {
         // 숫자 (0-9)만 입력 가능하게 설정
         if (event.which < 48 || event.which > 57) {
             // 백스페이스 (8), 탭 (9), 화살표 키 등은 허용
@@ -94,15 +94,15 @@ $(document).ready(function(){
                         success : function(response){
                             if(response){
                                 if (response.endsWith("회")) {
-                                    $("#code-container").css("display", "block");
-                                    $("#btn-send").css("display", "none");
-                                    $("#btn-retrieve").css("display", "block");
+                                    $("#pw-code-container").css("display", "block");
+                                    $("#pw-btn-send").css("display", "none");
+                                    $("#pw-btn-retrieve").css("display", "block");
                                     // 타이머 초기화
                                     clearInterval(timerInterval); // 이전 타이머 중지 (중복 방지)
                                     timeLeft = 2 * 60; // 시간을 초기화
 
                                     // 타이머 컨테이너 표시
-                                    $('#timer').css("display","block");
+                                    $('#pw-timer').css("display","block");
 
                                     // 타이머 시작
                                     timerInterval = setInterval(updateTimer, 1000);
