@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Access Denied</title>
+</head>
+<body>
+<input type="hidden" id="prevPage" th:value="${prevPage}" />
+<script>
+    window.onload = function () {
+        console.log("접근 제한");
+        alert("접근 권한이 없습니다.\n이전 페이지로 돌아갑니다.");
+        const prevPage = document.getElementById("prevPage").value;
+
+        // 이전 페이지가 있으면 이동, 없으면 메인으로 이동
+        if (prevPage) {
+            window.location.href = prevPage;
+        } else {
+            window.location.href = "/main";
+        }
+    }
+</script>
+</body>
+</html>

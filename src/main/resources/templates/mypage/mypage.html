@@ -59,15 +59,15 @@
             <div class="mycustomer">
                 <div id="mycustomer_title">
                     <p>나의 고객 정보:</p>
-                    <button type="button" id="customerMoreBtn" th:attr="data-user-name=${mypageDTO.userName}">더보기</button>
+                    <button  type="button" id="customerMoreBtn"><a th:href="@{/customer/list}"  class="nav-link" style="text-decoration: none; color: inherit;">더보기</a></button>
                 </div>
 
                 <table id="mycustomer_table">
                     <thead>
                     <tr class="table_head">
-                        <th>고객 이름</th>
+                        <th id="cust_name">고객 이름</th>
                         <th>가입 상품</th>
-                        <th>이메일</th>
+                        <th id="cust_email">이메일</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -86,7 +86,7 @@
             <div class="myboard">
                 <div id="myboard_title">
                     <p>내 작성글:</p>
-                    <button type="button" id="inquireMoreBtn" th:attr="data-user-name=${mypageDTO.userName}">더보기</button>
+                    <button type="button" id="inquireMoreBtn"><a th:href="@{/inquire/list}" class="nav-link" style="text-decoration: none; color: inherit;">더보기</a></button>
                 </div>
 
                 <table id="myboard_table">
