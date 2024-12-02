@@ -2,7 +2,6 @@ package com.team.financial_project.mypage.controller;
 
 import com.team.financial_project.login.service.RegisterService;
 import com.team.financial_project.main.service.S3Service;
-import com.team.financial_project.main.service.SmsService;
 import com.team.financial_project.mypage.dto.MypageDTO;
 import com.team.financial_project.mypage.mapper.MypageMapper;
 import com.team.financial_project.mypage.service.MypageService;
@@ -16,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @Slf4j
 @Controller
 public class MypageController{
@@ -24,16 +25,12 @@ public class MypageController{
     private final MypageMapper mypageMapper;
     private final S3Service s3Service;
     private final RegisterService registerService;
-    private final SmsService smsService; // SmsService 추가
 
-    public MypageController(MypageService mypageService, MypageMapper mypageMapper,
-                            S3Service s3Service, RegisterService registerService,
-                            SmsService smsService) {
+    public MypageController(MypageService mypageService,MypageMapper mypageMapper, S3Service s3Service, RegisterService registerService) {
         this.mypageMapper = mypageMapper;
         this.s3Service = s3Service;
         this.mypageService = mypageService;
         this.registerService = registerService;
-        this.smsService = smsService; // SmsService 주입
     }
 
 
@@ -146,12 +143,28 @@ public class MypageController{
         }
     }
 
+
     @GetMapping("/mypage/certify")
     @ResponseBody
     public boolean certifyPhone(@RequestParam("telno") String telno) {
         System.out.println("Received telno: " + telno);
         return registerService.certifyByUserTelno(telno);
     }
+    @PostMapping("/mypage/savePhone")
+    public ResponseEntity<?> updatePhone(@RequestBody Map<String, String> request) {
+        String userId = request.get("userId"); // 사용자 ID
+        String phoneNumber = request.get("telno"); // 전화번호
+
+        try {
+            // 서비스 호출
+            mypageService.updatePhoneNumber(userId, phoneNumber);
+            return ResponseEntity.ok("전화번호가 업데이트되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("전화번호 업데이트에 실패했습니다.");
+        }
+    }
+
 
 
 

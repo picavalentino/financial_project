@@ -79,7 +79,7 @@ $(document).ready(function () {
         }
 
         const prodSn = $("input[name='prodSn']").val();
-        if (!productId) {
+        if (!prodSn) {
             alert("상품 ID가 유효하지 않습니다.");
             return;
         }

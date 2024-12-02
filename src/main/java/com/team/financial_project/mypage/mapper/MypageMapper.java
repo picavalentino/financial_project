@@ -20,6 +20,5 @@ public interface MypageMapper {
     int updateUserInfo(MypageDTO mypageDTO);
     int updatePassword(@Param("userId") String userId, @Param("encryptedPassword") String encryptedPassword);
 
-
-    UserDTO certifyByUserTelno(String telno);
+    void updatePhoneNumber(@Param("userId") String userId, @Param("phoneNumber") String phoneNumber); // 업데이트 메서드
 }

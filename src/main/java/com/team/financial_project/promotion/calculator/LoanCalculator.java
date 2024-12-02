@@ -142,7 +142,7 @@ public class LoanCalculator {
 
             // 월 이자 계산
             BigDecimal monthlyInterestRate = annualInterestRate.divide(BigDecimal.valueOf(100 * 12), 12, RoundingMode.HALF_UP);
-            BigDecimal monthlyInterest = remainingBalance.multiply(monthlyInterestRate).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal monthlyInterest = remainingBalance.multiply(monthlyInterestRate).setScale(0, RoundingMode.FLOOR);
 
             // 총 이자 누적
             totalInterest = totalInterest.add(monthlyInterest);
@@ -191,7 +191,7 @@ public class LoanCalculator {
         for (int i = 1; i <= loanPeriodMonths; i++) {
             LocalDate dueDate = startDate.plusMonths(i - 1); // 회차별 날짜 계산
             int daysInMonth = dueDate.lengthOfMonth(); // 해당 월의 일수 계산
-            monthlyInterest = loanAmount.multiply(dailyInterestRate).multiply(BigDecimal.valueOf(daysInMonth)).setScale(2, RoundingMode.HALF_UP);
+            monthlyInterest = loanAmount.multiply(dailyInterestRate).multiply(BigDecimal.valueOf(daysInMonth)).setScale(0, RoundingMode.FLOOR);
 
             totalInterest = totalInterest.add(monthlyInterest); // 총 이자 누적
 

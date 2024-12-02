@@ -96,5 +96,10 @@
         FROM user
         WHERE telno = #{telno}
     </select>
+    <update id="updatePhoneNumber">
+        UPDATE user_phone
+        SET phone_number = #{phoneNumber}
+        WHERE user_id = #{userId}
+    </update>
 
 </mapper>

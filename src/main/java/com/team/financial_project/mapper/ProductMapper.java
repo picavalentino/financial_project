@@ -14,9 +14,9 @@ import java.util.Map;
 public interface ProductMapper {
     List<ProductDTO> findAllList();
 
-    ProductDTO getProductById(@Param("prodSn") Long prodSn); // @Param 추가
+    ProductDTO getProductById(@Param("prodSn") BigDecimal prodSn); // @Param 추가
 
-    List<ProdHistDTO> getProdHistById(@Param("prodSn") Long prodSn); // @Param 추가
+    List<ProdHistDTO> getProdHistById(@Param("prodSn") BigDecimal prodSn); // @Param 추가
 
     void updateProduct(@Param("dto") ProductDTO dto, @Param("userId") String userId); // @Param 추가
 
@@ -83,5 +83,5 @@ public interface ProductMapper {
             @Param("prodNm") String prodNm
     ); // @Param 추가
 
-    int updateProductStatus();
+    int updateProductStatus(@Param("product") ProductDTO product);
 }
