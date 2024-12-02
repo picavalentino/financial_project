@@ -50,31 +50,31 @@ function searchManager() {
         })
         .then(data => {
             console.log("검색 결과:", data);
-            var resultListDiv = document.querySelector('#searchModal .result-list');
-            resultListDiv.innerHTML = ''; // 기존 검색 결과 초기화
+            var tbody = document.getElementById('managerList');
+            tbody.innerHTML = ''; // 기존 테이블 내용 초기화
 
             if (data.length === 0) {
-                resultListDiv.innerHTML = '<div>검색 결과가 없습니다.</div>';
+                tbody.innerHTML = '<tr><td colspan="3">검색 결과가 없습니다.</td></tr>';
             } else {
                 data.forEach(function (manager) {
-                    // 동적으로 검색 결과 버튼을 추가
-                    var resultButton = document.createElement('button');
-                    resultButton.className = 'result-btn';
-                    resultButton.innerHTML = `
-                        <span class="name">${manager.user_name}</span>
-                        <span class="info">${manager.user_id} / ${manager.user_telno}</span>
+                    // 동적으로 테이블 행 추가
+                    var row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${manager.user_name}</td>
+                        <td>${manager.user_id}</td>
+                        <td>${manager.user_telno}</td>
                     `;
-                    resultButton.onclick = function () {
+                    row.onclick = function () {
                         selectManager(manager);
                     };
-                    resultListDiv.appendChild(resultButton);
+                    tbody.appendChild(row);
                 });
             }
         })
         .catch(error => {
             console.error('검색 중 오류 발생:', error);
-            var resultListDiv = document.querySelector('#searchModal .result-list');
-            resultListDiv.innerHTML = '<div>오류가 발생했습니다. 다시 시도해주세요.</div>';
+            var tbody = document.getElementById('managerList');
+            tbody.innerHTML = '<tr><td colspan="3">오류가 발생했습니다. 다시 시도해주세요.</td></tr>';
         });
 }
 
@@ -163,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             custAddr: form.querySelector('input[name="custAddr"]').value,
             users: {
                 user_id: form.querySelector('input[name="user_id"]').value,
+                user_name: form.querySelector('input[name="user_name"]').value,
             },
         };
     }
@@ -204,7 +205,7 @@ async function loadRevisionHistory(custId) {
 
         // 수정 내역을 textarea에 추가
         const formattedRevisions = revisions.map(rev => {
-            return `수정 일시: ${new Date(rev.custUpdateAt).toLocaleString()}\n수정 ID: ${rev.userId}\n내용: ${rev.updateDetail}\n======================================`;
+            return `\n수정 일시: ${new Date(rev.custUpdateAt).toLocaleString()}\n수정 ID: ${rev.userId}\n내용: ${rev.updateDetail}\n==========================================`;
         }).join('\n\n');
 
         document.getElementById('revisionHistory').value = formattedRevisions;
@@ -242,7 +243,15 @@ function goList() {
 }
 // =========================================================================
 // 상품설계 페이지로
-function goPromotion() {
-    // Spring Controller의 목록 페이지 URL로 이동
-    window.location.href = "/promotion/list";
-}
+      function goPromotion(button) {
+      // 버튼의 data 속성에서 ID와 고객명을 가져옴
+        const custId = button.getAttribute('data-cust-id');
+        const custNm = button.getAttribute('data-cust-nm');
+
+// URL 생성
+    const url = `/promotion/list?custId=${encodeURIComponent(custId)}&custNm=${encodeURIComponent(custNm)}`;
+
+
+         // 생성된 URL로 페이지 이동
+         window.location.href = url;
+      }

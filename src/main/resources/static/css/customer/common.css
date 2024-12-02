@@ -1,0 +1,12 @@
+/* 공통 : 링크 태그에 밑줄 제거 */
+a {
+    text-decoration: none;
+}
+
+/* content 사이즈와 여백 */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    padding-top: 0px;
+    margin: auto;
+}

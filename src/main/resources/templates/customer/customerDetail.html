@@ -8,10 +8,12 @@
     <!-- 전체 적용될 스크립트 -->
     <th:block layout:fragment="script"></th:block>
     <!-- 페이지별 고객 조회 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/counsel/button.css}">
+    <link rel="stylesheet" th:href="@{/css/customer/common.css}">
     <link rel="stylesheet" th:href="@{/css/customer/customerDetail.css}">
     <link rel="stylesheet" th:href="@{/css/customer/customerDetailModal.css}">
     <link rel="stylesheet" th:href="@{/css/counsel/counsel.css}">
-    <link rel="stylesheet" th:href="@{/css/counsel/button.css}">
     <!-- 날짜 포맷용 라이브러리 추가 -->
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <script th:src="@{/js/customer/customerDetailModal.js}" defer></script>
@@ -19,35 +21,42 @@
 </head>
 <body>
 <div layout:fragment="content" class="content">
+    <!-- 페이지 위치 & 제목 -->
     <div class="location">
         <a th:href="@{/main}"><i class="bi bi-house-door-fill"></i> Home</a>
-        <a href="/customer/list"> / 고객 관리</a>
-        <spapn> / 고객 정보</spapn>
+        <a th:href="@{/customer/list}">/ 고객 관리</a>
+        <p> / 고객 정보</p>
     </div>
-    <h2 class="title">고객 정보</h2>
+    <h1 class="title">고객 정보</h1>
     <div class="main-content">
         <!-- ============================================================================================== -->
-        <section class="customerInfo">
+        <div class="customerInfo">
             <form id="customerUpdateForm" th:object="${customer}">
                 <!-- 고객 정보 섹션 -->
+                <div class="info-header">
+                    <h2 class="info-tab info-tab-first">고객 정보</h2>
+                    <button id="openModalBtn" class="btn btn-list consult-btn" type="button">
+                        <i class="icon bi bi-list"></i> 상담 내역
+                    </button>
+                </div>
+
                 <section class="leftSide" id="leftSide">
                     <div class="customer">
                         <div class="customerLeft">
-                            <label>고객ID<input type="text" id="custId" th:value="${customer.custId}" disabled> </label>
+                            <label>고객 ID <input type="text" id="custId" th:value="${customer.custId}" disabled></label>
                             <label>고객명 <input type="text" th:value="${customer.custNm}" disabled></label>
                             <label>주민번호 <input type="text" th:value="${customer.custRrn}" disabled></label>
-
-                            <label>활동 상태 <input type="text" th:value="${customer.custStateCd}" disabled></label>
-                            <label>가입 일자 <input type="text"
-                                                th:value="${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')}"
-                                                disabled></label>
+                            <label>활동상태 <input type="text" th:value="${customer.custStateCd}" disabled></label>
+                            <label>가입일자 <input type="text"
+                                               th:value="${#temporals.format(customer.custCreateAt, 'yyyy-MM-dd HH:mm')}"
+                                               disabled></label>
                         </div>
                         <div class="customerRight">
+                            <label>연락처 <input type="text" th:value="${customer.custTelno}" name="custTelno"></label>
+                            <label>이메일 <input type="text" th:value="${customer.custEmail}" name="custEmail"></label>
                             <label>주소
                                 <input type="text" class="wide-input" th:value="${customer.custAddr}" name="custAddr">
                             </label>
-                            <label>연락처 <input type="text" th:value="${customer.custTelno}" name="custTelno"></label>
-                            <label>이메일 <input type="text" th:value="${customer.custEmail}" name="custEmail"></label>
                             <label>직업
                                 <select name="custOccpTyCd" class="custOccpTyCd">
                                     <option th:text="${customer.custOccpTyCd_name}" disabled>직업 선택</option>
@@ -58,52 +67,49 @@
                                     </th:block>
                                 </select>
                             </label>
-                            <label>상품 설계 <input type="button" value="페이지로 이동" class="go-promotion-btn"
-                                                onclick="goPromotion()"></label>
+                            <label>상품 설계
+                                <input type="button" value="페이지로 이동" class="go-promotion-btn"    th:data-cust-id="${customer.custId}"
+                                       th:data-cust-nm="${customer.custNm}" onclick="goPromotion(this)">
+                            </label>
                         </div>
                     </div>
                     <!-- ===================================================================================== -->
+                    <h2 class="info-tab">담당 직원</h2>
                     <div class="staff">
-                        <h2>담당 직원</h2>
-                        <div class="staffContainer">
-                            <div class="staffLeft">
-                                <label>담당자
-                                    <input class="searchManager" type="text" name="user_name"
-                                           th:value="${customer.users != null ? customer.users.user_name : '없음'}">
-                                    <button id="openSearchModalBtn" class="search-btn" type="button"
-                                            onclick="openSearchModal()">🔍
-                                    </button>
-                                </label>
-                                <label>담당자ID
-                                    <input type="text" name="user_id"
-                                           th:value="${customer.users != null ? customer.users.user_id : ''}"
-                                           disabled>
-                                </label>
-                            </div>
-                            <div class="staffRight">
-                                <label>연락처
-                                    <input type="text" name="user_telno"
-                                           th:value="${customer.users != null ? customer.users.user_telno : ''}"
-                                           disabled>
-                                </label>
-                                <label>담당자 부서 / 직급
-                                    <input type="text" name="user_dept_Position"
-                                           th:value="${customer.users != null ? customer.users.dept_name + ' / ' + customer.users.position_name : ''}"
-                                           disabled>
-                                </label>
-                            </div>
+                        <div class="staffLeft">
+                            <label class="staff-search-label">담당자
+                                <input class="searchManager" type="text" name="user_name"
+                                       th:value="${customer.users != null ? customer.users.user_name : '없음'}">
+                                <button id="openSearchModalBtn" class="search-btn" type="button" onclick="openSearchModal()">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </label>
+                            <label>담당자 ID
+                                <input type="text" name="user_id"
+                                       th:value="${customer.users != null ? customer.users.user_id : ''}"
+                                       disabled>
+                            </label>
+                        </div>
+                        <div class="staffRight">
+                            <label>연락처
+                                <input type="text" name="user_telno"
+                                       th:value="${customer.users != null ? customer.users.user_telno : ''}"
+                                       disabled>
+                            </label>
+                            <label>부서 / 직급
+                                <input type="text" name="user_dept_Position"
+                                       th:value="${customer.users != null ? customer.users.dept_name + ' / ' + customer.users.position_name : ''}"
+                                       disabled>
+                            </label>
                         </div>
                     </div>
                 </section>
             </form>
             <!-- ===================================================================================== -->
             <!-- 상담 내역 및 수정 내역 섹션 -->
-            <section class="rightSide">
+            <div class="rightSide">
+                <h2 class="info-tab">최근 상담 내역</h2>
                 <div class="consultation">
-                    <div class="consult-bar">
-                        <h2>최근 상담 내역</h2>
-                        <button class="consult-btn" id="openModalBtn">상담일지</button>
-                    </div>
                     <textarea id="counselContentTextarea" readonly>
 [[${latestCounsel != null ? #temporals.format(latestCounsel.counsel_create_at, 'yyyy-MM-dd HH:mm') : '상담 내용이 없습니다.'}]]
 
@@ -128,19 +134,26 @@
                 <input type="hidden" id="latestCounselId"
                        th:value="${latestCounsel != null ? latestCounsel.counsel_id : ''}">
 
+                <h2 class="info-tab">최근 수정내역</h2>
                 <div class="revision">
-                    <h2>최근 수정내역</h2>
-                    <textarea id="revisionHistory" rows="10" cols="50" disabled th:text="${#strings.arrayJoin(history, '\n')}"></textarea>
+                    <textarea id="revisionHistory" rows="10" cols="50" disabled
+                              th:text="${#strings.arrayJoin(history, '\n')}"></textarea>
                 </div>
-            </section>
-        </section>
+            </div>
+        </div>
     </div>
     <!-- ===================================================================================== -->
     <div class="buttons">
-        <button class="btn-print" onclick="DetailPrint()"><span class="icon">🖨️</span> 인쇄</button>
-        <button class="edit-btn" disabled>변경</button>
+        <button class="btn btn-print" onclick="DetailPrint()">
+            <i class="icon bi bi-printer"></i> 인쇄
+        </button>
+        <button class="btn btn-register edit-btn" disabled>
+            <i class="icon bi bi-plus-circle-fill"></i> 수정
+        </button>
         <input type="hidden" name="staffId" th:value="${staffId}">
-        <button class="list-btn" onclick="goList()">목록</button>
+        <button class="btn btn-list list-btn" onclick="goList()">
+            <i class="icon bi bi-list"></i> 목록
+        </button>
     </div>
     <div th:replace="~{customer/customerDetailModal :: managerSearchModal}"></div>
 

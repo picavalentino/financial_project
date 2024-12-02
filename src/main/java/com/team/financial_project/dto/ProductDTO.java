@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO {
-    private Long prodSn;                 // 상품 일련번호
+    private BigDecimal prodSn;                 // 상품 일련번호
     private String prodNm;                 // 상품명
     private Integer prodInstlAmtMin;    // 최소 가입한도
     private Long prodInstlAmtMax;    // 최대 가입한도

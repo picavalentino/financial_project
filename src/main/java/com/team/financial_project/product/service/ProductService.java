@@ -6,13 +6,13 @@ import com.team.financial_project.dto.ProductDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -113,7 +113,7 @@ public class ProductService {
     }
 
     // 단일 제품 조회
-    public ProductDTO findById(Long prodSn) {
+    public ProductDTO findById(BigDecimal prodSn) {
         ProductDTO product = productMapper.getProductById(prodSn);
 
         // histList 초기화
@@ -202,13 +202,38 @@ public class ProductService {
     @Transactional
     public void updateProductStatuses() {
         List<ProductDTO> productsBeforeUpdate = productMapper.findAllList(); // 상태 변경 전 조회
-        int updatedRows = productMapper.updateProductStatus();
+
+        LocalDate currentDate = LocalDate.now();
+        int updatedRows = 0;
+
+        for(ProductDTO product : productsBeforeUpdate){
+            // String 날짜를 LocalDate로 변환
+            LocalDate bgnDate = LocalDate.parse(product.getProdNtslBgnYmd(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate endDate = LocalDate.parse(product.getProdNtslEndYmd(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            // 판매대기 -> 판매중
+            if (product.getProdCurrStcd().equals("0") &&
+                    (bgnDate.isEqual(currentDate) || bgnDate.isBefore(currentDate))) {
+                product.setProdCurrStcd("1");
+            }
+
+            // 판매중 -> 판매종료
+            if (product.getProdCurrStcd().equals("1") && endDate.isBefore(currentDate)) {
+                product.setProdCurrStcd("2");
+            }
+
+            try {
+                updatedRows += productMapper.updateProductStatus(product);
+            } catch (Exception e) {
+                log.error("상품 업데이트 실패: 상품 ID = {}", product.getProdSn(), e);
+            }
+        }
+
         List<ProductDTO> productsAfterUpdate = productMapper.findAllList();  // 상태 변경 후 조회
 
         if (updatedRows > 0) {
             log.info("상품 상태 변경 완료: {}개의 상품 상태가 업데이트되었습니다.", updatedRows);
 
-            // 상태 변경된 상품 로깅
             for (int i = 0; i < productsBeforeUpdate.size(); i++) {
                 ProductDTO before = productsBeforeUpdate.get(i);
                 ProductDTO after = productsAfterUpdate.get(i);
@@ -222,5 +247,6 @@ public class ProductService {
             log.warn("상품 상태 변경 작업이 수행되지 않았습니다. (업데이트된 상품 없음)");
         }
     }
+
 
 }

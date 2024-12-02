@@ -175,7 +175,7 @@ public class ProductController {
 
     // 상품 상세보기 ---------------------------------------
     @GetMapping("/detail/{prodSn}")
-    public String viewProductDetail(@PathVariable("prodSn") Long prodSn, Model model) {
+    public String viewProductDetail(@PathVariable("prodSn") BigDecimal prodSn, Model model) {
         ProductDTO dto = productService.findById(prodSn);
 
         // 포맷팅 처리
