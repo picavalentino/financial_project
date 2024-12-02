@@ -1,12 +1,21 @@
 html {
     background-color: #EFEFF1;;
 }
+
+.sub_content{
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+    max-width: 750px;
+    width: 100%;
+}
+
 .form-container{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: auto;
-    width: 70%;
+    margin: auto 20px;
+    width: 100%;
 }
 /* 테이블 스타일 */
 .inquire-form{
@@ -23,7 +32,6 @@ html {
     border-collapse: separate; /* 행 간 간격 유지 */
     border-spacing: 5px 3px; /* 테이블 행 간격 추가 */
     background-color: white; /* #f8f9fa; */
-    /*background-color: #f8f9fa;*/
     border-radius: 10px;
 }
 
@@ -38,6 +46,7 @@ html {
     padding: 10px 15px;
     padding-right: 30px;
     vertical-align: middle;
+    flex: 1;
 }
 
 /* 입력 필드 */
@@ -64,12 +73,12 @@ html {
 .input-like {
     display: block;
     width: 100%; /* 기존 설정 유지 */
-    max-width: 400px; /* 동일한 너비로 제한 */
+    min-width: 200px; /* 동일한 너비로 제한 */
     border: 1px solid #ced4da;
     border-radius: 5px;
     padding: 10px;
     font-size: 14px;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     box-sizing: border-box;
     text-align: center;
 }
@@ -91,8 +100,11 @@ html {
     max-width: 287px;
 }
 input[type="checkbox"]{
-    width: 3%;
-    font-size: 20px;
+    width: 10%;
+    font-size: 40px;
+    text-align: left;
+    vertical-align: center;
+    padding-left: 0px;
 }
 
 /* 파일 입력 스타일 */

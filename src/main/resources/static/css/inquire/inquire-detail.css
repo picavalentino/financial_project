@@ -1,21 +1,43 @@
-.detail-container{
+.sub_content{
+    margin: 0px;
+    padding: 0px;
     display: flex;
     flex-direction: column;
-    margin: 20px auto;
-    padding: 20px;
+    justify-contents: center;
+    max-width: 900px;
+    width: 100%;
+}
+.detail-container{
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
     align-items: center;
-    width: 80%;
+    width: 100%;
     background-color: white;
     border-radius: 15px;
     overflow-x: hidden; /* 가로 오버플로우 숨기기 */
+    justify-content: center;
 }
-
+.form-container{
+    align-items: center;
+}
+/* 테이블 스타일 */
+inquire-form{
+    margin: auto;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 .inquire-table {
+    padding: 10px;
     width: 100%;
     margin: auto;
     border-collapse: separate; /* 행 간 간격 유지 */
-    border-spacing: 3px; /* 테이블 행 간격 추가 */
-    max-width: 100%; /* 셀 너비 제한 */
+    border-spacing: 5px 10px; /* 테이블 행 간격 추가 */
+    background-color: white; /* #f8f9fa; */
+    /*background-color: #f8f9fa;*/
+    border-radius: 10px;
 }
 
 .inquire-table th {
@@ -41,7 +63,7 @@
     border-radius: 5px;
     padding: 10px;
     font-size: 14px;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     box-sizing: border-box;
     resize: none; /* 텍스트 영역 크기 조정 비활성화 */
     max-width: 100%; /* 셀 너비 제한 */
@@ -62,7 +84,7 @@
     border-radius: 5px;
     padding: 10px;
     font-size: 14px;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     box-sizing: border-box;
     max-width: 100%; /* 셀 너비 제한 */
 }
@@ -77,7 +99,7 @@
     border-radius: 5px;
     padding: 10px;
     font-size: 14px;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     box-sizing: border-box;
     white-space: pre-wrap; /* 줄바꿈 적용 */
     overflow-y: auto; /* 세로 스크롤 */
@@ -111,10 +133,14 @@
     background-color: #ffffff; /* 호버 시 배경색 변경 */
 }
 
+.hr{
+    border-top: 2px solid #555; /* 선 두께와 색상 */
+    margin: 0px 0; /* 위아래 여백 */
+}
 
 /* 댓글 영역 컨테이너 */
 .comments-container {
-    margin-top: 20px;
+    margin-top: 0px;
     padding: 20px;
     width: 100%;
 }
@@ -155,13 +181,13 @@
 
 .comment-table th:nth-child(2),
 .comment-table td:nth-child(2) {
-    width: 55%; /* 3 비율 (내용) */
+    width: 50%; /* 3 비율 (내용) */
     text-align: left;
 }
 
 .comment-table th:nth-child(3),
 .comment-table td:nth-child(3) {
-    width: 10%; /* 1 비율 (상태) */
+    width: 15%; /* 1 비율 (상태) */
 }
 
 .comment-table th:last-child,

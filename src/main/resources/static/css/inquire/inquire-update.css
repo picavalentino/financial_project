@@ -1,17 +1,21 @@
 html {
     background-color: #EFEFF1;;
 }
+.sub_content{
+    position: absolute;
+}
 .form-container{
     display: flex;
     flex-direction: column;
-    margin: 20px auto;
-    align-items: center;
-    width: 90%;
+    margin: 0px auto;
+    align-items: left;
+    width: 100%;
+    max-width: 800px;
 }
 /* 테이블 스타일 */
 inquire-form{
     margin: auto;
-    padding: 20px;
+    padding: 0px;
     width: 100%;
     background-color: white;
     border-radius: 10px;
@@ -150,10 +154,10 @@ inquire-form{
     padding: 3px;
 }
 .btn-icon i{
-    color: #000000;
+    color: #ffffff;
 }
 .btn-icon:hover {
-    background-color: #000000;
+    background-color: #ffffff;
 }
 .btn-icon:hover i{
     color: white;
@@ -168,7 +172,7 @@ inquire-form{
 }
 
 .button-wrap .btn{
-    color: #000000;
+    color: #ffffff;
 }
 
 .button-wrap .btn:hover{
