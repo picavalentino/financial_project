@@ -262,7 +262,7 @@ thead {
     height: 35px; /* 높이 축소 */
     background-color: #7AAEBC;
     font-weight: 900;
-    text-align: center;
+    text-align: left;
     font-size: 16px; /* 글자 크기 축소 */
     border-radius: 10px 10px 0 0px;
     display: inline-table;
@@ -311,13 +311,23 @@ tbody::-webkit-scrollbar-thumb:hover {
     border-spacing: 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+#cust_name{
+padding-left: 45px;
+}
 
-#mycustomer_table th,
 #mycustomer_table td,
 #myboard_table th,
 #myboard_table td {
     padding: 12px; /* 셀 내부 여백 축소 */
     text-align: center;
+
+}
+#mycustomer_table th{
+padding-right: -12px
+}
+.nav-link {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 부모 요소의 색상 상속 */
 }
 
 #mycustomer_table tbody tr:last-child td,
