@@ -148,6 +148,52 @@ $("#phone_btn").on("click", function() {
         }
     });
 
+$("#phone_btn").on("click", function() {
+    // 전화번호 조합
+    const phonePart1 = $("#phone_input1").val();
+    const phonePart2 = $("#phone_input2").val();
+    const phonePart3 = $("#phone_input3").val();
+    const phoneNumber = phonePart1 + "-" + phonePart2 + "-" + phonePart3; // 전화번호 조합
+
+    // 서버로 AJAX 요청
+    $.ajax({
+        url: "/mypage/certify",
+        type: "GET",
+        data: { telno: phoneNumber },
+        success: function (response) {
+            if (response) {
+                $("#phone_btn").prop("disabled", true).val("인증완료");
+                alert("인증되었습니다.");
+            } else {
+                alert("이미 등록된 번호입니다.");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error);
+            alert("인증 요청 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+    });
+});
+
+
+// 전화번호 저장 함수
+function savePhoneNumber(phoneNumber) {
+    const userId = $("#userId").val(); // 사용자 ID 가져오기 (예시)
+
+    $.ajax({
+        url: "/mypage/savePhone",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ userId: userId, telno: phoneNumber }), // userId와 전화번호 JSON으로 전송
+        success: function(response) {
+            alert("전화번호가 저장되었습니다.");
+        },
+        error: function(xhr, status, error) {
+            console.error("Error while saving phone number:", error);
+            alert("전화번호 저장 중 오류가 발생했습니다.");
+        }
+    });
+}
     // 데이터를 가져와 페이지에 렌더링
     function fetchAndRenderData() {
         $.ajax({

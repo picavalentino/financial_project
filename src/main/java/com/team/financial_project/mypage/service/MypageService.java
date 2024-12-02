@@ -79,4 +79,13 @@ public class MypageService {
         }
     }
 
+
+    public void updatePhoneNumber(String userId, String phoneNumber) {
+        try {
+            mypageMapper.updatePhoneNumber(userId, phoneNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("전화번호 업데이트 중 오류가 발생했습니다.");
+        }
+    }
 }
