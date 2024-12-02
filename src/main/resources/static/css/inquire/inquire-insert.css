@@ -95,10 +95,10 @@ inquire-form{
     padding: 3px;
 }
 .btn-icon i{
-    color: #000000;
+    color: #ffffff;
 }
 .btn-icon:hover {
-    background-color: #000000;
+    background-color: #ffffff;
 }
 .btn-icon:hover i{
     color: white;
@@ -113,7 +113,7 @@ inquire-form{
 }
 
 .button-wrap .btn{
-    color: #000000;
+    color: #ffffff;
 }
 
 .button-wrap .btn:hover{
