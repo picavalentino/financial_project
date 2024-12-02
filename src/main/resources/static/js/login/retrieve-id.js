@@ -94,7 +94,6 @@ $(document).ready(function(){
                         data: { telno: $("#user_telno").val() },
                         success : function(response){
                             if(response){
-                                alert(response);
                                 if (response.endsWith("회")) {
                                     $("#code-container").css("display", "block");
                                     $("#btn-send").css("display", "none");
@@ -105,7 +104,7 @@ $(document).ready(function(){
 
                                     // 타이머 컨테이너 표시
                                     $('#timer').css("display","block");
-
+                                    alert(response);
                                     // 타이머 시작
                                     timerInterval = setInterval(updateTimer, 1000);
                                     updateTimer();

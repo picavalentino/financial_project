@@ -103,7 +103,7 @@ $(document).ready(function(){
 
                                     // 타이머 컨테이너 표시
                                     $('#pw-timer').css("display","block");
-
+                                    alert(response);
                                     // 타이머 시작
                                     timerInterval = setInterval(updateTimer, 1000);
                                     updateTimer();
