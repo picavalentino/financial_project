@@ -55,7 +55,7 @@ public class DepositCalculator {
         // 세전 이자 계산: 예치금액 × (적용금리 / 12) × 목표기간
         BigDecimal totalInterest = principal.multiply(interestRate)
                 .multiply(BigDecimal.valueOf(goalPeriod))
-                .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+                .divide(BigDecimal.valueOf(12), 0, RoundingMode.CEILING);
 
         // 세전 수령액 = 예치금액 + 세전 이자
         BigDecimal preTaxTotal = principal.add(totalInterest);
